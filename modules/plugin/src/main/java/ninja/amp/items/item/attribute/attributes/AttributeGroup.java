@@ -21,16 +21,12 @@ package ninja.amp.items.item.attribute.attributes;
 import ninja.amp.items.AmpItems;
 import ninja.amp.items.config.ConfigUtil;
 import ninja.amp.items.item.ItemManager;
-import ninja.amp.items.item.attribute.AttributeType;
 import ninja.amp.items.item.attribute.ItemAttribute;
 import ninja.amp.items.item.attribute.ItemLore;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.MemoryConfiguration;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class AttributeGroup extends BasicAttribute {
 

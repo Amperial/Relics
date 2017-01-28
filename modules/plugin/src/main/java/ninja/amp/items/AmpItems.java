@@ -32,6 +32,7 @@ import ninja.amp.items.item.attribute.attributes.DefaultAttributeType;
 import ninja.amp.items.item.attribute.attributes.InformationAttribute;
 import ninja.amp.items.item.attribute.attributes.sockets.Socket;
 import ninja.amp.items.message.Messenger;
+import ninja.amp.items.nms.NMSHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
@@ -52,6 +53,9 @@ public class AmpItems extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        // Attempt to load NMSHandler
+        NMSHandler.getInterface();
+
         // Initialize item factories
         DefaultAttributeType.INFO.setFactory(new InformationAttribute.InformationAttributeFactory(this));
         DefaultAttributeType.SOCKET.setFactory(new Socket.SocketFactory(this));
