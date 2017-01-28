@@ -20,8 +20,9 @@ package ninja.amp.items.item.attribute.attributes;
 
 import ninja.amp.items.AmpItems;
 import ninja.amp.items.item.attribute.AttributeFactory;
+import ninja.amp.items.item.attribute.ItemAttribute;
 
-public abstract class BasicAttributeFactory implements AttributeFactory {
+public abstract class BasicAttributeFactory<T extends ItemAttribute> implements AttributeFactory<T> {
 
     private AmpItems plugin;
 

@@ -1,6 +1,8 @@
 package ninja.amp.items.nms;
 
+import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
 
 public abstract class NMSHandler {
 
@@ -29,5 +31,9 @@ public abstract class NMSHandler {
 
         return activeInterface;
     }
+
+    public abstract NBTTagCompound getTagCompound(ItemStack item);
+
+    public abstract ItemStack setTagCompound(ItemStack item, NBTTagCompound compound);
 
 }

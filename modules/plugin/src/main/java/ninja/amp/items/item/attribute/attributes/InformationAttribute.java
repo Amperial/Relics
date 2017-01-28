@@ -19,10 +19,13 @@
 package ninja.amp.items.item.attribute.attributes;
 
 import ninja.amp.items.AmpItems;
-import ninja.amp.items.item.attribute.ItemAttribute;
 import ninja.amp.items.item.attribute.ItemLore;
+import ninja.amp.items.nms.nbt.NBTTagCompound;
+import ninja.amp.items.nms.nbt.NBTTagList;
+import ninja.amp.items.nms.nbt.NBTTagString;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InformationAttribute extends BasicAttribute {
@@ -46,25 +49,38 @@ public class InformationAttribute extends BasicAttribute {
         return information;
     }
 
-    public static class InformationAttributeFactory extends BasicAttributeFactory {
+    public static class InformationAttributeFactory extends BasicAttributeFactory<InformationAttribute> {
 
         public InformationAttributeFactory(AmpItems plugin) {
             super(plugin);
         }
 
         @Override
-        public ItemAttribute loadFromConfig(ConfigurationSection config) {
+        public InformationAttribute loadFromConfig(ConfigurationSection config) {
             return new InformationAttribute(config.getStringList("text"));
         }
 
         @Override
-        public ItemAttribute loadFromNBT() {
-            return null;
+        public InformationAttribute loadFromNBT(NBTTagCompound compound) {
+            List<String> text = new ArrayList<>();
+            if (compound.hasKey("text")) {
+                NBTTagList list = compound.getList("text", 8);
+                for (int i = 0; i < list.size(); i++) {
+                    text.add(list.getString(i));
+                }
+            }
+            return new InformationAttribute(text);
         }
 
         @Override
-        public void saveToNBT() {
-
+        public void saveToNBT(InformationAttribute attribute, NBTTagCompound compound) {
+            compound.setString("type", DefaultAttributeType.INFO.getName());
+            List<String> text = attribute.getInformation();
+            NBTTagList list = NBTTagList.create();
+            for (String line : text) {
+                list.add(NBTTagString.create(line));
+            }
+            compound.set("text", list);
         }
 
     }

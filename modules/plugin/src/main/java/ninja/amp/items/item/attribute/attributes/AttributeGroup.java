@@ -23,6 +23,8 @@ import ninja.amp.items.config.ConfigUtil;
 import ninja.amp.items.item.ItemManager;
 import ninja.amp.items.item.attribute.ItemAttribute;
 import ninja.amp.items.item.attribute.ItemLore;
+import ninja.amp.items.nms.nbt.NBTTagCompound;
+import ninja.amp.items.nms.nbt.NBTTagList;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
@@ -51,14 +53,14 @@ public class AttributeGroup extends BasicAttribute {
         return attributes;
     }
 
-    public static class AttributeGroupFactory extends BasicAttributeFactory {
+    public static class AttributeGroupFactory extends BasicAttributeFactory<AttributeGroup> {
 
         public AttributeGroupFactory(AmpItems plugin) {
             super(plugin);
         }
 
         @Override
-        public ItemAttribute loadFromConfig(ConfigurationSection config) {
+        public AttributeGroup loadFromConfig(ConfigurationSection config) {
             ItemManager itemManager = getPlugin().getItemManager();
 
             List<ItemAttribute> attributes = new ArrayList<>();
@@ -75,13 +77,34 @@ public class AttributeGroup extends BasicAttribute {
         }
 
         @Override
-        public ItemAttribute loadFromNBT() {
-            return null;
+        public AttributeGroup loadFromNBT(NBTTagCompound compound) {
+            ItemManager itemManager = getPlugin().getItemManager();
+
+            List<ItemAttribute> attributes = new ArrayList<>();
+            if (compound.hasKey("attributes")) {
+                NBTTagList list = compound.getList("attributes", 10);
+                for (int i = 0; i < list.size(); i++) {
+                    NBTTagCompound attribute = list.getCompound(i);
+                    String type = attribute.getString("type");
+                    if (itemManager.hasAttributeType(type)) {
+                        attributes.add(itemManager.getAttributeType(type).getFactory().loadFromNBT(attribute));
+                    }
+                }
+            }
+
+            return new AttributeGroup(attributes);
         }
 
         @Override
-        public void saveToNBT() {
-
+        public void saveToNBT(AttributeGroup attributeGroup, NBTTagCompound compound) {
+            compound.setString("type", DefaultAttributeType.GROUP.getName());
+            NBTTagList list = NBTTagList.create();
+            for (ItemAttribute attribute : attributeGroup.getAttributes()) {
+                NBTTagCompound attributeCompound = NBTTagCompound.create();
+                attribute.getType().getFactory().saveToNBT(attribute, attributeCompound);
+                list.add(attributeCompound);
+            }
+            compound.set("attributes", list);
         }
 
     }

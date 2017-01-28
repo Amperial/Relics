@@ -18,14 +18,15 @@
  */
 package ninja.amp.items.item.attribute;
 
+import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.configuration.ConfigurationSection;
 
-public interface AttributeFactory {
+public interface AttributeFactory<T extends ItemAttribute> {
 
-    ItemAttribute loadFromConfig(ConfigurationSection config);
+    T loadFromConfig(ConfigurationSection config);
 
-    ItemAttribute loadFromNBT();
+    T loadFromNBT(NBTTagCompound compound);
 
-    void saveToNBT();
+    void saveToNBT(T attribute, NBTTagCompound compound);
 
 }

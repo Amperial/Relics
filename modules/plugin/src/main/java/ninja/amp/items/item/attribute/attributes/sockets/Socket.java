@@ -20,11 +20,13 @@ package ninja.amp.items.item.attribute.attributes.sockets;
 
 import ninja.amp.items.AmpItems;
 import ninja.amp.items.item.attribute.AttributeType;
-import ninja.amp.items.item.attribute.ItemAttribute;
 import ninja.amp.items.item.attribute.ItemLore;
 import ninja.amp.items.item.attribute.attributes.BasicAttribute;
 import ninja.amp.items.item.attribute.attributes.BasicAttributeFactory;
 import ninja.amp.items.item.attribute.attributes.DefaultAttributeType;
+import ninja.amp.items.nms.nbt.NBTTagCompound;
+import ninja.amp.items.nms.nbt.NBTTagList;
+import ninja.amp.items.nms.nbt.NBTTagString;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -70,6 +72,10 @@ public class Socket extends BasicAttribute {
         return color;
     }
 
+    public Set<SocketColor> getAccepts() {
+        return accepts;
+    }
+
     public boolean hasGem() {
         return gem != null;
     }
@@ -86,14 +92,14 @@ public class Socket extends BasicAttribute {
         this.gem = gem;
     }
 
-    public static class SocketFactory extends BasicAttributeFactory {
+    public static class SocketFactory extends BasicAttributeFactory<Socket> {
 
         public SocketFactory(AmpItems plugin) {
             super(plugin);
         }
 
         @Override
-        public ItemAttribute loadFromConfig(ConfigurationSection config) {
+        public Socket loadFromConfig(ConfigurationSection config) {
             SocketColor color = SocketColor.fromName(config.getString("color"));
 
             Set<SocketColor> accepts;
@@ -109,13 +115,34 @@ public class Socket extends BasicAttribute {
         }
 
         @Override
-        public ItemAttribute loadFromNBT() {
-            return null;
+        public Socket loadFromNBT(NBTTagCompound compound) {
+            SocketColor color = SocketColor.fromName(compound.getString("color"));
+
+            Set<SocketColor> accepts;
+            if (compound.hasKey("accepts")) {
+                accepts = new HashSet<>();
+                NBTTagList list = compound.getList("accepts", 8);
+                for (int i = 0; i < list.size(); i++) {
+                    accepts.add(SocketColor.fromName(list.getString(i)));
+                }
+            } else {
+                accepts = color.getAccepts();
+            }
+
+            return new Socket(DefaultAttributeType.SOCKET, color, accepts);
         }
 
         @Override
-        public void saveToNBT() {
-
+        public void saveToNBT(Socket socket, NBTTagCompound compound) {
+            compound.setString("type", DefaultAttributeType.SOCKET.getName());
+            compound.setString("color", socket.getColor().getName());
+            if (!socket.getAccepts().equals(socket.getColor().getAccepts())) {
+                NBTTagList list = NBTTagList.create();
+                for (SocketColor color : socket.getAccepts()) {
+                    list.add(NBTTagString.create(color.getName()));
+                }
+                compound.set("accepts", list);
+            }
         }
 
     }
