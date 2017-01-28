@@ -1,0 +1,49 @@
+colors:
+  aqua:
+    accepts:
+    - aqua
+  black:
+    accepts:
+    - black
+  blue:
+    accepts:
+    - blue
+  dark-aqua:
+    accepts:
+    - dark-aqua
+  dark-blue:
+    accepts:
+    - dark-blue
+  dark-gray:
+    accepts:
+    - dark-gray
+  dark-green:
+    accepts:
+    - dark-green
+  dark-purple:
+    accepts:
+    - dark-purple
+  dark-red:
+    accepts:
+    - dark-red
+  gold:
+    accepts:
+    - gold
+  gray:
+    accepts:
+    - gray
+  green:
+    accepts:
+    - green
+  light-purple:
+    accepts:
+    - light-purple
+  red:
+    accepts:
+    - red
+  white:
+    accepts:
+    - white
+  yellow:
+    accepts:
+    - yellow

@@ -1,0 +1,8 @@
+name: AmpItems
+version: 0.0
+description: Item Attributes API Plugin
+author: ampayne2
+main: ninja.amp.items.AmpItems
+commands:
+  ampitems:
+    aliases: [ampitem, aitems, aitem]
