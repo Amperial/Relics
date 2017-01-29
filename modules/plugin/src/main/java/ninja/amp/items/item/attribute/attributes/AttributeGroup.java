@@ -25,6 +25,7 @@ import ninja.amp.items.item.attribute.ItemLore;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
 import ninja.amp.items.nms.nbt.NBTTagList;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,21 @@ public class AttributeGroup extends BasicAttribute {
 
     public List<ItemAttribute> getAttributes() {
         return attributes;
+    }
+
+    @Override
+    public boolean canEquip(Player player) {
+        return attributes.stream().allMatch((ItemAttribute a) -> a.canEquip(player));
+    }
+
+    @Override
+    public void equip(Player player) {
+        attributes.forEach((ItemAttribute a) -> a.equip(player));
+    }
+
+    @Override
+    public void unEquip(Player player) {
+        attributes.forEach((ItemAttribute a) -> a.unEquip(player));
     }
 
     @Override

@@ -28,6 +28,6 @@ public interface AttributeType extends Config {
 
     void setLorePosition(int position);
 
-    AttributeFactory<ItemAttribute> getFactory();
+    AttributeFactory<? extends ItemAttribute> getFactory();
 
 }

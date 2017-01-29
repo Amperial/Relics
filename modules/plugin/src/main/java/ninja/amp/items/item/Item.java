@@ -24,7 +24,7 @@ import ninja.amp.items.nms.NMSHandler;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -32,8 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Item {
-
-    public static final ItemFactory DEFAULT_FACTORY = new ItemFactory();
 
     private final ItemStack base;
     private final ItemAttribute attribute;
@@ -67,7 +65,7 @@ public class Item {
 
     public static class ItemFactory {
 
-        public Item loadFromConfig(FileConfiguration config) {
+        public Item loadFromConfig(ConfigurationSection config) {
             // Load ItemStack
             String name = ChatColor.translateAlternateColorCodes('&', config.getString("name"));
             Material material = Material.getMaterial(config.getString("material"));

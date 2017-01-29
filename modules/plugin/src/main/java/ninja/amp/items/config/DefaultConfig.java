@@ -25,6 +25,7 @@ package ninja.amp.items.config;
  */
 public enum DefaultConfig implements Config {
     MESSAGE("lang.yml"),
+    ITEMS("items.yml"),
     ATTRIBUTES("attributes.yml"),
     SOCKETS("sockets.yml");
 

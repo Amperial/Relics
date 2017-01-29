@@ -30,6 +30,7 @@ import ninja.amp.items.nms.nbt.NBTTagList;
 import ninja.amp.items.nms.nbt.NBTTagString;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -91,6 +92,25 @@ public class Socket extends BasicAttribute {
 
     public void setGem(Gem gem) {
         this.gem = gem;
+    }
+
+    @Override
+    public boolean canEquip(Player player) {
+        return !hasGem() || getGem().canEquip(player);
+    }
+
+    @Override
+    public void equip(Player player) {
+        if (hasGem()) {
+            getGem().equip(player);
+        }
+    }
+
+    @Override
+    public void unEquip(Player player) {
+        if (hasGem()) {
+            getGem().unEquip(player);
+        }
     }
 
     @Override

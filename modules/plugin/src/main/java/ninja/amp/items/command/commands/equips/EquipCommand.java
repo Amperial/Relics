@@ -16,35 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with AmpItems.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ninja.amp.items.config;
+package ninja.amp.items.command.commands.equips;
 
-public class ItemConfig implements Config {
-
-    private final String item;
-    private final String fileName;
-
-    public ItemConfig(String item) {
-        this.item = item;
-        this.fileName = "items/" + item + ".yml";
-    }
-
-    public String getItem() {
-        return item;
-    }
-
-    @Override
-    public String getFileName() {
-        return fileName;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj != null && obj instanceof ItemConfig && fileName.equals(((ItemConfig) obj).getFileName());
-    }
-
-    @Override
-    public int hashCode() {
-        return fileName.hashCode();
-    }
-
+public class EquipCommand {
 }

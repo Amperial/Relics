@@ -20,11 +20,13 @@ package ninja.amp.items.item;
 
 import ninja.amp.items.AmpItems;
 import ninja.amp.items.config.DefaultConfig;
+import ninja.amp.items.config.ItemConfig;
 import ninja.amp.items.item.attribute.AttributeType;
 import ninja.amp.items.item.attribute.attributes.DefaultAttributeType;
 import ninja.amp.items.item.attribute.attributes.sockets.SocketColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.EnumSet;
@@ -34,12 +36,16 @@ import java.util.Map;
 
 public class ItemManager {
 
+    public static final Item.ItemFactory DEFAULT_FACTORY = new Item.ItemFactory();
+
     private final AmpItems plugin;
     private final Map<String, AttributeType> attributeTypes;
+    private final Map<String, ItemConfig> items;
 
     public ItemManager(AmpItems plugin) {
         this.plugin = plugin;
         this.attributeTypes = new HashMap<>();
+        this.items = new HashMap<>();
 
         registerAttributeTypes(EnumSet.allOf(DefaultAttributeType.class), plugin);
 
@@ -63,6 +69,10 @@ public class ItemManager {
                 }
             }
         }
+
+        // Load items
+        FileConfiguration itemConfig = plugin.getConfigManager().getConfig(DefaultConfig.ITEMS);
+        itemConfig.getStringList("items").forEach((String item) -> registerItem(new ItemConfig(item), plugin));
     }
 
     public boolean hasAttributeType(String type) {
@@ -84,6 +94,35 @@ public class ItemManager {
     public void registerAttributeType(AttributeType type, JavaPlugin plugin) {
         attributeTypes.put(type.getName(), type);
         this.plugin.getConfigManager().registerCustomConfig(type, plugin);
+    }
+
+    public boolean hasItem(String item) {
+        return items.containsKey(item);
+    }
+
+    public ItemConfig getItemConfig(String item) {
+        return items.get(item);
+    }
+
+    public Item getItem(ItemStack itemStack) {
+        return DEFAULT_FACTORY.loadFromItemStack(itemStack);
+    }
+
+    public Item getItem(ConfigurationSection config) {
+        return DEFAULT_FACTORY.loadFromConfig(config);
+    }
+
+    public Item getItem(ItemConfig config) {
+        return getItem(plugin.getConfigManager().getConfig(config));
+    }
+
+    public Item getItem(String item) {
+        return getItem(getItemConfig(item));
+    }
+
+    public void registerItem(ItemConfig config, JavaPlugin plugin) {
+        items.put(config.getItem(), config);
+        this.plugin.getConfigManager().registerCustomConfig(config, plugin);
     }
 
 }

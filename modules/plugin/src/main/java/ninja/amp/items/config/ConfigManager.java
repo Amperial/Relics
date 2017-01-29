@@ -47,9 +47,6 @@ public class ConfigManager {
 
         // Register custom configs
         registerCustomConfigs(EnumSet.allOf(DefaultConfig.class), plugin);
-
-        // TODO: Temporary
-        registerCustomConfig(new ItemConfig("item"), plugin);
     }
 
     /**

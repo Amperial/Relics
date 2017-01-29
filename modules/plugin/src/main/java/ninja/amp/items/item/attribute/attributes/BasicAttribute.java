@@ -21,6 +21,7 @@ package ninja.amp.items.item.attribute.attributes;
 import ninja.amp.items.item.attribute.AttributeType;
 import ninja.amp.items.item.attribute.ItemAttribute;
 import ninja.amp.items.item.attribute.ItemLore;
+import org.bukkit.entity.Player;
 
 public abstract class BasicAttribute implements ItemAttribute {
 
@@ -44,6 +45,19 @@ public abstract class BasicAttribute implements ItemAttribute {
 
     public void setLore(ItemLore lore) {
         this.lore = lore;
+    }
+
+    @Override
+    public boolean canEquip(Player player) {
+        return true;
+    }
+
+    @Override
+    public void equip(Player player) {
+    }
+
+    @Override
+    public void unEquip(Player player) {
     }
 
 }

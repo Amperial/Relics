@@ -20,17 +20,14 @@ package ninja.amp.items.command.commands.items;
 
 import ninja.amp.items.AmpItems;
 import ninja.amp.items.command.Command;
-import ninja.amp.items.config.Config;
 import ninja.amp.items.config.ConfigManager;
-import ninja.amp.items.config.ItemConfig;
 import ninja.amp.items.item.Item;
+import ninja.amp.items.item.ItemManager;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
-import java.io.File;
 import java.util.List;
 
 public class GetItemCommand extends Command {
@@ -48,17 +45,18 @@ public class GetItemCommand extends Command {
     public void execute(String command, CommandSender sender, List<String> args) {
         Player player = (Player) sender;
         ConfigManager configManager = plugin.getConfigManager();
+        ItemManager itemManager = plugin.getItemManager();
 
         String itemName = args.get(0);
-        Config itemConfig = new ItemConfig(itemName);
-        File file = new File(plugin.getDataFolder(), itemConfig.getFileName());
-        if (!file.exists()) {
-            configManager.registerCustomConfig(itemConfig, plugin);
-        }
-        FileConfiguration config = configManager.getConfig(itemConfig);
-        Item item = Item.DEFAULT_FACTORY.loadFromConfig(config);
+        if (itemManager.hasItem(itemName)) {
+            Item item = itemManager.getItem(itemName);
 
-        player.getInventory().addItem(item.getItem());
+            player.getInventory().addItem(item.getItem());
+
+            // TODO: Item spawned
+        } else {
+            // TODO: Item not registered
+        }
     }
 
 }

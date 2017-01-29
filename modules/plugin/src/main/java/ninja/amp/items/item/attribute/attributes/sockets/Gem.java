@@ -27,6 +27,7 @@ import ninja.amp.items.item.attribute.attributes.DefaultAttributeType;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
 public class Gem extends BasicAttribute {
 
@@ -65,6 +66,25 @@ public class Gem extends BasicAttribute {
 
     public void setAttribute(ItemAttribute attribute) {
         this.attribute = attribute;
+    }
+
+    @Override
+    public boolean canEquip(Player player) {
+        return hasAttribute() && getAttribute().canEquip(player);
+    }
+
+    @Override
+    public void equip(Player player) {
+        if (hasAttribute()) {
+            getAttribute().equip(player);
+        }
+    }
+
+    @Override
+    public void unEquip(Player player) {
+        if (hasAttribute()) {
+            getAttribute().unEquip(player);
+        }
     }
 
     @Override
