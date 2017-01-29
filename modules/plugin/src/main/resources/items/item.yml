@@ -1,20 +1,35 @@
-display-name: "Example Item"
+name: "Example Item"
 material: "DIAMOND_SWORD"
 attributes:
-- type: "info"
-  text:
-  - "This is information..."
-  - "And here is more!"
-- type: "socket"
-  color: "aqua"
-  accepts: []
-- type: "socket"
-  color: "red"
-- type: "group"
-  attributes:
-  - type: "info"
+  description:
+    type: "info"
     text:
-    - "group info 1"
-  - type: "info"
-    text:
-    - "group info 2"
+    - "This is information..."
+    - "And here is more!"
+  aqua-socket:
+    type: "socket"
+    color: "aqua"
+    accepts: []
+  red-socket:
+    type: "socket"
+    color: "red"
+    gem:
+      type: "gem"
+      name: "Fire Gem"
+      color: "red"
+      attribute:
+        type: "info"
+        text:
+        - "Weapons with this gem"
+        - "will light enemies on fire"
+  extra:
+    type: "group"
+    attributes:
+      info-1:
+        type: "info"
+        text:
+        - "group info 1"
+      info-2:
+        type: "info"
+        text:
+        - "group info 2"

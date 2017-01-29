@@ -27,6 +27,4 @@ public interface AttributeFactory<T extends ItemAttribute> {
 
     T loadFromNBT(NBTTagCompound compound);
 
-    void saveToNBT(T attribute, NBTTagCompound compound);
-
 }

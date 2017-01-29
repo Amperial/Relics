@@ -36,4 +36,9 @@ public class ItemConfig implements Config {
         return obj != null && obj instanceof ItemConfig && fileName.equals(((ItemConfig) obj).getFileName());
     }
 
+    @Override
+    public int hashCode() {
+        return fileName.hashCode();
+    }
+
 }

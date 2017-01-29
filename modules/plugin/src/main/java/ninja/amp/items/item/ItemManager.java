@@ -25,6 +25,7 @@ import ninja.amp.items.item.attribute.attributes.DefaultAttributeType;
 import ninja.amp.items.item.attribute.attributes.sockets.SocketColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -40,7 +41,7 @@ public class ItemManager {
         this.plugin = plugin;
         this.attributeTypes = new HashMap<>();
 
-        registerAttributeTypes(EnumSet.allOf(DefaultAttributeType.class));
+        registerAttributeTypes(EnumSet.allOf(DefaultAttributeType.class), plugin);
 
         // TODO: Go through attributes.yml lore-order to assign lore positions
         FileConfiguration attributes = plugin.getConfigManager().getConfig(DefaultConfig.ATTRIBUTES);
@@ -76,12 +77,13 @@ public class ItemManager {
         return attributeTypes;
     }
 
-    public void registerAttributeTypes(EnumSet<? extends AttributeType> types) {
-        types.forEach(this::registerAttributeType);
+    public void registerAttributeTypes(EnumSet<? extends AttributeType> types, JavaPlugin plugin) {
+        types.forEach((AttributeType type) -> registerAttributeType(type, plugin));
     }
 
-    public void registerAttributeType(AttributeType type) {
+    public void registerAttributeType(AttributeType type, JavaPlugin plugin) {
         attributeTypes.put(type.getName(), type);
+        this.plugin.getConfigManager().registerCustomConfig(type, plugin);
     }
 
 }

@@ -22,7 +22,7 @@ import ninja.amp.items.item.attribute.AttributeType;
 import ninja.amp.items.item.attribute.ItemAttribute;
 import ninja.amp.items.item.attribute.ItemLore;
 
-public class BasicAttribute implements ItemAttribute {
+public abstract class BasicAttribute implements ItemAttribute {
 
     private AttributeType type;
     private ItemLore lore;

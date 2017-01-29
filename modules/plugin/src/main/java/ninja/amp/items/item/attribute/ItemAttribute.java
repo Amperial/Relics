@@ -18,6 +18,8 @@
  */
 package ninja.amp.items.item.attribute;
 
+import ninja.amp.items.nms.nbt.NBTTagCompound;
+
 import java.util.Comparator;
 
 public interface ItemAttribute {
@@ -27,5 +29,7 @@ public interface ItemAttribute {
     AttributeType getType();
 
     ItemLore getLore();
+
+    void saveToNBT(NBTTagCompound compound);
 
 }

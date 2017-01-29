@@ -20,45 +20,33 @@ package ninja.amp.items.command.commands.items;
 
 import ninja.amp.items.AmpItems;
 import ninja.amp.items.command.Command;
-import ninja.amp.items.config.Config;
-import ninja.amp.items.config.ConfigManager;
-import ninja.amp.items.config.ItemConfig;
-import ninja.amp.items.item.Item;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
-import java.io.File;
 import java.util.List;
 
-public class GetItemCommand extends Command {
+public class ItemInfoCommand extends Command {
 
-    public GetItemCommand(AmpItems plugin) {
-        super(plugin, "get");
-        setDescription("Spawn a custom attribute item into your inventory.");
-        setCommandUsage("/aitem item get <item>");
-        setPermission(new Permission("ampitems.item.get", PermissionDefault.OP));
-        setArgumentRange(1, 1);
+    public ItemInfoCommand(AmpItems plugin) {
+        super(plugin, "info");
+        setDescription("Prints information about the currently held custom attribute item.");
+        setCommandUsage("/aitem item info");
+        setPermission(new Permission("ampitems.item.info", PermissionDefault.TRUE));
         setPlayerOnly(true);
     }
 
     @Override
     public void execute(String command, CommandSender sender, List<String> args) {
         Player player = (Player) sender;
-        ConfigManager configManager = plugin.getConfigManager();
-
-        String itemName = args.get(0);
-        Config itemConfig = new ItemConfig(itemName);
-        File file = new File(plugin.getDataFolder(), itemConfig.getFileName());
-        if (!file.exists()) {
-            configManager.registerCustomConfig(itemConfig, plugin);
+        ItemStack itemStack = player.getInventory().getItemInMainHand();
+        if (itemStack == null) {
+            // TODO: Not holding an item
+        } else {
+            // TODO: Get item info
         }
-        FileConfiguration config = configManager.getConfig(itemConfig);
-        Item item = Item.DEFAULT_FACTORY.loadFromConfig(config);
-
-        player.getInventory().addItem(item.getItem());
     }
 
 }

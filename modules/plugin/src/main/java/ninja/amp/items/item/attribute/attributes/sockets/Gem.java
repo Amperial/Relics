@@ -18,20 +18,28 @@
  */
 package ninja.amp.items.item.attribute.attributes.sockets;
 
+import ninja.amp.items.AmpItems;
+import ninja.amp.items.item.ItemManager;
 import ninja.amp.items.item.attribute.ItemAttribute;
+import ninja.amp.items.item.attribute.attributes.BasicAttribute;
+import ninja.amp.items.item.attribute.attributes.BasicAttributeFactory;
+import ninja.amp.items.item.attribute.attributes.DefaultAttributeType;
+import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
 
-public class Gem {
+public class Gem extends BasicAttribute {
 
     private final String name;
     private final String displayName;
     private final SocketColor color;
     private ItemAttribute attribute;
 
-    public Gem(String name, String displayName, SocketColor color) {
+    public Gem(String name, SocketColor color) {
+        super(DefaultAttributeType.GEM);
         this.name = name;
         // TODO: Configurable
-        this.displayName = color.getChatColor() + "(" + ChatColor.GRAY + displayName + color.getChatColor() + ")";
+        this.displayName = color.getChatColor() + "(" + ChatColor.GRAY + name + color.getChatColor() + ")";
         this.color = color;
     }
 
@@ -57,6 +65,68 @@ public class Gem {
 
     public void setAttribute(ItemAttribute attribute) {
         this.attribute = attribute;
+    }
+
+    @Override
+    public void saveToNBT(NBTTagCompound compound) {
+        compound.setString("type", DefaultAttributeType.GEM.getName());
+        compound.setString("name", getName());
+        compound.setString("color", getColor().getName());
+        if (hasAttribute()) {
+            NBTTagCompound attribute = NBTTagCompound.create();
+            getAttribute().saveToNBT(attribute);
+            compound.set("attribute", attribute);
+        }
+    }
+
+    public static class GemFactory extends BasicAttributeFactory<Gem> {
+
+        public GemFactory(AmpItems plugin) {
+            super(plugin);
+        }
+
+        @Override
+        public Gem loadFromConfig(ConfigurationSection config) {
+            ItemManager itemManager = getPlugin().getItemManager();
+
+            // Load gem
+            String name = ChatColor.translateAlternateColorCodes('&', config.getString("name"));
+            SocketColor color = SocketColor.fromName(config.getString("color"));
+            Gem gem = new Gem(name, color);
+
+            // Load attribute
+            if (config.isConfigurationSection("attribute")) {
+                ConfigurationSection attribute = config.getConfigurationSection("attribute");
+                String type = attribute.getString("type");
+                if (itemManager.hasAttributeType(type)) {
+                    gem.setAttribute(itemManager.getAttributeType(type).getFactory().loadFromConfig(attribute));
+                }
+            }
+
+            return gem;
+        }
+
+        @Override
+        public Gem loadFromNBT(NBTTagCompound compound) {
+            ItemManager itemManager = getPlugin().getItemManager();
+
+            // Load gem
+            String name = compound.getString("name");
+            SocketColor color = SocketColor.fromName(compound.getString("color"));
+            Gem gem = new Gem(name, color);
+
+            // Load attribute
+            if (compound.hasKey("attribute")) {
+                NBTTagCompound attribute = compound.getCompound("attribute");
+                String type = attribute.getString("type");
+                if (itemManager.hasAttributeType(type)) {
+                    gem.setAttribute(itemManager.getAttributeType(type).getFactory().loadFromNBT(attribute));
+                }
+            }
+
+            return gem;
+        }
+
     }
 
 }

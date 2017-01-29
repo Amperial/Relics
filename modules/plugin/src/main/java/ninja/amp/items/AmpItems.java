@@ -25,11 +25,13 @@ import ninja.amp.items.command.commands.AboutCommand;
 import ninja.amp.items.command.commands.HelpCommand;
 import ninja.amp.items.command.commands.ReloadCommand;
 import ninja.amp.items.command.commands.items.GetItemCommand;
+import ninja.amp.items.command.commands.items.ItemInfoCommand;
 import ninja.amp.items.config.ConfigManager;
 import ninja.amp.items.item.ItemManager;
 import ninja.amp.items.item.attribute.attributes.AttributeGroup;
 import ninja.amp.items.item.attribute.attributes.DefaultAttributeType;
 import ninja.amp.items.item.attribute.attributes.InformationAttribute;
+import ninja.amp.items.item.attribute.attributes.sockets.Gem;
 import ninja.amp.items.item.attribute.attributes.sockets.Socket;
 import ninja.amp.items.message.Messenger;
 import ninja.amp.items.nms.NMSHandler;
@@ -59,6 +61,7 @@ public class AmpItems extends JavaPlugin {
         // Initialize item factories
         DefaultAttributeType.INFO.setFactory(new InformationAttribute.InformationAttributeFactory(this));
         DefaultAttributeType.SOCKET.setFactory(new Socket.SocketFactory(this));
+        DefaultAttributeType.GEM.setFactory(new Gem.GemFactory(this));
         DefaultAttributeType.GROUP.setFactory(new AttributeGroup.AttributeGroupFactory(this));
 
         // The order managers are created in is important
@@ -71,8 +74,10 @@ public class AmpItems extends JavaPlugin {
         // Create amp items command tree
 
         // Item commands. These are added to both /aitem and /aitem item
+        Command info = new ItemInfoCommand(this);
         Command get = new GetItemCommand(this);
         CommandGroup item = new CommandGroup(this, "item")
+                .addChildCommand(info)
                 .addChildCommand(get);
         item.setPermission(new Permission("ampitems.item.all", PermissionDefault.OP));
 
@@ -81,6 +86,7 @@ public class AmpItems extends JavaPlugin {
                 .addChildCommand(new AboutCommand(this))
                 .addChildCommand(new HelpCommand(this))
                 .addChildCommand(new ReloadCommand(this))
+                .addChildCommand(info)
                 .addChildCommand(get)
                 .addChildCommand(item);
         ampItems.setPermission(new Permission("ampitems.all", PermissionDefault.OP));

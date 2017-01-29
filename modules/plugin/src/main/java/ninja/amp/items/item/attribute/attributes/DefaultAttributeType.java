@@ -20,16 +20,18 @@ package ninja.amp.items.item.attribute.attributes;
 
 import ninja.amp.items.item.attribute.AttributeFactory;
 import ninja.amp.items.item.attribute.AttributeType;
+import ninja.amp.items.item.attribute.ItemAttribute;
 
 public enum DefaultAttributeType implements AttributeType {
     INFO("info", 0),
     SOCKET("socket", 1),
-    GROUP("group", 2);
+    GEM("gem", 2),
+    GROUP("group", 3);
 
     private final String name;
     private final String fileName;
     private int lorePosition;
-    private AttributeFactory factory;
+    private AttributeFactory<? extends ItemAttribute> factory;
 
     DefaultAttributeType(String name, int lorePosition) {
         this.name = name;
@@ -58,11 +60,11 @@ public enum DefaultAttributeType implements AttributeType {
     }
 
     @Override
-    public AttributeFactory getFactory() {
+    public AttributeFactory<? extends ItemAttribute> getFactory() {
         return factory;
     }
 
-    public void setFactory(AttributeFactory factory) {
+    public void setFactory(AttributeFactory<? extends ItemAttribute> factory) {
         this.factory = factory;
     }
 

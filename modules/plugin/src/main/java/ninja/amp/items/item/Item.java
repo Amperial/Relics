@@ -18,11 +18,11 @@
  */
 package ninja.amp.items.item;
 
-import net.md_5.bungee.api.ChatColor;
 import ninja.amp.items.item.attribute.ItemAttribute;
 import ninja.amp.items.item.attribute.attributes.DefaultAttributeType;
 import ninja.amp.items.nms.NMSHandler;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -55,7 +55,7 @@ public class Item {
 
         // Set NBTTagCompound
         NBTTagCompound compound = NMSHandler.getInterface().getTagCompound(item);
-        attribute.getType().getFactory().saveToNBT(attribute, compound);
+        attribute.saveToNBT(compound);
         item = NMSHandler.getInterface().setTagCompound(item, compound);
 
         return item;
@@ -69,10 +69,12 @@ public class Item {
 
         public Item loadFromConfig(FileConfiguration config) {
             // Load ItemStack
+            String name = ChatColor.translateAlternateColorCodes('&', config.getString("name"));
             Material material = Material.getMaterial(config.getString("material"));
+
             ItemStack base = new ItemStack(material);
             ItemMeta meta = base.getItemMeta();
-            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getString("display-name")));
+            meta.setDisplayName(name);
             base.setItemMeta(meta);
 
             // Load ItemAttribute
@@ -87,10 +89,6 @@ public class Item {
             ItemAttribute attribute = DefaultAttributeType.GROUP.getFactory().loadFromNBT(compound);
 
             return new Item(itemStack, attribute);
-        }
-
-        public void saveToItemStack(Item item, ItemStack itemStack) {
-            
         }
 
     }

@@ -19,6 +19,7 @@
 package ninja.amp.items.item.attribute.attributes.sockets;
 
 import ninja.amp.items.AmpItems;
+import ninja.amp.items.item.ItemManager;
 import ninja.amp.items.item.attribute.AttributeType;
 import ninja.amp.items.item.attribute.ItemLore;
 import ninja.amp.items.item.attribute.attributes.BasicAttribute;
@@ -92,6 +93,24 @@ public class Socket extends BasicAttribute {
         this.gem = gem;
     }
 
+    @Override
+    public void saveToNBT(NBTTagCompound compound) {
+        compound.setString("type", DefaultAttributeType.SOCKET.getName());
+        compound.setString("color", getColor().getName());
+        if (!getAccepts().equals(getColor().getAccepts())) {
+            NBTTagList list = NBTTagList.create();
+            for (SocketColor color : getAccepts()) {
+                list.add(NBTTagString.create(color.getName()));
+            }
+            compound.set("accepts", list);
+        }
+        if (hasGem()) {
+            NBTTagCompound gemCompound = NBTTagCompound.create();
+            getGem().saveToNBT(gemCompound);
+            compound.set("gem", gemCompound);
+        }
+    }
+
     public static class SocketFactory extends BasicAttributeFactory<Socket> {
 
         public SocketFactory(AmpItems plugin) {
@@ -100,24 +119,38 @@ public class Socket extends BasicAttribute {
 
         @Override
         public Socket loadFromConfig(ConfigurationSection config) {
-            SocketColor color = SocketColor.fromName(config.getString("color"));
+            ItemManager itemManager = getPlugin().getItemManager();
 
+            // Load socket
+            SocketColor color = SocketColor.fromName(config.getString("color"));
             Set<SocketColor> accepts;
-            if (config.isSet("accepts")) {
+            if (config.isList("accepts")) {
                 accepts = new HashSet<>();
                 List<String> colors = config.getStringList("accepts");
                 accepts.addAll(colors.stream().map(SocketColor::fromName).collect(Collectors.toList()));
             } else {
                 accepts = color.getAccepts();
             }
+            Socket socket = new Socket(DefaultAttributeType.SOCKET, color, accepts);
 
-            return new Socket(DefaultAttributeType.SOCKET, color, accepts);
+            // Load gem
+            if (config.isConfigurationSection("gem")) {
+                ConfigurationSection gem = config.getConfigurationSection("gem");
+                String type = gem.getString("type");
+                if (itemManager.hasAttributeType(type)) {
+                    socket.setGem((Gem) itemManager.getAttributeType(type).getFactory().loadFromConfig(gem));
+                }
+            }
+
+            return socket;
         }
 
         @Override
         public Socket loadFromNBT(NBTTagCompound compound) {
-            SocketColor color = SocketColor.fromName(compound.getString("color"));
+            ItemManager itemManager = getPlugin().getItemManager();
 
+            // Load socket
+            SocketColor color = SocketColor.fromName(compound.getString("color"));
             Set<SocketColor> accepts;
             if (compound.hasKey("accepts")) {
                 accepts = new HashSet<>();
@@ -128,21 +161,18 @@ public class Socket extends BasicAttribute {
             } else {
                 accepts = color.getAccepts();
             }
+            Socket socket = new Socket(DefaultAttributeType.SOCKET, color, accepts);
 
-            return new Socket(DefaultAttributeType.SOCKET, color, accepts);
-        }
-
-        @Override
-        public void saveToNBT(Socket socket, NBTTagCompound compound) {
-            compound.setString("type", DefaultAttributeType.SOCKET.getName());
-            compound.setString("color", socket.getColor().getName());
-            if (!socket.getAccepts().equals(socket.getColor().getAccepts())) {
-                NBTTagList list = NBTTagList.create();
-                for (SocketColor color : socket.getAccepts()) {
-                    list.add(NBTTagString.create(color.getName()));
+            // Load gem
+            if (compound.hasKey("gem")) {
+                NBTTagCompound gem = compound.getCompound("gem");
+                String type = gem.getString("type");
+                if (itemManager.hasAttributeType(type)) {
+                    socket.setGem((Gem) itemManager.getAttributeType(type).getFactory().loadFromNBT(gem));
                 }
-                compound.set("accepts", list);
             }
+
+            return socket;
         }
 
     }

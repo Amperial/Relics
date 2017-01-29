@@ -49,6 +49,16 @@ public class InformationAttribute extends BasicAttribute {
         return information;
     }
 
+    @Override
+    public void saveToNBT(NBTTagCompound compound) {
+        compound.setString("type", DefaultAttributeType.INFO.getName());
+        NBTTagList list = NBTTagList.create();
+        for (String line : getInformation()) {
+            list.add(NBTTagString.create(line));
+        }
+        compound.set("text", list);
+    }
+
     public static class InformationAttributeFactory extends BasicAttributeFactory<InformationAttribute> {
 
         public InformationAttributeFactory(AmpItems plugin) {
@@ -57,11 +67,13 @@ public class InformationAttribute extends BasicAttribute {
 
         @Override
         public InformationAttribute loadFromConfig(ConfigurationSection config) {
+            // Load attribute
             return new InformationAttribute(config.getStringList("text"));
         }
 
         @Override
         public InformationAttribute loadFromNBT(NBTTagCompound compound) {
+            // Load text
             List<String> text = new ArrayList<>();
             if (compound.hasKey("text")) {
                 NBTTagList list = compound.getList("text", 8);
@@ -69,18 +81,9 @@ public class InformationAttribute extends BasicAttribute {
                     text.add(list.getString(i));
                 }
             }
-            return new InformationAttribute(text);
-        }
 
-        @Override
-        public void saveToNBT(InformationAttribute attribute, NBTTagCompound compound) {
-            compound.setString("type", DefaultAttributeType.INFO.getName());
-            List<String> text = attribute.getInformation();
-            NBTTagList list = NBTTagList.create();
-            for (String line : text) {
-                list.add(NBTTagString.create(line));
-            }
-            compound.set("text", list);
+            // Load attribute
+            return new InformationAttribute(text);
         }
 
     }
