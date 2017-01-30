@@ -65,18 +65,8 @@ public class Messenger {
         registerMessages(EnumSet.allOf(AIMessage.class));
 
         // Register types of message recipients
-        registerRecipient(CommandSender.class, new RecipientHandler() {
-            @Override
-            public void sendMessage(Object recipient, String message) {
-                ((CommandSender) recipient).sendMessage(message);
-            }
-        });
-        registerRecipient(Server.class, new RecipientHandler() {
-            @Override
-            public void sendMessage(Object recipient, String message) {
-                ((Server) recipient).broadcastMessage(message);
-            }
-        });
+        registerRecipient(CommandSender.class, (recipient, message) -> ((CommandSender) recipient).sendMessage(message));
+        registerRecipient(Server.class, (recipient, message) -> ((Server) recipient).broadcastMessage(message));
 
         // Load color theme of messages from config
         FileConfiguration config = plugin.getConfig();
@@ -208,7 +198,7 @@ public class Messenger {
     /**
      * Handles sending a message to a recipient.
      */
-    public abstract class RecipientHandler {
+    public interface RecipientHandler {
 
         /**
          * Sends a message to the recipient.
@@ -216,7 +206,7 @@ public class Messenger {
          * @param recipient The recipient
          * @param message   The message
          */
-        public abstract void sendMessage(Object recipient, String message);
+        void sendMessage(Object recipient, String message);
 
     }
 

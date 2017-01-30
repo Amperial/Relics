@@ -22,8 +22,10 @@ import ninja.amp.items.AmpItems;
 import ninja.amp.items.config.DefaultConfig;
 import ninja.amp.items.config.ItemConfig;
 import ninja.amp.items.item.attribute.AttributeType;
+import ninja.amp.items.item.attribute.ItemAttribute;
 import ninja.amp.items.item.attribute.attributes.DefaultAttributeType;
 import ninja.amp.items.item.attribute.attributes.sockets.SocketColor;
+import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -52,9 +54,15 @@ public class ItemManager {
         registerAttributeTypes(EnumSet.allOf(DefaultAttributeType.class), plugin);
         registerItemTypes(EnumSet.allOf(DefaultItemType.class), plugin);
 
-        // TODO: Go through attributes.yml lore-order to assign lore positions
+        // Load attribute type lore order
         FileConfiguration attributes = plugin.getConfigManager().getConfig(DefaultConfig.ATTRIBUTES);
-        List<String> loreOrder = attributes.getStringList("lore-order");
+        int position = 0;
+        for (String type : attributes.getStringList("lore-order")) {
+            if (hasAttributeType(type)) {
+                getAttributeType(type).setLorePosition(position);
+                position++;
+            }
+        }
 
         // Load default socket accepts
         FileConfiguration sockets = plugin.getConfigManager().getConfig(DefaultConfig.SOCKETS);
@@ -75,7 +83,7 @@ public class ItemManager {
 
         // Load items
         FileConfiguration itemConfig = plugin.getConfigManager().getConfig(DefaultConfig.ITEMS);
-        itemConfig.getStringList("items").forEach((String item) -> registerItem(new ItemConfig(item), plugin));
+        itemConfig.getStringList("items").forEach(item -> registerItem(new ItemConfig(item), plugin));
     }
 
     public boolean hasAttributeType(String type) {
@@ -91,12 +99,22 @@ public class ItemManager {
     }
 
     public void registerAttributeTypes(EnumSet<? extends AttributeType> types, JavaPlugin plugin) {
-        types.forEach((AttributeType type) -> registerAttributeType(type, plugin));
+        types.forEach(type -> registerAttributeType(type, plugin));
     }
 
     public void registerAttributeType(AttributeType type, JavaPlugin plugin) {
         attributeTypes.put(type.getName(), type);
         this.plugin.getConfigManager().registerCustomConfig(type, plugin);
+    }
+
+    public ItemAttribute loadAttribute(ConfigurationSection config) {
+        String type = config.getString("type");
+        return hasAttributeType(type) ? getAttributeType(type).getFactory().loadFromConfig(config) : null;
+    }
+
+    public ItemAttribute loadAttribute(NBTTagCompound compound) {
+        String type = compound.getString("type");
+        return hasAttributeType(type) ? getAttributeType(type).getFactory().loadFromNBT(compound) : null;
     }
 
     public boolean hasItemType(String type) {
@@ -112,7 +130,7 @@ public class ItemManager {
     }
 
     public void registerItemTypes(EnumSet<? extends ItemType> types, JavaPlugin plugin) {
-        types.forEach((ItemType type) -> registerItemType(type, plugin));
+        types.forEach(type -> registerItemType(type, plugin));
     }
 
     public void registerItemType(ItemType type, JavaPlugin plugin) {
@@ -133,6 +151,10 @@ public class ItemManager {
 
     public Item getItem(ItemStack itemStack) {
         return factory.isItem(itemStack) ? factory.loadFromItemStack(itemStack) : null;
+    }
+
+    public Item getItem(NBTTagCompound compound) {
+        return factory.loadFromNBT(compound);
     }
 
     public Item getItem(ConfigurationSection config) {

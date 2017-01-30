@@ -18,7 +18,6 @@
  */
 package ninja.amp.items.item;
 
-import ninja.amp.items.item.attribute.ItemAttribute;
 import ninja.amp.items.item.attribute.attributes.AttributeGroup;
 import ninja.amp.items.item.attribute.attributes.DefaultAttributeType;
 import ninja.amp.items.nms.NMSHandler;
@@ -34,33 +33,40 @@ import java.util.List;
 
 public class Item {
 
-    private final ItemStack itemStack;
+    private final String name;
+    private final Material material;
     private final ItemType type;
     private final AttributeGroup attributes;
 
-    private Item(ItemStack itemStack, ItemType type, AttributeGroup attributes) {
-        this.itemStack = itemStack;
+    private Item(String name, Material material, ItemType type, AttributeGroup attributes) {
+        this.name = name;
+        this.material = material;
         this.type = type;
         this.attributes = attributes;
     }
 
-    public ItemStack getItemStack() {
-        return itemStack;
+    public String getName() {
+        return name;
+    }
+
+    public Material getMaterial() {
+        return material;
     }
 
     public ItemType getType() {
         return type;
     }
 
-    public List<ItemAttribute> getAttribute() {
-        return attributes.getAttributes();
+    public AttributeGroup getAttributes() {
+        return attributes;
     }
 
     public ItemStack getItem() {
-        ItemStack item = itemStack.clone();
+        ItemStack item = new ItemStack(getMaterial());
 
         // Set ItemMeta
         ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(getName());
         List<String> lore = new ArrayList<>();
         attributes.getLore().addTo(lore);
         meta.setLore(lore);
@@ -68,11 +74,17 @@ public class Item {
 
         // Set NBTTagCompound
         NBTTagCompound compound = NMSHandler.getInterface().getTagCompound(item);
-        compound.setString("item-type", type.getName());
-        attributes.saveToNBT(compound);
+        saveToNBT(compound);
         item = NMSHandler.getInterface().setTagCompound(item, compound);
 
         return item;
+    }
+
+    public void saveToNBT(NBTTagCompound compound) {
+        compound.setString("name", getName());
+        compound.setString("material", getMaterial().name());
+        compound.setString("item-type", getType().getName());
+        attributes.saveToNBT(compound);
     }
 
     public static class DefaultItemFactory implements ItemFactory {
@@ -91,24 +103,29 @@ public class Item {
             ItemType type = itemManager.getItemType(config.getString("item-type"));
             AttributeGroup attribute = (AttributeGroup) DefaultAttributeType.GROUP.getFactory().loadFromConfig(config);
 
-            // Create ItemStack
-            ItemStack base = new ItemStack(material);
-            ItemMeta meta = base.getItemMeta();
-            meta.setDisplayName(name);
-            base.setItemMeta(meta);
+            // Create Item
+            return new Item(name, material, type, attribute);
+        }
+
+        @Override
+        public Item loadFromNBT(NBTTagCompound compound) {
+            // Load name, material, type, and attributes
+            String name = compound.getString("name");
+            Material material = Material.getMaterial(compound.getString("material"));
+            ItemType type = itemManager.getItemType(compound.getString("item-type"));
+            AttributeGroup attribute = (AttributeGroup) DefaultAttributeType.GROUP.getFactory().loadFromNBT(compound);
 
             // Create Item
-            return new Item(base, type, attribute);
+            return new Item(name, material, type, attribute);
         }
 
         @Override
         public Item loadFromItemStack(ItemStack itemStack) {
-            // We already have the ItemStack, load attributes
+            // Get ItemStack NBT
             NBTTagCompound compound = NMSHandler.getInterface().getTagCompound(itemStack);
-            ItemType type = itemManager.getItemType(compound.getString("item-type"));
-            AttributeGroup attribute = (AttributeGroup) DefaultAttributeType.GROUP.getFactory().loadFromNBT(compound);
 
-            return new Item(itemStack, type, attribute);
+            // Load from NBT
+            return loadFromNBT(compound);
         }
 
         @Override

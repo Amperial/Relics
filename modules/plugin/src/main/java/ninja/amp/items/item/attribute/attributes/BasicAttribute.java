@@ -21,16 +21,25 @@ package ninja.amp.items.item.attribute.attributes;
 import ninja.amp.items.item.attribute.AttributeType;
 import ninja.amp.items.item.attribute.ItemAttribute;
 import ninja.amp.items.item.attribute.ItemLore;
+import ninja.amp.items.nms.nbt.NBTTagCompound;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public abstract class BasicAttribute implements ItemAttribute {
+public class BasicAttribute implements ItemAttribute {
 
-    private AttributeType type;
+    private final String name;
+    private final AttributeType type;
     private ItemLore lore;
 
-    public BasicAttribute(AttributeType type) {
+    public BasicAttribute(String name, AttributeType type) {
+        this.name = ChatColor.translateAlternateColorCodes('&', name);
         this.type = type;
         this.lore = ItemLore.NONE;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     @Override
@@ -41,6 +50,12 @@ public abstract class BasicAttribute implements ItemAttribute {
     @Override
     public ItemLore getLore() {
         return lore;
+    }
+
+    @Override
+    public void saveToNBT(NBTTagCompound compound) {
+        compound.setString("name", name);
+        compound.setString("type", type.getName());
     }
 
     public void setLore(ItemLore lore) {

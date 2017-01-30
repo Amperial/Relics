@@ -30,7 +30,7 @@ import ninja.amp.items.config.ConfigManager;
 import ninja.amp.items.item.ItemManager;
 import ninja.amp.items.item.attribute.attributes.AttributeGroup;
 import ninja.amp.items.item.attribute.attributes.DefaultAttributeType;
-import ninja.amp.items.item.attribute.attributes.InformationAttribute;
+import ninja.amp.items.item.attribute.attributes.TextAttribute;
 import ninja.amp.items.item.attribute.attributes.sockets.Gem;
 import ninja.amp.items.item.attribute.attributes.sockets.Socket;
 import ninja.amp.items.message.Messenger;
@@ -59,7 +59,7 @@ public class AmpItems extends JavaPlugin {
         NMSHandler.getInterface();
 
         // Initialize item factories
-        DefaultAttributeType.INFO.setFactory(new InformationAttribute.InformationAttributeFactory(this));
+        DefaultAttributeType.TEXT.setFactory(new TextAttribute.TextAttributeFactory(this));
         DefaultAttributeType.SOCKET.setFactory(new Socket.SocketFactory(this));
         DefaultAttributeType.GEM.setFactory(new Gem.GemFactory(this));
         DefaultAttributeType.GROUP.setFactory(new AttributeGroup.AttributeGroupFactory(this));

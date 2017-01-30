@@ -18,12 +18,15 @@
  */
 package ninja.amp.items.item;
 
+import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 public interface ItemFactory {
 
     Item loadFromConfig(ConfigurationSection config);
+
+    Item loadFromNBT(NBTTagCompound compound);
 
     Item loadFromItemStack(ItemStack itemStack);
 

@@ -21,63 +21,63 @@ package ninja.amp.items.item.attribute.attributes;
 import ninja.amp.items.AmpItems;
 import ninja.amp.items.item.ItemManager;
 import ninja.amp.items.item.attribute.ItemAttribute;
-import ninja.amp.items.item.attribute.ItemLore;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
 import ninja.amp.items.nms.nbt.NBTTagList;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AttributeGroup extends BasicAttribute {
 
-    private final List<ItemAttribute> attributes;
+    private final Map<String, ItemAttribute> attributes;
 
-    public AttributeGroup(List<ItemAttribute> attributes) {
-        super(DefaultAttributeType.GROUP);
+    public AttributeGroup(String name, Map<String, ItemAttribute> attributes) {
+        super(name, DefaultAttributeType.GROUP);
 
         this.attributes = attributes;
 
-        setLore(new ItemLore() {
-            @Override
-            public void addTo(List<String> lore) {
-                List<ItemAttribute> attributes = getAttributes();
-                attributes.sort(ItemAttribute.LORE_ORDER);
-                attributes.forEach((ItemAttribute a) -> a.getLore().addTo(lore));
-            }
-        });
+        setLore(lore -> getAttributes().stream()
+                .sorted(Comparator.comparingInt(a -> a.getType().getLorePosition()))
+                .forEachOrdered(a -> a.getLore().addTo(lore)));
     }
 
-    public List<ItemAttribute> getAttributes() {
-        return attributes;
+    public ItemAttribute getAttribute(String name) {
+        return attributes.get(name);
+    }
+
+    public Collection<ItemAttribute> getAttributes() {
+        return attributes.values();
     }
 
     @Override
     public boolean canEquip(Player player) {
-        return attributes.stream().allMatch((ItemAttribute a) -> a.canEquip(player));
+        return getAttributes().stream().allMatch(attribute -> attribute.canEquip(player));
     }
 
     @Override
     public void equip(Player player) {
-        attributes.forEach((ItemAttribute a) -> a.equip(player));
+        getAttributes().forEach(attribute -> attribute.equip(player));
     }
 
     @Override
     public void unEquip(Player player) {
-        attributes.forEach((ItemAttribute a) -> a.unEquip(player));
+        getAttributes().forEach(attribute -> attribute.unEquip(player));
     }
 
     @Override
     public void saveToNBT(NBTTagCompound compound) {
-        compound.setString("type", DefaultAttributeType.GROUP.getName());
-        NBTTagList list = NBTTagList.create();
+        super.saveToNBT(compound);
+        NBTTagCompound attributes = NBTTagCompound.create();
         for (ItemAttribute attribute : getAttributes()) {
             NBTTagCompound attributeCompound = NBTTagCompound.create();
             attribute.saveToNBT(attributeCompound);
-            list.add(attributeCompound);
+            attributes.set(attribute.getName(), attributeCompound);
         }
-        compound.set("attributes", list);
+        compound.set("attributes", attributes);
     }
 
     public static class AttributeGroupFactory extends BasicAttributeFactory<AttributeGroup> {
@@ -90,40 +90,44 @@ public class AttributeGroup extends BasicAttribute {
         public AttributeGroup loadFromConfig(ConfigurationSection config) {
             ItemManager itemManager = getPlugin().getItemManager();
 
-            // Load attributes
-            List<ItemAttribute> attributes = new ArrayList<>();
+            // Load name and attributes
+            String name = config.getName();
+            Map<String, ItemAttribute> attributes = new HashMap<>();
             if (config.isConfigurationSection("attributes")) {
                 ConfigurationSection attributesSection = config.getConfigurationSection("attributes");
-                attributesSection.getKeys(false).stream().filter(attributesSection::isConfigurationSection).forEach(attribute -> {
-                    ConfigurationSection attributeSection = attributesSection.getConfigurationSection(attribute);
-                    String type = attributeSection.getString("type");
-                    if (itemManager.hasAttributeType(type)) {
-                        attributes.add(itemManager.getAttributeType(type).getFactory().loadFromConfig(attributeSection));
+                attributesSection.getKeys(false).stream().filter(attributesSection::isConfigurationSection).forEach(attributeName -> {
+                    ConfigurationSection attributeSection = attributesSection.getConfigurationSection(attributeName);
+                    ItemAttribute attribute = itemManager.loadAttribute(attributeSection);
+                    if (attribute != null) {
+                        attributes.put(attributeName, attribute);
                     }
                 });
             }
 
-            return new AttributeGroup(attributes);
+            // Create attribute group
+            return new AttributeGroup(name, attributes);
         }
 
         @Override
         public AttributeGroup loadFromNBT(NBTTagCompound compound) {
             ItemManager itemManager = getPlugin().getItemManager();
 
-            // Load attributes
-            List<ItemAttribute> attributes = new ArrayList<>();
+            // Load name and attributes
+            String name = compound.getString("name");
+            Map<String, ItemAttribute> attributes = new HashMap<>();
             if (compound.hasKey("attributes")) {
                 NBTTagList list = compound.getList("attributes", 10);
                 for (int i = 0; i < list.size(); i++) {
-                    NBTTagCompound attribute = list.getCompound(i);
-                    String type = attribute.getString("type");
-                    if (itemManager.hasAttributeType(type)) {
-                        attributes.add(itemManager.getAttributeType(type).getFactory().loadFromNBT(attribute));
+                    NBTTagCompound attributeCompound = list.getCompound(i);
+                    ItemAttribute attribute = itemManager.loadAttribute(attributeCompound);
+                    if (attribute != null) {
+                        attributes.put(attribute.getName(), attribute);
                     }
                 }
             }
 
-            return new AttributeGroup(attributes);
+            // Create attribute group
+            return new AttributeGroup(name, attributes);
         }
 
     }

@@ -21,11 +21,9 @@ package ninja.amp.items.item.attribute;
 import ninja.amp.items.item.equip.Equippable;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
 
-import java.util.Comparator;
-
 public interface ItemAttribute extends Equippable {
 
-    Comparator<ItemAttribute> LORE_ORDER = (ItemAttribute a1, ItemAttribute a2) -> a1.getLore().getOrder() - a2.getLore().getOrder();
+    String getName();
 
     AttributeType getType();
 

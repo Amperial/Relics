@@ -20,32 +20,11 @@ package ninja.amp.items.item.attribute;
 
 import java.util.List;
 
-public abstract class ItemLore {
+public interface ItemLore {
 
-    public static final ItemLore NONE = new ItemLore() {
-        @Override
-        public void addTo(List<String> lore) {
-        }
+    ItemLore NONE = lore -> {
     };
 
-    private int order;
-
-    public ItemLore(int order) {
-        this.order = order;
-    }
-
-    public ItemLore() {
-        this(0);
-    }
-
-    public int getOrder() {
-        return order;
-    }
-
-    public void setOrder(int order) {
-        this.order = order;
-    }
-
-    public abstract void addTo(List<String> lore);
+    void addTo(List<String> lore);
 
 }

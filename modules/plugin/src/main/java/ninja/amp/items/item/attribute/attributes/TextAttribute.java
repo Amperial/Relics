@@ -19,61 +19,62 @@
 package ninja.amp.items.item.attribute.attributes;
 
 import ninja.amp.items.AmpItems;
-import ninja.amp.items.item.attribute.ItemLore;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
 import ninja.amp.items.nms.nbt.NBTTagList;
 import ninja.amp.items.nms.nbt.NBTTagString;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class InformationAttribute extends BasicAttribute {
+public class TextAttribute extends BasicAttribute {
 
-    private final List<String> information;
+    private final List<String> text;
 
-    public InformationAttribute(List<String> information) {
-        super(DefaultAttributeType.INFO);
+    public TextAttribute(String name, List<String> text) {
+        super(name, DefaultAttributeType.TEXT);
 
-        this.information = information;
+        this.text = text;
 
-        setLore(new ItemLore() {
-            @Override
-            public void addTo(List<String> lore) {
-                lore.addAll(getInformation());
-            }
-        });
+        setLore(lore -> lore.addAll(getText()));
     }
 
-    public List<String> getInformation() {
-        return information;
+    public List<String> getText() {
+        return text;
     }
 
     @Override
     public void saveToNBT(NBTTagCompound compound) {
-        compound.setString("type", DefaultAttributeType.INFO.getName());
+        super.saveToNBT(compound);
         NBTTagList list = NBTTagList.create();
-        for (String line : getInformation()) {
+        for (String line : getText()) {
             list.add(NBTTagString.create(line));
         }
         compound.set("text", list);
     }
 
-    public static class InformationAttributeFactory extends BasicAttributeFactory<InformationAttribute> {
+    public static class TextAttributeFactory extends BasicAttributeFactory<TextAttribute> {
 
-        public InformationAttributeFactory(AmpItems plugin) {
+        public TextAttributeFactory(AmpItems plugin) {
             super(plugin);
         }
 
         @Override
-        public InformationAttribute loadFromConfig(ConfigurationSection config) {
-            // Load attribute
-            return new InformationAttribute(config.getStringList("text"));
+        public TextAttribute loadFromConfig(ConfigurationSection config) {
+            // Load name and text
+            String name = config.getName();
+            List<String> text = config.getStringList("text");
+            text.replaceAll(line -> ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', line));
+
+            // Create text attribute
+            return new TextAttribute(name, text);
         }
 
         @Override
-        public InformationAttribute loadFromNBT(NBTTagCompound compound) {
-            // Load text
+        public TextAttribute loadFromNBT(NBTTagCompound compound) {
+            // Load name and text
+            String name = compound.getString("name");
             List<String> text = new ArrayList<>();
             if (compound.hasKey("text")) {
                 NBTTagList list = compound.getList("text", 8);
@@ -82,8 +83,8 @@ public class InformationAttribute extends BasicAttribute {
                 }
             }
 
-            // Load attribute
-            return new InformationAttribute(text);
+            // Create text attribute
+            return new TextAttribute(name, text);
         }
 
     }

@@ -23,7 +23,7 @@ import ninja.amp.items.item.attribute.AttributeType;
 import ninja.amp.items.item.attribute.ItemAttribute;
 
 public enum DefaultAttributeType implements AttributeType {
-    INFO("info", 0),
+    TEXT("text", 0),
     SOCKET("socket", 1),
     GEM("gem", 2),
     GROUP("group", 3);

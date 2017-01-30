@@ -1,0 +1,9 @@
+name: "&4Fire Gem"
+material: "COAL"
+item-type: "other"
+attributes:
+  description:
+    type: "text"
+    text:
+    - "Weapons with this gem"
+    - "will light enemies on fire"

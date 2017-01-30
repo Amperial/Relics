@@ -21,7 +21,7 @@ package ninja.amp.items.item.attribute.attributes.sockets;
 import ninja.amp.items.AmpItems;
 import ninja.amp.items.item.ItemManager;
 import ninja.amp.items.item.attribute.AttributeType;
-import ninja.amp.items.item.attribute.ItemLore;
+import ninja.amp.items.item.attribute.ItemAttribute;
 import ninja.amp.items.item.attribute.attributes.BasicAttribute;
 import ninja.amp.items.item.attribute.attributes.BasicAttributeFactory;
 import ninja.amp.items.item.attribute.attributes.DefaultAttributeType;
@@ -44,30 +44,31 @@ public class Socket extends BasicAttribute {
     private final Set<SocketColor> accepts;
     private Gem gem;
 
-    public Socket(AttributeType type, SocketColor color, Set<SocketColor> accepts) {
-        super(type);
+    public Socket(String name, AttributeType type, SocketColor color, Set<SocketColor> accepts) {
+        super(name, type);
 
         this.color = color;
         this.accepts = accepts;
 
-        setLore(new ItemLore() {
-            @Override
-            public void addTo(List<String> lore) {
-                // TODO: Configurable
-                ChatColor color = getColor().getChatColor();
-                if (hasGem()) {
-                    lore.add(color + "<< " + gem.getDisplayName() + color + " >>");
-                    Gem gem = getGem();
-                    if (gem.hasAttribute()) {
-                        List<String> gemLore = new ArrayList<>();
-                        gem.getAttribute().getLore().addTo(gemLore);
-                        gemLore.forEach((String s) -> lore.add("  " + s));
-                    }
-                } else {
-                    lore.add(color + "<< " + ChatColor.GRAY + "Empty Socket" + color + " >>");
+        setLore(lore -> {
+            // TODO: Configurable
+            ChatColor color1 = getColor().getChatColor();
+            if (hasGem()) {
+                lore.add(color1 + "<< " + gem.getDisplayName() + color1 + " >>");
+                Gem gem1 = getGem();
+                if (gem1.hasAttribute()) {
+                    List<String> gemLore = new ArrayList<>();
+                    gem1.getAttribute().getLore().addTo(gemLore);
+                    gemLore.forEach(s -> lore.add("  " + s));
                 }
+            } else {
+                lore.add(color1 + "<< " + ChatColor.GRAY + "Empty Socket" + color1 + " >>");
             }
         });
+    }
+
+    public Socket(String name, SocketColor color, Set<SocketColor> accepts) {
+        this(name, DefaultAttributeType.SOCKET, color, accepts);
     }
 
     public SocketColor getColor() {
@@ -115,7 +116,7 @@ public class Socket extends BasicAttribute {
 
     @Override
     public void saveToNBT(NBTTagCompound compound) {
-        compound.setString("type", DefaultAttributeType.SOCKET.getName());
+        super.saveToNBT(compound);
         compound.setString("color", getColor().getName());
         if (!getAccepts().equals(getColor().getAccepts())) {
             NBTTagList list = NBTTagList.create();
@@ -141,7 +142,8 @@ public class Socket extends BasicAttribute {
         public Socket loadFromConfig(ConfigurationSection config) {
             ItemManager itemManager = getPlugin().getItemManager();
 
-            // Load socket
+            // Load name, color, and accepts
+            String name = config.getName();
             SocketColor color = SocketColor.fromName(config.getString("color"));
             Set<SocketColor> accepts;
             if (config.isList("accepts")) {
@@ -151,14 +153,16 @@ public class Socket extends BasicAttribute {
             } else {
                 accepts = color.getAccepts();
             }
-            Socket socket = new Socket(DefaultAttributeType.SOCKET, color, accepts);
+
+            // Create socket
+            Socket socket = new Socket(name, color, accepts);
 
             // Load gem
             if (config.isConfigurationSection("gem")) {
-                ConfigurationSection gem = config.getConfigurationSection("gem");
-                String type = gem.getString("type");
-                if (itemManager.hasAttributeType(type)) {
-                    socket.setGem((Gem) itemManager.getAttributeType(type).getFactory().loadFromConfig(gem));
+                ConfigurationSection gemSection = config.getConfigurationSection("gem");
+                ItemAttribute gem = itemManager.loadAttribute(gemSection);
+                if (gem != null && gem instanceof Gem) {
+                    socket.setGem((Gem) gem);
                 }
             }
 
@@ -169,7 +173,8 @@ public class Socket extends BasicAttribute {
         public Socket loadFromNBT(NBTTagCompound compound) {
             ItemManager itemManager = getPlugin().getItemManager();
 
-            // Load socket
+            // Load name, color, and accepts
+            String name = compound.getString("name");
             SocketColor color = SocketColor.fromName(compound.getString("color"));
             Set<SocketColor> accepts;
             if (compound.hasKey("accepts")) {
@@ -181,14 +186,16 @@ public class Socket extends BasicAttribute {
             } else {
                 accepts = color.getAccepts();
             }
-            Socket socket = new Socket(DefaultAttributeType.SOCKET, color, accepts);
+
+            // Create socket
+            Socket socket = new Socket(name, color, accepts);
 
             // Load gem
             if (compound.hasKey("gem")) {
-                NBTTagCompound gem = compound.getCompound("gem");
-                String type = gem.getString("type");
-                if (itemManager.hasAttributeType(type)) {
-                    socket.setGem((Gem) itemManager.getAttributeType(type).getFactory().loadFromNBT(gem));
+                NBTTagCompound gemCompound = compound.getCompound("gem");
+                ItemAttribute gem = itemManager.loadAttribute(gemCompound);
+                if (gem != null && gem instanceof Gem) {
+                    socket.setGem((Gem) gem);
                 }
             }
 

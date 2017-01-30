@@ -19,6 +19,7 @@
 package ninja.amp.items.item.attribute.attributes.sockets;
 
 import ninja.amp.items.AmpItems;
+import ninja.amp.items.item.Item;
 import ninja.amp.items.item.ItemManager;
 import ninja.amp.items.item.attribute.ItemAttribute;
 import ninja.amp.items.item.attribute.attributes.BasicAttribute;
@@ -31,21 +32,17 @@ import org.bukkit.entity.Player;
 
 public class Gem extends BasicAttribute {
 
-    private final String name;
     private final String displayName;
     private final SocketColor color;
+    private final String item;
     private ItemAttribute attribute;
 
-    public Gem(String name, SocketColor color) {
-        super(DefaultAttributeType.GEM);
-        this.name = name;
+    public Gem(String name, SocketColor color, String item) {
+        super(name, DefaultAttributeType.GEM);
         // TODO: Configurable
-        this.displayName = color.getChatColor() + "(" + ChatColor.GRAY + name + color.getChatColor() + ")";
+        this.displayName = color.getChatColor() + "(" + ChatColor.GRAY + getName() + color.getChatColor() + ")";
         this.color = color;
-    }
-
-    public String getName() {
-        return name;
+        this.item = item;
     }
 
     public String getDisplayName() {
@@ -54,6 +51,10 @@ public class Gem extends BasicAttribute {
 
     public SocketColor getColor() {
         return color;
+    }
+
+    public String getItem() {
+        return item;
     }
 
     public boolean hasAttribute() {
@@ -89,9 +90,9 @@ public class Gem extends BasicAttribute {
 
     @Override
     public void saveToNBT(NBTTagCompound compound) {
-        compound.setString("type", DefaultAttributeType.GEM.getName());
-        compound.setString("name", getName());
+        super.saveToNBT(compound);
         compound.setString("color", getColor().getName());
+        compound.setString("item", getItem());
         if (hasAttribute()) {
             NBTTagCompound attribute = NBTTagCompound.create();
             getAttribute().saveToNBT(attribute);
@@ -109,19 +110,20 @@ public class Gem extends BasicAttribute {
         public Gem loadFromConfig(ConfigurationSection config) {
             ItemManager itemManager = getPlugin().getItemManager();
 
-            // Load gem
-            String name = ChatColor.translateAlternateColorCodes('&', config.getString("name"));
+            // Load name, color, and item
             SocketColor color = SocketColor.fromName(config.getString("color"));
-            Gem gem = new Gem(name, color);
+            String itemName = config.getString("item");
+            if (!itemManager.hasItem(itemName)) {
+                return null;
+            }
+            Item item = itemManager.getItem(itemName);
+            String name = item.getName();
+
+            // Create gem
+            Gem gem = new Gem(name, color, itemName);
 
             // Load attribute
-            if (config.isConfigurationSection("attribute")) {
-                ConfigurationSection attribute = config.getConfigurationSection("attribute");
-                String type = attribute.getString("type");
-                if (itemManager.hasAttributeType(type)) {
-                    gem.setAttribute(itemManager.getAttributeType(type).getFactory().loadFromConfig(attribute));
-                }
-            }
+            gem.setAttribute(item.getAttributes());
 
             return gem;
         }
@@ -130,17 +132,20 @@ public class Gem extends BasicAttribute {
         public Gem loadFromNBT(NBTTagCompound compound) {
             ItemManager itemManager = getPlugin().getItemManager();
 
-            // Load gem
+            // Load name, color, and item
             String name = compound.getString("name");
             SocketColor color = SocketColor.fromName(compound.getString("color"));
-            Gem gem = new Gem(name, color);
+            String item = compound.getString("item");
+
+            // Create gem
+            Gem gem = new Gem(name, color, item);
 
             // Load attribute
             if (compound.hasKey("attribute")) {
-                NBTTagCompound attribute = compound.getCompound("attribute");
-                String type = attribute.getString("type");
-                if (itemManager.hasAttributeType(type)) {
-                    gem.setAttribute(itemManager.getAttributeType(type).getFactory().loadFromNBT(attribute));
+                NBTTagCompound attributeCompound = compound.getCompound("attribute");
+                ItemAttribute attribute = itemManager.loadAttribute(attributeCompound);
+                if (attribute != null) {
+                    gem.setAttribute(attribute);
                 }
             }
 
