@@ -1,4 +1,5 @@
 lore-order:
+- rarity
 - text
 - socket
 - gem

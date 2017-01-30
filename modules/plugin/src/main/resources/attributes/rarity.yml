@@ -1,0 +1,10 @@
+tiers:
+- "&fMundane"
+- "&7Common"
+- "&aUncommon"
+- "&bRare"
+- "&5Heroic"
+- "&6Legendary"
+- "&4Artifact"
+unknown:
+- "&8Unknown"

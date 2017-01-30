@@ -16,32 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with AmpItems.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ninja.amp.items.item;
+package ninja.amp.items.commands.sockets;
 
-import ninja.amp.items.api.item.ItemType;
-
-public enum DefaultItemType implements ItemType {
-    ARMOR("armor"),
-    BLOCK("block"),
-    CONSUMABLE("consumable"),
-    ENTITY("entity"),
-    INTERACTABLE("interactable"),
-    OTHER("other"),
-    PROJECTILE("projectile"),
-    SHIELD("shield"),
-    SHULKER_BOX("shulker-box"),
-    TOOL("tool"),
-    WEAPON("weapon");
-
-    private final String name;
-
-    DefaultItemType(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
+public class ForgeSocketCommand {
 }

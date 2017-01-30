@@ -18,22 +18,18 @@
  */
 package ninja.amp.items;
 
-import ninja.amp.items.command.Command;
-import ninja.amp.items.command.CommandController;
-import ninja.amp.items.command.CommandGroup;
-import ninja.amp.items.command.commands.AboutCommand;
-import ninja.amp.items.command.commands.HelpCommand;
-import ninja.amp.items.command.commands.ReloadCommand;
-import ninja.amp.items.command.commands.items.GetItemCommand;
-import ninja.amp.items.command.commands.items.ItemInfoCommand;
-import ninja.amp.items.config.ConfigManager;
+import ninja.amp.items.api.ItemPlugin;
+import ninja.amp.items.api.command.Command;
+import ninja.amp.items.api.command.CommandController;
+import ninja.amp.items.api.command.CommandGroup;
+import ninja.amp.items.api.config.ConfigManager;
+import ninja.amp.items.api.message.Messenger;
+import ninja.amp.items.commands.AboutCommand;
+import ninja.amp.items.commands.HelpCommand;
+import ninja.amp.items.commands.ReloadCommand;
+import ninja.amp.items.commands.items.GetItemCommand;
+import ninja.amp.items.commands.items.ItemInfoCommand;
 import ninja.amp.items.item.ItemManager;
-import ninja.amp.items.item.attribute.attributes.AttributeGroup;
-import ninja.amp.items.item.attribute.attributes.DefaultAttributeType;
-import ninja.amp.items.item.attribute.attributes.TextAttribute;
-import ninja.amp.items.item.attribute.attributes.sockets.Gem;
-import ninja.amp.items.item.attribute.attributes.sockets.Socket;
-import ninja.amp.items.message.Messenger;
 import ninja.amp.items.nms.NMSHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.permissions.Permission;
@@ -45,7 +41,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  *
  * @author Austin Payne
  */
-public class AmpItems extends JavaPlugin {
+public class AmpItems extends JavaPlugin implements ItemPlugin {
 
     private ConfigManager configManager;
     private Messenger messenger;
@@ -58,18 +54,15 @@ public class AmpItems extends JavaPlugin {
         // Attempt to load NMSHandler
         NMSHandler.getInterface();
 
-        // Initialize item factories
-        DefaultAttributeType.TEXT.setFactory(new TextAttribute.TextAttributeFactory(this));
-        DefaultAttributeType.SOCKET.setFactory(new Socket.SocketFactory(this));
-        DefaultAttributeType.GEM.setFactory(new Gem.GemFactory(this));
-        DefaultAttributeType.GROUP.setFactory(new AttributeGroup.AttributeGroupFactory(this));
-
         // The order managers are created in is important
         configManager = new ConfigManager(this);
         messenger = new Messenger(this);
         commandController = new CommandController(this);
         itemManager = new ItemManager(this);
         itemListener = new ItemListener(this);
+
+        // Initialize item factories
+        itemManager.setDefaultFactories();
 
         // Create amp items command tree
 
@@ -95,6 +88,7 @@ public class AmpItems extends JavaPlugin {
         commandController.addCommand(ampItems);
         commandController.updatePageList();
 
+        // Register item listener
         Bukkit.getServer().getPluginManager().registerEvents(itemListener, this);
     }
 
@@ -109,18 +103,22 @@ public class AmpItems extends JavaPlugin {
         configManager = null;
     }
 
+    @Override
     public ConfigManager getConfigManager() {
         return configManager;
     }
 
+    @Override
     public Messenger getMessenger() {
         return messenger;
     }
 
+    @Override
     public CommandController getCommandController() {
         return commandController;
     }
 
+    @Override
     public ItemManager getItemManager() {
         return itemManager;
     }

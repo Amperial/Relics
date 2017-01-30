@@ -2,11 +2,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>AmpItems</artifactId>
+    <artifactId>AmpItems-api</artifactId>
     <version>0.0-SNAPSHOT</version>
     <inceptionYear>2017</inceptionYear>
-    <name>AmpItems</name>
-    <description>Item Attributes API Plugin.</description>
+    <name>AmpItems API</name>
+    <description>Item Attributes API</description>
 
     <organization>
         <name>AmpItems</name>
@@ -35,20 +35,8 @@
     <dependencies>
         <dependency>
             <groupId>ninja.amp.items</groupId>
-            <artifactId>AmpItems-api</artifactId>
-            <version>0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>ninja.amp.items</groupId>
             <artifactId>NMSHandler</artifactId>
             <version>0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>ninja.amp.items</groupId>
-            <artifactId>NMSHandler-v1_11_R1</artifactId>
-            <version>v1_11_R1-SNAPSHOT</version>
-            <type>jar</type>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
@@ -59,20 +47,9 @@
     </dependencies>
 
     <build>
-        <finalName>AmpItems</finalName>
+        <finalName>AmpItems-api</finalName>
         <sourceDirectory>src/main/java</sourceDirectory>
         <defaultGoal>clean install</defaultGoal>
-        <resources>
-            <resource>
-                <targetPath>.</targetPath>
-                <filtering>true</filtering>
-                <directory>${basedir}/src/main/resources</directory>
-                <includes>
-                    <include>**/*.yml</include>
-                    <include>**/*.info</include>
-                </includes>
-            </resource>
-        </resources>
         <plugins>
             <!-- Compiler plugin -->
             <plugin>
@@ -89,29 +66,6 @@
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
                 </configuration>
-            </plugin>
-            <!-- Shade plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>1.7.1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <minimizeJar>false</minimizeJar>
-                            <artifactSet>
-                                <includes>
-                                    <include>ninja.amp.items:AmpItems-api</include>
-                                    <include>ninja.amp.items:NMSHandler*</include>
-                                </includes>
-                            </artifactSet>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <!-- License header plugin -->
             <plugin>
