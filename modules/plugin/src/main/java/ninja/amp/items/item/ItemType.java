@@ -19,4 +19,7 @@
 package ninja.amp.items.item;
 
 public interface ItemType {
+
+    String getName();
+
 }

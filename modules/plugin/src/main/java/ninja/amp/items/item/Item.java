@@ -19,6 +19,7 @@
 package ninja.amp.items.item;
 
 import ninja.amp.items.item.attribute.ItemAttribute;
+import ninja.amp.items.item.attribute.attributes.AttributeGroup;
 import ninja.amp.items.item.attribute.attributes.DefaultAttributeType;
 import ninja.amp.items.nms.NMSHandler;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
@@ -33,60 +34,86 @@ import java.util.List;
 
 public class Item {
 
-    private final ItemStack base;
-    private final ItemAttribute attribute;
+    private final ItemStack itemStack;
+    private final ItemType type;
+    private final AttributeGroup attributes;
 
-    public Item(ItemStack base, ItemAttribute attribute) {
-        this.base = base;
-        this.attribute = attribute;
+    private Item(ItemStack itemStack, ItemType type, AttributeGroup attributes) {
+        this.itemStack = itemStack;
+        this.type = type;
+        this.attributes = attributes;
+    }
+
+    public ItemStack getItemStack() {
+        return itemStack;
+    }
+
+    public ItemType getType() {
+        return type;
+    }
+
+    public List<ItemAttribute> getAttribute() {
+        return attributes.getAttributes();
     }
 
     public ItemStack getItem() {
-        ItemStack item = base.clone();
+        ItemStack item = itemStack.clone();
 
         // Set ItemMeta
         ItemMeta meta = item.getItemMeta();
         List<String> lore = new ArrayList<>();
-        attribute.getLore().addTo(lore);
+        attributes.getLore().addTo(lore);
         meta.setLore(lore);
         item.setItemMeta(meta);
 
         // Set NBTTagCompound
         NBTTagCompound compound = NMSHandler.getInterface().getTagCompound(item);
-        attribute.saveToNBT(compound);
+        compound.setString("item-type", type.getName());
+        attributes.saveToNBT(compound);
         item = NMSHandler.getInterface().setTagCompound(item, compound);
 
         return item;
     }
 
-    public ItemAttribute getAttribute() {
-        return attribute;
-    }
+    public static class DefaultItemFactory implements ItemFactory {
 
-    public static class ItemFactory {
+        private ItemManager itemManager;
 
+        public DefaultItemFactory(ItemManager itemManager) {
+            this.itemManager = itemManager;
+        }
+
+        @Override
         public Item loadFromConfig(ConfigurationSection config) {
-            // Load ItemStack
+            // Load name, material, type, and attributes
             String name = ChatColor.translateAlternateColorCodes('&', config.getString("name"));
             Material material = Material.getMaterial(config.getString("material"));
+            ItemType type = itemManager.getItemType(config.getString("item-type"));
+            AttributeGroup attribute = (AttributeGroup) DefaultAttributeType.GROUP.getFactory().loadFromConfig(config);
 
+            // Create ItemStack
             ItemStack base = new ItemStack(material);
             ItemMeta meta = base.getItemMeta();
             meta.setDisplayName(name);
             base.setItemMeta(meta);
 
-            // Load ItemAttribute
-            ItemAttribute attribute = DefaultAttributeType.GROUP.getFactory().loadFromConfig(config);
-
-            return new Item(base, attribute);
+            // Create Item
+            return new Item(base, type, attribute);
         }
 
+        @Override
         public Item loadFromItemStack(ItemStack itemStack) {
-            // We already have the ItemStack, Load ItemAttribute
+            // We already have the ItemStack, load attributes
             NBTTagCompound compound = NMSHandler.getInterface().getTagCompound(itemStack);
-            ItemAttribute attribute = DefaultAttributeType.GROUP.getFactory().loadFromNBT(compound);
+            ItemType type = itemManager.getItemType(compound.getString("item-type"));
+            AttributeGroup attribute = (AttributeGroup) DefaultAttributeType.GROUP.getFactory().loadFromNBT(compound);
 
-            return new Item(itemStack, attribute);
+            return new Item(itemStack, type, attribute);
+        }
+
+        @Override
+        public boolean isItem(ItemStack itemStack) {
+            return NMSHandler.getInterface().getTagCompound(itemStack).hasKey("item-type");
         }
 
     }

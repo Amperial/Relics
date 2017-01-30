@@ -1,5 +1,6 @@
 name: "Example Item"
 material: "DIAMOND_SWORD"
+item-type: "weapon"
 attributes:
   description:
     type: "info"

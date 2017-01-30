@@ -36,18 +36,21 @@ import java.util.Map;
 
 public class ItemManager {
 
-    public static final Item.ItemFactory DEFAULT_FACTORY = new Item.ItemFactory();
-
     private final AmpItems plugin;
     private final Map<String, AttributeType> attributeTypes;
+    private final Map<String, ItemType> itemTypes;
     private final Map<String, ItemConfig> items;
+    private ItemFactory factory;
 
     public ItemManager(AmpItems plugin) {
         this.plugin = plugin;
         this.attributeTypes = new HashMap<>();
+        this.itemTypes = new HashMap<>();
         this.items = new HashMap<>();
+        this.factory = new Item.DefaultItemFactory(this);
 
         registerAttributeTypes(EnumSet.allOf(DefaultAttributeType.class), plugin);
+        registerItemTypes(EnumSet.allOf(DefaultItemType.class), plugin);
 
         // TODO: Go through attributes.yml lore-order to assign lore positions
         FileConfiguration attributes = plugin.getConfigManager().getConfig(DefaultConfig.ATTRIBUTES);
@@ -96,6 +99,26 @@ public class ItemManager {
         this.plugin.getConfigManager().registerCustomConfig(type, plugin);
     }
 
+    public boolean hasItemType(String type) {
+        return itemTypes.containsKey(type);
+    }
+
+    public ItemType getItemType(String type) {
+        return itemTypes.get(type);
+    }
+
+    public Map<String, ItemType> getItemTypeTypes() {
+        return itemTypes;
+    }
+
+    public void registerItemTypes(EnumSet<? extends ItemType> types, JavaPlugin plugin) {
+        types.forEach((ItemType type) -> registerItemType(type, plugin));
+    }
+
+    public void registerItemType(ItemType type, JavaPlugin plugin) {
+        itemTypes.put(type.getName(), type);
+    }
+
     public boolean hasItem(String item) {
         return items.containsKey(item);
     }
@@ -104,12 +127,16 @@ public class ItemManager {
         return items.get(item);
     }
 
+    public boolean isItem(ItemStack itemStack) {
+        return factory.isItem(itemStack);
+    }
+
     public Item getItem(ItemStack itemStack) {
-        return DEFAULT_FACTORY.loadFromItemStack(itemStack);
+        return factory.isItem(itemStack) ? factory.loadFromItemStack(itemStack) : null;
     }
 
     public Item getItem(ConfigurationSection config) {
-        return DEFAULT_FACTORY.loadFromConfig(config);
+        return factory.loadFromConfig(config);
     }
 
     public Item getItem(ItemConfig config) {
@@ -123,6 +150,16 @@ public class ItemManager {
     public void registerItem(ItemConfig config, JavaPlugin plugin) {
         items.put(config.getItem(), config);
         this.plugin.getConfigManager().registerCustomConfig(config, plugin);
+    }
+
+    public ItemFactory getFactory() {
+        return factory;
+    }
+
+    public void setFactory(ItemFactory factory) {
+        if (factory != null) {
+            this.factory = factory;
+        }
     }
 
 }

@@ -18,28 +18,15 @@
  */
 package ninja.amp.items.item;
 
-public enum DefaultItemType implements ItemType {
-    ARMOR("armor"),
-    BLOCK("block"),
-    CONSUMABLE("consumable"),
-    ENTITY("entity"),
-    INTERACTABLE("interactable"),
-    OTHER("other"),
-    PROJECTILE("projectile"),
-    SHIELD("shield"),
-    SHULKER_BOX("shulker-box"),
-    TOOL("tool"),
-    WEAPON("weapon");
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
 
-    private final String name;
+public interface ItemFactory {
 
-    DefaultItemType(String name) {
-        this.name = name;
-    }
+    Item loadFromConfig(ConfigurationSection config);
 
-    @Override
-    public String getName() {
-        return name;
-    }
+    Item loadFromItemStack(ItemStack itemStack);
+
+    boolean isItem(ItemStack itemStack);
 
 }
