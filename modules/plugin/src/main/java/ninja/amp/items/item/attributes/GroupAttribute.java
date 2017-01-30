@@ -20,6 +20,7 @@ package ninja.amp.items.item.attributes;
 
 import ninja.amp.items.api.ItemPlugin;
 import ninja.amp.items.api.item.ItemManager;
+import ninja.amp.items.api.item.attribute.AttributeType;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
 import ninja.amp.items.api.item.attribute.attributes.AttributeGroup;
 import ninja.amp.items.api.item.attribute.attributes.BasicAttribute;
@@ -29,9 +30,11 @@ import ninja.amp.items.nms.nbt.NBTTagList;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GroupAttribute extends BasicAttribute implements AttributeGroup {
@@ -54,8 +57,34 @@ public class GroupAttribute extends BasicAttribute implements AttributeGroup {
     }
 
     @Override
+    public boolean hasAttribute(AttributeType type, boolean deep) {
+        for (ItemAttribute attribute : getAttributes()) {
+            if (attribute.getType().equals(type)) {
+                return true;
+            } else if (deep && attribute instanceof AttributeGroup) {
+                return ((AttributeGroup) attribute).hasAttribute(type, true);
+            }
+        }
+        return false;
+    }
+
+    @Override
     public ItemAttribute getAttribute(String name) {
         return attributes.get(name);
+    }
+
+    @Override
+    public Collection<ItemAttribute> getAttributes(AttributeType type, boolean deep) {
+        List<ItemAttribute> attributes = new ArrayList<>();
+        for (ItemAttribute attribute : getAttributes()) {
+            if (attribute.getType().equals(type)) {
+                attributes.add(attribute);
+            }
+            if (deep && attribute instanceof AttributeGroup) {
+                attributes.addAll(((AttributeGroup) attribute).getAttributes(type, true));
+            }
+        }
+        return attributes;
     }
 
     @Override

@@ -18,6 +18,7 @@
  */
 package ninja.amp.items.api.item.attribute.attributes;
 
+import ninja.amp.items.api.item.attribute.AttributeType;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
 
 import java.util.Collection;
@@ -27,7 +28,11 @@ public interface AttributeGroup extends ItemAttribute {
 
     boolean hasAttribute(String name);
 
+    boolean hasAttribute(AttributeType type, boolean deep);
+
     ItemAttribute getAttribute(String name);
+
+    Collection<ItemAttribute> getAttributes(AttributeType type, boolean deep);
 
     Collection<ItemAttribute> getAttributes();
 
