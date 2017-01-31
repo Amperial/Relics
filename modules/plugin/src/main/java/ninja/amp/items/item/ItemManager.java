@@ -40,6 +40,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -132,22 +133,22 @@ public class ItemManager implements ninja.amp.items.api.item.ItemManager {
 
     @Override
     public Item getItem(String item) {
-        return getItem(getItemConfig(item));
+        return getItem(getItemConfig(item.toLowerCase()));
     }
 
     @Override
     public boolean hasItemConfig(String item) {
-        return items.containsKey(item);
+        return items.containsKey(item.toLowerCase());
     }
 
     @Override
     public ItemConfig getItemConfig(String item) {
-        return items.get(item);
+        return items.get(item.toLowerCase());
     }
 
     @Override
     public Map<String, ItemConfig> getItemConfigs() {
-        return items;
+        return Collections.unmodifiableMap(items);
     }
 
     @Override
@@ -157,23 +158,23 @@ public class ItemManager implements ninja.amp.items.api.item.ItemManager {
 
     @Override
     public void registerItemConfig(ItemConfig config, JavaPlugin plugin) {
-        items.put(config.getItem(), config);
+        items.put(config.getItem().toLowerCase(), config);
         this.plugin.getConfigManager().registerCustomConfig(config, plugin);
     }
 
     @Override
     public boolean hasItemType(String type) {
-        return itemTypes.containsKey(type);
+        return itemTypes.containsKey(type.toLowerCase());
     }
 
     @Override
     public ItemType getItemType(String type) {
-        return itemTypes.get(type);
+        return itemTypes.get(type.toLowerCase());
     }
 
     @Override
     public Map<String, ItemType> getItemTypes() {
-        return itemTypes;
+        return Collections.unmodifiableMap(itemTypes);
     }
 
     @Override
@@ -183,22 +184,22 @@ public class ItemManager implements ninja.amp.items.api.item.ItemManager {
 
     @Override
     public void registerItemType(ItemType type, JavaPlugin plugin) {
-        itemTypes.put(type.getName(), type);
+        itemTypes.put(type.getName().toLowerCase(), type);
     }
 
     @Override
     public boolean hasAttributeType(String type) {
-        return attributeTypes.containsKey(type);
+        return attributeTypes.containsKey(type.toLowerCase());
     }
 
     @Override
     public AttributeType getAttributeType(String type) {
-        return attributeTypes.get(type);
+        return attributeTypes.get(type.toLowerCase());
     }
 
     @Override
     public Map<String, AttributeType> getAttributeTypes() {
-        return attributeTypes;
+        return Collections.unmodifiableMap(attributeTypes);
     }
 
     @Override
@@ -208,7 +209,7 @@ public class ItemManager implements ninja.amp.items.api.item.ItemManager {
 
     @Override
     public void registerAttributeType(AttributeType type, JavaPlugin plugin) {
-        attributeTypes.put(type.getName(), type);
+        attributeTypes.put(type.getName().toLowerCase(), type);
         this.plugin.getConfigManager().registerCustomConfig(type, plugin);
     }
 

@@ -44,8 +44,8 @@ import java.util.stream.Collectors;
 
 public class SocketAttribute extends BasicAttribute implements Socket {
 
-    private final SocketColor color;
-    private final Set<SocketColor> accepts;
+    private SocketColor color;
+    private Set<SocketColor> accepts;
     private Gem gem;
 
     public SocketAttribute(String name, AttributeType type, SocketColor color, Set<SocketColor> accepts) {
@@ -60,11 +60,9 @@ public class SocketAttribute extends BasicAttribute implements Socket {
             if (hasGem()) {
                 lore.add(c + "<< " + gem.getDisplayName() + c + " >>");
                 Gem gem = getGem();
-                if (gem.hasAttribute()) {
-                    List<String> gemLore = new ArrayList<>();
-                    gem.getAttribute().getLore().addTo(gemLore);
-                    gemLore.forEach(s -> lore.add("  " + s));
-                }
+                List<String> gemLore = new ArrayList<>();
+                gem.getAttributes().getLore().addTo(gemLore);
+                gemLore.forEach(s -> lore.add("  " + s));
             } else {
                 lore.add(c + "<< " + ChatColor.GRAY + "Empty Socket" + c + " >>");
             }
@@ -78,6 +76,11 @@ public class SocketAttribute extends BasicAttribute implements Socket {
     @Override
     public SocketColor getColor() {
         return color;
+    }
+
+    @Override
+    public void setColor(SocketColor color) {
+        this.color = color;
     }
 
     @Override
@@ -176,8 +179,8 @@ public class SocketAttribute extends BasicAttribute implements Socket {
             if (config.isConfigurationSection("gem")) {
                 ConfigurationSection gemSection = config.getConfigurationSection("gem");
                 ItemAttribute gem = itemManager.loadAttribute(gemSection);
-                if (gem != null && gem instanceof GemAttribute) {
-                    socket.setGem((GemAttribute) gem);
+                if (gem != null && gem instanceof Gem) {
+                    socket.setGem((Gem) gem);
                 }
             }
 
@@ -209,8 +212,8 @@ public class SocketAttribute extends BasicAttribute implements Socket {
             if (compound.hasKey("gem")) {
                 NBTTagCompound gemCompound = compound.getCompound("gem");
                 ItemAttribute gem = itemManager.loadAttribute(gemCompound);
-                if (gem != null && gem instanceof GemAttribute) {
-                    socket.setGem((GemAttribute) gem);
+                if (gem != null && gem instanceof Gem) {
+                    socket.setGem((Gem) gem);
                 }
             }
 

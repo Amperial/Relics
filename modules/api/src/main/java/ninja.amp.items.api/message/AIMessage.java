@@ -49,7 +49,17 @@ public enum AIMessage implements Message {
     COMMAND_NOTAPLAYER("Command.NotAPlayer", "You must be a player to use this command."),
     COMMAND_NOPERMISSION("Command.NoPermission", "You do not have permission to use this command."),
     COMMAND_INVALID("Command.Invalid", "Unknown commad. Type &b/aitem help&4 for help."),
-    COMMAND_USAGE("Command.Usage", "Usage: %s");
+    COMMAND_USAGE("Command.Usage", "Usage: %s"),
+
+    ITEM_SPAWN("Item.Spawn", "Spawned item: %s&7!"),
+    ITEM_DOESNTEXIST("Item.DoesntExist", "Item not found: %s"),
+    ITEM_NOTCUSTOM("Item.NotCustom", "Item is not a custom item."),
+    ITEM_NOTHOLDING("Item.NotHolding", "Not holding an item."),
+
+    SOCKET_DOESNTEXIST("Socket.DoesntExist", "Item doesn't have a socket."),
+    SOCKET_NOTFOUND("Socket.NotFound", "Socket of name %s not found."),
+    SOCKET_NOGEMS("Socket.NoGems", "Socket doesn't have a gem."),
+    SOCKET_EXTRACT("Socket.Extract", "Extracted gem %s&7 from socket!");
 
     private final String path;
     private final String defaultMessage;

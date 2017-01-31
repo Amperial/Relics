@@ -29,6 +29,7 @@ import ninja.amp.items.commands.HelpCommand;
 import ninja.amp.items.commands.ReloadCommand;
 import ninja.amp.items.commands.items.GetItemCommand;
 import ninja.amp.items.commands.items.ItemInfoCommand;
+import ninja.amp.items.commands.sockets.ExtractGemCommand;
 import ninja.amp.items.item.ItemManager;
 import ninja.amp.items.nms.NMSHandler;
 import org.bukkit.Bukkit;
@@ -74,6 +75,12 @@ public class AmpItems extends JavaPlugin implements ItemPlugin {
                 .addChildCommand(get);
         item.setPermission(new Permission("ampitems.item.all", PermissionDefault.OP));
 
+        // Socket commands.
+        Command extract = new ExtractGemCommand(this);
+        CommandGroup socket = new CommandGroup(this, "socket")
+                .addChildCommand(extract);
+        socket.setPermission(new Permission("ampitems.socket.all", PermissionDefault.OP));
+
         // Main /aitem command tree
         CommandGroup ampItems = new CommandGroup(this, "ampitems")
                 .addChildCommand(new AboutCommand(this))
@@ -81,6 +88,7 @@ public class AmpItems extends JavaPlugin implements ItemPlugin {
                 .addChildCommand(new ReloadCommand(this))
                 .addChildCommand(info)
                 .addChildCommand(get)
+                .addChildCommand(socket)
                 .addChildCommand(item);
         ampItems.setPermission(new Permission("ampitems.all", PermissionDefault.OP));
 

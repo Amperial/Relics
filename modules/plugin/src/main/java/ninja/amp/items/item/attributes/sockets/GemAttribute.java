@@ -21,7 +21,7 @@ package ninja.amp.items.item.attributes.sockets;
 import ninja.amp.items.api.ItemPlugin;
 import ninja.amp.items.api.item.Item;
 import ninja.amp.items.api.item.ItemManager;
-import ninja.amp.items.api.item.attribute.ItemAttribute;
+import ninja.amp.items.api.item.attribute.attributes.AttributeGroup;
 import ninja.amp.items.api.item.attribute.attributes.BasicAttribute;
 import ninja.amp.items.api.item.attribute.attributes.BasicAttributeFactory;
 import ninja.amp.items.api.item.attribute.attributes.sockets.Gem;
@@ -35,13 +35,15 @@ import org.bukkit.entity.Player;
 public class GemAttribute extends BasicAttribute implements Gem {
 
     private SocketColor color;
-    private String item;
-    private ItemAttribute attribute;
+    private AttributeGroup attributes;
+    private Item item;
 
-    public GemAttribute(String name, SocketColor color, String item) {
+    public GemAttribute(String name, SocketColor color, AttributeGroup attributes) {
         super(name, DefaultAttributeType.GEM);
         this.color = color;
-        this.item = item;
+        this.attributes = attributes;
+
+        setLore(lore -> getAttributes().getLore().addTo(lore));
     }
 
     @Override
@@ -61,58 +63,51 @@ public class GemAttribute extends BasicAttribute implements Gem {
     }
 
     @Override
-    public String getItem() {
+    public boolean hasItem() {
+        return item != null;
+    }
+
+    @Override
+    public Item getItem() {
         return item;
     }
 
     @Override
-    public void setItem(String item) {
+    public void setItem(Item item) {
         this.item = item;
     }
 
     @Override
-    public boolean hasAttribute() {
-        return attribute != null;
-    }
-
-    @Override
-    public ItemAttribute getAttribute() {
-        return attribute;
-    }
-
-    @Override
-    public void setAttribute(ItemAttribute attribute) {
-        this.attribute = attribute;
+    public AttributeGroup getAttributes() {
+        return attributes;
     }
 
     @Override
     public boolean canEquip(Player player) {
-        return hasAttribute() && getAttribute().canEquip(player);
+        return getAttributes().canEquip(player);
     }
 
     @Override
     public void equip(Player player) {
-        if (hasAttribute()) {
-            getAttribute().equip(player);
-        }
+        getAttributes().equip(player);
     }
 
     @Override
     public void unEquip(Player player) {
-        if (hasAttribute()) {
-            getAttribute().unEquip(player);
-        }
+        getAttributes().unEquip(player);
     }
 
     @Override
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
         compound.setString("color", getColor().getName());
-        compound.setString("item", getItem());
-        if (hasAttribute()) {
-            NBTTagCompound attribute = NBTTagCompound.create();
-            getAttribute().saveToNBT(attribute);
-            compound.set("attribute", attribute);
+        NBTTagCompound attributes = NBTTagCompound.create();
+        getAttributes().saveToNBT(attributes);
+        compound.set("attributes", attributes);
+        if (hasItem()) {
+            NBTTagCompound item = NBTTagCompound.create();
+            getItem().saveToNBT(item);
+            compound.set("item", item);
         }
     }
 
@@ -126,20 +121,20 @@ public class GemAttribute extends BasicAttribute implements Gem {
         public GemAttribute loadFromConfig(ConfigurationSection config) {
             ItemManager itemManager = getPlugin().getItemManager();
 
-            // Load name, color, and item
+            // Load name, color, and attributes
+            String name = ChatColor.translateAlternateColorCodes('&', config.getString("name"));
             SocketColor color = SocketColor.fromName(config.getString("color"));
-            String itemName = config.getString("item");
-            if (!itemManager.hasItemConfig(itemName)) {
-                return null;
-            }
-            Item item = itemManager.getItem(itemName);
-            String name = item.getName();
+            AttributeGroup attributes = (AttributeGroup) DefaultAttributeType.GROUP.getFactory().loadFromConfig(config);
 
             // Create gem
-            GemAttribute gem = new GemAttribute(name, color, itemName);
+            GemAttribute gem = new GemAttribute(name, color, attributes);
 
-            // Load attribute
-            gem.setAttribute(item.getAttributes());
+            // Load item
+            if (config.isConfigurationSection("item")) {
+                ConfigurationSection itemConfig = config.getConfigurationSection("item");
+                Item item = itemManager.getItem(itemConfig);
+                gem.setItem(item);
+            }
 
             return gem;
         }
@@ -148,21 +143,20 @@ public class GemAttribute extends BasicAttribute implements Gem {
         public GemAttribute loadFromNBT(NBTTagCompound compound) {
             ItemManager itemManager = getPlugin().getItemManager();
 
-            // Load name, color, and item
+            // Load name, color, and attribute
             String name = compound.getString("name");
             SocketColor color = SocketColor.fromName(compound.getString("color"));
-            String item = compound.getString("item");
+            NBTTagCompound attributesCompound = compound.getCompound("attributes");
+            AttributeGroup attributes = (AttributeGroup) itemManager.loadAttribute(attributesCompound);
 
             // Create gem
-            GemAttribute gem = new GemAttribute(name, color, item);
+            GemAttribute gem = new GemAttribute(name, color, attributes);
 
-            // Load attribute
-            if (compound.hasKey("attribute")) {
-                NBTTagCompound attributeCompound = compound.getCompound("attribute");
-                ItemAttribute attribute = itemManager.loadAttribute(attributeCompound);
-                if (attribute != null) {
-                    gem.setAttribute(attribute);
-                }
+            // Load item
+            if (compound.hasKey("item")) {
+                NBTTagCompound itemCompound = compound.getCompound("item");
+                Item item = itemManager.getItem(itemCompound);
+                gem.setItem(item);
             }
 
             return gem;

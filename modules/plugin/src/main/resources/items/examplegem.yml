@@ -1,9 +1,18 @@
-name: "&4Fire Gem"
+name: "&4Fire Gem Item"
 material: "COAL"
 item-type: "other"
 attributes:
+  gem:
+    type: "gem"
+    name: "&4Fire Gem"
+    color: "red"
+    attributes:
+      description:
+        type: "text"
+        text:
+        - "Weapons with this gem"
+        - "will light enemies on fire"
   description:
     type: "text"
     text:
-    - "Weapons with this gem"
-    - "will light enemies on fire"
+    - "This is a fire gem item"

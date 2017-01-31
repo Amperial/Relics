@@ -19,8 +19,23 @@ attributes:
     color: "red"
     gem:
       type: "gem"
+      name: "&4Fire Gem"
       color: "red"
-      item: "examplegem"
+      attributes:
+        description:
+          type: "text"
+          text:
+          - "Weapons with this gem"
+          - "will light enemies on fire"
+      item:
+        name: "&4Fire Gem Item"
+        material: "COAL"
+        item-type: "other"
+        attributes:
+          description:
+            type: "text"
+            text:
+            - "This is a fire gem item"
   example-group-attribute:
     type: "group"
     attributes:

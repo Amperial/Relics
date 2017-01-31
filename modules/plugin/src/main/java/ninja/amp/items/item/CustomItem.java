@@ -88,11 +88,12 @@ public class CustomItem implements Item {
         return item;
     }
 
+    @Override
     public void saveToNBT(NBTTagCompound compound) {
+        attributes.saveToNBT(compound);
         compound.setString("name", getName());
         compound.setString("material", getMaterial().name());
         compound.setString("item-type", getType().getName());
-        attributes.saveToNBT(compound);
     }
 
     public static class DefaultItemFactory implements ItemFactory {

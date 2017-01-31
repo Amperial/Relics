@@ -20,9 +20,10 @@ package ninja.amp.items.commands.items;
 
 import ninja.amp.items.api.ItemPlugin;
 import ninja.amp.items.api.command.Command;
-import ninja.amp.items.api.config.ConfigManager;
 import ninja.amp.items.api.item.Item;
 import ninja.amp.items.api.item.ItemManager;
+import ninja.amp.items.api.message.AIMessage;
+import ninja.amp.items.api.message.Messenger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
@@ -34,7 +35,7 @@ public class GetItemCommand extends Command {
 
     public GetItemCommand(ItemPlugin plugin) {
         super(plugin, "get");
-        setDescription("Spawn a custom attribute item into your inventory.");
+        setDescription("Spawn a custom item into your inventory.");
         setCommandUsage("/aitem item get <item>");
         setPermission(new Permission("ampitems.item.get", PermissionDefault.OP));
         setArgumentRange(1, 1);
@@ -44,7 +45,7 @@ public class GetItemCommand extends Command {
     @Override
     public void execute(String command, CommandSender sender, List<String> args) {
         Player player = (Player) sender;
-        ConfigManager configManager = plugin.getConfigManager();
+        Messenger messenger = plugin.getMessenger();
         ItemManager itemManager = plugin.getItemManager();
 
         String itemName = args.get(0);
@@ -53,9 +54,9 @@ public class GetItemCommand extends Command {
 
             player.getInventory().addItem(item.getItem());
 
-            // TODO: Item spawned
+            messenger.sendMessage(player, AIMessage.ITEM_SPAWN, item.getName());
         } else {
-            // TODO: Item not registered
+            messenger.sendErrorMessage(player, AIMessage.ITEM_DOESNTEXIST, itemName);
         }
     }
 

@@ -26,17 +26,17 @@ import java.util.Map;
 
 public interface AttributeGroup extends ItemAttribute {
 
-    boolean hasAttribute(String name);
+    boolean hasAttribute(String name, boolean deep);
 
     boolean hasAttribute(AttributeType type, boolean deep);
 
-    ItemAttribute getAttribute(String name);
+    ItemAttribute getAttribute(String name, boolean deep);
 
-    Collection<ItemAttribute> getAttributes(AttributeType type, boolean deep);
+    Collection<? extends ItemAttribute> getAttributes(AttributeType type, boolean deep);
 
-    Collection<ItemAttribute> getAttributes();
+    Collection<? extends ItemAttribute> getAttributes();
 
-    Map<String, ItemAttribute> getAttributesByName();
+    Map<String, ? extends ItemAttribute> getAttributesByName();
 
     void addAttribute(ItemAttribute... attributes);
 

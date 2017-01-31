@@ -19,6 +19,7 @@
 package ninja.amp.items.api.item;
 
 import ninja.amp.items.api.item.attribute.attributes.AttributeGroup;
+import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -33,5 +34,7 @@ public interface Item {
     AttributeGroup getAttributes();
 
     ItemStack getItem();
+
+    void saveToNBT(NBTTagCompound compound);
 
 }

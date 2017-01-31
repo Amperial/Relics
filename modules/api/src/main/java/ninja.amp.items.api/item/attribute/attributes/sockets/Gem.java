@@ -18,7 +18,9 @@
  */
 package ninja.amp.items.api.item.attribute.attributes.sockets;
 
+import ninja.amp.items.api.item.Item;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
+import ninja.amp.items.api.item.attribute.attributes.AttributeGroup;
 
 public interface Gem extends ItemAttribute {
 
@@ -28,14 +30,12 @@ public interface Gem extends ItemAttribute {
 
     void setColor(SocketColor color);
 
-    String getItem();
+    boolean hasItem();
 
-    void setItem(String item);
+    Item getItem();
 
-    boolean hasAttribute();
+    void setItem(Item item);
 
-    ItemAttribute getAttribute();
-
-    void setAttribute(ItemAttribute attribute);
+    AttributeGroup getAttributes();
 
 }

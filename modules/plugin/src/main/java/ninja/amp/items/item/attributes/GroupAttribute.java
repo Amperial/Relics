@@ -33,9 +33,9 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class GroupAttribute extends BasicAttribute implements AttributeGroup {
 
@@ -52,8 +52,20 @@ public class GroupAttribute extends BasicAttribute implements AttributeGroup {
     }
 
     @Override
-    public boolean hasAttribute(String name) {
-        return attributes.containsKey(name);
+    public boolean hasAttribute(String name, boolean deep) {
+        if (getAttributesByName().containsKey(name)) {
+            return true;
+        } else if (deep) {
+            for (ItemAttribute attribute : getAttributes()) {
+                if (attribute instanceof AttributeGroup) {
+                    AttributeGroup attributeGroup = (AttributeGroup) attribute;
+                    if (attributeGroup.hasAttribute(name, true)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     @Override
@@ -62,14 +74,29 @@ public class GroupAttribute extends BasicAttribute implements AttributeGroup {
             if (attribute.getType().equals(type)) {
                 return true;
             } else if (deep && attribute instanceof AttributeGroup) {
-                return ((AttributeGroup) attribute).hasAttribute(type, true);
+                AttributeGroup attributeGroup = (AttributeGroup) attribute;
+                if (attributeGroup.hasAttribute(type, true)) {
+                    return true;
+                }
             }
         }
         return false;
     }
 
     @Override
-    public ItemAttribute getAttribute(String name) {
+    public ItemAttribute getAttribute(String name, boolean deep) {
+        if (attributes.containsKey(name)) {
+            return attributes.get(name);
+        } else if (deep) {
+            for (ItemAttribute attribute : getAttributes()) {
+                if (attribute instanceof AttributeGroup) {
+                    AttributeGroup attributeGroup = (AttributeGroup) attribute;
+                    if (attributeGroup.hasAttribute(name, true)) {
+                        return attributeGroup.getAttribute(name, true);
+                    }
+                }
+            }
+        }
         return attributes.get(name);
     }
 
@@ -122,11 +149,11 @@ public class GroupAttribute extends BasicAttribute implements AttributeGroup {
     @Override
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
-        NBTTagCompound attributes = NBTTagCompound.create();
+        NBTTagList attributes = NBTTagList.create();
         for (ItemAttribute attribute : getAttributes()) {
             NBTTagCompound attributeCompound = NBTTagCompound.create();
             attribute.saveToNBT(attributeCompound);
-            attributes.set(attribute.getName(), attributeCompound);
+            attributes.add(attributeCompound);
         }
         compound.set("attributes", attributes);
     }
@@ -143,7 +170,10 @@ public class GroupAttribute extends BasicAttribute implements AttributeGroup {
 
             // Load name and attributes
             String name = config.getName();
-            Map<String, ItemAttribute> attributes = new HashMap<>();
+            if (name.isEmpty()) {
+                name = "group";
+            }
+            Map<String, ItemAttribute> attributes = new TreeMap<>();
             if (config.isConfigurationSection("attributes")) {
                 ConfigurationSection attributesSection = config.getConfigurationSection("attributes");
                 attributesSection.getKeys(false).stream().filter(attributesSection::isConfigurationSection).forEach(attributeName -> {
@@ -165,7 +195,7 @@ public class GroupAttribute extends BasicAttribute implements AttributeGroup {
 
             // Load name and attributes
             String name = compound.getString("name");
-            Map<String, ItemAttribute> attributes = new HashMap<>();
+            Map<String, ItemAttribute> attributes = new TreeMap<>();
             if (compound.hasKey("attributes")) {
                 NBTTagList list = compound.getList("attributes", 10);
                 for (int i = 0; i < list.size(); i++) {

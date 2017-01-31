@@ -26,6 +26,8 @@ public interface Socket extends ItemAttribute {
 
     SocketColor getColor();
 
+    void setColor(SocketColor color);
+
     Set<SocketColor> getAccepts();
 
     void addAccepts(SocketColor... accepts);
