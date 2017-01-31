@@ -40,15 +40,31 @@ import java.util.TreeMap;
 public class GroupAttribute extends BasicAttribute implements AttributeGroup {
 
     private final Map<String, ItemAttribute> attributes;
+    private final boolean spacing;
 
-    public GroupAttribute(String name, Map<String, ItemAttribute> attributes) {
+    public GroupAttribute(String name, Map<String, ItemAttribute> attributes, boolean spacing) {
         super(name, DefaultAttributeType.GROUP);
 
         this.attributes = attributes;
+        this.spacing = spacing;
 
-        setLore(lore -> getAttributes().stream()
-                .sorted(Comparator.comparingInt(a -> a.getType().getLorePosition()))
-                .forEachOrdered(a -> a.getLore().addTo(lore)));
+        if (spacing) {
+            setLore((lore, prefix) -> {
+                getAttributes().stream()
+                        .sorted(Comparator.comparingInt(a -> a.getType().getLorePosition()))
+                        .forEachOrdered(a -> {
+                            a.getLore().addTo(lore, prefix);
+                            lore.add("");
+                        });
+                if (getAttributes().size() > 0) {
+                    lore.remove(lore.size() - 1);
+                }
+            });
+        } else {
+            setLore((lore, prefix) -> getAttributes().stream()
+                    .sorted(Comparator.comparingInt(a -> a.getType().getLorePosition()))
+                    .forEachOrdered(a -> a.getLore().addTo(lore, prefix)));
+        }
     }
 
     @Override
@@ -156,6 +172,7 @@ public class GroupAttribute extends BasicAttribute implements AttributeGroup {
             attributes.add(attributeCompound);
         }
         compound.set("attributes", attributes);
+        compound.setBoolean("spacing", spacing);
     }
 
     public static class AttributeGroupFactory extends BasicAttributeFactory<GroupAttribute> {
@@ -186,7 +203,7 @@ public class GroupAttribute extends BasicAttribute implements AttributeGroup {
             }
 
             // Create attribute group
-            return new GroupAttribute(name, attributes);
+            return new GroupAttribute(name, attributes, config.getBoolean("spacing", true));
         }
 
         @Override
@@ -208,7 +225,7 @@ public class GroupAttribute extends BasicAttribute implements AttributeGroup {
             }
 
             // Create attribute group
-            return new GroupAttribute(name, attributes);
+            return new GroupAttribute(name, attributes, !compound.hasKey("spacing") || compound.getBoolean("spacing"));
         }
 
     }

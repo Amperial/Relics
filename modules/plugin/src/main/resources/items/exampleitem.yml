@@ -38,6 +38,7 @@ attributes:
             - "This is a fire gem item"
   example-group-attribute:
     type: "group"
+    spacing: false
     attributes:
       exampletext:
         type: "text"

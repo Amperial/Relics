@@ -40,9 +40,9 @@ import java.util.List;
 
 public interface ItemLore {
 
-    ItemLore NONE = lore -> {
+    ItemLore NONE = (lore, prefix) -> {
     };
 
-    void addTo(List<String> lore);
+    void addTo(List<String> lore, String prefix);
 
 }

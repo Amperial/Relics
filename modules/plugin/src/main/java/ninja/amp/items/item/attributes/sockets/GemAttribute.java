@@ -43,7 +43,7 @@ public class GemAttribute extends BasicAttribute implements Gem {
         this.color = color;
         this.attributes = attributes;
 
-        setLore(lore -> getAttributes().getLore().addTo(lore));
+        setLore((lore, prefix) -> getAttributes().getLore().addTo(lore, prefix));
     }
 
     @Override

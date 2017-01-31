@@ -35,7 +35,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -54,17 +53,14 @@ public class SocketAttribute extends BasicAttribute implements Socket {
         this.color = color;
         this.accepts = accepts;
 
-        setLore(lore -> {
+        setLore((lore, prefix) -> {
             // TODO: Configurable
             ChatColor c = getColor().getChatColor();
             if (hasGem()) {
-                lore.add(c + "<< " + gem.getDisplayName() + c + " >>");
-                Gem gem = getGem();
-                List<String> gemLore = new ArrayList<>();
-                gem.getAttributes().getLore().addTo(gemLore);
-                gemLore.forEach(s -> lore.add("  " + s));
+                lore.add(prefix + c + "<< " + gem.getDisplayName() + c + " >>");
+                getGem().getAttributes().getLore().addTo(lore, prefix + "  ");
             } else {
-                lore.add(c + "<< " + ChatColor.GRAY + "Empty Socket" + c + " >>");
+                lore.add(prefix + c + "<< " + ChatColor.GRAY + "Empty Socket" + c + " >>");
             }
         });
     }

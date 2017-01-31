@@ -31,6 +31,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TextAttribute extends BasicAttribute implements Text {
 
@@ -41,7 +42,7 @@ public class TextAttribute extends BasicAttribute implements Text {
 
         this.text = text;
 
-        setLore(lore -> lore.addAll(getText()));
+        setLore((lore, prefix) -> lore.addAll(getText().stream().map(line -> prefix + line).collect(Collectors.toList())));
     }
 
     @Override

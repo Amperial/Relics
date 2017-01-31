@@ -76,7 +76,7 @@ public class CustomItem implements Item {
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(getName());
         List<String> lore = new ArrayList<>();
-        attributes.getLore().addTo(lore);
+        attributes.getLore().addTo(lore, "");
         meta.setLore(lore);
         item.setItemMeta(meta);
 

@@ -38,7 +38,7 @@ public class RarityAttribute extends BasicAttribute implements Rarity {
 
         this.rarity = rarity;
 
-        setLore(lore -> lore.add(text));
+        setLore((lore, prefix) -> lore.add(prefix + text));
     }
 
     @Override
