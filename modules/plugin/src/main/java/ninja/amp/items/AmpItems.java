@@ -23,6 +23,7 @@ import ninja.amp.items.api.command.Command;
 import ninja.amp.items.api.command.CommandController;
 import ninja.amp.items.api.command.CommandGroup;
 import ninja.amp.items.api.config.ConfigManager;
+import ninja.amp.items.api.menu.MenuListener;
 import ninja.amp.items.api.message.Messenger;
 import ninja.amp.items.commands.AboutCommand;
 import ninja.amp.items.commands.HelpCommand;
@@ -49,6 +50,7 @@ public class AmpItems extends JavaPlugin implements ItemPlugin {
     private CommandController commandController;
     private ItemManager itemManager;
     private ItemListener itemListener;
+    private MenuListener menuListener;
 
     @Override
     public void onEnable() {
@@ -61,6 +63,7 @@ public class AmpItems extends JavaPlugin implements ItemPlugin {
         commandController = new CommandController(this);
         itemManager = new ItemManager(this);
         itemListener = new ItemListener(this);
+        menuListener = new MenuListener(this);
 
         // Initialize item factories
         itemManager.setDefaultFactories();
@@ -96,13 +99,15 @@ public class AmpItems extends JavaPlugin implements ItemPlugin {
         commandController.addCommand(ampItems);
         commandController.updatePageList();
 
-        // Register item listener
+        // Register listeners
         Bukkit.getServer().getPluginManager().registerEvents(itemListener, this);
+        Bukkit.getServer().getPluginManager().registerEvents(menuListener, this);
     }
 
     @Override
     public void onDisable() {
         // The order managers are destroyed in is not important
+        menuListener = null;
         itemListener = null;
         itemManager = null;
         commandController.unregisterCommands();
@@ -133,6 +138,10 @@ public class AmpItems extends JavaPlugin implements ItemPlugin {
 
     public ItemListener getItemListener() {
         return itemListener;
+    }
+
+    public MenuListener getMenuListener() {
+        return menuListener;
     }
 
 }
