@@ -54,15 +54,15 @@ public class RarityAttribute extends BasicAttribute implements Rarity {
     @Override
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
-        compound.setInt("tier", rarity);
+        compound.setInt("tier", getRarity());
     }
 
-    public static class RarityAttributeFactory extends BasicAttributeFactory<RarityAttribute> {
+    public static class Factory extends BasicAttributeFactory<Rarity> {
 
         private final List<String> tiers;
         private final String unknown;
 
-        public RarityAttributeFactory(ItemPlugin plugin) {
+        public Factory(ItemPlugin plugin) {
             super(plugin);
 
             FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttributeType.RARITY);
@@ -72,7 +72,7 @@ public class RarityAttribute extends BasicAttribute implements Rarity {
         }
 
         @Override
-        public RarityAttribute loadFromConfig(ConfigurationSection config) {
+        public Rarity loadFromConfig(ConfigurationSection config) {
             // Load name and rarity
             String name = config.getName();
             int rarity = config.getInt("tier");
@@ -83,7 +83,7 @@ public class RarityAttribute extends BasicAttribute implements Rarity {
         }
 
         @Override
-        public RarityAttribute loadFromNBT(NBTTagCompound compound) {
+        public Rarity loadFromNBT(NBTTagCompound compound) {
             // Load name and rarity
             String name = compound.getString("name");
             int rarity = compound.getInt("tier");

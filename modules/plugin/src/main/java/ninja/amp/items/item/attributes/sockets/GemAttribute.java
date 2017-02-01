@@ -111,14 +111,14 @@ public class GemAttribute extends BasicAttribute implements Gem {
         }
     }
 
-    public static class GemFactory extends BasicAttributeFactory<GemAttribute> {
+    public static class Factory extends BasicAttributeFactory<Gem> {
 
-        public GemFactory(ItemPlugin plugin) {
+        public Factory(ItemPlugin plugin) {
             super(plugin);
         }
 
         @Override
-        public GemAttribute loadFromConfig(ConfigurationSection config) {
+        public Gem loadFromConfig(ConfigurationSection config) {
             ItemManager itemManager = getPlugin().getItemManager();
 
             // Load name, color, and attributes
@@ -127,7 +127,7 @@ public class GemAttribute extends BasicAttribute implements Gem {
             AttributeGroup attributes = (AttributeGroup) DefaultAttributeType.GROUP.getFactory().loadFromConfig(config);
 
             // Create gem
-            GemAttribute gem = new GemAttribute(name, color, attributes);
+            Gem gem = new GemAttribute(name, color, attributes);
 
             // Load item
             if (config.isConfigurationSection("item")) {
@@ -140,7 +140,7 @@ public class GemAttribute extends BasicAttribute implements Gem {
         }
 
         @Override
-        public GemAttribute loadFromNBT(NBTTagCompound compound) {
+        public Gem loadFromNBT(NBTTagCompound compound) {
             ItemManager itemManager = getPlugin().getItemManager();
 
             // Load name, color, and attribute
@@ -150,7 +150,7 @@ public class GemAttribute extends BasicAttribute implements Gem {
             AttributeGroup attributes = (AttributeGroup) itemManager.loadAttribute(attributesCompound);
 
             // Create gem
-            GemAttribute gem = new GemAttribute(name, color, attributes);
+            Gem gem = new GemAttribute(name, color, attributes);
 
             // Load item
             if (compound.hasKey("item")) {

@@ -2,6 +2,9 @@ name: "&3Example Item"
 material: "DIAMOND_SWORD"
 item-type: "weapon"
 attributes:
+  model:
+    type: "model"
+    model-damage: 1
   rarity:
     type: "rarity"
     tier: 6

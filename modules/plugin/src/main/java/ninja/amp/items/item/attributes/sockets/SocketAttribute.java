@@ -146,14 +146,14 @@ public class SocketAttribute extends BasicAttribute implements Socket {
         }
     }
 
-    public static class SocketFactory extends BasicAttributeFactory<SocketAttribute> {
+    public static class Factory extends BasicAttributeFactory<Socket> {
 
-        public SocketFactory(ItemPlugin plugin) {
+        public Factory(ItemPlugin plugin) {
             super(plugin);
         }
 
         @Override
-        public SocketAttribute loadFromConfig(ConfigurationSection config) {
+        public Socket loadFromConfig(ConfigurationSection config) {
             ItemManager itemManager = getPlugin().getItemManager();
 
             // Load name, color, and accepts
@@ -169,7 +169,7 @@ public class SocketAttribute extends BasicAttribute implements Socket {
             }
 
             // Create socket
-            SocketAttribute socket = new SocketAttribute(name, color, accepts);
+            Socket socket = new SocketAttribute(name, color, accepts);
 
             // Load gem
             if (config.isConfigurationSection("gem")) {
@@ -184,7 +184,7 @@ public class SocketAttribute extends BasicAttribute implements Socket {
         }
 
         @Override
-        public SocketAttribute loadFromNBT(NBTTagCompound compound) {
+        public Socket loadFromNBT(NBTTagCompound compound) {
             ItemManager itemManager = getPlugin().getItemManager();
 
             // Load name, color, and accepts
@@ -202,7 +202,7 @@ public class SocketAttribute extends BasicAttribute implements Socket {
             }
 
             // Create socket
-            SocketAttribute socket = new SocketAttribute(name, color, accepts);
+            Socket socket = new SocketAttribute(name, color, accepts);
 
             // Load gem
             if (compound.hasKey("gem")) {

@@ -23,11 +23,12 @@ import ninja.amp.items.api.item.attribute.AttributeType;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
 
 public enum DefaultAttributeType implements AttributeType {
-    RARITY("rarity", 0),
-    TEXT("text", 1),
-    SOCKET("socket", 2),
     GEM("gem", 3),
-    GROUP("group", 4);
+    GROUP("group", 4),
+    MODEL("model", Integer.MAX_VALUE),
+    RARITY("rarity", 0),
+    SOCKET("socket", 2),
+    TEXT("text", 1);
 
     private final String name;
     private final String fileName;

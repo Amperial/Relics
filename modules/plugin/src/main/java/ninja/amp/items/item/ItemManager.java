@@ -27,6 +27,7 @@ import ninja.amp.items.api.item.ItemType;
 import ninja.amp.items.api.item.attribute.AttributeType;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
 import ninja.amp.items.api.item.attribute.attributes.sockets.SocketColor;
+import ninja.amp.items.item.attributes.CustomModelAttribute;
 import ninja.amp.items.item.attributes.DefaultAttributeType;
 import ninja.amp.items.item.attributes.GroupAttribute;
 import ninja.amp.items.item.attributes.RarityAttribute;
@@ -99,11 +100,12 @@ public class ItemManager implements ninja.amp.items.api.item.ItemManager {
         factory = new CustomItem.DefaultItemFactory(this);
 
         // TODO: Abstract this?
-        DefaultAttributeType.RARITY.setFactory(new RarityAttribute.RarityAttributeFactory(plugin));
-        DefaultAttributeType.TEXT.setFactory(new TextAttribute.TextAttributeFactory(plugin));
-        DefaultAttributeType.SOCKET.setFactory(new SocketAttribute.SocketFactory(plugin));
-        DefaultAttributeType.GEM.setFactory(new GemAttribute.GemFactory(plugin));
-        DefaultAttributeType.GROUP.setFactory(new GroupAttribute.AttributeGroupFactory(plugin));
+        DefaultAttributeType.RARITY.setFactory(new RarityAttribute.Factory(plugin));
+        DefaultAttributeType.TEXT.setFactory(new TextAttribute.Factory(plugin));
+        DefaultAttributeType.SOCKET.setFactory(new SocketAttribute.Factory(plugin));
+        DefaultAttributeType.GEM.setFactory(new GemAttribute.Factory(plugin));
+        DefaultAttributeType.GROUP.setFactory(new GroupAttribute.Factory(plugin));
+        DefaultAttributeType.MODEL.setFactory(new CustomModelAttribute.Factory(plugin));
     }
 
     @Override

@@ -22,12 +22,14 @@ import ninja.amp.items.api.item.Item;
 import ninja.amp.items.api.item.ItemFactory;
 import ninja.amp.items.api.item.ItemType;
 import ninja.amp.items.api.item.attribute.attributes.AttributeGroup;
+import ninja.amp.items.api.item.attribute.attributes.CustomModel;
 import ninja.amp.items.item.attributes.DefaultAttributeType;
 import ninja.amp.items.nms.NMSHandler;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -77,6 +79,12 @@ public class CustomItem implements Item {
         meta.setDisplayName(getName());
         List<String> lore = new ArrayList<>();
         attributes.getLore().addTo(lore, "");
+        if (attributes.hasAttribute(DefaultAttributeType.MODEL, false)) {
+            CustomModel model = (CustomModel) attributes.getAttribute(DefaultAttributeType.MODEL, false);
+            item.setDurability(model.getModelDamage());
+            meta.setUnbreakable(true);
+            meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        }
         meta.setLore(lore);
         item.setItemMeta(meta);
 

@@ -53,8 +53,11 @@ public class GroupAttribute extends BasicAttribute implements AttributeGroup {
                 getAttributes().stream()
                         .sorted(Comparator.comparingInt(a -> a.getType().getLorePosition()))
                         .forEachOrdered(a -> {
+                            int s = lore.size();
                             a.getLore().addTo(lore, prefix);
-                            lore.add("");
+                            if (lore.size() > s) {
+                                lore.add("");
+                            }
                         });
                 if (getAttributes().size() > 0) {
                     lore.remove(lore.size() - 1);
@@ -117,6 +120,22 @@ public class GroupAttribute extends BasicAttribute implements AttributeGroup {
     }
 
     @Override
+    public ItemAttribute getAttribute(AttributeType type, boolean deep) {
+        for (ItemAttribute attribute : getAttributes()) {
+            if (attribute.getType().equals(type)) {
+                return attribute;
+            }
+            if (deep && attribute instanceof AttributeGroup) {
+                AttributeGroup attributeGroup = (AttributeGroup) attribute;
+                if (attributeGroup.hasAttribute(type, true)) {
+                    return attributeGroup.getAttribute(type, true);
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
     public Collection<ItemAttribute> getAttributes(AttributeType type, boolean deep) {
         List<ItemAttribute> attributes = new ArrayList<>();
         for (ItemAttribute attribute : getAttributes()) {
@@ -175,14 +194,14 @@ public class GroupAttribute extends BasicAttribute implements AttributeGroup {
         compound.setBoolean("spacing", spacing);
     }
 
-    public static class AttributeGroupFactory extends BasicAttributeFactory<GroupAttribute> {
+    public static class Factory extends BasicAttributeFactory<AttributeGroup> {
 
-        public AttributeGroupFactory(ItemPlugin plugin) {
+        public Factory(ItemPlugin plugin) {
             super(plugin);
         }
 
         @Override
-        public GroupAttribute loadFromConfig(ConfigurationSection config) {
+        public AttributeGroup loadFromConfig(ConfigurationSection config) {
             ItemManager itemManager = getPlugin().getItemManager();
 
             // Load name and attributes
@@ -207,7 +226,7 @@ public class GroupAttribute extends BasicAttribute implements AttributeGroup {
         }
 
         @Override
-        public GroupAttribute loadFromNBT(NBTTagCompound compound) {
+        public AttributeGroup loadFromNBT(NBTTagCompound compound) {
             ItemManager itemManager = getPlugin().getItemManager();
 
             // Load name and attributes

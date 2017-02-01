@@ -18,28 +18,12 @@
  */
 package ninja.amp.items.api.item.attribute.attributes;
 
-import ninja.amp.items.api.item.attribute.AttributeType;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
 
-import java.util.Collection;
-import java.util.Map;
+public interface CustomModel extends ItemAttribute {
 
-public interface AttributeGroup extends ItemAttribute {
+    short getModelDamage();
 
-    boolean hasAttribute(String name, boolean deep);
-
-    boolean hasAttribute(AttributeType type, boolean deep);
-
-    ItemAttribute getAttribute(String name, boolean deep);
-
-    ItemAttribute getAttribute(AttributeType type, boolean deep);
-
-    Collection<? extends ItemAttribute> getAttributes(AttributeType type, boolean deep);
-
-    Collection<? extends ItemAttribute> getAttributes();
-
-    Map<String, ? extends ItemAttribute> getAttributesByName();
-
-    void addAttribute(ItemAttribute... attributes);
+    void setModelDamage(short modelDamage);
 
 }

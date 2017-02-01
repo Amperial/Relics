@@ -65,14 +65,14 @@ public class TextAttribute extends BasicAttribute implements Text {
         compound.set("text", list);
     }
 
-    public static class TextAttributeFactory extends BasicAttributeFactory<TextAttribute> {
+    public static class Factory extends BasicAttributeFactory<Text> {
 
-        public TextAttributeFactory(ItemPlugin plugin) {
+        public Factory(ItemPlugin plugin) {
             super(plugin);
         }
 
         @Override
-        public TextAttribute loadFromConfig(ConfigurationSection config) {
+        public Text loadFromConfig(ConfigurationSection config) {
             // Load name and text
             String name = config.getName();
             List<String> text = config.getStringList("text");
@@ -83,7 +83,7 @@ public class TextAttribute extends BasicAttribute implements Text {
         }
 
         @Override
-        public TextAttribute loadFromNBT(NBTTagCompound compound) {
+        public Text loadFromNBT(NBTTagCompound compound) {
             // Load name and text
             String name = compound.getString("name");
             List<String> text = new ArrayList<>();
