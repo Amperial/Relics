@@ -25,7 +25,9 @@ import ninja.amp.items.api.item.attribute.attributes.AttributeGroup;
 import ninja.amp.items.api.item.attribute.attributes.CustomModel;
 import ninja.amp.items.item.attributes.DefaultAttributeType;
 import ninja.amp.items.nms.NMSHandler;
+import ninja.amp.items.nms.nbt.NBTBase;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
+import ninja.amp.items.nms.nbt.NBTTagObject;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -37,6 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomItem implements Item {
+
+    private static final String ITEM_TAG = "amp-item";
 
     private final String name;
     private final Material material;
@@ -75,6 +79,21 @@ public class CustomItem implements Item {
         ItemStack item = new ItemStack(getMaterial());
 
         // Set ItemMeta
+        updateItem(item);
+
+        // Set NBTTagCompound
+        NBTTagCompound compound = NMSHandler.getInterface().getTagCompound(item);
+        NBTTagCompound itemTag = NBTTagCompound.create();
+        saveToNBT(itemTag);
+        compound.setBase(ITEM_TAG, itemTag);
+        item = NMSHandler.getInterface().setTagCompoundCopy(item, compound);
+
+        return item;
+    }
+
+    @Override
+    public void updateItem(ItemStack item) {
+        // Set ItemMeta
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(getName());
         List<String> lore = new ArrayList<>();
@@ -87,13 +106,6 @@ public class CustomItem implements Item {
         }
         meta.setLore(lore);
         item.setItemMeta(meta);
-
-        // Set NBTTagCompound
-        NBTTagCompound compound = NMSHandler.getInterface().getTagCompound(item);
-        saveToNBT(compound);
-        item = NMSHandler.getInterface().setTagCompound(item, compound);
-
-        return item;
     }
 
     @Override
@@ -102,6 +114,7 @@ public class CustomItem implements Item {
         compound.setString("name", getName());
         compound.setString("material", getMaterial().name());
         compound.setString("item-type", getType().getName());
+        compound.setBase("item-instance", NBTTagObject.create(this));
     }
 
     public static class DefaultItemFactory implements ItemFactory {
@@ -113,7 +126,7 @@ public class CustomItem implements Item {
         }
 
         @Override
-        public CustomItem loadFromConfig(ConfigurationSection config) {
+        public Item loadFromConfig(ConfigurationSection config) {
             // Load name, material, type, and attributes
             String name = ChatColor.translateAlternateColorCodes('&', config.getString("name"));
             Material material = Material.getMaterial(config.getString("material"));
@@ -125,7 +138,14 @@ public class CustomItem implements Item {
         }
 
         @Override
-        public CustomItem loadFromNBT(NBTTagCompound compound) {
+        public Item loadFromNBT(NBTTagCompound compound) {
+            if (compound.hasKey("item-instance")) {
+                NBTBase itemInstance = compound.getBase("item-instance");
+                if (itemInstance instanceof NBTTagObject) {
+                    return (Item) ((NBTTagObject) itemInstance).getObject();
+                }
+            }
+
             // Load name, material, type, and attributes
             String name = compound.getString("name");
             Material material = Material.getMaterial(compound.getString("material"));
@@ -133,21 +153,29 @@ public class CustomItem implements Item {
             AttributeGroup attribute = (AttributeGroup) DefaultAttributeType.GROUP.getFactory().loadFromNBT(compound);
 
             // Create Item
-            return new CustomItem(name, material, type, attribute);
+            Item item = new CustomItem(name, material, type, attribute);
+            compound.setBase("item-instance", NBTTagObject.create(item));
+            return item;
         }
 
         @Override
-        public CustomItem loadFromItemStack(ItemStack itemStack) {
+        public Item loadFromItemStack(ItemStack itemStack) {
             // Get ItemStack NBT
             NBTTagCompound compound = NMSHandler.getInterface().getTagCompound(itemStack);
+            NBTTagCompound itemTag = compound.getCompound(ITEM_TAG);
 
             // Load from NBT
-            return loadFromNBT(compound);
+            Item item = loadFromNBT(itemTag);
+
+            // Set ItemStack NBT
+            NMSHandler.getInterface().setTagCompoundDirect(itemStack, compound);
+
+            return item;
         }
 
         @Override
         public boolean isItem(ItemStack itemStack) {
-            return NMSHandler.getInterface().getTagCompound(itemStack).hasKey("item-type");
+            return NMSHandler.getInterface().getTagCompound(itemStack).hasKey(ITEM_TAG);
         }
 
     }

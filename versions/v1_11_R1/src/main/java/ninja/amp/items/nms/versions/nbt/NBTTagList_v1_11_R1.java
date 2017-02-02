@@ -4,123 +4,102 @@ import ninja.amp.items.nms.nbt.NBTBase;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
 import ninja.amp.items.nms.nbt.NBTTagList;
 
-public class NBTTagList_v1_11_R1 implements NBTTagList {
-
-    private net.minecraft.server.v1_11_R1.NBTTagList list;
+public class NBTTagList_v1_11_R1 extends net.minecraft.server.v1_11_R1.NBTTagList implements NBTTagList {
 
     public NBTTagList_v1_11_R1(net.minecraft.server.v1_11_R1.NBTTagList list) {
-        this.list = list;
+        int size = list.size();
+        for (int i = 0; i < size; i++) {
+            add(list.h(i).clone());
+        }
     }
 
-    public net.minecraft.server.v1_11_R1.NBTTagList getList() {
-        return list;
+    public NBTTagList_v1_11_R1() {
     }
 
     @Override
     public NBTTagList newInstance() {
-        return new NBTTagList_v1_11_R1(new net.minecraft.server.v1_11_R1.NBTTagList());
+        return new NBTTagList_v1_11_R1();
     }
 
     @Override
-    public void add(NBTBase base) {
-        switch (base.getTypeId()) {
-            case 0:
-                break;
-            case 1:
-                list.add((NBTTagByte_v1_11_R1) base);
-                break;
-            case 2:
-                list.add((NBTTagShort_v1_11_R1) base);
-                break;
-            case 3:
-                list.add((NBTTagInt_v1_11_R1) base);
-                break;
-            case 4:
-                list.add((NBTTagLong_v1_11_R1) base);
-                break;
-            case 5:
-                list.add((NBTTagFloat_v1_11_R1) base);
-                break;
-            case 6:
-                list.add((NBTTagDouble_v1_11_R1) base);
-                break;
-            case 7:
-                list.add((NBTTagByteArray_v1_11_R1) base);
-                break;
-            case 8:
-                list.add((NBTTagString_v1_11_R1) base);
-                break;
-            case 9:
-                list.add(((NBTTagList_v1_11_R1) base).getList());
-                break;
-            case 10:
-                list.add(((NBTTagCompound_v1_11_R1) base).getCompound());
-                break;
-            case 11:
-                list.add((NBTTagIntArray_v1_11_R1) base);
-                break;
-            default:
+    public void addBase(NBTBase base) {
+        add((net.minecraft.server.v1_11_R1.NBTBase) base);
+    }
+
+    @Override
+    public void addBase(int index, NBTBase base) {
+        a(index, (net.minecraft.server.v1_11_R1.NBTBase) base);
+    }
+
+    @Override
+    public NBTBase removeBase(int index) {
+        return NBTUtil.fromNMSBase(remove(index));
+    }
+
+    @Override
+    public NBTBase getBase(int index) {
+        net.minecraft.server.v1_11_R1.NBTBase base = h(index);
+        if (base instanceof NBTBase) {
+            return (NBTBase) base;
+        } else {
+            NBTBase apiBase = NBTUtil.fromNMSBase(base);
+            addBase(index, apiBase);
+            return apiBase;
         }
     }
 
     @Override
-    public NBTBase remove(int index) {
-        return new NBTBase_v1_11_R1(list.remove(index));
-    }
-
-    @Override
-    public NBTBase get(int index) {
-        return new NBTBase_v1_11_R1(list.get(index));
-    }
-
-    @Override
     public int getInt(int index) {
-        return list.c(index);
+        return c(index);
     }
 
     @Override
     public float getFloat(int index) {
-        return list.f(index);
+        return f(index);
     }
 
     @Override
     public double getDouble(int index) {
-        return list.e(index);
-    }
-
-    @Override
-    public String getString(int index) {
-        return list.getString(index);
+        return e(index);
     }
 
     @Override
     public NBTTagCompound getCompound(int index) {
-        return new NBTTagCompound_v1_11_R1(list.get(index));
+        net.minecraft.server.v1_11_R1.NBTTagCompound compound = super.get(index);
+        if (compound instanceof NBTTagCompound_v1_11_R1) {
+            return (NBTTagCompound_v1_11_R1) compound;
+        } else {
+            NBTTagCompound_v1_11_R1 apiCompound = new NBTTagCompound_v1_11_R1(compound);
+            a(index, apiCompound);
+            return apiCompound;
+        }
     }
 
     @Override
     public int[] getIntArray(int index) {
-        return list.d(index);
-    }
-
-    @Override
-    public int size() {
-        return list.size();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return list.isEmpty();
+        return d(index);
     }
 
     @Override
     public int getType() {
-        return list.g();
+        return g();
     }
 
     @Override
-    public byte getTypeId() {
-        return list.getTypeId();
+    public NBTTagList_v1_11_R1 d() {
+        NBTTagList_v1_11_R1 clone = new NBTTagList_v1_11_R1();
+
+        int size = size();
+        for (int i = 0; i < size; i++) {
+            clone.add(h(i).clone());
+        }
+
+        return clone;
+    }
+
+    @Override
+    public NBTTagList_v1_11_R1 clone() {
+        return this.d();
     }
 
 }

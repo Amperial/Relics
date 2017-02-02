@@ -12,7 +12,7 @@ public interface NBTTagCompound extends NBTBase {
 
     Set<String> getKeySet();
 
-    void set(String key, NBTBase value);
+    void setBase(String key, NBTBase value);
 
     void setByte(String key, byte value);
 
@@ -34,7 +34,7 @@ public interface NBTTagCompound extends NBTBase {
 
     void setBoolean(String key, boolean value);
 
-    NBTBase get(String key);
+    NBTBase getBase(String key);
 
     boolean hasKey(String key);
 

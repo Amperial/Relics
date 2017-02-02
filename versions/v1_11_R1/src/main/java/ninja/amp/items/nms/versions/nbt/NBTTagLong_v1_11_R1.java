@@ -1,9 +1,12 @@
 package ninja.amp.items.nms.versions.nbt;
 
-import net.minecraft.server.v1_11_R1.NBTBase;
 import ninja.amp.items.nms.nbt.NBTTagLong;
 
 public class NBTTagLong_v1_11_R1 extends net.minecraft.server.v1_11_R1.NBTTagLong implements NBTTagLong {
+
+    public NBTTagLong_v1_11_R1(net.minecraft.server.v1_11_R1.NBTTagLong l) {
+        super(l.d());
+    }
 
     public NBTTagLong_v1_11_R1(long l) {
         super(l);
@@ -40,8 +43,13 @@ public class NBTTagLong_v1_11_R1 extends net.minecraft.server.v1_11_R1.NBTTagLon
     }
 
     @Override
-    public NBTBase clone() {
-        return super.c();
+    public NBTTagLong_v1_11_R1 c() {
+        return new NBTTagLong_v1_11_R1(d());
+    }
+
+    @Override
+    public NBTTagLong_v1_11_R1 clone() {
+        return this.c();
     }
 
 }

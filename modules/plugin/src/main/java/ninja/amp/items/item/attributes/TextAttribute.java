@@ -60,9 +60,9 @@ public class TextAttribute extends BasicAttribute implements Text {
         super.saveToNBT(compound);
         NBTTagList list = NBTTagList.create();
         for (String line : getText()) {
-            list.add(NBTTagString.create(line));
+            list.addBase(NBTTagString.create(line));
         }
-        compound.set("text", list);
+        compound.setBase("text", list);
     }
 
     public static class Factory extends BasicAttributeFactory<Text> {

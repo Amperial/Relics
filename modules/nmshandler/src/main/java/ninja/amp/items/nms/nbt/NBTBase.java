@@ -2,8 +2,7 @@ package ninja.amp.items.nms.nbt;
 
 public interface NBTBase {
 
-    String[] NBT_TYPES = {"END", "BYTE", "SHORT", "INT", "LONG", "FLOAT", "DOUBLE", "BYTE[]", "STRING", "LIST", "COMPOUND", "INT[]"};
-    NBTBase[] NBT_INSTANCES = new NBTBase[12];
+    NBTBase[] NBT_INSTANCES = new NBTBase[13];
 
     String toString();
 

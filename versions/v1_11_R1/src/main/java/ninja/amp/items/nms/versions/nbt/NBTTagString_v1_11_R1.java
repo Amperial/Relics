@@ -1,16 +1,19 @@
 package ninja.amp.items.nms.versions.nbt;
 
-import net.minecraft.server.v1_11_R1.NBTBase;
 import ninja.amp.items.nms.nbt.NBTTagString;
 
 public class NBTTagString_v1_11_R1 extends net.minecraft.server.v1_11_R1.NBTTagString implements NBTTagString {
 
-    public NBTTagString_v1_11_R1() {
-        super();
+    public NBTTagString_v1_11_R1(net.minecraft.server.v1_11_R1.NBTTagString data) {
+        super(data.c_());
     }
 
     public NBTTagString_v1_11_R1(String data) {
         super(data);
+    }
+
+    public NBTTagString_v1_11_R1() {
+        super();
     }
 
     @Override
@@ -29,8 +32,13 @@ public class NBTTagString_v1_11_R1 extends net.minecraft.server.v1_11_R1.NBTTagS
     }
 
     @Override
-    public NBTBase clone() {
-        return super.c();
+    public NBTTagString_v1_11_R1 c() {
+        return new NBTTagString_v1_11_R1(c_());
+    }
+
+    @Override
+    public NBTTagString_v1_11_R1 clone() {
+        return this.c();
     }
 
 }

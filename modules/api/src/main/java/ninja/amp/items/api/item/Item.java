@@ -35,6 +35,8 @@ public interface Item {
 
     ItemStack getItem();
 
+    void updateItem(ItemStack item);
+
     void saveToNBT(NBTTagCompound compound);
 
 }

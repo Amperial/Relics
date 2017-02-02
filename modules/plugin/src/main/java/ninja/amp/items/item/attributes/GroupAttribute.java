@@ -188,9 +188,9 @@ public class GroupAttribute extends BasicAttribute implements AttributeGroup {
         for (ItemAttribute attribute : getAttributes()) {
             NBTTagCompound attributeCompound = NBTTagCompound.create();
             attribute.saveToNBT(attributeCompound);
-            attributes.add(attributeCompound);
+            attributes.addBase(attributeCompound);
         }
-        compound.set("attributes", attributes);
+        compound.setBase("attributes", attributes);
         compound.setBoolean("spacing", spacing);
     }
 

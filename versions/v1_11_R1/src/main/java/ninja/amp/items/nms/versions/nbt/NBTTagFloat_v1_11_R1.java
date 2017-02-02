@@ -1,9 +1,12 @@
 package ninja.amp.items.nms.versions.nbt;
 
-import net.minecraft.server.v1_11_R1.NBTBase;
 import ninja.amp.items.nms.nbt.NBTTagFloat;
 
-public class NBTTagFloat_v1_11_R1 extends net.minecraft.server.v1_11_R1.NBTTagFloat implements NBTTagFloat{
+public class NBTTagFloat_v1_11_R1 extends net.minecraft.server.v1_11_R1.NBTTagFloat implements NBTTagFloat {
+
+    public NBTTagFloat_v1_11_R1(net.minecraft.server.v1_11_R1.NBTTagFloat v) {
+        super(v.i());
+    }
 
     public NBTTagFloat_v1_11_R1(float v) {
         super(v);
@@ -40,8 +43,13 @@ public class NBTTagFloat_v1_11_R1 extends net.minecraft.server.v1_11_R1.NBTTagFl
     }
 
     @Override
-    public NBTBase clone() {
-        return super.c();
+    public NBTTagFloat_v1_11_R1 c() {
+        return new NBTTagFloat_v1_11_R1(i());
+    }
+
+    @Override
+    public NBTTagFloat_v1_11_R1 clone() {
+        return this.c();
     }
 
 }

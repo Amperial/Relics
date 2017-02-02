@@ -8,11 +8,13 @@ public interface NBTTagList extends NBTBase {
 
     NBTTagList newInstance();
 
-    void add(NBTBase base);
+    void addBase(NBTBase base);
 
-    NBTBase remove(int index);
+    void addBase(int index, NBTBase base);
 
-    NBTBase get(int index);
+    NBTBase removeBase(int index);
+
+    NBTBase getBase(int index);
 
     int getInt(int index);
 

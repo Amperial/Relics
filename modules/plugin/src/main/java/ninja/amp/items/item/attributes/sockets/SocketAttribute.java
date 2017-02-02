@@ -135,14 +135,14 @@ public class SocketAttribute extends BasicAttribute implements Socket {
         if (!getAccepts().equals(getColor().getAccepts())) {
             NBTTagList list = NBTTagList.create();
             for (SocketColor color : getAccepts()) {
-                list.add(NBTTagString.create(color.getName()));
+                list.addBase(NBTTagString.create(color.getName()));
             }
-            compound.set("accepts", list);
+            compound.setBase("accepts", list);
         }
         if (hasGem()) {
             NBTTagCompound gemCompound = NBTTagCompound.create();
             getGem().saveToNBT(gemCompound);
-            compound.set("gem", gemCompound);
+            compound.setBase("gem", gemCompound);
         }
     }
 

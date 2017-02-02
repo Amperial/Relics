@@ -103,11 +103,11 @@ public class GemAttribute extends BasicAttribute implements Gem {
         compound.setString("color", getColor().getName());
         NBTTagCompound attributes = NBTTagCompound.create();
         getAttributes().saveToNBT(attributes);
-        compound.set("attributes", attributes);
+        compound.setBase("attributes", attributes);
         if (hasItem()) {
             NBTTagCompound item = NBTTagCompound.create();
             getItem().saveToNBT(item);
-            compound.set("item", item);
+            compound.setBase("item", item);
         }
     }
 
