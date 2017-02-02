@@ -51,6 +51,8 @@ import java.util.Map;
  */
 public class ConfigManager {
 
+    private static int NESTING_DEPTH;
+
     private final Map<Config, ConfigAccessor> configs = new HashMap<>();
 
     /**
@@ -61,6 +63,9 @@ public class ConfigManager {
     public ConfigManager(JavaPlugin plugin) {
         // Save main config
         plugin.saveDefaultConfig();
+
+        // Load nesting depth
+        NESTING_DEPTH = plugin.getConfig().getInt("config.nesting-depth", 0);
 
         // Register custom configs
         registerCustomConfigs(EnumSet.allOf(DefaultConfig.class), plugin);
@@ -73,10 +78,7 @@ public class ConfigManager {
      * @param plugin        The plugin that owns the configs
      */
     public void registerCustomConfigs(EnumSet<? extends Config> customConfigs, JavaPlugin plugin) {
-        File dataFolder = plugin.getDataFolder();
-        for (Config config : customConfigs) {
-            addConfigAccessor(new ConfigAccessor(plugin, config, dataFolder).saveDefaultConfig());
-        }
+        customConfigs.forEach(config -> registerCustomConfig(config, plugin));
     }
 
     /**
@@ -117,6 +119,16 @@ public class ConfigManager {
      */
     public FileConfiguration getConfig(Config configType) {
         return configs.get(configType).reloadConfig().getConfig();
+    }
+
+    public static String getNestedPath(String file) {
+        StringBuilder path = new StringBuilder();
+        int depth = Math.min(file.length(), NESTING_DEPTH);
+        for (int i = 0; i < depth; i++) {
+            path.append(file.charAt(i)).append('/');
+        }
+        path.append(file);
+        return path.toString();
     }
 
 }
