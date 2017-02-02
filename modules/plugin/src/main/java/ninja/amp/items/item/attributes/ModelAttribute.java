@@ -21,15 +21,15 @@ package ninja.amp.items.item.attributes;
 import ninja.amp.items.api.ItemPlugin;
 import ninja.amp.items.api.item.attribute.attributes.BasicAttribute;
 import ninja.amp.items.api.item.attribute.attributes.BasicAttributeFactory;
-import ninja.amp.items.api.item.attribute.attributes.CustomModel;
+import ninja.amp.items.api.item.attribute.attributes.Model;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class CustomModelAttribute extends BasicAttribute implements CustomModel {
+public class ModelAttribute extends BasicAttribute implements Model {
 
     private short modelDamage;
 
-    public CustomModelAttribute(String name, short modelDamage) {
+    public ModelAttribute(String name, short modelDamage) {
         super(name, DefaultAttributeType.MODEL);
 
         this.modelDamage = modelDamage;
@@ -51,30 +51,30 @@ public class CustomModelAttribute extends BasicAttribute implements CustomModel 
         compound.setShort("model-damage", getModelDamage());
     }
 
-    public static class Factory extends BasicAttributeFactory<CustomModel> {
+    public static class Factory extends BasicAttributeFactory<Model> {
 
         public Factory(ItemPlugin plugin) {
             super(plugin);
         }
 
         @Override
-        public CustomModel loadFromConfig(ConfigurationSection config) {
+        public Model loadFromConfig(ConfigurationSection config) {
             // Load name and model damage
             String name = config.getName();
             short modelDamage = (short) config.getInt("model-damage");
 
-            // Create custom model attribute
-            return new CustomModelAttribute(name, modelDamage);
+            // Create model attribute
+            return new ModelAttribute(name, modelDamage);
         }
 
         @Override
-        public CustomModel loadFromNBT(NBTTagCompound compound) {
+        public Model loadFromNBT(NBTTagCompound compound) {
             // Load name and model damage
             String name = compound.getString("name");
             short modelDamage = compound.getShort("model-damage");
 
-            // Create custom model attribute
-            return new CustomModelAttribute(name, modelDamage);
+            // Create model attribute
+            return new ModelAttribute(name, modelDamage);
         }
 
     }

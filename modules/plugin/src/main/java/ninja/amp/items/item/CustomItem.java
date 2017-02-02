@@ -22,7 +22,7 @@ import ninja.amp.items.api.item.Item;
 import ninja.amp.items.api.item.ItemFactory;
 import ninja.amp.items.api.item.ItemType;
 import ninja.amp.items.api.item.attribute.attributes.AttributeGroup;
-import ninja.amp.items.api.item.attribute.attributes.CustomModel;
+import ninja.amp.items.api.item.attribute.attributes.Model;
 import ninja.amp.items.item.attributes.DefaultAttributeType;
 import ninja.amp.items.nms.NMSHandler;
 import ninja.amp.items.nms.nbt.NBTBase;
@@ -107,7 +107,7 @@ public class CustomItem implements Item {
         List<String> lore = new ArrayList<>();
         attributes.getLore().addTo(lore, "");
         if (attributes.hasAttribute(DefaultAttributeType.MODEL, false)) {
-            CustomModel model = (CustomModel) attributes.getAttribute(DefaultAttributeType.MODEL, false);
+            Model model = (Model) attributes.getAttribute(DefaultAttributeType.MODEL, false);
             item.setDurability(model.getModelDamage());
             meta.setUnbreakable(true);
             meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);

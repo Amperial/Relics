@@ -20,7 +20,7 @@ package ninja.amp.items.api.item.attribute.attributes;
 
 import ninja.amp.items.api.item.attribute.ItemAttribute;
 
-public interface CustomModel extends ItemAttribute {
+public interface Model extends ItemAttribute {
 
     short getModelDamage();
 

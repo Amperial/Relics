@@ -27,7 +27,7 @@ import ninja.amp.items.api.item.ItemType;
 import ninja.amp.items.api.item.attribute.AttributeType;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
 import ninja.amp.items.api.item.attribute.attributes.sockets.SocketColor;
-import ninja.amp.items.item.attributes.CustomModelAttribute;
+import ninja.amp.items.item.attributes.ModelAttribute;
 import ninja.amp.items.item.attributes.DefaultAttributeType;
 import ninja.amp.items.item.attributes.GroupAttribute;
 import ninja.amp.items.item.attributes.RarityAttribute;
@@ -105,7 +105,7 @@ public class ItemManager implements ninja.amp.items.api.item.ItemManager {
         DefaultAttributeType.SOCKET.setFactory(new SocketAttribute.Factory(plugin));
         DefaultAttributeType.GEM.setFactory(new GemAttribute.Factory(plugin));
         DefaultAttributeType.GROUP.setFactory(new GroupAttribute.Factory(plugin));
-        DefaultAttributeType.MODEL.setFactory(new CustomModelAttribute.Factory(plugin));
+        DefaultAttributeType.MODEL.setFactory(new ModelAttribute.Factory(plugin));
     }
 
     @Override
