@@ -35,8 +35,11 @@ import ninja.amp.items.item.attributes.TextAttribute;
 import ninja.amp.items.item.attributes.sockets.GemAttribute;
 import ninja.amp.items.item.attributes.sockets.SocketAttribute;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
@@ -46,6 +49,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class ItemManager implements ninja.amp.items.api.item.ItemManager {
 
@@ -109,6 +113,29 @@ public class ItemManager implements ninja.amp.items.api.item.ItemManager {
         DefaultAttributeType.GEM.setFactory(new GemAttribute.Factory(plugin));
         DefaultAttributeType.GROUP.setFactory(new GroupAttribute.Factory(plugin));
         DefaultAttributeType.MODEL.setFactory(new ModelAttribute.Factory(plugin));
+    }
+
+    @Override
+    public ItemStack findInInventory(Player player, UUID itemId) {
+        return findInInventory(player.getInventory(), itemId);
+    }
+
+    @Override
+    public ItemStack findInInventory(Inventory inventory, UUID itemId) {
+        return findInContents(inventory.getContents(), itemId);
+    }
+
+    @Override
+    public ItemStack findInContents(ItemStack[] contents, UUID itemId) {
+        for (ItemStack itemStack : contents) {
+            if (itemStack != null && itemStack.getType() != Material.AIR && isItem(itemStack)) {
+                Item item = getItem(itemStack);
+                if (item.getId().equals(itemId)) {
+                    return itemStack;
+                }
+            }
+        }
+        return null;
     }
 
     @Override

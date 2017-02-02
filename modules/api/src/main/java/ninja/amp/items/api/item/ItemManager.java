@@ -23,13 +23,22 @@ import ninja.amp.items.api.item.attribute.AttributeType;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.UUID;
 
 public interface ItemManager {
+
+    ItemStack findInInventory(Player player, UUID itemId);
+
+    ItemStack findInInventory(Inventory inventory, UUID itemId);
+
+    ItemStack findInContents(ItemStack[] contents, UUID itemId);
 
     boolean isItem(ItemStack itemStack);
 

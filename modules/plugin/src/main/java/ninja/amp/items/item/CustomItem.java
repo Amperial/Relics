@@ -106,7 +106,7 @@ public class CustomItem implements Item {
         updateItem(item);
 
         // Set NBTTagCompound
-        NBTTagCompound compound = NMSHandler.getInterface().getTagCompound(item);
+        NBTTagCompound compound = NMSHandler.getInterface().getTagCompoundCopy(item);
         NBTTagCompound itemTag = NBTTagCompound.create();
         saveToNBT(itemTag);
         compound.setBase(ITEM_TAG, itemTag);
@@ -188,7 +188,7 @@ public class CustomItem implements Item {
         @Override
         public Item loadFromItemStack(ItemStack itemStack) {
             // Get ItemStack NBT
-            NBTTagCompound compound = NMSHandler.getInterface().getTagCompound(itemStack);
+            NBTTagCompound compound = NMSHandler.getInterface().getTagCompoundDirect(itemStack);
             NBTTagCompound itemTag = compound.getCompound(ITEM_TAG);
 
             // Load from NBT
@@ -202,7 +202,7 @@ public class CustomItem implements Item {
 
         @Override
         public boolean isItem(ItemStack itemStack) {
-            return NMSHandler.getInterface().getTagCompound(itemStack).hasKey(ITEM_TAG);
+            return NMSHandler.getInterface().getTagCompoundDirect(itemStack).hasKey(ITEM_TAG);
         }
 
     }

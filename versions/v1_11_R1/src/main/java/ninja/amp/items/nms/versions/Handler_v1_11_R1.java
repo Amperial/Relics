@@ -1,3 +1,21 @@
+/*
+ * This file is part of AmpItems NMS 1_11_R1 Compatibility.
+ *
+ * Copyright (c) 2017 <http://github.com/ampayne2/AmpItems//>
+ *
+ * AmpItems NMS 1_11_R1 Compatibility is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AmpItems NMS 1_11_R1 Compatibility is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with AmpItems NMS 1_11_R1 Compatibility.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package ninja.amp.items.nms.versions;
 
 import net.minecraft.server.v1_11_R1.NBTTagCompound;
@@ -13,6 +31,7 @@ import java.lang.reflect.Field;
 public class Handler_v1_11_R1 extends NMSHandler {
 
     private static final Field HANDLE_FIELD;
+
     static {
         try {
             HANDLE_FIELD = CraftItemStack.class.getDeclaredField("handle");
@@ -38,15 +57,30 @@ public class Handler_v1_11_R1 extends NMSHandler {
     }
 
     @Override
-    public ninja.amp.items.nms.nbt.NBTTagCompound getTagCompound(ItemStack item) {
-        net.minecraft.server.v1_11_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-        if (nmsItem.hasTag()) {
-            NBTTagCompound tag = nmsItem.getTag();
+    public ninja.amp.items.nms.nbt.NBTTagCompound getTagCompoundCopy(ItemStack item) {
+        return getTagCompound(CraftItemStack.asNMSCopy(item));
+    }
+
+    @Override
+    public ninja.amp.items.nms.nbt.NBTTagCompound getTagCompoundDirect(ItemStack item) {
+        if (item instanceof CraftItemStack) {
+            try {
+                return getTagCompound((net.minecraft.server.v1_11_R1.ItemStack) HANDLE_FIELD.get(item));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return getTagCompoundCopy(item);
+    }
+
+    private ninja.amp.items.nms.nbt.NBTTagCompound getTagCompound(net.minecraft.server.v1_11_R1.ItemStack item) {
+        if (item.hasTag()) {
+            NBTTagCompound tag = item.getTag();
             if (tag instanceof NBTTagCompound_v1_11_R1) {
                 return (NBTTagCompound_v1_11_R1) tag;
             } else {
                 NBTTagCompound_v1_11_R1 apiTag = new NBTTagCompound_v1_11_R1(tag);
-                nmsItem.setTag(apiTag);
+                item.setTag(apiTag);
                 return apiTag;
             }
         } else {
@@ -63,12 +97,16 @@ public class Handler_v1_11_R1 extends NMSHandler {
 
     @Override
     public void setTagCompoundDirect(ItemStack item, ninja.amp.items.nms.nbt.NBTTagCompound compound) {
-        CraftItemStack itemStack = (CraftItemStack) item;
-        try {
-            net.minecraft.server.v1_11_R1.ItemStack handle = (net.minecraft.server.v1_11_R1.ItemStack) HANDLE_FIELD.get(itemStack);
-            handle.setTag((NBTTagCompound_v1_11_R1) compound);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        if (item instanceof CraftItemStack) {
+            CraftItemStack itemStack = (CraftItemStack) item;
+            try {
+                net.minecraft.server.v1_11_R1.ItemStack handle = (net.minecraft.server.v1_11_R1.ItemStack) HANDLE_FIELD.get(itemStack);
+                handle.setTag((NBTTagCompound_v1_11_R1) compound);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        } else {
+            // TODO: Research how to handle this case. Shouldn't be a problem for now
         }
     }
 
