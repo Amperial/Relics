@@ -23,9 +23,13 @@ import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.UUID;
+
 public interface Item {
 
     String getName();
+
+    UUID getId();
 
     Material getMaterial();
 

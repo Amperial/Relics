@@ -37,18 +37,21 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class CustomItem implements Item {
 
     private static final String ITEM_TAG = "amp-item";
 
     private final String name;
+    private final UUID id;
     private final Material material;
     private final ItemType type;
     private final AttributeGroup attributes;
 
-    private CustomItem(String name, Material material, ItemType type, AttributeGroup attributes) {
+    private CustomItem(String name, UUID id, Material material, ItemType type, AttributeGroup attributes) {
         this.name = name;
+        this.id = id;
         this.material = material;
         this.type = type;
         this.attributes = attributes;
@@ -57,6 +60,11 @@ public class CustomItem implements Item {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public UUID getId() {
+        return id;
     }
 
     @Override
@@ -112,6 +120,7 @@ public class CustomItem implements Item {
     public void saveToNBT(NBTTagCompound compound) {
         attributes.saveToNBT(compound);
         compound.setString("name", getName());
+        compound.setString("id", getId().toString());
         compound.setString("material", getMaterial().name());
         compound.setString("item-type", getType().getName());
         compound.setBase("item-instance", NBTTagObject.create(this));
@@ -127,14 +136,15 @@ public class CustomItem implements Item {
 
         @Override
         public Item loadFromConfig(ConfigurationSection config) {
-            // Load name, material, type, and attributes
+            // Load name, id, material, type, and attributes
             String name = ChatColor.translateAlternateColorCodes('&', config.getString("name"));
+            UUID id = UUID.randomUUID();
             Material material = Material.getMaterial(config.getString("material"));
             ItemType type = itemManager.getItemType(config.getString("item-type"));
             AttributeGroup attribute = (AttributeGroup) DefaultAttributeType.GROUP.getFactory().loadFromConfig(config);
 
             // Create Item
-            return new CustomItem(name, material, type, attribute);
+            return new CustomItem(name, id, material, type, attribute);
         }
 
         @Override
@@ -146,14 +156,15 @@ public class CustomItem implements Item {
                 }
             }
 
-            // Load name, material, type, and attributes
+            // Load name, id, material, type, and attributes
             String name = compound.getString("name");
+            UUID id = UUID.fromString(compound.getString("id"));
             Material material = Material.getMaterial(compound.getString("material"));
             ItemType type = itemManager.getItemType(compound.getString("item-type"));
             AttributeGroup attribute = (AttributeGroup) DefaultAttributeType.GROUP.getFactory().loadFromNBT(compound);
 
             // Create Item
-            Item item = new CustomItem(name, material, type, attribute);
+            Item item = new CustomItem(name, id, material, type, attribute);
             compound.setBase("item-instance", NBTTagObject.create(item));
             return item;
         }
