@@ -1,6 +1,6 @@
 name: "&3Example Item"
 material: "DIAMOND_SWORD"
-item-type: "weapon"
+item-type: "weapon-sword"
 attributes:
   model:
     type: "model"

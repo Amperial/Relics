@@ -80,11 +80,11 @@ public class BasicAttribute implements ItemAttribute {
     }
 
     @Override
-    public void equip(Player player) {
+    public void onEquip(Player player) {
     }
 
     @Override
-    public void unEquip(Player player) {
+    public void onUnEquip(Player player) {
     }
 
     @Override

@@ -16,7 +16,25 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with AmpItems.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ninja.amp.items.item.equip;
+package ninja.amp.items.item;
 
-public class Equipment {
+import ninja.amp.items.api.item.ItemType;
+
+public enum ArmorType implements ItemType {
+    HELMET("helmet"),
+    CHESTPLATE("chestplate"),
+    LEGGINGS("leggings"),
+    BOOTS("boots");
+
+    private final String name;
+
+    ArmorType(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
 }

@@ -31,9 +31,9 @@ import ninja.amp.items.commands.ReloadCommand;
 import ninja.amp.items.commands.items.GetItemCommand;
 import ninja.amp.items.commands.items.ItemInfoCommand;
 import ninja.amp.items.commands.sockets.ExtractGemCommand;
+import ninja.amp.items.equipment.EquipmentManager;
 import ninja.amp.items.item.ItemManager;
 import ninja.amp.items.nms.NMSHandler;
-import org.bukkit.Bukkit;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -49,6 +49,7 @@ public class AmpItems extends JavaPlugin implements ItemPlugin {
     private Messenger messenger;
     private CommandController commandController;
     private ItemManager itemManager;
+    private EquipmentManager equipmentManager;
     private ItemListener itemListener;
     private MenuListener menuListener;
 
@@ -62,6 +63,7 @@ public class AmpItems extends JavaPlugin implements ItemPlugin {
         messenger = new Messenger(this);
         commandController = new CommandController(this);
         itemManager = new ItemManager(this);
+        equipmentManager = new EquipmentManager(this);
         itemListener = new ItemListener(this);
         menuListener = new MenuListener(this);
 
@@ -98,10 +100,6 @@ public class AmpItems extends JavaPlugin implements ItemPlugin {
         // Add amp items command tree to command controller
         commandController.addCommand(ampItems);
         commandController.updatePageList();
-
-        // Register listeners
-        Bukkit.getServer().getPluginManager().registerEvents(itemListener, this);
-        Bukkit.getServer().getPluginManager().registerEvents(menuListener, this);
     }
 
     @Override
@@ -109,6 +107,7 @@ public class AmpItems extends JavaPlugin implements ItemPlugin {
         // The order managers are destroyed in is not important
         menuListener = null;
         itemListener = null;
+        equipmentManager = null;
         itemManager = null;
         commandController.unregisterCommands();
         commandController = null;
@@ -134,6 +133,11 @@ public class AmpItems extends JavaPlugin implements ItemPlugin {
     @Override
     public ItemManager getItemManager() {
         return itemManager;
+    }
+
+    @Override
+    public EquipmentManager getEquipmentManager() {
+        return equipmentManager;
     }
 
     public ItemListener getItemListener() {

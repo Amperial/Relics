@@ -20,19 +20,17 @@ package ninja.amp.items.item;
 
 import ninja.amp.items.api.item.ItemType;
 
-public enum DefaultItemType implements ItemType {
-    BLOCK("block"),
-    CONSUMABLE("consumable"),
-    ENTITY("entity"),
-    INTERACTABLE("interactable"),
-    OTHER("other"),
-    PROJECTILE("projectile"),
-    SHIELD("shield"),
-    SHULKER_BOX("shulker-box");
+public enum WeaponType implements ItemType {
+    AXE("weapon-axe"),
+    BOW("weapon-bow"),
+    HOE("weapon-hoe"),
+    PICKAXE("weapon-pickaxe"),
+    SHOVEL("weapon-shovel"),
+    SWORD("weapon-sword");
 
     private final String name;
 
-    DefaultItemType(String name) {
+    WeaponType(String name) {
         this.name = name;
     }
 

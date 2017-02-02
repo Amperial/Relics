@@ -36,10 +36,10 @@
  */
 package ninja.amp.items.api.item.attribute;
 
-import ninja.amp.items.api.item.attribute.equips.Equippable;
+import ninja.amp.items.api.equipment.Equip;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
 
-public interface ItemAttribute extends Equippable {
+public interface ItemAttribute extends Equip {
 
     String getName();
 

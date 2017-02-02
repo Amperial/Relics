@@ -115,16 +115,16 @@ public class SocketAttribute extends BasicAttribute implements Socket {
     }
 
     @Override
-    public void equip(Player player) {
+    public void onEquip(Player player) {
         if (hasGem()) {
-            getGem().equip(player);
+            getGem().onEquip(player);
         }
     }
 
     @Override
-    public void unEquip(Player player) {
+    public void onUnEquip(Player player) {
         if (hasGem()) {
-            getGem().unEquip(player);
+            getGem().onUnEquip(player);
         }
     }
 

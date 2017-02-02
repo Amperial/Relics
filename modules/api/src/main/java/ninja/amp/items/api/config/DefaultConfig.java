@@ -42,9 +42,10 @@ package ninja.amp.items.api.config;
  * @author Austin Payne
  */
 public enum DefaultConfig implements Config {
-    MESSAGE("lang.yml"),
-    ITEMS("items.yml"),
     ATTRIBUTES("attributes.yml"),
+    EQUIPMENT("equipment.yml"),
+    ITEMS("items.yml"),
+    MESSAGE("lang.yml"),
     SOCKETS("sockets.yml");
 
     private final String fileName;

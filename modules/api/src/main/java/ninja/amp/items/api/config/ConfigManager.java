@@ -37,9 +37,8 @@
 package ninja.amp.items.api.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
-import java.io.File;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,7 +59,7 @@ public class ConfigManager {
      *
      * @param plugin The item plugin instance
      */
-    public ConfigManager(JavaPlugin plugin) {
+    public ConfigManager(Plugin plugin) {
         // Save main config
         plugin.saveDefaultConfig();
 
@@ -77,7 +76,7 @@ public class ConfigManager {
      * @param customConfigs The custom configs to register
      * @param plugin        The plugin that owns the configs
      */
-    public void registerCustomConfigs(EnumSet<? extends Config> customConfigs, JavaPlugin plugin) {
+    public void registerCustomConfigs(EnumSet<? extends Config> customConfigs, Plugin plugin) {
         customConfigs.forEach(config -> registerCustomConfig(config, plugin));
     }
 
@@ -87,9 +86,8 @@ public class ConfigManager {
      * @param config The custom config to register
      * @param plugin The plugin that owns the config
      */
-    public void registerCustomConfig(Config config, JavaPlugin plugin) {
-        File dataFolder = plugin.getDataFolder();
-        addConfigAccessor(new ConfigAccessor(plugin, config, dataFolder).saveDefaultConfig());
+    public void registerCustomConfig(Config config, Plugin plugin) {
+        addConfigAccessor(new ConfigAccessor(plugin, config).saveDefaultConfig());
     }
 
     /**
@@ -118,7 +116,7 @@ public class ConfigManager {
      * @return The configuration file
      */
     public FileConfiguration getConfig(Config configType) {
-        return configs.get(configType).reloadConfig().getConfig();
+        return getConfigAccessor(configType).getConfig();
     }
 
     public static String getNestedPath(String file) {

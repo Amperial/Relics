@@ -18,14 +18,18 @@
  */
 package ninja.amp.items;
 
+import ninja.amp.items.api.ItemPlugin;
 import org.bukkit.event.Listener;
 
 public class ItemListener implements Listener {
 
-    private final AmpItems plugin;
+    private final ItemPlugin plugin;
 
-    public ItemListener(AmpItems plugin) {
+    public ItemListener(ItemPlugin plugin) {
         this.plugin = plugin;
+
+        // Register listener
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
 }

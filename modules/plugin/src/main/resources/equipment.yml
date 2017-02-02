@@ -1,0 +1,13 @@
+slots:
+  helmet:
+    type: "helmet"
+  chestplate:
+    type: "chestplate"
+  leggings:
+    type: "leggings"
+  boots:
+    type: "boots"
+  main-hand:
+    type: "weapon-sword"
+  off-hand:
+    type: "shield"

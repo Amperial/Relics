@@ -172,13 +172,13 @@ public class GroupAttribute extends BasicAttribute implements AttributeGroup {
     }
 
     @Override
-    public void equip(Player player) {
-        getAttributes().forEach(attribute -> attribute.equip(player));
+    public void onEquip(Player player) {
+        getAttributes().forEach(attribute -> attribute.onEquip(player));
     }
 
     @Override
-    public void unEquip(Player player) {
-        getAttributes().forEach(attribute -> attribute.unEquip(player));
+    public void onUnEquip(Player player) {
+        getAttributes().forEach(attribute -> attribute.onUnEquip(player));
     }
 
     @Override

@@ -24,7 +24,7 @@ import ninja.amp.items.api.item.attribute.ItemAttribute;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import java.util.Collection;
 import java.util.Map;
@@ -49,9 +49,9 @@ public interface ItemManager {
 
     Map<String, ItemConfig> getItemConfigs();
 
-    void registerItemConfigs(Collection<? extends ItemConfig> items, JavaPlugin plugin);
+    void registerItemConfigs(Collection<? extends ItemConfig> items, Plugin plugin);
 
-    void registerItemConfig(ItemConfig item, JavaPlugin plugin);
+    void registerItemConfig(ItemConfig item, Plugin plugin);
 
     boolean hasItemType(String type);
 
@@ -59,9 +59,9 @@ public interface ItemManager {
 
     Map<String, ItemType> getItemTypes();
 
-    void registerItemTypes(Collection<? extends ItemType> types, JavaPlugin plugin);
+    void registerItemTypes(Collection<? extends ItemType> types, Plugin plugin);
 
-    void registerItemType(ItemType type, JavaPlugin plugin);
+    void registerItemType(ItemType type, Plugin plugin);
 
     boolean hasAttributeType(String type);
 
@@ -69,9 +69,9 @@ public interface ItemManager {
 
     Map<String, AttributeType> getAttributeTypes();
 
-    void registerAttributeTypes(Collection<? extends AttributeType> types, JavaPlugin plugin);
+    void registerAttributeTypes(Collection<? extends AttributeType> types, Plugin plugin);
 
-    void registerAttributeType(AttributeType type, JavaPlugin plugin);
+    void registerAttributeType(AttributeType type, Plugin plugin);
 
     ItemAttribute loadAttribute(ConfigurationSection config);
 

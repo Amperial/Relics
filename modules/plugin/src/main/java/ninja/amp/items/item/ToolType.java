@@ -20,19 +20,16 @@ package ninja.amp.items.item;
 
 import ninja.amp.items.api.item.ItemType;
 
-public enum DefaultItemType implements ItemType {
-    BLOCK("block"),
-    CONSUMABLE("consumable"),
-    ENTITY("entity"),
-    INTERACTABLE("interactable"),
-    OTHER("other"),
-    PROJECTILE("projectile"),
-    SHIELD("shield"),
-    SHULKER_BOX("shulker-box");
+public enum ToolType implements ItemType {
+    AXE("tool-axe"),
+    HOE("tool-hoe"),
+    PICKAXE("tool-pickaxe"),
+    SHEARS("tool-shears"),
+    SHOVEL("tool-shovel");
 
     private final String name;
 
-    DefaultItemType(String name) {
+    ToolType(String name) {
         this.name = name;
     }
 

@@ -18,7 +18,7 @@
  */
 package ninja.amp.items.item;
 
-import ninja.amp.items.AmpItems;
+import ninja.amp.items.api.ItemPlugin;
 import ninja.amp.items.api.config.DefaultConfig;
 import ninja.amp.items.api.config.ItemConfig;
 import ninja.amp.items.api.item.Item;
@@ -27,9 +27,9 @@ import ninja.amp.items.api.item.ItemType;
 import ninja.amp.items.api.item.attribute.AttributeType;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
 import ninja.amp.items.api.item.attribute.attributes.sockets.SocketColor;
-import ninja.amp.items.item.attributes.ModelAttribute;
 import ninja.amp.items.item.attributes.DefaultAttributeType;
 import ninja.amp.items.item.attributes.GroupAttribute;
+import ninja.amp.items.item.attributes.ModelAttribute;
 import ninja.amp.items.item.attributes.RarityAttribute;
 import ninja.amp.items.item.attributes.TextAttribute;
 import ninja.amp.items.item.attributes.sockets.GemAttribute;
@@ -38,7 +38,7 @@ import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -49,13 +49,13 @@ import java.util.Map;
 
 public class ItemManager implements ninja.amp.items.api.item.ItemManager {
 
-    private final AmpItems plugin;
+    private final ItemPlugin plugin;
     private final Map<String, AttributeType> attributeTypes;
     private final Map<String, ItemType> itemTypes;
     private final Map<String, ItemConfig> items;
     private ItemFactory factory;
 
-    public ItemManager(AmpItems plugin) {
+    public ItemManager(ItemPlugin plugin) {
         this.plugin = plugin;
         this.attributeTypes = new HashMap<>();
         this.itemTypes = new HashMap<>();
@@ -63,6 +63,9 @@ public class ItemManager implements ninja.amp.items.api.item.ItemManager {
 
         registerAttributeTypes(EnumSet.allOf(DefaultAttributeType.class), plugin);
         registerItemTypes(EnumSet.allOf(DefaultItemType.class), plugin);
+        registerItemTypes(EnumSet.allOf(ArmorType.class), plugin);
+        registerItemTypes(EnumSet.allOf(ToolType.class), plugin);
+        registerItemTypes(EnumSet.allOf(WeaponType.class), plugin);
 
         // Load attribute type lore order
         FileConfiguration attributes = plugin.getConfigManager().getConfig(DefaultConfig.ATTRIBUTES);
@@ -154,12 +157,12 @@ public class ItemManager implements ninja.amp.items.api.item.ItemManager {
     }
 
     @Override
-    public void registerItemConfigs(Collection<? extends ItemConfig> items, JavaPlugin plugin) {
+    public void registerItemConfigs(Collection<? extends ItemConfig> items, Plugin plugin) {
         items.forEach(item -> registerItemConfig(item, plugin));
     }
 
     @Override
-    public void registerItemConfig(ItemConfig config, JavaPlugin plugin) {
+    public void registerItemConfig(ItemConfig config, Plugin plugin) {
         items.put(config.getItem().toLowerCase(), config);
         this.plugin.getConfigManager().registerCustomConfig(config, plugin);
     }
@@ -180,12 +183,12 @@ public class ItemManager implements ninja.amp.items.api.item.ItemManager {
     }
 
     @Override
-    public void registerItemTypes(Collection<? extends ItemType> types, JavaPlugin plugin) {
+    public void registerItemTypes(Collection<? extends ItemType> types, Plugin plugin) {
         types.forEach(type -> registerItemType(type, plugin));
     }
 
     @Override
-    public void registerItemType(ItemType type, JavaPlugin plugin) {
+    public void registerItemType(ItemType type, Plugin plugin) {
         itemTypes.put(type.getName().toLowerCase(), type);
     }
 
@@ -205,12 +208,12 @@ public class ItemManager implements ninja.amp.items.api.item.ItemManager {
     }
 
     @Override
-    public void registerAttributeTypes(Collection<? extends AttributeType> types, JavaPlugin plugin) {
+    public void registerAttributeTypes(Collection<? extends AttributeType> types, Plugin plugin) {
         types.forEach(type -> registerAttributeType(type, plugin));
     }
 
     @Override
-    public void registerAttributeType(AttributeType type, JavaPlugin plugin) {
+    public void registerAttributeType(AttributeType type, Plugin plugin) {
         attributeTypes.put(type.getName().toLowerCase(), type);
         this.plugin.getConfigManager().registerCustomConfig(type, plugin);
     }

@@ -38,7 +38,7 @@ package ninja.amp.items.api.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +52,7 @@ import java.util.logging.Level;
  */
 public class ConfigAccessor {
 
-    private final JavaPlugin plugin;
+    private final Plugin plugin;
     private final Config configType;
     private final File configFile;
     private FileConfiguration fileConfiguration;
@@ -64,10 +64,29 @@ public class ConfigAccessor {
      * @param configType The type of the configuration file
      * @param parent     The parent file
      */
-    public ConfigAccessor(JavaPlugin plugin, Config configType, File parent) {
+    public ConfigAccessor(Plugin plugin, Config configType, File parent) {
         this.plugin = plugin;
         this.configType = configType;
         this.configFile = new File(parent, configType.getFileName());
+    }
+
+    /**
+     * Creates a new config accessor with the parent file of the plugin instance.
+     *
+     * @param plugin     The plugin instance
+     * @param configType The type of the configuration file
+     */
+    public ConfigAccessor(Plugin plugin, Config configType) {
+        this(plugin, configType, plugin.getDataFolder());
+    }
+
+    /**
+     * Checks if the configuration file exists.
+     *
+     * @return {@code true} if the config exists, else {@code false}
+     */
+    public boolean exists() {
+        return configFile.exists();
     }
 
     /**

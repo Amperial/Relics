@@ -16,31 +16,17 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with AmpItems API.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ninja.amp.items.api.config;
+package ninja.amp.items.api.equipment;
 
+import ninja.amp.items.api.item.Item;
 import org.bukkit.entity.Player;
 
-public class PlayerConfig implements Config {
+public interface EquipmentManager {
 
-    private final String fileName;
+    Equipment getEquipment(Player player);
 
-    public PlayerConfig(Player player) {
-        this.fileName = "players/" + ConfigManager.getNestedPath(player.getUniqueId().toString()) + ".yml";
-    }
+    boolean canEquip(Player player, Item equip);
 
-    @Override
-    public String getFileName() {
-        return fileName;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj != null && obj instanceof PlayerConfig && fileName.equals(((PlayerConfig) obj).getFileName());
-    }
-
-    @Override
-    public int hashCode() {
-        return fileName.hashCode();
-    }
+    void equip(Player player, Item equip);
 
 }

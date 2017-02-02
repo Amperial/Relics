@@ -20,6 +20,7 @@ package ninja.amp.items.api;
 
 import ninja.amp.items.api.command.CommandController;
 import ninja.amp.items.api.config.ConfigManager;
+import ninja.amp.items.api.equipment.EquipmentManager;
 import ninja.amp.items.api.item.ItemManager;
 import ninja.amp.items.api.message.Messenger;
 import org.bukkit.plugin.Plugin;
@@ -33,5 +34,7 @@ public interface ItemPlugin extends Plugin {
     CommandController getCommandController();
 
     ItemManager getItemManager();
+
+    EquipmentManager getEquipmentManager();
 
 }

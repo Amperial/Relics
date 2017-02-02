@@ -40,6 +40,7 @@ public class MenuListener implements Listener {
      * @param plugin The item plugin instance
      */
     public MenuListener(ItemPlugin plugin) {
+        // Register listener
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 

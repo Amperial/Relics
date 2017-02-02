@@ -88,13 +88,13 @@ public class GemAttribute extends BasicAttribute implements Gem {
     }
 
     @Override
-    public void equip(Player player) {
-        getAttributes().equip(player);
+    public void onEquip(Player player) {
+        getAttributes().onEquip(player);
     }
 
     @Override
-    public void unEquip(Player player) {
-        getAttributes().unEquip(player);
+    public void onUnEquip(Player player) {
+        getAttributes().onUnEquip(player);
     }
 
     @Override

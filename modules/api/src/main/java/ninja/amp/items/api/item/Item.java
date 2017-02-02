@@ -18,6 +18,7 @@
  */
 package ninja.amp.items.api.item;
 
+import ninja.amp.items.api.equipment.Equip;
 import ninja.amp.items.api.item.attribute.attributes.AttributeGroup;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.Material;
@@ -25,7 +26,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 
-public interface Item {
+public interface Item extends Equip {
 
     String getName();
 
