@@ -21,6 +21,7 @@ package ninja.amp.items.item;
 import ninja.amp.items.api.item.Item;
 import ninja.amp.items.api.item.ItemFactory;
 import ninja.amp.items.api.item.ItemType;
+import ninja.amp.items.api.item.attribute.ItemAttribute;
 import ninja.amp.items.api.item.attribute.attributes.AttributeGroup;
 import ninja.amp.items.api.item.attribute.attributes.Model;
 import ninja.amp.items.item.attributes.DefaultAttributeType;
@@ -37,8 +38,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class CustomItem implements Item {
 
@@ -79,8 +84,128 @@ public class CustomItem implements Item {
     }
 
     @Override
-    public AttributeGroup getAttributes() {
-        return attributes;
+    public boolean hasAttribute(String name) {
+        return attributes.hasAttribute(name);
+    }
+
+    @Override
+    public boolean hasAttributeDeep(String name) {
+        return attributes.hasAttributeDeep(name);
+    }
+
+    @Override
+    public boolean hasAttribute(Predicate<ItemAttribute> predicate) {
+        return attributes.hasAttribute(predicate);
+    }
+
+    @Override
+    public boolean hasAttributeDeep(Predicate<ItemAttribute> predicate) {
+        return attributes.hasAttributeDeep(predicate);
+    }
+
+    @Override
+    public Optional<ItemAttribute> getAttribute(String name) {
+        return attributes.getAttribute(name);
+    }
+
+    @Override
+    public Optional<ItemAttribute> getAttributeDeep(String name) {
+        return attributes.getAttributeDeep(name);
+    }
+
+    @Override
+    public Optional<ItemAttribute> getAttribute(Predicate<ItemAttribute> predicate) {
+        return attributes.getAttribute(predicate);
+    }
+
+    @Override
+    public Optional<ItemAttribute> getAttributeDeep(Predicate<ItemAttribute> predicate) {
+        return attributes.getAttributeDeep(predicate);
+    }
+
+    @Override
+    public Collection<ItemAttribute> getAttributes() {
+        return attributes.getAttributes();
+    }
+
+    @Override
+    public Collection<ItemAttribute> getAttributesDeep() {
+        return attributes.getAttributesDeep();
+    }
+
+    @Override
+    public Collection<ItemAttribute> getAttributes(Predicate<ItemAttribute> predicate) {
+        return attributes.getAttributes(predicate);
+    }
+
+    @Override
+    public Collection<ItemAttribute> getAttributesDeep(Predicate<ItemAttribute> predicate) {
+        return attributes.getAttributesDeep(predicate);
+    }
+
+    @Override
+    public <T extends ItemAttribute> Optional<T> getAttribute(String name, Class<T> clazz) {
+        return attributes.getAttribute(name, clazz);
+    }
+
+    @Override
+    public <T extends ItemAttribute> Optional<T> getAttributeDeep(String name, Class<T> clazz) {
+        return attributes.getAttributeDeep(name, clazz);
+    }
+
+    @Override
+    public <T extends ItemAttribute> Optional<T> getAttribute(Predicate<T> predicate, Class<T> clazz) {
+        return attributes.getAttribute(predicate, clazz);
+    }
+
+    @Override
+    public <T extends ItemAttribute> Optional<T> getAttributeDeep(Predicate<T> predicate, Class<T> clazz) {
+        return attributes.getAttributeDeep(predicate, clazz);
+    }
+
+    @Override
+    public <T extends ItemAttribute> Collection<T> getAttributes(Class<T> clazz) {
+        return attributes.getAttributes(clazz);
+    }
+
+    @Override
+    public <T extends ItemAttribute> Collection<T> getAttributesDeep(Class<T> clazz) {
+        return attributes.getAttributesDeep(clazz);
+    }
+
+    @Override
+    public <T extends ItemAttribute> Collection<T> getAttributes(Predicate<T> predicate, Class<T> clazz) {
+        return attributes.getAttributes(predicate, clazz);
+    }
+
+    @Override
+    public <T extends ItemAttribute> Collection<T> getAttributesDeep(Predicate<T> predicate, Class<T> clazz) {
+        return attributes.getAttributesDeep(predicate, clazz);
+    }
+
+    @Override
+    public void forEach(Consumer<ItemAttribute> action) {
+        attributes.forEach(action);
+    }
+
+    @Override
+    public void forEachDeep(Consumer<ItemAttribute> action) {
+        attributes.forEachDeep(action);
+    }
+
+    @Override
+    public void forEach(Consumer<ItemAttribute> action, Predicate<ItemAttribute> predicate) {
+        attributes.forEach(action, predicate);
+    }
+
+    @Override
+    public void forEachDeep(Consumer<ItemAttribute> action, Predicate<ItemAttribute> predicate) {
+        attributes.forEachDeep(action, predicate);
+    }
+
+    @Override
+    public void addAttribute(ItemAttribute... attributes) {
+        this.attributes.addAttribute(attributes);
     }
 
     @Override
@@ -102,34 +227,37 @@ public class CustomItem implements Item {
     public ItemStack getItem() {
         ItemStack item = new ItemStack(getMaterial());
 
-        // Set ItemMeta
-        updateItem(item);
-
-        // Set NBTTagCompound
-        NBTTagCompound compound = NMSHandler.getInterface().getTagCompoundCopy(item);
-        NBTTagCompound itemTag = NBTTagCompound.create();
-        saveToNBT(itemTag);
-        compound.setBase(ITEM_TAG, itemTag);
-        item = NMSHandler.getInterface().setTagCompoundCopy(item, compound);
+        // Update ItemStack
+        item = updateItem(item);
 
         return item;
     }
 
     @Override
-    public void updateItem(ItemStack item) {
+    public ItemStack updateItem(ItemStack item) {
         // Set ItemMeta
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(getName());
         List<String> lore = new ArrayList<>();
         attributes.getLore().addTo(lore, "");
-        if (attributes.hasAttribute(DefaultAttributeType.MODEL, false)) {
-            Model model = (Model) attributes.getAttribute(DefaultAttributeType.MODEL, false);
+        Optional<ItemAttribute> modelOptional = attributes.getAttribute(DefaultAttributeType.MODEL);
+        if (modelOptional.isPresent()) {
+            Model model = (Model) modelOptional.get();
             item.setDurability(model.getModelDamage());
             meta.setUnbreakable(true);
             meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         }
         meta.setLore(lore);
         item.setItemMeta(meta);
+
+        // Set NBTTagCompound
+        NBTTagCompound compound = NMSHandler.getInterface().getTagCompoundDirect(item);
+        NBTTagCompound itemTag = NBTTagCompound.create();
+        saveToNBT(itemTag);
+        compound.setBase(ITEM_TAG, itemTag);
+        item = NMSHandler.getInterface().setTagCompoundDirect(item, compound);
+
+        return item;
     }
 
     @Override
@@ -157,7 +285,7 @@ public class CustomItem implements Item {
             UUID id = UUID.randomUUID();
             Material material = Material.getMaterial(config.getString("material"));
             ItemType type = itemManager.getItemType(config.getString("item-type"));
-            AttributeGroup attribute = (AttributeGroup) DefaultAttributeType.GROUP.getFactory().loadFromConfig(config);
+            AttributeGroup attribute = (AttributeGroup) DefaultAttributeType.GROUP.getFactory().loadFromConfig("attributes", config);
 
             // Create Item
             return new CustomItem(name, id, material, type, attribute);
@@ -177,7 +305,7 @@ public class CustomItem implements Item {
             UUID id = UUID.fromString(compound.getString("id"));
             Material material = Material.getMaterial(compound.getString("material"));
             ItemType type = itemManager.getItemType(compound.getString("item-type"));
-            AttributeGroup attribute = (AttributeGroup) DefaultAttributeType.GROUP.getFactory().loadFromNBT(compound);
+            AttributeGroup attribute = (AttributeGroup) DefaultAttributeType.GROUP.getFactory().loadFromNBT("attributes", compound);
 
             // Create Item
             Item item = new CustomItem(name, id, material, type, attribute);

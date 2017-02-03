@@ -56,6 +56,6 @@ public abstract class NMSHandler {
 
     public abstract ItemStack setTagCompoundCopy(ItemStack item, NBTTagCompound compound);
 
-    public abstract void setTagCompoundDirect(ItemStack item, NBTTagCompound compound);
+    public abstract ItemStack setTagCompoundDirect(ItemStack item, NBTTagCompound compound);
 
 }

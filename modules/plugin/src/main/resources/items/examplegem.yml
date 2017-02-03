@@ -12,6 +12,10 @@ attributes:
         text:
         - "Weapons with this gem"
         - "will light enemies on fire"
+      damage:
+        type: "damage"
+        damage: 5
+        variation: 2
   description:
     type: "text"
     text:

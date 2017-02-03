@@ -72,9 +72,8 @@ public class RarityAttribute extends BasicAttribute implements Rarity {
         }
 
         @Override
-        public Rarity loadFromConfig(ConfigurationSection config) {
-            // Load name and rarity
-            String name = config.getName();
+        public Rarity loadFromConfig(String name, ConfigurationSection config) {
+            // Load rarity
             int rarity = config.getInt("tier");
             String text = rarity < tiers.size() ? tiers.get(rarity) : unknown;
 
@@ -83,9 +82,8 @@ public class RarityAttribute extends BasicAttribute implements Rarity {
         }
 
         @Override
-        public Rarity loadFromNBT(NBTTagCompound compound) {
-            // Load name and rarity
-            String name = compound.getString("name");
+        public Rarity loadFromNBT(String name, NBTTagCompound compound) {
+            // Load rarity
             int rarity = compound.getInt("tier");
             String text = rarity < tiers.size() ? tiers.get(rarity) : unknown;
 

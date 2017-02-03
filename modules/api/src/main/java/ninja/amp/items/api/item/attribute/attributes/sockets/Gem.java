@@ -20,9 +20,9 @@ package ninja.amp.items.api.item.attribute.attributes.sockets;
 
 import ninja.amp.items.api.item.Item;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
-import ninja.amp.items.api.item.attribute.attributes.AttributeGroup;
+import ninja.amp.items.api.item.attribute.attributes.AttributeContainer;
 
-public interface Gem extends ItemAttribute {
+public interface Gem extends ItemAttribute, AttributeContainer {
 
     String getDisplayName();
 
@@ -35,7 +35,5 @@ public interface Gem extends ItemAttribute {
     Item getItem();
 
     void setItem(Item item);
-
-    AttributeGroup getAttributes();
 
 }

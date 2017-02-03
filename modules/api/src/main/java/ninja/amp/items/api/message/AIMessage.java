@@ -16,24 +16,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with AmpItems API.  If not, see <http://www.gnu.org/licenses/>.
  */
-/*
- * This file is part of AmpItems.
- *
- * Copyright (c) 2017 <http://github.com/ampayne2/AmpItems//>
- *
- * AmpItems is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * AmpItems is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with AmpItems.  If not, see <http://www.gnu.org/licenses/>.
- */
 package ninja.amp.items.api.message;
 
 /**
@@ -58,7 +40,9 @@ public enum AIMessage implements Message {
 
     SOCKET_DOESNTEXIST("Socket.DoesntExist", "Item doesn't have a socket."),
     SOCKET_NOTFOUND("Socket.NotFound", "Socket of name %s not found."),
-    SOCKET_NOGEMS("Socket.NoGems", "Socket doesn't have a gem."),
+    SOCKET_NOGEMS("Socket.NoGems", "Item doesn't have a gem to extract."),
+    SOCKET_FULL("Socket.Full", "Item's sockets are full."),
+    SOCKET_NOACCEPT("Socket.NoAccept", "Item can't accept the gem."),
     SOCKET_EXTRACT("Socket.Extract", "Extracted gem %s&7 from socket!");
 
     private final String path;

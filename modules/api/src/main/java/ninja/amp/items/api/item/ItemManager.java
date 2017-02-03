@@ -82,9 +82,9 @@ public interface ItemManager {
 
     void registerAttributeType(AttributeType type, Plugin plugin);
 
-    ItemAttribute loadAttribute(ConfigurationSection config);
+    ItemAttribute loadAttribute(String name, ConfigurationSection config);
 
-    ItemAttribute loadAttribute(NBTTagCompound compound);
+    ItemAttribute loadAttribute(String name, NBTTagCompound compound);
 
     ItemFactory getFactory();
 

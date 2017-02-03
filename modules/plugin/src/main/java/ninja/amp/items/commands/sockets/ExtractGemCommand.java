@@ -54,7 +54,7 @@ public class ExtractGemCommand extends SocketCommand {
         gem.setItem(null);
 
         // Add gem to gem item attributes
-        gemItem.getAttributes().addAttribute(gem);
+        gemItem.addAttribute(gem);
 
         // Add gem to inventory
         player.getInventory().addItem(gemItem.getItem());

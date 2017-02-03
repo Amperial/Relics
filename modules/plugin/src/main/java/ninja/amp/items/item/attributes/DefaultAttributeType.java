@@ -23,11 +23,12 @@ import ninja.amp.items.api.item.attribute.AttributeType;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
 
 public enum DefaultAttributeType implements AttributeType {
-    GEM("gem", 3),
-    GROUP("group", 4),
+    DAMAGE("damage", 2),
+    GEM("gem", 4),
+    GROUP("group", 5),
     MODEL("model", Integer.MAX_VALUE),
     RARITY("rarity", 0),
-    SOCKET("socket", 2),
+    SOCKET("socket", 3),
     TEXT("text", 1);
 
     private final String name;
@@ -68,6 +69,11 @@ public enum DefaultAttributeType implements AttributeType {
 
     public void setFactory(AttributeFactory<? extends ItemAttribute> factory) {
         this.factory = factory;
+    }
+
+    @Override
+    public boolean test(ItemAttribute itemAttribute) {
+        return equals(itemAttribute.getType());
     }
 
 }

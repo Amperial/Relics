@@ -21,6 +21,7 @@ package ninja.amp.items.item.attributes.sockets;
 import ninja.amp.items.api.ItemPlugin;
 import ninja.amp.items.api.item.Item;
 import ninja.amp.items.api.item.ItemManager;
+import ninja.amp.items.api.item.attribute.ItemAttribute;
 import ninja.amp.items.api.item.attribute.attributes.AttributeGroup;
 import ninja.amp.items.api.item.attribute.attributes.BasicAttribute;
 import ninja.amp.items.api.item.attribute.attributes.BasicAttributeFactory;
@@ -31,6 +32,11 @@ import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+
+import java.util.Collection;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class GemAttribute extends BasicAttribute implements Gem {
 
@@ -43,7 +49,7 @@ public class GemAttribute extends BasicAttribute implements Gem {
         this.color = color;
         this.attributes = attributes;
 
-        setLore((lore, prefix) -> getAttributes().getLore().addTo(lore, prefix));
+        setLore((lore, prefix) -> attributes.getLore().addTo(lore, prefix));
     }
 
     @Override
@@ -78,32 +84,147 @@ public class GemAttribute extends BasicAttribute implements Gem {
     }
 
     @Override
-    public AttributeGroup getAttributes() {
-        return attributes;
+    public boolean hasAttribute(String name) {
+        return attributes.hasAttribute(name);
+    }
+
+    @Override
+    public boolean hasAttributeDeep(String name) {
+        return attributes.hasAttributeDeep(name);
+    }
+
+    @Override
+    public boolean hasAttribute(Predicate<ItemAttribute> predicate) {
+        return attributes.hasAttribute(predicate);
+    }
+
+    @Override
+    public boolean hasAttributeDeep(Predicate<ItemAttribute> predicate) {
+        return attributes.hasAttributeDeep(predicate);
+    }
+
+    @Override
+    public Optional<ItemAttribute> getAttribute(String name) {
+        return attributes.getAttribute(name);
+    }
+
+    @Override
+    public Optional<ItemAttribute> getAttributeDeep(String name) {
+        return attributes.getAttributeDeep(name);
+    }
+
+    @Override
+    public Optional<ItemAttribute> getAttribute(Predicate<ItemAttribute> predicate) {
+        return attributes.getAttribute(predicate);
+    }
+
+    @Override
+    public Optional<ItemAttribute> getAttributeDeep(Predicate<ItemAttribute> predicate) {
+        return attributes.getAttributeDeep(predicate);
+    }
+
+    @Override
+    public Collection<ItemAttribute> getAttributes() {
+        return attributes.getAttributes();
+    }
+
+    @Override
+    public Collection<ItemAttribute> getAttributesDeep() {
+        return attributes.getAttributesDeep();
+    }
+
+    @Override
+    public Collection<ItemAttribute> getAttributes(Predicate<ItemAttribute> predicate) {
+        return attributes.getAttributes(predicate);
+    }
+
+    @Override
+    public Collection<ItemAttribute> getAttributesDeep(Predicate<ItemAttribute> predicate) {
+        return attributes.getAttributesDeep(predicate);
+    }
+
+    @Override
+    public <T extends ItemAttribute> Optional<T> getAttribute(String name, Class<T> clazz) {
+        return attributes.getAttribute(name, clazz);
+    }
+
+    @Override
+    public <T extends ItemAttribute> Optional<T> getAttributeDeep(String name, Class<T> clazz) {
+        return attributes.getAttributeDeep(name, clazz);
+    }
+
+    @Override
+    public <T extends ItemAttribute> Optional<T> getAttribute(Predicate<T> predicate, Class<T> clazz) {
+        return attributes.getAttribute(predicate, clazz);
+    }
+
+    @Override
+    public <T extends ItemAttribute> Optional<T> getAttributeDeep(Predicate<T> predicate, Class<T> clazz) {
+        return attributes.getAttributeDeep(predicate, clazz);
+    }
+
+    @Override
+    public <T extends ItemAttribute> Collection<T> getAttributes(Class<T> clazz) {
+        return attributes.getAttributes(clazz);
+    }
+
+    @Override
+    public <T extends ItemAttribute> Collection<T> getAttributesDeep(Class<T> clazz) {
+        return attributes.getAttributesDeep(clazz);
+    }
+
+    @Override
+    public <T extends ItemAttribute> Collection<T> getAttributes(Predicate<T> predicate, Class<T> clazz) {
+        return attributes.getAttributes(predicate, clazz);
+    }
+
+    @Override
+    public <T extends ItemAttribute> Collection<T> getAttributesDeep(Predicate<T> predicate, Class<T> clazz) {
+        return attributes.getAttributesDeep(predicate, clazz);
+    }
+
+    @Override
+    public void forEach(Consumer<ItemAttribute> action) {
+        attributes.forEach(action);
+    }
+
+    @Override
+    public void forEachDeep(Consumer<ItemAttribute> action) {
+        attributes.forEachDeep(action);
+    }
+
+    @Override
+    public void forEach(Consumer<ItemAttribute> action, Predicate<ItemAttribute> predicate) {
+        attributes.forEach(action, predicate);
+    }
+
+    @Override
+    public void forEachDeep(Consumer<ItemAttribute> action, Predicate<ItemAttribute> predicate) {
+        attributes.forEachDeep(action, predicate);
     }
 
     @Override
     public boolean canEquip(Player player) {
-        return getAttributes().canEquip(player);
+        return attributes.canEquip(player);
     }
 
     @Override
     public void onEquip(Player player) {
-        getAttributes().onEquip(player);
+        attributes.onEquip(player);
     }
 
     @Override
     public void onUnEquip(Player player) {
-        getAttributes().onUnEquip(player);
+        attributes.onUnEquip(player);
     }
 
     @Override
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
         compound.setString("color", getColor().getName());
-        NBTTagCompound attributes = NBTTagCompound.create();
-        getAttributes().saveToNBT(attributes);
-        compound.setBase("attributes", attributes);
+        NBTTagCompound attributesCompound = NBTTagCompound.create();
+        attributes.saveToNBT(attributesCompound);
+        compound.setBase("attributes", attributesCompound);
         if (hasItem()) {
             NBTTagCompound item = NBTTagCompound.create();
             getItem().saveToNBT(item);
@@ -118,13 +239,13 @@ public class GemAttribute extends BasicAttribute implements Gem {
         }
 
         @Override
-        public Gem loadFromConfig(ConfigurationSection config) {
+        public Gem loadFromConfig(String name, ConfigurationSection config) {
             ItemManager itemManager = getPlugin().getItemManager();
 
             // Load name, color, and attributes
-            String name = ChatColor.translateAlternateColorCodes('&', config.getString("name"));
+            name = ChatColor.translateAlternateColorCodes('&', name);
             SocketColor color = SocketColor.fromName(config.getString("color"));
-            AttributeGroup attributes = (AttributeGroup) DefaultAttributeType.GROUP.getFactory().loadFromConfig(config);
+            AttributeGroup attributes = (AttributeGroup) DefaultAttributeType.GROUP.getFactory().loadFromConfig("attributes", config);
 
             // Create gem
             Gem gem = new GemAttribute(name, color, attributes);
@@ -140,14 +261,13 @@ public class GemAttribute extends BasicAttribute implements Gem {
         }
 
         @Override
-        public Gem loadFromNBT(NBTTagCompound compound) {
+        public Gem loadFromNBT(String name, NBTTagCompound compound) {
             ItemManager itemManager = getPlugin().getItemManager();
 
-            // Load name, color, and attribute
-            String name = compound.getString("name");
+            // Load color and attribute
             SocketColor color = SocketColor.fromName(compound.getString("color"));
             NBTTagCompound attributesCompound = compound.getCompound("attributes");
-            AttributeGroup attributes = (AttributeGroup) itemManager.loadAttribute(attributesCompound);
+            AttributeGroup attributes = (AttributeGroup) itemManager.loadAttribute("attributes", attributesCompound);
 
             // Create gem
             Gem gem = new GemAttribute(name, color, attributes);

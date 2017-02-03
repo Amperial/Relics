@@ -58,9 +58,8 @@ public class ModelAttribute extends BasicAttribute implements Model {
         }
 
         @Override
-        public Model loadFromConfig(ConfigurationSection config) {
-            // Load name and model damage
-            String name = config.getName();
+        public Model loadFromConfig(String name, ConfigurationSection config) {
+            // Load model damage
             short modelDamage = (short) config.getInt("model-damage");
 
             // Create model attribute
@@ -68,9 +67,8 @@ public class ModelAttribute extends BasicAttribute implements Model {
         }
 
         @Override
-        public Model loadFromNBT(NBTTagCompound compound) {
-            // Load name and model damage
-            String name = compound.getString("name");
+        public Model loadFromNBT(String name, NBTTagCompound compound) {
+            // Load model damage
             short modelDamage = compound.getShort("model-damage");
 
             // Create model attribute

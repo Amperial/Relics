@@ -22,7 +22,7 @@ import ninja.amp.items.api.ItemPlugin;
 import ninja.amp.items.api.item.ItemManager;
 import ninja.amp.items.api.item.attribute.AttributeType;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
-import ninja.amp.items.api.item.attribute.attributes.BasicAttribute;
+import ninja.amp.items.api.item.attribute.attributes.BasicAttributeContainer;
 import ninja.amp.items.api.item.attribute.attributes.BasicAttributeFactory;
 import ninja.amp.items.api.item.attribute.attributes.sockets.Gem;
 import ninja.amp.items.api.item.attribute.attributes.sockets.Socket;
@@ -35,13 +35,18 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class SocketAttribute extends BasicAttribute implements Socket {
+public class SocketAttribute extends BasicAttributeContainer implements Socket {
 
     private SocketColor color;
     private Set<SocketColor> accepts;
@@ -58,7 +63,7 @@ public class SocketAttribute extends BasicAttribute implements Socket {
             ChatColor c = getColor().getChatColor();
             if (hasGem()) {
                 lore.add(prefix + c + "<< " + gem.getDisplayName() + c + " >>");
-                getGem().getAttributes().getLore().addTo(lore, prefix + "  ");
+                getGem().getLore().addTo(lore, prefix + "  ");
             } else {
                 lore.add(prefix + c + "<< " + ChatColor.GRAY + "Empty Socket" + c + " >>");
             }
@@ -110,6 +115,85 @@ public class SocketAttribute extends BasicAttribute implements Socket {
     }
 
     @Override
+    public boolean hasAttribute(Predicate<ItemAttribute> predicate) {
+        return hasGem() && predicate.test(getGem());
+    }
+
+    @Override
+    public boolean hasAttributeDeep(Predicate<ItemAttribute> predicate) {
+        if (hasGem()) {
+            Gem gem = getGem();
+            return predicate.test(gem) || gem.hasAttributeDeep(predicate);
+        }
+        return false;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends ItemAttribute> Optional<T> getAttribute(Predicate<T> predicate, Class<T> clazz) {
+        if (hasGem() && clazz.isAssignableFrom(getGem().getClass())) {
+            T gem = (T) getGem();
+            if (predicate.test(gem)) {
+                return Optional.of(gem);
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends ItemAttribute> Optional<T> getAttributeDeep(Predicate<T> predicate, Class<T> clazz) {
+        if (hasGem()) {
+            if (clazz.isAssignableFrom(getGem().getClass())) {
+                T gem = (T) getGem();
+                if (predicate.test(gem)) {
+                    return Optional.of(gem);
+                }
+            }
+            return getGem().getAttributeDeep(predicate, clazz);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Collection<ItemAttribute> getAttributes() {
+        if (hasGem()) {
+            return Collections.singleton(getGem());
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends ItemAttribute> Collection<T> getAttributesDeep(Class<T> clazz) {
+        if (hasGem()) {
+            Gem gem = getGem();
+            List<T> attributes = new ArrayList<>(gem.getAttributesDeep(clazz));
+            if (clazz.isAssignableFrom(gem.getClass())) {
+                attributes.add((T) gem);
+            }
+            return attributes;
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void forEach(Consumer<ItemAttribute> action) {
+        if (hasGem()) {
+            action.accept(getGem());
+        }
+    }
+
+    @Override
+    public void forEachDeep(Consumer<ItemAttribute> action) {
+        if (hasGem()) {
+            Gem gem = getGem();
+            action.accept(gem);
+            gem.forEachDeep(action);
+        }
+    }
+
+    @Override
     public boolean canEquip(Player player) {
         return !hasGem() || getGem().canEquip(player);
     }
@@ -153,11 +237,10 @@ public class SocketAttribute extends BasicAttribute implements Socket {
         }
 
         @Override
-        public Socket loadFromConfig(ConfigurationSection config) {
+        public Socket loadFromConfig(String name, ConfigurationSection config) {
             ItemManager itemManager = getPlugin().getItemManager();
 
-            // Load name, color, and accepts
-            String name = config.getName();
+            // Load color and accepts
             SocketColor color = SocketColor.fromName(config.getString("color"));
             Set<SocketColor> accepts;
             if (config.isList("accepts")) {
@@ -174,7 +257,7 @@ public class SocketAttribute extends BasicAttribute implements Socket {
             // Load gem
             if (config.isConfigurationSection("gem")) {
                 ConfigurationSection gemSection = config.getConfigurationSection("gem");
-                ItemAttribute gem = itemManager.loadAttribute(gemSection);
+                ItemAttribute gem = itemManager.loadAttribute("gem", gemSection);
                 if (gem != null && gem instanceof Gem) {
                     socket.setGem((Gem) gem);
                 }
@@ -184,11 +267,10 @@ public class SocketAttribute extends BasicAttribute implements Socket {
         }
 
         @Override
-        public Socket loadFromNBT(NBTTagCompound compound) {
+        public Socket loadFromNBT(String name, NBTTagCompound compound) {
             ItemManager itemManager = getPlugin().getItemManager();
 
-            // Load name, color, and accepts
-            String name = compound.getString("name");
+            // Load color and accepts
             SocketColor color = SocketColor.fromName(compound.getString("color"));
             Set<SocketColor> accepts;
             if (compound.hasKey("accepts")) {
@@ -207,7 +289,7 @@ public class SocketAttribute extends BasicAttribute implements Socket {
             // Load gem
             if (compound.hasKey("gem")) {
                 NBTTagCompound gemCompound = compound.getCompound("gem");
-                ItemAttribute gem = itemManager.loadAttribute(gemCompound);
+                ItemAttribute gem = itemManager.loadAttribute("gem", gemCompound);
                 if (gem != null && gem instanceof Gem) {
                     socket.setGem((Gem) gem);
                 }

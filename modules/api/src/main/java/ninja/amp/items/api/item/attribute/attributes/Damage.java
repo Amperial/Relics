@@ -16,29 +16,18 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with AmpItems API.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ninja.amp.items.api.item.attribute.attributes.sockets;
+package ninja.amp.items.api.item.attribute.attributes;
 
 import ninja.amp.items.api.item.attribute.ItemAttribute;
-import ninja.amp.items.api.item.attribute.attributes.AttributeContainer;
 
-import java.util.Set;
+public interface Damage extends ItemAttribute {
 
-public interface Socket extends ItemAttribute, AttributeContainer {
+    int getDamage();
 
-    SocketColor getColor();
+    void setDamage(int damage);
 
-    void setColor(SocketColor color);
+    int getVariation();
 
-    Set<SocketColor> getAccepts();
-
-    void addAccepts(SocketColor... accepts);
-
-    boolean acceptsGem(Gem gem);
-
-    boolean hasGem();
-
-    Gem getGem();
-
-    void setGem(Gem gem);
+    void setVariation(int variation);
 
 }

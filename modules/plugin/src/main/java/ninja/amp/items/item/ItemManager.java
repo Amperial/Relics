@@ -27,6 +27,7 @@ import ninja.amp.items.api.item.ItemType;
 import ninja.amp.items.api.item.attribute.AttributeType;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
 import ninja.amp.items.api.item.attribute.attributes.sockets.SocketColor;
+import ninja.amp.items.item.attributes.DamageAttribute;
 import ninja.amp.items.item.attributes.DefaultAttributeType;
 import ninja.amp.items.item.attributes.GroupAttribute;
 import ninja.amp.items.item.attributes.ModelAttribute;
@@ -109,6 +110,7 @@ public class ItemManager implements ninja.amp.items.api.item.ItemManager {
         // TODO: Abstract this?
         DefaultAttributeType.RARITY.setFactory(new RarityAttribute.Factory(plugin));
         DefaultAttributeType.TEXT.setFactory(new TextAttribute.Factory(plugin));
+        DefaultAttributeType.DAMAGE.setFactory(new DamageAttribute.DamageFactory(plugin));
         DefaultAttributeType.SOCKET.setFactory(new SocketAttribute.Factory(plugin));
         DefaultAttributeType.GEM.setFactory(new GemAttribute.Factory(plugin));
         DefaultAttributeType.GROUP.setFactory(new GroupAttribute.Factory(plugin));
@@ -246,15 +248,15 @@ public class ItemManager implements ninja.amp.items.api.item.ItemManager {
     }
 
     @Override
-    public ItemAttribute loadAttribute(ConfigurationSection config) {
+    public ItemAttribute loadAttribute(String name, ConfigurationSection config) {
         String type = config.getString("type");
-        return hasAttributeType(type) ? getAttributeType(type).getFactory().loadFromConfig(config) : null;
+        return hasAttributeType(type) ? getAttributeType(type).getFactory().loadFromConfig(name, config) : null;
     }
 
     @Override
-    public ItemAttribute loadAttribute(NBTTagCompound compound) {
+    public ItemAttribute loadAttribute(String name, NBTTagCompound compound) {
         String type = compound.getString("type");
-        return hasAttributeType(type) ? getAttributeType(type).getFactory().loadFromNBT(compound) : null;
+        return hasAttributeType(type) ? getAttributeType(type).getFactory().loadFromNBT(name, compound) : null;
     }
 
     @Override

@@ -72,9 +72,8 @@ public class TextAttribute extends BasicAttribute implements Text {
         }
 
         @Override
-        public Text loadFromConfig(ConfigurationSection config) {
-            // Load name and text
-            String name = config.getName();
+        public Text loadFromConfig(String name, ConfigurationSection config) {
+            // Load text
             List<String> text = config.getStringList("text");
             text.replaceAll(line -> ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', line));
 
@@ -83,9 +82,8 @@ public class TextAttribute extends BasicAttribute implements Text {
         }
 
         @Override
-        public Text loadFromNBT(NBTTagCompound compound) {
-            // Load name and text
-            String name = compound.getString("name");
+        public Text loadFromNBT(String name, NBTTagCompound compound) {
+            // Load text
             List<String> text = new ArrayList<>();
             if (compound.hasKey("text")) {
                 NBTTagList list = compound.getList("text", 8);

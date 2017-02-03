@@ -19,14 +19,15 @@
 package ninja.amp.items.api.item;
 
 import ninja.amp.items.api.equipment.Equip;
-import ninja.amp.items.api.item.attribute.attributes.AttributeGroup;
+import ninja.amp.items.api.item.attribute.ItemAttribute;
+import ninja.amp.items.api.item.attribute.attributes.AttributeContainer;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 
-public interface Item extends Equip {
+public interface Item extends AttributeContainer, Equip {
 
     String getName();
 
@@ -36,11 +37,11 @@ public interface Item extends Equip {
 
     ItemType getType();
 
-    AttributeGroup getAttributes();
-
     ItemStack getItem();
 
-    void updateItem(ItemStack item);
+    ItemStack updateItem(ItemStack item);
+
+    void addAttribute(ItemAttribute... attributes);
 
     void saveToNBT(NBTTagCompound compound);
 

@@ -21,15 +21,12 @@ package ninja.amp.items.commands.sockets;
 import ninja.amp.items.api.ItemPlugin;
 import ninja.amp.items.api.command.ItemCommand;
 import ninja.amp.items.api.item.Item;
-import ninja.amp.items.api.item.attribute.attributes.AttributeGroup;
 import ninja.amp.items.api.item.attribute.attributes.sockets.Socket;
 import ninja.amp.items.api.message.AIMessage;
 import ninja.amp.items.api.message.Message;
 import ninja.amp.items.api.message.Messenger;
-import ninja.amp.items.item.attributes.DefaultAttributeType;
 import org.bukkit.entity.Player;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -60,36 +57,31 @@ public abstract class SocketCommand extends ItemCommand {
         Messenger messenger = plugin.getMessenger();
 
         // Load Socket from Item
-        AttributeGroup attributes = item.getAttributes();
         Socket socket;
         if (args.size() > socketArg) {
             String name = args.get(socketArg);
-            if (!attributes.hasAttribute(name, false)) {
+            Optional<Socket> optional = item.getAttributeDeep(name, Socket.class);
+            if (!optional.isPresent()) {
                 messenger.sendErrorMessage(player, AIMessage.SOCKET_NOTFOUND, name);
                 return;
             }
-            socket = (Socket) attributes.getAttribute(name, false);
+            socket = optional.get();
             if (!socketPredicate.test(socket)) {
                 messenger.sendErrorMessage(player, predicateError);
                 return;
             }
         } else {
-            Collection<Socket> sockets = (Collection<Socket>) attributes.getAttributes(DefaultAttributeType.SOCKET, false);
-            if (sockets.isEmpty()) {
-                messenger.sendErrorMessage(player, AIMessage.SOCKET_DOESNTEXIST);
-                return;
-            }
-            Optional<Socket> s = sockets.stream().filter(socketPredicate).findFirst();
-            if (s.isPresent()) {
-                socket = s.get();
-            } else {
+            Optional<Socket> optional = item.getAttributeDeep(socketPredicate, Socket.class);
+            if (!optional.isPresent()) {
                 messenger.sendErrorMessage(player, predicateError);
                 return;
             }
+            socket = optional.get();
         }
 
         // Execute SocketCommand
         execute(command, player, args, item, socket);
+
     }
 
     public abstract void execute(String command, Player player, List<String> args, Item item, Socket socket);

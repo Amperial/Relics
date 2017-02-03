@@ -96,7 +96,7 @@ public class Handler_v1_11_R1 extends NMSHandler {
     }
 
     @Override
-    public void setTagCompoundDirect(ItemStack item, ninja.amp.items.nms.nbt.NBTTagCompound compound) {
+    public ItemStack setTagCompoundDirect(ItemStack item, ninja.amp.items.nms.nbt.NBTTagCompound compound) {
         if (item instanceof CraftItemStack) {
             CraftItemStack itemStack = (CraftItemStack) item;
             try {
@@ -105,8 +105,9 @@ public class Handler_v1_11_R1 extends NMSHandler {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
+            return item;
         } else {
-            // TODO: Research how to handle this case. Shouldn't be a problem for now
+            return setTagCompoundCopy(item, compound);
         }
     }
 
