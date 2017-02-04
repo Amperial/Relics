@@ -34,9 +34,9 @@ import java.util.List;
 public class ExtractGemCommand extends SocketCommand {
 
     public ExtractGemCommand(ItemPlugin plugin) {
-        super(plugin, "extract", 0, Socket::hasGem, AIMessage.SOCKET_NOGEMS);
+        super(plugin, "extract", 0, Socket::hasGem, AIMessage.SOCKET_EMPTY);
         setDescription("Extracts the gem from a socket into your inventory.");
-        setCommandUsage("/aitem socket extract [name]");
+        setCommandUsage("/aitem socket extract [socket]");
         setPermission(new Permission("ampitems.socket.extract", PermissionDefault.OP));
         setArgumentRange(0, 1);
     }

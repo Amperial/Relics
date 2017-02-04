@@ -32,6 +32,8 @@ import java.util.function.Predicate;
  */
 public interface AttributeContainer {
 
+    boolean hasAttribute(Class<?> clazz);
+
     boolean hasAttribute(String name);
 
     boolean hasAttributeDeep(String name);
@@ -56,7 +58,11 @@ public interface AttributeContainer {
 
     Collection<ItemAttribute> getAttributesDeep(Predicate<ItemAttribute> predicate);
 
+    <T extends ItemAttribute> Optional<T> getAttribute(Class<T> clazz);
+
     <T extends ItemAttribute> Optional<T> getAttribute(String name, Class<T> clazz);
+
+    <T extends ItemAttribute> Optional<T> getAttributeDeep(Class<T> clazz);
 
     <T extends ItemAttribute> Optional<T> getAttributeDeep(String name, Class<T> clazz);
 

@@ -31,6 +31,7 @@ import ninja.amp.items.commands.ReloadCommand;
 import ninja.amp.items.commands.items.GetItemCommand;
 import ninja.amp.items.commands.items.ItemInfoCommand;
 import ninja.amp.items.commands.sockets.ExtractGemCommand;
+import ninja.amp.items.commands.sockets.InfuseGemCommand;
 import ninja.amp.items.equipment.EquipmentManager;
 import ninja.amp.items.item.ItemManager;
 import ninja.amp.items.nms.NMSHandler;
@@ -82,8 +83,10 @@ public class AmpItems extends JavaPlugin implements ItemPlugin {
 
         // Socket commands.
         Command extract = new ExtractGemCommand(this);
+        Command infuse = new InfuseGemCommand(this);
         CommandGroup socket = new CommandGroup(this, "socket")
-                .addChildCommand(extract);
+                .addChildCommand(extract)
+                .addChildCommand(infuse);
         socket.setPermission(new Permission("ampitems.socket.all", PermissionDefault.OP));
 
         // Main /aitem command tree
@@ -93,8 +96,10 @@ public class AmpItems extends JavaPlugin implements ItemPlugin {
                 .addChildCommand(new ReloadCommand(this))
                 .addChildCommand(info)
                 .addChildCommand(get)
-                .addChildCommand(socket)
-                .addChildCommand(item);
+                .addChildCommand(item)
+                .addChildCommand(extract)
+                .addChildCommand(infuse)
+                .addChildCommand(socket);
         ampItems.setPermission(new Permission("ampitems.all", PermissionDefault.OP));
 
         // Add amp items command tree to command controller

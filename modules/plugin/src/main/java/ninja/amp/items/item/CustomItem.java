@@ -23,11 +23,13 @@ import ninja.amp.items.api.item.ItemFactory;
 import ninja.amp.items.api.item.ItemType;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
 import ninja.amp.items.api.item.attribute.attributes.AttributeGroup;
+import ninja.amp.items.api.item.attribute.attributes.MinecraftAttribute;
 import ninja.amp.items.api.item.attribute.attributes.Model;
 import ninja.amp.items.item.attributes.DefaultAttributeType;
 import ninja.amp.items.nms.NMSHandler;
 import ninja.amp.items.nms.nbt.NBTBase;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
+import ninja.amp.items.nms.nbt.NBTTagList;
 import ninja.amp.items.nms.nbt.NBTTagObject;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -81,6 +83,11 @@ public class CustomItem implements Item {
     @Override
     public ItemType getType() {
         return type;
+    }
+
+    @Override
+    public boolean hasAttribute(Class<?> clazz) {
+        return attributes.hasAttribute(clazz);
     }
 
     @Override
@@ -144,8 +151,18 @@ public class CustomItem implements Item {
     }
 
     @Override
+    public <T extends ItemAttribute> Optional<T> getAttribute(Class<T> clazz) {
+        return attributes.getAttribute(clazz);
+    }
+
+    @Override
     public <T extends ItemAttribute> Optional<T> getAttribute(String name, Class<T> clazz) {
         return attributes.getAttribute(name, clazz);
+    }
+
+    @Override
+    public <T extends ItemAttribute> Optional<T> getAttributeDeep(Class<T> clazz) {
+        return attributes.getAttributeDeep(clazz);
     }
 
     @Override
@@ -209,6 +226,11 @@ public class CustomItem implements Item {
     }
 
     @Override
+    public void removeAttribute(ItemAttribute attribute) {
+        attributes.removeAttribute(attribute);
+    }
+
+    @Override
     public boolean canEquip(Player player) {
         return attributes.canEquip(player);
     }
@@ -248,16 +270,89 @@ public class CustomItem implements Item {
             meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         }
         meta.setLore(lore);
+        if (hasAttributeDeep(ItemAttribute.type(MinecraftAttribute.class))) {
+            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        }
         item.setItemMeta(meta);
 
-        // Set NBTTagCompound
+        // Get NBTTagCompound
         NBTTagCompound compound = NMSHandler.getInterface().getTagCompoundDirect(item);
+
+        // Set item compound
         NBTTagCompound itemTag = NBTTagCompound.create();
         saveToNBT(itemTag);
         compound.setBase(ITEM_TAG, itemTag);
+
+        // Get attribute modifiers
+        NBTTagList modifiers;
+        if (compound.hasKey("AttributeModifiers")) {
+            modifiers = compound.getList("AttributeModifiers", 10);
+        } else {
+            modifiers = NBTTagList.create();
+        }
+
+        // Temporarily tag modifiers to remove unused ones later
+        for (int i = 0; i < modifiers.size(); i++) {
+            NBTTagCompound modifier = modifiers.getCompound(i);
+            if (modifier.getString("Name").startsWith(ITEM_TAG)) {
+                modifier.setBoolean("Updated", false);
+            }
+        }
+
+        // Update modifiers
+        forEachDeep(attribute -> updateModifier(modifiers, (MinecraftAttribute) attribute), ItemAttribute.type(MinecraftAttribute.class));
+
+        // Remove unused modifiers
+        int i = 0;
+        while (i < modifiers.size()) {
+            NBTTagCompound modifier = modifiers.getCompound(i);
+            if (modifier.getString("Name").startsWith(ITEM_TAG) && !modifier.getBoolean("Updated")) {
+                modifiers.removeBase(i);
+            } else {
+                modifier.remove("Updated");
+                i++;
+            }
+        }
+
+        // Set attribute modifiers
+        compound.setBase("AttributeModifiers", modifiers);
+
+        // Set NBTTagCompound
         item = NMSHandler.getInterface().setTagCompoundDirect(item, compound);
 
         return item;
+    }
+
+    private NBTTagCompound getModifier(NBTTagList modifiers, MinecraftAttribute attribute) {
+        String attributeName = attribute.getMinecraftType().getName();
+        String name = ITEM_TAG + ":" + attribute.getName();
+        for (int i = 0; i < modifiers.size(); i++) {
+            NBTTagCompound modifier = modifiers.getCompound(i);
+            if (modifier.getString("AttributeName").equals(attributeName)) {
+                if (modifier.getString("Name").equals(name)) {
+                    return modifier;
+                }
+            }
+        }
+        NBTTagCompound modifier = NBTTagCompound.create();
+        modifier.setString("AttributeName", attributeName);
+        modifier.setString("Name", name);
+        modifiers.addBase(modifier);
+        return modifier;
+    }
+
+    private void updateModifier(NBTTagList modifiers, MinecraftAttribute attribute) {
+        NBTTagCompound modifier = getModifier(modifiers, attribute);
+        modifier.setDouble("Amount", attribute.getAmount());
+        if (attribute.getSlot() == MinecraftAttribute.Slot.ANY) {
+            modifier.remove("Slot");
+        } else {
+            modifier.setString("Slot", attribute.getSlot().getName());
+        }
+        modifier.setInt("Operation", attribute.getOperation().ordinal());
+        modifier.setLong("UUIDMost", attribute.getUUID().getMostSignificantBits());
+        modifier.setLong("UUIDLeast", attribute.getUUID().getLeastSignificantBits());
+        modifier.setBoolean("Updated", true);
     }
 
     @Override

@@ -28,4 +28,6 @@ public interface AttributeGroup extends ItemAttribute, AttributeContainer {
 
     void addAttribute(ItemAttribute... attributes);
 
+    void removeAttribute(ItemAttribute attribute);
+
 }

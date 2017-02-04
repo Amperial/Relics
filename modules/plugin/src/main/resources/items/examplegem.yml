@@ -4,7 +4,7 @@ item-type: "other"
 attributes:
   gem:
     type: "gem"
-    name: "&4Fire Gem"
+    name: "&7(&4Fire Gem&7)"
     color: "red"
     attributes:
       description:
@@ -12,11 +12,14 @@ attributes:
         text:
         - "Weapons with this gem"
         - "will light enemies on fire"
-      damage:
-        type: "damage"
-        damage: 5
-        variation: 2
   description:
     type: "text"
     text:
     - "This is a fire gem item"
+  fast:
+    type: "minecraft"
+    minecraft-type: "MOVEMENT_SPEED"
+    amount: 1
+    operation: "ADD_SCALAR"
+    slot: "MAIN_HAND"
+    stacks: true

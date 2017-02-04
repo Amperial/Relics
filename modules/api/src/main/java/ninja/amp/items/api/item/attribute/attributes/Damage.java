@@ -18,16 +18,14 @@
  */
 package ninja.amp.items.api.item.attribute.attributes;
 
-import ninja.amp.items.api.item.attribute.ItemAttribute;
+public interface Damage extends MinecraftAttribute {
 
-public interface Damage extends ItemAttribute {
+    double getDamage();
 
-    int getDamage();
+    void setDamage(double damage);
 
-    void setDamage(int damage);
+    double getVariation();
 
-    int getVariation();
-
-    void setVariation(int variation);
+    void setVariation(double variation);
 
 }

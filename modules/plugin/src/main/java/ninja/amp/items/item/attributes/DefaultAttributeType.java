@@ -26,6 +26,7 @@ public enum DefaultAttributeType implements AttributeType {
     DAMAGE("damage", 2),
     GEM("gem", 4),
     GROUP("group", 5),
+    MINECRAFT("minecraft", 6),
     MODEL("model", Integer.MAX_VALUE),
     RARITY("rarity", 0),
     SOCKET("socket", 3),

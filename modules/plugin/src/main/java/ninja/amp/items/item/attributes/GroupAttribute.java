@@ -130,6 +130,11 @@ public class GroupAttribute extends BasicAttributeContainer implements Attribute
     }
 
     @Override
+    public void removeAttribute(ItemAttribute attribute) {
+        attributes.remove(attribute.getName());
+    }
+
+    @Override
     public boolean canEquip(Player player) {
         return getAttributes().stream().allMatch(attribute -> attribute.canEquip(player));
     }

@@ -40,12 +40,14 @@ import java.util.function.Predicate;
 
 public class GemAttribute extends BasicAttribute implements Gem {
 
+    private String displayName;
     private SocketColor color;
     private AttributeGroup attributes;
     private Item item;
 
-    public GemAttribute(String name, SocketColor color, AttributeGroup attributes) {
+    public GemAttribute(String name, String displayName, SocketColor color, AttributeGroup attributes) {
         super(name, DefaultAttributeType.GEM);
+        this.displayName = displayName;
         this.color = color;
         this.attributes = attributes;
 
@@ -54,8 +56,7 @@ public class GemAttribute extends BasicAttribute implements Gem {
 
     @Override
     public String getDisplayName() {
-        // TODO: Configurable
-        return color.getChatColor() + "(" + ChatColor.GRAY + getName() + color.getChatColor() + ")";
+        return displayName;
     }
 
     @Override
@@ -81,6 +82,11 @@ public class GemAttribute extends BasicAttribute implements Gem {
     @Override
     public void setItem(Item item) {
         this.item = item;
+    }
+
+    @Override
+    public boolean hasAttribute(Class<?> clazz) {
+        return attributes.hasAttribute(clazz);
     }
 
     @Override
@@ -144,8 +150,18 @@ public class GemAttribute extends BasicAttribute implements Gem {
     }
 
     @Override
+    public <T extends ItemAttribute> Optional<T> getAttribute(Class<T> clazz) {
+        return attributes.getAttribute(clazz);
+    }
+
+    @Override
     public <T extends ItemAttribute> Optional<T> getAttribute(String name, Class<T> clazz) {
         return attributes.getAttribute(name, clazz);
+    }
+
+    @Override
+    public <T extends ItemAttribute> Optional<T> getAttributeDeep(Class<T> clazz) {
+        return attributes.getAttributeDeep(clazz);
     }
 
     @Override
@@ -221,6 +237,7 @@ public class GemAttribute extends BasicAttribute implements Gem {
     @Override
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
+        compound.setString("name", getDisplayName());
         compound.setString("color", getColor().getName());
         NBTTagCompound attributesCompound = NBTTagCompound.create();
         attributes.saveToNBT(attributesCompound);
@@ -243,12 +260,12 @@ public class GemAttribute extends BasicAttribute implements Gem {
             ItemManager itemManager = getPlugin().getItemManager();
 
             // Load name, color, and attributes
-            name = ChatColor.translateAlternateColorCodes('&', name);
+            String displayName = ChatColor.translateAlternateColorCodes('&', config.getString("name"));
             SocketColor color = SocketColor.fromName(config.getString("color"));
             AttributeGroup attributes = (AttributeGroup) DefaultAttributeType.GROUP.getFactory().loadFromConfig("attributes", config);
 
             // Create gem
-            Gem gem = new GemAttribute(name, color, attributes);
+            Gem gem = new GemAttribute(name, displayName, color, attributes);
 
             // Load item
             if (config.isConfigurationSection("item")) {
@@ -265,12 +282,13 @@ public class GemAttribute extends BasicAttribute implements Gem {
             ItemManager itemManager = getPlugin().getItemManager();
 
             // Load color and attribute
+            String displayName = compound.getString("name");
             SocketColor color = SocketColor.fromName(compound.getString("color"));
             NBTTagCompound attributesCompound = compound.getCompound("attributes");
             AttributeGroup attributes = (AttributeGroup) itemManager.loadAttribute("attributes", attributesCompound);
 
             // Create gem
-            Gem gem = new GemAttribute(name, color, attributes);
+            Gem gem = new GemAttribute(name, displayName, color, attributes);
 
             // Load item
             if (compound.hasKey("item")) {

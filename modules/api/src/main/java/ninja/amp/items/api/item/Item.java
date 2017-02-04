@@ -43,6 +43,8 @@ public interface Item extends AttributeContainer, Equip {
 
     void addAttribute(ItemAttribute... attributes);
 
+    void removeAttribute(ItemAttribute attribute);
+
     void saveToNBT(NBTTagCompound compound);
 
 }

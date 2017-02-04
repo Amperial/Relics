@@ -1,8 +1,9 @@
 lore-order:
 - rarity
 - text
-- damage
 - socket
 - gem
 - group
+- damage
+- minecraft
 - model

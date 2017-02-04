@@ -12,6 +12,16 @@ attributes:
     type: "damage"
     damage: 10
     variation: 2
+    operation: "ADD_NUMBER"
+    slot: "MAIN_HAND"
+    stacks: true
+  scaling-health:
+    type: "minecraft"
+    minecraft-type: "MAX_HEALTH"
+    amount: 2
+    operation: "ADD_SCALAR"
+    slot: "ANY"
+    stacks: true
   description:
     type: "text"
     text:
@@ -26,7 +36,7 @@ attributes:
     color: "red"
     gem:
       type: "gem"
-      name: "&4Fire Gem"
+      name: "&7(&4Fire Gem&7)"
       color: "red"
       attributes:
         description:
@@ -34,10 +44,13 @@ attributes:
           text:
           - "Weapons with this gem"
           - "will light enemies on fire"
-        damage:
-          type: "damage"
-          damage: 5
-          variation: 2
+        fast:
+          type: "minecraft"
+          minecraft-type: "MOVEMENT_SPEED"
+          amount: 1
+          operation: "ADD_SCALAR"
+          slot: "MAIN_HAND"
+          stacks: true
       item:
         name: "&4Fire Gem Item"
         material: "COAL"

@@ -66,6 +66,11 @@ public class BasicAttributeContainer extends BasicAttribute implements Attribute
     }
 
     @Override
+    public boolean hasAttribute(Class<?> clazz) {
+        return hasAttribute(ItemAttribute.type(clazz));
+    }
+
+    @Override
     public boolean hasAttribute(String name) {
         return hasAttribute(attribute -> attribute.getName().equals(name));
     }
@@ -128,8 +133,18 @@ public class BasicAttributeContainer extends BasicAttribute implements Attribute
     }
 
     @Override
+    public <T extends ItemAttribute> Optional<T> getAttribute(Class<T> clazz) {
+        return getAttribute(attribute -> true, clazz);
+    }
+
+    @Override
     public <T extends ItemAttribute> Optional<T> getAttribute(String name, Class<T> clazz) {
         return getAttribute(attribute -> attribute.getName().equals(name), clazz);
+    }
+
+    @Override
+    public <T extends ItemAttribute> Optional<T> getAttributeDeep(Class<T> clazz) {
+        return getAttributeDeep(attribute -> true, clazz);
     }
 
     @Override

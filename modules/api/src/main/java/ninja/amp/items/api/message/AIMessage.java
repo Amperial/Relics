@@ -38,12 +38,14 @@ public enum AIMessage implements Message {
     ITEM_NOTCUSTOM("Item.NotCustom", "Item is not a custom item."),
     ITEM_NOTHOLDING("Item.NotHolding", "Not holding an item."),
 
-    SOCKET_DOESNTEXIST("Socket.DoesntExist", "Item doesn't have a socket."),
     SOCKET_NOTFOUND("Socket.NotFound", "Socket of name %s not found."),
-    SOCKET_NOGEMS("Socket.NoGems", "Item doesn't have a gem to extract."),
-    SOCKET_FULL("Socket.Full", "Item's sockets are full."),
-    SOCKET_NOACCEPT("Socket.NoAccept", "Item can't accept the gem."),
-    SOCKET_EXTRACT("Socket.Extract", "Extracted gem %s&7 from socket!");
+    SOCKET_EMPTY("Socket.Empty", "Item doesn't have a gem to extract."),
+    SOCKET_FULL("Socket.Full", "Item's doesn't have an empty socket."),
+    SOCKET_NOACCEPT("Socket.NoAccept", "Socket can't accept the gem."),
+    SOCKET_EXTRACT("Socket.Extract", "Extracted gem %s&7 from socket!"),
+    SOCKET_INFUSE("Socket.Infuse", "Infused gem %s&7 into the socket!"),
+
+    GEM_NOTHOLDING("Gem.NotHolding", "Not holding a gem in off hand.");
 
     private final String path;
     private final String defaultMessage;
