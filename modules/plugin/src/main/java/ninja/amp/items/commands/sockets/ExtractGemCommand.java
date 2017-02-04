@@ -57,7 +57,7 @@ public class ExtractGemCommand extends SocketCommand {
         // Update item in inventory
         item.updateItem(player.getInventory().getItemInMainHand());
 
-        messenger.sendMessage(player, AIMessage.SOCKET_EXTRACT, gem.getName());
+        messenger.sendMessage(player, AIMessage.SOCKET_EXTRACT, gem.getDisplayName());
     }
 
 }

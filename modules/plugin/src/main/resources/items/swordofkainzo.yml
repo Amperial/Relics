@@ -1,0 +1,57 @@
+name: "&cSword of Kainzo"
+material: "DIAMOND_SWORD"
+item-type: "weapon-sword"
+attributes:
+  rarity:
+    type: "rarity"
+    tier: 6
+  description:
+    type: "text"
+    text:
+    - "Legends say this sword"
+    - "once belonged to"
+    - "the almighty Kainzo"
+  model:
+    type: "model"
+    damage: 1
+  damage:
+    type: "damage"
+    damage: 45
+    variation: 5
+    slot: "MAIN_HAND"
+  aqua:
+    type: "socket"
+    color: "aqua"
+    accepts: []
+  white:
+    type: "socket"
+    color: "white"
+    gem:
+      type: "gem"
+      name: "&7(&fLight Gem&7)"
+      color: "white"
+      attributes:
+        description:
+          type: "text"
+          text:
+          - "Move at the speed of light!"
+        fast:
+          type: "minecraft"
+          minecraft-type: "MOVEMENT_SPEED"
+          amount: 0.5
+          operation: "ADD_SCALAR"
+      item:
+        name: "&fLight Gem Item"
+        material: "FEATHER"
+        item-type: "other"
+        attributes:
+          rarity:
+            type: "rarity"
+            tier: 2
+          infuse:
+            type: "text"
+            text:
+            - "&dInfuse this gem into a socket!"
+  dark-red:
+    type: "socket"
+    color: "dark-red"

@@ -1,0 +1,29 @@
+name: "&4Gem of Ampayne2"
+material: "DIAMOND"
+item-type: "other"
+attributes:
+  rarity:
+    type: "rarity"
+    tier: 5
+  description:
+    type: "text"
+    text:
+    - "This gem can imbue a "
+    - "weapon with the legendary"
+    - "strength of Ampayne2"
+  infuse:
+    type: "text"
+    text:
+    - "&dInfuse this gem into a socket!"
+  gem:
+    type: "gem"
+    name: "&7(&4Gem of Ampayne2&7)"
+    color: "dark-red"
+    attributes:
+      description:
+        type: "text"
+        text:
+        - "Attack with legendary strength!"
+      damage:
+        type: "damage"
+        damage: 20

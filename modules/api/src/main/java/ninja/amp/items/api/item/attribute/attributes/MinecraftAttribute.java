@@ -37,26 +37,22 @@ public interface MinecraftAttribute extends ItemAttribute {
     void setStacks(boolean stacks);
 
     enum Type {
-        ARMOR("Armor", "armor", UUID.fromString("E4A6AA09-6F0E-483F-B599-70A99CAB3A60")),
-        ARMOR_TOUGHNESS("Armor Toughness", "armorToughness", UUID.fromString("299080F9-436A-4230-BEBA-193D896293EA")),
-        ATTACK_DAMAGE("Attack Damage", "attackDamage", UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A33DB5CF")),
-        ATTACK_SPEED("Attack Speed", "attackSpeed", UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9785ACA3")),
-        LUCK("Luck", "luck", UUID.fromString("940A0E67-89D3-4A4F-907F-ACE9524BE34E")),
-        MAX_HEALTH("Max Health", "maxHealth", UUID.fromString("493E3AEC-0B14-48DF-985B-E6CAD96838BD")),
-        MOVEMENT_SPEED("Move Speed", "movementSpeed", UUID.fromString("662A6B8D-DA3E-4C1C-8813-96EA6097278D"));
+        ARMOR("armor", UUID.fromString("E4A6AA09-6F0E-483F-B599-70A99CAB3A60"), "Armor"),
+        ARMOR_TOUGHNESS("armorToughness", UUID.fromString("299080F9-436A-4230-BEBA-193D896293EA"), "Armor Toughness"),
+        ATTACK_DAMAGE("attackDamage", UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A33DB5CF"), "Attack Damage"),
+        ATTACK_SPEED("attackSpeed", UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9785ACA3"), "Attack Speed"),
+        LUCK("luck", UUID.fromString("940A0E67-89D3-4A4F-907F-ACE9524BE34E"), "Luck"),
+        MAX_HEALTH("maxHealth", UUID.fromString("493E3AEC-0B14-48DF-985B-E6CAD96838BD"), "Max Health"),
+        MOVEMENT_SPEED("movementSpeed", UUID.fromString("662A6B8D-DA3E-4C1C-8813-96EA6097278D"), "Movement Speed");
 
-        private final String displayName;
         private final String name;
         private final UUID uuid;
+        private String displayName;
 
-        Type(String displayName, String name, UUID uuid) {
-            this.displayName = displayName;
+        Type(String name, UUID uuid, String displayName) {
             this.name = "generic." + name;
             this.uuid = uuid;
-        }
-
-        public String getDisplayName() {
-            return displayName;
+            this.displayName = displayName;
         }
 
         public String getName() {
@@ -67,49 +63,89 @@ public interface MinecraftAttribute extends ItemAttribute {
             return uuid;
         }
 
+        public String getDisplayName() {
+            return displayName;
+        }
+
+        public void setDisplayName(String displayName) {
+            this.displayName = displayName;
+        }
+
     }
 
     enum Slot {
-        ANY("When equipped:", "any"),
-        MAIN_HAND("When equipped in main hand:", "mainhand"),
-        OFF_HAND("When equipped in off hand:", "offhand"),
-        HEAD("When equipped on head:", "head"),
-        CHEST("When equipped on chest:", "chest"),
-        LEGS("When equipped on legs:", "legs"),
-        FEET("When equipped on feet:", "feet");
+        ANY("any", "When equipped:"),
+        MAIN_HAND("mainhand", "When equipped in main hand:"),
+        OFF_HAND("offhand", "When equipped in off hand:"),
+        HEAD("head", "When equipped on head:"),
+        CHEST("chest", "When equipped on chest:"),
+        LEGS("legs", "When equipped on legs:"),
+        FEET("feet", "When equipped on feet:");
 
-        private final String displayName;
         private final String name;
+        private String displayName;
 
-        Slot(String displayName, String name) {
-            this.displayName = displayName;
+        Slot(String name, String displayName) {
             this.name = name;
-        }
-
-        public String getDisplayName() {
-            return displayName;
+            this.displayName = displayName;
         }
 
         public String getName() {
             return name;
         }
 
+        public String getDisplayName() {
+            return displayName;
+        }
+
+        public void setDisplayName(String displayName) {
+            this.displayName = displayName;
+        }
+
     }
 
     enum Operation {
-        ADD_NUMBER("+"),
-        ADD_SCALAR("x"),
-        MULTIPLY_SCALAR("x");
+        ADD_NUMBER() {
+            @Override
+            public String format(double amount) {
+                return format(formatAmount(amount));
+            }
 
-        private final String symbol;
+            @Override
+            public String format(String amount) {
+                return amount;
+            }
+        },
+        ADD_SCALAR() {
+            @Override
+            public String format(double amount) {
+                return format(formatAmount(amount * 100));
+            }
 
-        Operation(String symbol) {
-            this.symbol = symbol;
+            @Override
+            public String format(String amount) {
+                return amount + "%";
+            }
+        },
+        MULTIPLY_SCALAR() {
+            @Override
+            public String format(double amount) {
+                return format(formatAmount(amount * 100));
+            }
+
+            @Override
+            public String format(String amount) {
+                return amount + "%";
+            }
+        };
+
+        public static String formatAmount(double amount) {
+            return (amount == Math.floor(amount) ? Integer.toString((int) amount) : Double.toString(amount));
         }
 
-        public String getSymbol() {
-            return symbol;
-        }
+        public abstract String format(double amount);
+
+        public abstract String format(String amount);
 
     }
 

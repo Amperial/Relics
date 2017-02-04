@@ -15,7 +15,9 @@ import ninja.amp.items.api.item.attribute.AttributeType;
 import ninja.amp.items.api.item.attribute.attributes.BasicAttribute;
 import ninja.amp.items.api.item.attribute.attributes.BasicAttributeFactory;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.UUID;
 
@@ -35,10 +37,12 @@ public class MinecraftAttribute extends BasicAttribute implements ninja.amp.item
         this.amount = amount;
         this.operation = operation;
         this.slot = slot;
-        setStacks(stacks);
+        this.setStacks(stacks);
+
         setLore((lore, prefix) -> {
-            lore.add(prefix + getSlot().getDisplayName());
-            lore.add(prefix + "  " + getOperation().getSymbol() + getAmount() + " " + getMinecraftType().getDisplayName());
+            lore.add(prefix + ChatColor.GRAY + getSlot().getDisplayName());
+            String stacking = getStacks() ? ChatColor.BLUE + "+" : ChatColor.GRAY.toString();
+            lore.add(prefix + "  " + stacking + getOperation().format(getAmount()) + " " + getMinecraftType().getDisplayName());
         });
     }
 
@@ -111,6 +115,21 @@ public class MinecraftAttribute extends BasicAttribute implements ninja.amp.item
 
         public MinecraftAttributeFactory(ItemPlugin plugin) {
             super(plugin);
+
+            // Load config strings for minecraft attribute types and slots
+            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttributeType.MINECRAFT);
+            for (Type type : Type.values()) {
+                if (config.isString("type." + type.name())) {
+                    type.setDisplayName(config.getString("type." + type.name()));
+                }
+                type.setDisplayName(ChatColor.translateAlternateColorCodes('&', type.getDisplayName()));
+            }
+            for (Slot slot : Slot.values()) {
+                if (config.isString("slot." + slot.name())) {
+                    slot.setDisplayName(config.getString("slot." + slot.name()));
+                }
+                slot.setDisplayName(ChatColor.translateAlternateColorCodes('&', slot.getDisplayName()));
+            }
         }
 
         @Override
@@ -118,9 +137,9 @@ public class MinecraftAttribute extends BasicAttribute implements ninja.amp.item
             // Load minecraft type, amount, operation, slot and stacks
             Type minecraftType = Type.valueOf(config.getString("minecraft-type"));
             double amount = config.getDouble("amount", 0);
-            Operation operation = Operation.valueOf(config.getString("operation"));
-            Slot slot = Slot.valueOf(config.getString("slot"));
-            boolean stacks = config.getBoolean("stacks");
+            Operation operation = Operation.valueOf(config.getString("operation", "ADD_NUMBER"));
+            Slot slot = Slot.valueOf(config.getString("slot", "ANY"));
+            boolean stacks = config.getBoolean("stacks", true);
 
             // Create minecraft attribute
             return new MinecraftAttribute(name, minecraftType, amount, operation, slot, stacks);

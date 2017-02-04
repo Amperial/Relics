@@ -92,7 +92,7 @@ public class InfuseGemCommand extends DualItemCommand {
         // Remove gem from inventory
         player.getInventory().setItemInOffHand(null);
 
-        messenger.sendMessage(player, AIMessage.SOCKET_INFUSE, gem.getName());
+        messenger.sendMessage(player, AIMessage.SOCKET_INFUSE, gem.getDisplayName());
     }
 
 }

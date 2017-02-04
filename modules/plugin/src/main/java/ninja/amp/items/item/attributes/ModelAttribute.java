@@ -40,7 +40,7 @@ public class ModelAttribute extends BasicAttribute implements Model {
     @Override
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
-        compound.setShort("model-damage", getModelDamage());
+        compound.setShort("damage", getModelDamage());
     }
 
     public static class Factory extends BasicAttributeFactory<Model> {
@@ -52,7 +52,7 @@ public class ModelAttribute extends BasicAttribute implements Model {
         @Override
         public Model loadFromConfig(String name, ConfigurationSection config) {
             // Load model damage
-            short modelDamage = (short) config.getInt("model-damage");
+            short modelDamage = (short) config.getInt("damage");
 
             // Create model attribute
             return new ModelAttribute(name, modelDamage);
@@ -61,7 +61,7 @@ public class ModelAttribute extends BasicAttribute implements Model {
         @Override
         public Model loadFromNBT(String name, NBTTagCompound compound) {
             // Load model damage
-            short modelDamage = compound.getShort("model-damage");
+            short modelDamage = compound.getShort("damage");
 
             // Create model attribute
             return new ModelAttribute(name, modelDamage);

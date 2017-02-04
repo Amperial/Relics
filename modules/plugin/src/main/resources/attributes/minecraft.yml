@@ -1,0 +1,16 @@
+type:
+  ARMOR: "Armor"
+  ARMOR_TOUGHNESS: "Armor Toughness"
+  ATTACK_DAMAGE: "Attack Damage"
+  ATTACK_SPEED: "Attack Speed"
+  LUCK: "Luck"
+  MAX_HEALTH: "Max Health"
+  MOVEMENT_SPEED: "Movement Speed"
+slot:
+  ANY: "When equipped:"
+  MAIN_HAND: "When equipped in main hand:"
+  OFF_HAND: "When equipped in off hand:"
+  HEAD: "When equipped on head:"
+  CHEST: "When equipped on chest:"
+  LEGS: "When equipped on legs:"
+  FEET: "When equipped on feet:"

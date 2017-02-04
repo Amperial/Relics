@@ -24,26 +24,26 @@ import java.util.stream.Collectors;
  * An implementation of AttributeContainer to help subclasses avoid implementing the full interface.<br>
  * Subclasses are required to override the following methods:
  * <p>
- *     {@link #getAttributes()} or {@link #forEach(Consumer)},<br>
- *     {@link #getAttributesDeep(Class)} or {@link #forEachDeep(Consumer)}
+ * {@link #getAttributes()} or {@link #forEach(Consumer)},<br>
+ * {@link #getAttributesDeep(Class)} or {@link #forEachDeep(Consumer)}
  * </p>
  * In addition, they are encouraged to override any methods that could achieve increased performance.<br>
  * The following methods are the most likely to achieve a higher performance if overriden:
  * <p>
- *     Even if {@link #forEach(Consumer)} is overriden:<br>
- *         {@link #getAttributes()}
+ * Even if {@link #forEach(Consumer)} is overriden:<br>
+ * {@link #getAttributes()}
  * </p>
  * <p>
- *     Even if {@link #getAttributesDeep(Class)} is overriden:<br>
- *         {@link #forEachDeep(Consumer)}
+ * Even if {@link #getAttributesDeep(Class)} is overriden:<br>
+ * {@link #forEachDeep(Consumer)}
  * </p>
  * <p>
- *     If {@link #getAttributes()} is not overriden:<br>
- *         {@link #hasAttribute(Predicate)} and {@link #getAttribute(Predicate, Class)}
+ * If {@link #getAttributes()} is not overriden:<br>
+ * {@link #hasAttribute(Predicate)} and {@link #getAttribute(Predicate, Class)}
  * </p>
  * <p>
- *     If {@link #getAttributesDeep(Class)} is not overriden:<br>
- *         {@link #hasAttributeDeep(Predicate)} and {@link #getAttributeDeep(Predicate, Class)}
+ * If {@link #getAttributesDeep(Class)} is not overriden:<br>
+ * {@link #hasAttributeDeep(Predicate)} and {@link #getAttributeDeep(Predicate, Class)}
  * </p>
  * The goal is to avoid constructing new collections when a collection is already available to use,
  * when only a single item is needed, or when a collection is not needed, while working with nested attributes

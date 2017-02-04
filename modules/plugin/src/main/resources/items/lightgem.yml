@@ -1,0 +1,25 @@
+name: "&fLight Gem Item"
+material: "FEATHER"
+item-type: "other"
+attributes:
+  rarity:
+    type: "rarity"
+    tier: 2
+  infuse:
+    type: "text"
+    text:
+    - "&dInfuse this gem into a socket!"
+  gem:
+    type: "gem"
+    name: "&7(&fLight Gem&7)"
+    color: "white"
+    attributes:
+      description:
+        type: "text"
+        text:
+        - "Move at the speed of light!"
+      fast:
+        type: "minecraft"
+        minecraft-type: "MOVEMENT_SPEED"
+        amount: 0.5
+        operation: "ADD_SCALAR"

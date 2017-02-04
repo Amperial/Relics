@@ -14,6 +14,7 @@ import ninja.amp.items.api.ItemPlugin;
 import ninja.amp.items.api.item.attribute.attributes.BasicAttributeFactory;
 import ninja.amp.items.api.item.attribute.attributes.Damage;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class DamageAttribute extends MinecraftAttribute implements Damage {
@@ -24,10 +25,17 @@ public class DamageAttribute extends MinecraftAttribute implements Damage {
         super(name, DefaultAttributeType.DAMAGE, Type.ATTACK_DAMAGE, damage, operation, slot, stacks);
 
         this.variation = variation;
+
         setLore((lore, prefix) -> {
-            lore.add(prefix + getSlot().getDisplayName());
-            lore.add(prefix + "  " + getOperation().getSymbol() + getAmount() + " Attack Damage");
-            lore.add(prefix + "   Damage Spread: +/- " + getVariation());
+            lore.add(prefix + ChatColor.GRAY + getSlot().getDisplayName());
+            String dmg = getStacks() ? ChatColor.BLUE + "+" : ChatColor.GRAY.toString();
+            double var = getVariation();
+            if (var > 0) {
+                dmg += getOperation().format(Operation.formatAmount(getAmount() - var) + "-" + Operation.formatAmount(getAmount() + var));
+            } else {
+                dmg += getOperation().format(getDamage());
+            }
+            lore.add(prefix + "  " + dmg + " " + getMinecraftType().getDisplayName());
         });
     }
 
@@ -66,11 +74,11 @@ public class DamageAttribute extends MinecraftAttribute implements Damage {
         @Override
         public Damage loadFromConfig(String name, ConfigurationSection config) {
             // Load damage, variation, operation, slot and stacks
-            double damage = config.getDouble("damage");
+            double damage = config.getDouble("damage", 0);
             double variation = config.getDouble("variation", 0);
-            Operation operation = Operation.valueOf(config.getString("operation"));
-            Slot slot = Slot.valueOf(config.getString("slot"));
-            boolean stacks = config.getBoolean("stacks");
+            Operation operation = Operation.valueOf(config.getString("operation", "ADD_NUMBER"));
+            Slot slot = Slot.valueOf(config.getString("slot", "ANY"));
+            boolean stacks = config.getBoolean("stacks", true);
 
             // Create damage attribute
             return new DamageAttribute(name, damage, variation, operation, slot, stacks);
