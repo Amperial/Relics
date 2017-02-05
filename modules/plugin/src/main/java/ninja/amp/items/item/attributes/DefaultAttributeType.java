@@ -21,6 +21,7 @@ public enum DefaultAttributeType implements AttributeType {
     MINECRAFT("minecraft", 6),
     MODEL("model", Integer.MAX_VALUE),
     RARITY("rarity", 0),
+    SMITE("smite", Integer.MAX_VALUE),
     SOCKET("socket", 3),
     TEXT("text", 1);
 

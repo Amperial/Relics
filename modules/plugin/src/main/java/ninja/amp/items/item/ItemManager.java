@@ -24,6 +24,7 @@ import ninja.amp.items.item.attributes.GroupAttribute;
 import ninja.amp.items.item.attributes.ModelAttribute;
 import ninja.amp.items.item.attributes.RarityAttribute;
 import ninja.amp.items.item.attributes.TextAttribute;
+import ninja.amp.items.item.attributes.misc.SmiteAttribute;
 import ninja.amp.items.item.attributes.sockets.GemAttribute;
 import ninja.amp.items.item.attributes.sockets.SocketAttribute;
 import ninja.amp.items.item.attributes.stats.DamageAttribute;
@@ -107,6 +108,7 @@ public class ItemManager implements ninja.amp.items.api.item.ItemManager {
         DefaultAttributeType.MINECRAFT.setFactory(new MinecraftAttribute.MinecraftAttributeFactory(plugin));
         DefaultAttributeType.MODEL.setFactory(new ModelAttribute.Factory(plugin));
         DefaultAttributeType.RARITY.setFactory(new RarityAttribute.Factory(plugin));
+        DefaultAttributeType.SMITE.setFactory(new SmiteAttribute.SmiteAttributeFactory(plugin));
         DefaultAttributeType.SOCKET.setFactory(new SocketAttribute.Factory(plugin));
         DefaultAttributeType.TEXT.setFactory(new TextAttribute.Factory(plugin));
     }

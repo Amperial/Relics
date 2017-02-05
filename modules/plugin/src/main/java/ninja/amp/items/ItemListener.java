@@ -15,15 +15,18 @@ import ninja.amp.items.api.item.Item;
 import ninja.amp.items.api.item.ItemManager;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
 import ninja.amp.items.api.item.attribute.attributes.stats.Damage;
+import ninja.amp.items.item.attributes.misc.SmiteAttribute;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 
@@ -41,6 +44,25 @@ public class ItemListener implements Listener {
 
         // Register listener
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        ItemStack itemStack = event.getItem();
+        if (itemStack != null && itemStack.getType() != Material.AIR) {
+            ItemManager itemManager = plugin.getItemManager();
+            if (itemManager.isItem(itemStack)) {
+                Item item = itemManager.getItem(itemStack);
+                Optional<SmiteAttribute> smiteOptional = item.getAttributeDeep(SmiteAttribute.class);
+                if (smiteOptional.isPresent()) {
+                    SmiteAttribute smite = smiteOptional.get();
+                    Player player = event.getPlayer();
+                    if (smite.canSmite(player)) {
+                        smite.smite(player);
+                    }
+                }
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.LOW)

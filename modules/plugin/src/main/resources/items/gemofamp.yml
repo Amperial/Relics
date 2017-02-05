@@ -23,9 +23,6 @@ attributes:
       description:
         type: "text"
         text:
-        - "Attack with legendary strength!"
-      damage:
-        type: "damage"
-        slot: "MAIN_HAND"
-        operation: "MULTIPLY_SCALAR"
-        damage: 10
+        - "Strike lightning at your foes!"
+      smite:
+        type: "smite"
