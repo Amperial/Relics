@@ -14,7 +14,7 @@ import ninja.amp.items.api.ItemPlugin;
 import ninja.amp.items.api.item.Item;
 import ninja.amp.items.api.item.ItemManager;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
-import ninja.amp.items.api.item.attribute.attributes.Damage;
+import ninja.amp.items.api.item.attribute.attributes.stats.Damage;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;

@@ -24,11 +24,13 @@ import java.util.function.Predicate;
  */
 public interface AttributeContainer {
 
-    boolean hasAttribute(Class<?> clazz);
-
     boolean hasAttribute(String name);
 
     boolean hasAttributeDeep(String name);
+
+    boolean hasAttribute(Class<?> clazz);
+
+    boolean hasAttributeDeep(Class<?> clazz);
 
     boolean hasAttribute(Predicate<ItemAttribute> predicate);
 

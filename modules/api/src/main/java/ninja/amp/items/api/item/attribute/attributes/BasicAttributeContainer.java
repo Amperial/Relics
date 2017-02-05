@@ -63,6 +63,11 @@ public class BasicAttributeContainer extends BasicAttribute implements Attribute
     }
 
     @Override
+    public boolean hasAttributeDeep(Class<?> clazz) {
+        return hasAttributeDeep(ItemAttribute.type(clazz));
+    }
+
+    @Override
     public boolean hasAttribute(String name) {
         return hasAttribute(attribute -> attribute.getName().equals(name));
     }

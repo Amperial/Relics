@@ -8,16 +8,14 @@
  * Unauthorized copying and/or distribution of AmpItems API,
  * via any medium is strictly prohibited.
  */
-package ninja.amp.items.api.item.attribute.attributes;
+package ninja.amp.items.api.item.attribute.attributes.stats;
 
-public interface Damage extends MinecraftAttribute {
+import ninja.amp.items.api.item.attribute.ItemAttribute;
 
-    double getDamage();
+public interface StatAttribute<T extends StatType<T>> extends ItemAttribute {
 
-    void setDamage(double damage);
+    T getStatType();
 
-    double getVariation();
-
-    void setVariation(double variation);
+    StatSpecifier<T> getStatSpecifier();
 
 }

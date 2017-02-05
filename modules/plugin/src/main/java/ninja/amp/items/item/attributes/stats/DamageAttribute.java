@@ -8,35 +8,23 @@
  * Unauthorized copying and/or distribution of AmpItems,
  * via any medium is strictly prohibited.
  */
-package ninja.amp.items.item.attributes;
+package ninja.amp.items.item.attributes.stats;
 
 import ninja.amp.items.api.ItemPlugin;
 import ninja.amp.items.api.item.attribute.attributes.BasicAttributeFactory;
-import ninja.amp.items.api.item.attribute.attributes.Damage;
+import ninja.amp.items.api.item.attribute.attributes.stats.Damage;
+import ninja.amp.items.item.attributes.DefaultAttributeType;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class DamageAttribute extends MinecraftAttribute implements Damage {
 
     private double variation;
 
-    public DamageAttribute(String name, double damage, double variation, Operation operation, Slot slot, boolean stacks) {
-        super(name, DefaultAttributeType.DAMAGE, Type.ATTACK_DAMAGE, damage, operation, slot, stacks);
+    public DamageAttribute(String name, Slot slot, Operation operation, boolean stacking, double damage, double variation) {
+        super(name, DefaultAttributeType.DAMAGE, Damage.STAT_TYPE, Type.ATTACK_DAMAGE, slot, operation, stacking, damage);
 
         this.variation = variation;
-
-        setLore((lore, prefix) -> {
-            lore.add(prefix + ChatColor.GRAY + getSlot().getDisplayName());
-            String dmg = getStacks() ? ChatColor.BLUE + "+" : ChatColor.GRAY.toString();
-            double var = getVariation();
-            if (var > 0) {
-                dmg += getOperation().format(Operation.formatAmount(getAmount() - var) + "-" + Operation.formatAmount(getAmount() + var));
-            } else {
-                dmg += getOperation().format(getDamage());
-            }
-            lore.add(prefix + "  " + dmg + " " + getMinecraftType().getDisplayName());
-        });
     }
 
     @Override
@@ -73,28 +61,28 @@ public class DamageAttribute extends MinecraftAttribute implements Damage {
 
         @Override
         public Damage loadFromConfig(String name, ConfigurationSection config) {
-            // Load damage, variation, operation, slot and stacks
+            // Load slot, operation, stacking, damage, and variation
+            Slot slot = Slot.valueOf(config.getString("slot", "ANY"));
+            Operation operation = Operation.valueOf(config.getString("operation", "ADD_NUMBER"));
+            boolean stacking = config.getBoolean("stacking", true);
             double damage = config.getDouble("damage", 0);
             double variation = config.getDouble("variation", 0);
-            Operation operation = Operation.valueOf(config.getString("operation", "ADD_NUMBER"));
-            Slot slot = Slot.valueOf(config.getString("slot", "ANY"));
-            boolean stacks = config.getBoolean("stacks", true);
 
             // Create damage attribute
-            return new DamageAttribute(name, damage, variation, operation, slot, stacks);
+            return new DamageAttribute(name, slot, operation, stacking, damage, variation);
         }
 
         @Override
         public Damage loadFromNBT(String name, NBTTagCompound compound) {
-            // Load damage, variation, operation, slot and stacks
+            // Load slot, operation, stacking, damage, and variation
+            Slot slot = Slot.valueOf(compound.getString("slot"));
+            Operation operation = Operation.valueOf(compound.getString("operation"));
+            boolean stacking = compound.getBoolean("stacking");
             double damage = compound.getDouble("amount");
             double variation = compound.getDouble("variation");
-            Operation operation = Operation.valueOf(compound.getString("operation"));
-            Slot slot = Slot.valueOf(compound.getString("slot"));
-            boolean stacks = compound.getBoolean("stacks");
 
             // Create damage attribute
-            return new DamageAttribute(name, damage, variation, operation, slot, stacks);
+            return new DamageAttribute(name, slot, operation, stacking, damage, variation);
         }
 
     }

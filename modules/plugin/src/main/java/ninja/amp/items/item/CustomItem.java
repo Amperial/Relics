@@ -15,8 +15,10 @@ import ninja.amp.items.api.item.ItemFactory;
 import ninja.amp.items.api.item.ItemType;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
 import ninja.amp.items.api.item.attribute.attributes.AttributeGroup;
-import ninja.amp.items.api.item.attribute.attributes.MinecraftAttribute;
 import ninja.amp.items.api.item.attribute.attributes.Model;
+import ninja.amp.items.api.item.attribute.attributes.stats.GenericAttribute;
+import ninja.amp.items.api.item.attribute.attributes.stats.StatAttribute;
+import ninja.amp.items.api.item.attribute.attributes.stats.StatGroup;
 import ninja.amp.items.item.attributes.DefaultAttributeType;
 import ninja.amp.items.nms.NMSHandler;
 import ninja.amp.items.nms.nbt.NBTBase;
@@ -80,6 +82,11 @@ public class CustomItem implements Item {
     @Override
     public boolean hasAttribute(Class<?> clazz) {
         return attributes.hasAttribute(clazz);
+    }
+
+    @Override
+    public boolean hasAttributeDeep(Class<?> clazz) {
+        return attributes.hasAttributeDeep(clazz);
     }
 
     @Override
@@ -248,12 +255,20 @@ public class CustomItem implements Item {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ItemStack updateItem(ItemStack item) {
         // Set ItemMeta
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(getName());
         List<String> lore = new ArrayList<>();
         attributes.getLore().addTo(lore, "");
+        if (attributes.hasAttributeDeep(StatAttribute.class)) {
+            StatGroup stats = new StatGroup<>();
+            attributes.forEachDeep(a -> stats.addStat((StatAttribute) a), a -> a instanceof StatAttribute);
+            lore.add("");
+            stats.addTo(lore, "");
+        }
+        meta.setLore(lore);
         Optional<ItemAttribute> modelOptional = attributes.getAttribute(DefaultAttributeType.MODEL);
         if (modelOptional.isPresent()) {
             Model model = (Model) modelOptional.get();
@@ -261,8 +276,7 @@ public class CustomItem implements Item {
             meta.setUnbreakable(true);
             meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         }
-        meta.setLore(lore);
-        if (hasAttributeDeep(ItemAttribute.type(MinecraftAttribute.class))) {
+        if (hasAttributeDeep(ItemAttribute.type(GenericAttribute.class))) {
             meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         }
         item.setItemMeta(meta);
@@ -292,7 +306,7 @@ public class CustomItem implements Item {
         }
 
         // Update modifiers
-        forEachDeep(attribute -> updateModifier(modifiers, (MinecraftAttribute) attribute), ItemAttribute.type(MinecraftAttribute.class));
+        forEachDeep(attribute -> setModifier(modifiers, (GenericAttribute) attribute), ItemAttribute.type(GenericAttribute.class));
 
         // Remove unused modifiers
         int i = 0;
@@ -315,28 +329,12 @@ public class CustomItem implements Item {
         return item;
     }
 
-    private NBTTagCompound getModifier(NBTTagList modifiers, MinecraftAttribute attribute) {
-        String attributeName = attribute.getMinecraftType().getName();
-        String name = ITEM_TAG + ":" + attribute.getName();
-        for (int i = 0; i < modifiers.size(); i++) {
-            NBTTagCompound modifier = modifiers.getCompound(i);
-            if (modifier.getString("AttributeName").equals(attributeName)) {
-                if (modifier.getString("Name").equals(name)) {
-                    return modifier;
-                }
-            }
-        }
+    private void setModifier(NBTTagList modifiers, GenericAttribute attribute) {
         NBTTagCompound modifier = NBTTagCompound.create();
-        modifier.setString("AttributeName", attributeName);
-        modifier.setString("Name", name);
-        modifiers.addBase(modifier);
-        return modifier;
-    }
-
-    private void updateModifier(NBTTagList modifiers, MinecraftAttribute attribute) {
-        NBTTagCompound modifier = getModifier(modifiers, attribute);
+        modifier.setString("AttributeName", attribute.getMinecraftType().getName());
+        modifier.setString("Name", ITEM_TAG + ":" + attribute.getName());
         modifier.setDouble("Amount", attribute.getAmount());
-        if (attribute.getSlot() == MinecraftAttribute.Slot.ANY) {
+        if (attribute.getSlot() == GenericAttribute.Slot.ANY) {
             modifier.remove("Slot");
         } else {
             modifier.setString("Slot", attribute.getSlot().getName());
@@ -345,6 +343,7 @@ public class CustomItem implements Item {
         modifier.setLong("UUIDMost", attribute.getUUID().getMostSignificantBits());
         modifier.setLong("UUIDLeast", attribute.getUUID().getLeastSignificantBits());
         modifier.setBoolean("Updated", true);
+        modifiers.addBase(modifier);
     }
 
     @Override

@@ -82,6 +82,11 @@ public class GemAttribute extends BasicAttribute implements Gem {
     }
 
     @Override
+    public boolean hasAttributeDeep(Class<?> clazz) {
+        return attributes.hasAttributeDeep(clazz);
+    }
+
+    @Override
     public boolean hasAttribute(String name) {
         return attributes.hasAttribute(name);
     }

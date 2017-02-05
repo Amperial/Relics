@@ -17,6 +17,7 @@ import ninja.amp.items.api.item.attribute.attributes.AttributeContainer;
 import ninja.amp.items.api.item.attribute.attributes.AttributeGroup;
 import ninja.amp.items.api.item.attribute.attributes.BasicAttributeContainer;
 import ninja.amp.items.api.item.attribute.attributes.BasicAttributeFactory;
+import ninja.amp.items.api.item.attribute.attributes.stats.StatAttribute;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -40,26 +41,22 @@ public class GroupAttribute extends BasicAttributeContainer implements Attribute
         this.attributes = attributes;
         this.spacing = spacing;
 
-        if (spacing) {
-            setLore((lore, prefix) -> {
-                getAttributes().stream()
-                        .sorted(Comparator.comparingInt(a -> a.getType().getLorePosition()))
-                        .forEachOrdered(a -> {
+        setLore((lore, prefix) -> {
+            getAttributes().stream()
+                    .sorted(Comparator.comparingInt(a -> a.getType().getLorePosition()))
+                    .forEachOrdered(a -> {
+                        if (!(a instanceof StatAttribute)) {
                             int s = lore.size();
                             a.getLore().addTo(lore, prefix);
-                            if (lore.size() > s) {
+                            if (spacing && lore.size() > s) {
                                 lore.add("");
                             }
-                        });
-                if (getAttributes().size() > 0) {
-                    lore.remove(lore.size() - 1);
-                }
-            });
-        } else {
-            setLore((lore, prefix) -> getAttributes().stream()
-                    .sorted(Comparator.comparingInt(a -> a.getType().getLorePosition()))
-                    .forEachOrdered(a -> a.getLore().addTo(lore, prefix)));
-        }
+                        }
+                    });
+            if (spacing && getAttributes().size() > 0) {
+                lore.remove(lore.size() - 1);
+            }
+        });
     }
 
     @Override
@@ -199,7 +196,7 @@ public class GroupAttribute extends BasicAttributeContainer implements Attribute
             }
 
             // Create attribute group
-            return new GroupAttribute(name, attributeMap, !compound.hasKey("spacing") || compound.getBoolean("spacing"));
+            return new GroupAttribute(name, attributeMap, compound.getBoolean("spacing"));
         }
 
     }

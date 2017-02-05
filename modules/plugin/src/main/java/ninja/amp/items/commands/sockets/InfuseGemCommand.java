@@ -40,7 +40,7 @@ public class InfuseGemCommand extends DualItemCommand {
 
         // Load Gem from offhand Item
         Gem gem;
-        Optional<Gem> gemOptional = offHand.getAttribute(Gem.class);
+        Optional<Gem> gemOptional = offHand.getAttributeDeep(Gem.class);
         if (!gemOptional.isPresent()) {
             messenger.sendErrorMessage(player, AIMessage.GEM_NOTHOLDING);
             return;
@@ -65,7 +65,7 @@ public class InfuseGemCommand extends DualItemCommand {
                 return;
             }
         } else {
-            if (!mainHand.hasAttribute(s -> s instanceof Socket && !((Socket) s).hasGem())) {
+            if (!mainHand.hasAttributeDeep(s -> s instanceof Socket && !((Socket) s).hasGem())) {
                 messenger.sendErrorMessage(player, AIMessage.SOCKET_FULL);
                 return;
             }

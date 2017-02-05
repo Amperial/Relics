@@ -26,4 +26,6 @@ attributes:
         - "Attack with legendary strength!"
       damage:
         type: "damage"
-        damage: 20
+        slot: "MAIN_HAND"
+        operation: "MULTIPLY_SCALAR"
+        damage: 10
