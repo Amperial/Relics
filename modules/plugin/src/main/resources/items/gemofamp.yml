@@ -2,9 +2,16 @@ name: "&4Gem of Ampayne2"
 material: "DIAMOND"
 item-type: "other"
 attributes:
-  rarity:
-    type: "rarity"
-    tier: 5
+  info:
+    type: "group"
+    spacing: false
+    attributes:
+      rarity:
+        type: "rarity"
+        tier: 5
+      level:
+        type: "level"
+        level: 30
   description:
     type: "text"
     text:
@@ -20,6 +27,9 @@ attributes:
     name: "&7(&4Gem of Ampayne2&7)"
     color: "dark-red"
     attributes:
+      requirement:
+        type: "level-requirement"
+        level: 20
       description:
         type: "text"
         text:

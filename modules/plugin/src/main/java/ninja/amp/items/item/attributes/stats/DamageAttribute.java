@@ -53,9 +53,9 @@ public class DamageAttribute extends MinecraftAttribute implements Damage {
         compound.setDouble("variation", getVariation());
     }
 
-    public static class DamageFactory extends BasicAttributeFactory<Damage> {
+    public static class Factory extends BasicAttributeFactory<Damage> {
 
-        public DamageFactory(ItemPlugin plugin) {
+        public Factory(ItemPlugin plugin) {
             super(plugin);
         }
 

@@ -10,20 +10,84 @@
  */
 package ninja.amp.items.item.attributes;
 
+import ninja.amp.items.api.ItemPlugin;
 import ninja.amp.items.api.item.attribute.AttributeFactory;
 import ninja.amp.items.api.item.attribute.AttributeType;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
+import ninja.amp.items.item.attributes.misc.SmiteAttribute;
+import ninja.amp.items.item.attributes.sockets.GemAttribute;
+import ninja.amp.items.item.attributes.sockets.SocketAttribute;
+import ninja.amp.items.item.attributes.stats.DamageAttribute;
+import ninja.amp.items.item.attributes.stats.LevelRequirementAttribute;
+import ninja.amp.items.item.attributes.stats.MinecraftAttribute;
 
 public enum DefaultAttributeType implements AttributeType {
-    DAMAGE("damage", 2),
-    GEM("gem", 4),
-    GROUP("group", 5),
-    MINECRAFT("minecraft", 6),
-    MODEL("model", Integer.MAX_VALUE),
-    RARITY("rarity", 0),
-    SMITE("smite", Integer.MAX_VALUE),
-    SOCKET("socket", 3),
-    TEXT("text", 1);
+    DAMAGE("damage", 4) {
+        @Override
+        AttributeFactory<? extends ItemAttribute> loadFactory(ItemPlugin plugin) {
+            return new DamageAttribute.Factory(plugin);
+        }
+    },
+    GEM("gem", 6) {
+        @Override
+        AttributeFactory<? extends ItemAttribute> loadFactory(ItemPlugin plugin) {
+            return new GemAttribute.Factory(plugin);
+        }
+    },
+    GROUP("group", 0) {
+        @Override
+        AttributeFactory<? extends ItemAttribute> loadFactory(ItemPlugin plugin) {
+            return new GroupAttribute.Factory(plugin);
+        }
+    },
+    LEVEL("level", 2) {
+        @Override
+        AttributeFactory<? extends ItemAttribute> loadFactory(ItemPlugin plugin) {
+            return new LevelAttribute.Factory(plugin);
+        }
+    },
+    LEVEL_REQUIREMENT("level-requirement", Integer.MIN_VALUE) {
+        @Override
+        AttributeFactory<? extends ItemAttribute> loadFactory(ItemPlugin plugin) {
+            return new LevelRequirementAttribute.Factory(plugin);
+        }
+    },
+    MINECRAFT("minecraft", 7) {
+        @Override
+        AttributeFactory<? extends ItemAttribute> loadFactory(ItemPlugin plugin) {
+            return new MinecraftAttribute.Factory(plugin);
+        }
+    },
+    MODEL("model", Integer.MAX_VALUE) {
+        @Override
+        AttributeFactory<? extends ItemAttribute> loadFactory(ItemPlugin plugin) {
+            return new ModelAttribute.Factory(plugin);
+        }
+    },
+    RARITY("rarity", 1) {
+        @Override
+        AttributeFactory<? extends ItemAttribute> loadFactory(ItemPlugin plugin) {
+            return new RarityAttribute.Factory(plugin);
+        }
+    },
+    SMITE("smite", Integer.MAX_VALUE) {
+        @Override
+        AttributeFactory<? extends ItemAttribute> loadFactory(ItemPlugin plugin) {
+            return new SmiteAttribute.Factory(plugin);
+        }
+    },
+    SOCKET("socket", 5) {
+        @Override
+        AttributeFactory<? extends ItemAttribute> loadFactory(ItemPlugin plugin) {
+            return new SocketAttribute.Factory(plugin);
+        }
+    },
+    TEXT("text", 3) {
+        @Override
+        AttributeFactory<? extends ItemAttribute> loadFactory(ItemPlugin plugin) {
+            return new TextAttribute.Factory(plugin);
+        }
+    };
 
     private final String name;
     private final String fileName;
@@ -57,6 +121,11 @@ public enum DefaultAttributeType implements AttributeType {
     }
 
     @Override
+    public boolean test(ItemAttribute itemAttribute) {
+        return equals(itemAttribute.getType());
+    }
+
+    @Override
     public AttributeFactory<? extends ItemAttribute> getFactory() {
         return factory;
     }
@@ -65,9 +134,12 @@ public enum DefaultAttributeType implements AttributeType {
         this.factory = factory;
     }
 
-    @Override
-    public boolean test(ItemAttribute itemAttribute) {
-        return equals(itemAttribute.getType());
+    abstract AttributeFactory<? extends ItemAttribute> loadFactory(ItemPlugin plugin);
+
+    public static void loadFactories(ItemPlugin plugin) {
+        for (DefaultAttributeType type : values()) {
+            type.setFactory(type.loadFactory(plugin));
+        }
     }
 
 }

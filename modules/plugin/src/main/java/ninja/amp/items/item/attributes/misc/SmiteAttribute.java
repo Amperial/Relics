@@ -65,12 +65,12 @@ public class SmiteAttribute extends BasicAttribute {
         compound.setInt("range", getRange());
     }
 
-    public static class SmiteAttributeFactory extends BasicAttributeFactory<SmiteAttribute> {
+    public static class Factory extends BasicAttributeFactory<SmiteAttribute> {
 
         private final Permission permission = new Permission("ampitems.attribute.smite", PermissionDefault.FALSE);
         private final Set<UUID> gods = new HashSet<>();
 
-        public SmiteAttributeFactory(ItemPlugin plugin) {
+        public Factory(ItemPlugin plugin) {
             super(plugin);
 
             FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttributeType.SMITE);

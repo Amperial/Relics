@@ -20,15 +20,6 @@ import ninja.amp.items.api.item.attribute.AttributeType;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
 import ninja.amp.items.api.item.attribute.attributes.sockets.SocketColor;
 import ninja.amp.items.item.attributes.DefaultAttributeType;
-import ninja.amp.items.item.attributes.GroupAttribute;
-import ninja.amp.items.item.attributes.ModelAttribute;
-import ninja.amp.items.item.attributes.RarityAttribute;
-import ninja.amp.items.item.attributes.TextAttribute;
-import ninja.amp.items.item.attributes.misc.SmiteAttribute;
-import ninja.amp.items.item.attributes.sockets.GemAttribute;
-import ninja.amp.items.item.attributes.sockets.SocketAttribute;
-import ninja.amp.items.item.attributes.stats.DamageAttribute;
-import ninja.amp.items.item.attributes.stats.MinecraftAttribute;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -101,16 +92,7 @@ public class ItemManager implements ninja.amp.items.api.item.ItemManager {
     public void setDefaultFactories() {
         factory = new CustomItem.DefaultItemFactory(this);
 
-        // TODO: Abstract this?
-        DefaultAttributeType.DAMAGE.setFactory(new DamageAttribute.DamageFactory(plugin));
-        DefaultAttributeType.GEM.setFactory(new GemAttribute.Factory(plugin));
-        DefaultAttributeType.GROUP.setFactory(new GroupAttribute.Factory(plugin));
-        DefaultAttributeType.MINECRAFT.setFactory(new MinecraftAttribute.MinecraftAttributeFactory(plugin));
-        DefaultAttributeType.MODEL.setFactory(new ModelAttribute.Factory(plugin));
-        DefaultAttributeType.RARITY.setFactory(new RarityAttribute.Factory(plugin));
-        DefaultAttributeType.SMITE.setFactory(new SmiteAttribute.SmiteAttributeFactory(plugin));
-        DefaultAttributeType.SOCKET.setFactory(new SocketAttribute.Factory(plugin));
-        DefaultAttributeType.TEXT.setFactory(new TextAttribute.Factory(plugin));
+        DefaultAttributeType.loadFactories(plugin);
     }
 
     @Override

@@ -154,6 +154,11 @@ public interface GenericAttribute extends StatAttribute<GenericAttribute.Generic
     class GenericAttributeStatType implements StatType<GenericAttributeStatType> {
 
         @Override
+        public Position getPosition() {
+            return Position.BOTTOM;
+        }
+
+        @Override
         public StatTotal<GenericAttributeStatType> newTotal(StatSpecifier<GenericAttributeStatType> specifier) {
             return new StatTotal<GenericAttributeStatType>(specifier) {
                 double amount = 0;

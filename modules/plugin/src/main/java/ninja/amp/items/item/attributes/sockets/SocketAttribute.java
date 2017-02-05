@@ -54,10 +54,10 @@ public class SocketAttribute extends BasicAttributeContainer implements Socket {
             // TODO: Configurable
             ChatColor c = getColor().getChatColor();
             if (hasGem()) {
-                lore.add(prefix + c + "<< " + gem.getDisplayName() + c + " >>");
+                lore.add(prefix + c + "[ " + gem.getDisplayName() + c + " ]");
                 getGem().getLore().addTo(lore, prefix + "  ");
             } else {
-                lore.add(prefix + c + "<< " + ChatColor.GRAY + "Empty Socket" + c + " >>");
+                lore.add(prefix + c + "[ " + ChatColor.GRAY + "-" + c + " ]");
             }
         });
     }

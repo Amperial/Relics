@@ -5,9 +5,19 @@ attributes:
   model:
     type: "model"
     damage: 1
-  rarity:
-    type: "rarity"
-    tier: 6
+  info:
+    type: "group"
+    spacing: false
+    attributes:
+      rarity:
+        type: "rarity"
+        tier: 6
+      level:
+        type: "level"
+        level: 50
+  requirement:
+    type: "level-requirement"
+    level: 30
   description:
     type: "text"
     text:
@@ -41,6 +51,9 @@ attributes:
           name: "&7(&fLight Gem&7)"
           color: "white"
           attributes:
+            requirement:
+              type: "level-requirement"
+              level: 1
             description:
               type: "text"
               text:
@@ -55,9 +68,16 @@ attributes:
             material: "FEATHER"
             item-type: "other"
             attributes:
-              rarity:
-                type: "rarity"
-                tier: 2
+              info:
+                type: "group"
+                spacing: false
+                attributes:
+                  rarity:
+                    type: "rarity"
+                    tier: 2
+                  level:
+                    type: "level"
+                    level: 5
               infuse:
                 type: "text"
                 text:

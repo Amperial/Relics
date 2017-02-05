@@ -113,9 +113,9 @@ public class MinecraftAttribute extends BasicStatAttribute<GenericAttribute.Gene
         compound.setDouble("amount", getAmount());
     }
 
-    public static class MinecraftAttributeFactory extends BasicAttributeFactory<MinecraftAttribute> {
+    public static class Factory extends BasicAttributeFactory<MinecraftAttribute> {
 
-        public MinecraftAttributeFactory(ItemPlugin plugin) {
+        public Factory(ItemPlugin plugin) {
             super(plugin);
 
             // Load config strings for minecraft attribute types and slots

@@ -15,8 +15,17 @@ import java.util.Map;
 
 public interface StatType<T extends StatType<T>> {
 
+    Position getPosition();
+
     StatTotal<T> newTotal(StatSpecifier<T> specifier);
 
     void addTo(List<String> lore, Map<StatSpecifier<T>, StatTotal<T>> stats);
+
+    enum Position {
+        FARTHEST_TOP,
+        TOP,
+        BOTTOM,
+        FARTHEST_BOTTOM
+    }
 
 }

@@ -2,9 +2,16 @@ name: "&8Unforgiving Anchor"
 material: "IRON_INGOT"
 item-type: "other"
 attributes:
-  rarity:
-    type: "rarity"
-    tier: 2
+  info:
+    type: "group"
+    spacing: false
+    attributes:
+      rarity:
+        type: "rarity"
+        tier: 2
+      level:
+        type: "level"
+        level: 5
   infuse:
     type: "text"
     text:
@@ -14,6 +21,9 @@ attributes:
     name: "&7(&8Unforgiving Anchor&7)"
     color: "black"
     attributes:
+      requirement:
+        type: "level-requirement"
+        level: 1
       description:
         type: "text"
         text:

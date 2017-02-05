@@ -19,6 +19,7 @@ import ninja.amp.items.api.item.attribute.attributes.Model;
 import ninja.amp.items.api.item.attribute.attributes.stats.GenericAttribute;
 import ninja.amp.items.api.item.attribute.attributes.stats.StatAttribute;
 import ninja.amp.items.api.item.attribute.attributes.stats.StatGroup;
+import ninja.amp.items.api.item.attribute.attributes.stats.StatType;
 import ninja.amp.items.item.attributes.DefaultAttributeType;
 import ninja.amp.items.nms.NMSHandler;
 import ninja.amp.items.nms.nbt.NBTBase;
@@ -257,18 +258,28 @@ public class CustomItem implements Item {
     @Override
     @SuppressWarnings("unchecked")
     public ItemStack updateItem(ItemStack item) {
-        // Set ItemMeta
+        // Get ItemMeta
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(getName());
+
+        // Build lore
         List<String> lore = new ArrayList<>();
-        attributes.getLore().addTo(lore, "");
+        // Add stats to top of lore
         if (attributes.hasAttributeDeep(StatAttribute.class)) {
-            StatGroup stats = new StatGroup<>();
-            attributes.forEachDeep(a -> stats.addStat((StatAttribute) a), a -> a instanceof StatAttribute);
+            addStatGroup(lore, StatType.Position.FARTHEST_TOP);
+            addStatGroup(lore, StatType.Position.TOP);
+        }
+        // Add lore of all attributes
+        attributes.getLore().addTo(lore, "");
+        // Add stats to bottom of lore
+        if (attributes.hasAttributeDeep(StatAttribute.class)) {
             lore.add("");
-            stats.addTo(lore, "");
+            addStatGroup(lore, StatType.Position.BOTTOM);
+            addStatGroup(lore, StatType.Position.FARTHEST_BOTTOM);
         }
         meta.setLore(lore);
+
+        // Check for model attribute
         Optional<ItemAttribute> modelOptional = attributes.getAttribute(DefaultAttributeType.MODEL);
         if (modelOptional.isPresent()) {
             Model model = (Model) modelOptional.get();
@@ -276,9 +287,13 @@ public class CustomItem implements Item {
             meta.setUnbreakable(true);
             meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         }
+
+        // Check for generic attributes
         if (hasAttributeDeep(ItemAttribute.type(GenericAttribute.class))) {
             meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         }
+
+        // Set ItemMeta
         item.setItemMeta(meta);
 
         // Get NBTTagCompound
@@ -327,6 +342,17 @@ public class CustomItem implements Item {
         item = NMSHandler.getInterface().setTagCompoundDirect(item, compound);
 
         return item;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void addStatGroup(List<String> lore, StatType.Position position) {
+        StatGroup stats = new StatGroup();
+        attributes.forEachDeep(a -> {
+            if (((StatAttribute) a).getStatType().getPosition() == position) {
+                stats.addStat((StatAttribute) a);
+            }
+        }, a -> a instanceof StatAttribute);
+        stats.addTo(lore, "");
     }
 
     private void setModifier(NBTTagList modifiers, GenericAttribute attribute) {
