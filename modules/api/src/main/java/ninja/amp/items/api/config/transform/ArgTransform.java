@@ -13,9 +13,9 @@ package ninja.amp.items.api.config.transform;
 import ninja.amp.items.api.ItemPlugin;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class ArgTransformer extends ConfigTransform {
+public class ArgTransform extends ConfigTransform {
 
-    public ArgTransformer(ItemPlugin plugin) {
+    public ArgTransform(ItemPlugin plugin) {
         super(plugin);
     }
 
