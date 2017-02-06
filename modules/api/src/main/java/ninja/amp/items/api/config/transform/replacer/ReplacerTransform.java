@@ -25,10 +25,15 @@ public class ReplacerTransform extends ConfigTransform {
         section.getKeys(true).stream().filter(section::isString).forEach(key -> {
             // Create replaceable for string
             Replaceable replaceable = new Replaceable(section.getString(key));
-            replaceable.addReplacer(new PairRangeReplacer(replaceable));
-            replaceable.addReplacer(new TripleRangeReplacer(replaceable));
-            replaceable.addReplacer(new EqualChanceListReplacer(replaceable));
-            replaceable.addReplacer(new WeightedChanceListReplacer(replaceable));
+
+            // Add replacers, order here is important
+            // As the regex for each replacer increases in complexity, it becomes less specific
+            // Therefore each consecutive replacer assumes the previous replacers are all unable to find a match
+            replaceable.addReplacer(new PairRange(replaceable));
+            replaceable.addReplacer(new TripleRange(replaceable));
+            replaceable.addReplacer(new EqualChanceList(replaceable));
+            replaceable.addReplacer(new WeightedChanceList(replaceable));
+            replaceable.addReplacer(new Expression(replaceable));
 
             // Replace value at config path
             setValue(section, key, replaceable.replace());

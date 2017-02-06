@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 
 public interface GenericAttribute extends StatAttribute<GenericAttribute.GenericAttributeStatType> {
 
+    GenericAttributeStatType STAT_TYPE = new GenericAttributeStatType();
+
     Type getMinecraftType();
 
     Slot getSlot();
@@ -148,8 +150,6 @@ public interface GenericAttribute extends StatAttribute<GenericAttribute.Generic
         }
 
     }
-
-    GenericAttributeStatType STAT_TYPE = new GenericAttributeStatType();
 
     class GenericAttributeStatType implements StatType<GenericAttributeStatType> {
 

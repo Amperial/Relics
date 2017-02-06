@@ -12,11 +12,12 @@ package ninja.amp.items.api.config.transform.replacer;
 
 import java.util.regex.Pattern;
 
-public class WeightedChanceListReplacer extends Replacer {
+public class WeightedChanceList extends Replacer {
 
-    private static final Pattern WEIGHTED_CHANCE = Pattern.compile("<[^<:,\\s]*:([1-9]\\d*|\\d\\.\\d*[1-9])+(,[^<:,\\s]*:([1-9]\\d*|\\d\\.\\d*[1-9])+)*>");
+    private static final String VALUE = "[^<:,\\s]*:([1-9]\\d*|\\d\\.\\d*[1-9])+";
+    private static final Pattern WEIGHTED_CHANCE = Pattern.compile("<" + VALUE + "(," + VALUE + ")*>");
 
-    public WeightedChanceListReplacer(Replaceable value) {
+    public WeightedChanceList(Replaceable value) {
         super(WEIGHTED_CHANCE.matcher(value.getString()), value);
     }
 

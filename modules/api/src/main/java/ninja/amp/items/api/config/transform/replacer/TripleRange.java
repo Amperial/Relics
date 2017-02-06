@@ -12,11 +12,12 @@ package ninja.amp.items.api.config.transform.replacer;
 
 import java.util.regex.Pattern;
 
-public class TripleRangeReplacer extends Replacer {
+public class TripleRange extends Replacer {
 
-    private static final Pattern TRIPLE = Pattern.compile("\\(([+-]?\\d+(\\.\\d+)?,){2}[+-]?\\d+(\\.\\d+)?\\)");
+    private static final String VALUE = "-?\\d+(\\.\\d+)?";
+    private static final Pattern TRIPLE = Pattern.compile("\\((" + VALUE + ",){2}" + VALUE + "\\)");
 
-    public TripleRangeReplacer(Replaceable value) {
+    public TripleRange(Replaceable value) {
         super(TRIPLE.matcher(value.getString()), value);
     }
 

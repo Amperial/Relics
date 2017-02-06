@@ -38,11 +38,11 @@ public interface ItemManager {
 
     Item getItem(NBTTagCompound compound);
 
-    Item getItem(ConfigurationSection config);
+    Item getItem(ConfigurationSection config, Object... args);
 
-    Item getItem(ItemConfig config);
+    Item getItem(ItemConfig config, Object... args);
 
-    Item getItem(String item);
+    Item getItem(String item, Object... args);
 
     boolean hasItemConfig(String item);
 

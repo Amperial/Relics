@@ -12,11 +12,12 @@ package ninja.amp.items.api.config.transform.replacer;
 
 import java.util.regex.Pattern;
 
-public class PairRangeReplacer extends Replacer {
+public class PairRange extends Replacer {
 
-    private static final Pattern PAIR = Pattern.compile("\\([+-]?\\d+(\\.\\d+)?,[+-]?\\d+(\\.\\d+)?\\)");
+    private static final String VALUE = "-?\\d+(\\.\\d+)?";
+    private static final Pattern PAIR = Pattern.compile("\\(" + VALUE + "," + VALUE + "\\)");
 
-    public PairRangeReplacer(Replaceable value) {
+    public PairRange(Replaceable value) {
         super(PAIR.matcher(value.getString()), value);
     }
 

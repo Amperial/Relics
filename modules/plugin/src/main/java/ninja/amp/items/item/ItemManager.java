@@ -134,18 +134,18 @@ public class ItemManager implements ninja.amp.items.api.item.ItemManager {
     }
 
     @Override
-    public Item getItem(ConfigurationSection config) {
-        return factory.loadFromConfig(config);
+    public Item getItem(ConfigurationSection config, Object... args) {
+        return factory.loadFromConfig(plugin.getConfigManager().transformConfig(config, args));
     }
 
     @Override
-    public Item getItem(ItemConfig config) {
-        return getItem(plugin.getConfigManager().getConfig(config));
+    public Item getItem(ItemConfig config, Object... args) {
+        return getItem(plugin.getConfigManager().getConfig(config), args);
     }
 
     @Override
-    public Item getItem(String item) {
-        return getItem(getItemConfig(item.toLowerCase()));
+    public Item getItem(String item, Object... args) {
+        return getItem(getItemConfig(item.toLowerCase()), args);
     }
 
     @Override

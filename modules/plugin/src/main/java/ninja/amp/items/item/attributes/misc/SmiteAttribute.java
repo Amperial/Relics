@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 public class SmiteAttribute extends BasicAttribute {
 
     private static final Set<Material> AIR;
+
     static {
         AIR = new HashSet<>();
         AIR.add(Material.AIR);

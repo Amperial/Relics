@@ -17,6 +17,10 @@ import java.util.function.Predicate;
 
 public interface ItemAttribute extends Equip {
 
+    static Predicate<ItemAttribute> type(Class<?> clazz) {
+        return attribute -> clazz.isAssignableFrom(attribute.getClass());
+    }
+
     String getName();
 
     AttributeType getType();
@@ -24,9 +28,5 @@ public interface ItemAttribute extends Equip {
     ItemLore getLore();
 
     void saveToNBT(NBTTagCompound compound);
-
-    static Predicate<ItemAttribute> type(Class<?> clazz) {
-        return attribute -> clazz.isAssignableFrom(attribute.getClass());
-    }
 
 }

@@ -28,9 +28,9 @@ public class GetItemCommand extends Command {
     public GetItemCommand(ItemPlugin plugin) {
         super(plugin, "get");
         setDescription("Spawn a custom item into your inventory.");
-        setCommandUsage("/aitem item get <item>");
+        setCommandUsage("/aitem item get <item> [args...]");
         setPermission(new Permission("ampitems.item.get", PermissionDefault.OP));
-        setArgumentRange(1, 1);
+        setArgumentRange(1, -1);
         setPlayerOnly(true);
     }
 
@@ -40,9 +40,26 @@ public class GetItemCommand extends Command {
         Messenger messenger = plugin.getMessenger();
         ItemManager itemManager = plugin.getItemManager();
 
-        String itemName = args.get(0);
+        String itemName = args.remove(0);
         if (itemManager.hasItemConfig(itemName)) {
-            Item item = itemManager.getItem(itemName);
+            Object[] itemArgs = args.toArray();
+
+            // Replace string arguments with numbers where possible
+            for (int i = 0; i < itemArgs.length; i++) {
+                try {
+                    String itemArg = (String) itemArgs[i];
+                    double value = Double.valueOf(itemArg);
+                    if (itemArg.contains(".")) {
+                        itemArgs[i] = value;
+                    } else {
+                        itemArgs[i] = (int) value;
+                    }
+                } catch (NumberFormatException e) {
+                    // Arg isn't a number
+                }
+            }
+
+            Item item = itemManager.getItem(itemName, itemArgs);
 
             player.getInventory().addItem(item.getItem());
 

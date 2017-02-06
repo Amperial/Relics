@@ -37,6 +37,13 @@ public enum SocketColor {
 
     private static final Map<String, SocketColor> colorByName;
 
+    static {
+        colorByName = new HashMap<>();
+        for (SocketColor color : values()) {
+            colorByName.put(color.getName(), color);
+        }
+    }
+
     private final String name;
     private final ChatColor color;
     private final Set<SocketColor> accepts;
@@ -45,6 +52,14 @@ public enum SocketColor {
         this.name = name;
         this.color = ChatColor.valueOf(name());
         this.accepts = new HashSet<>();
+    }
+
+    public static SocketColor fromName(String name) {
+        return colorByName.get(name);
+    }
+
+    public static SocketColor fromChatColor(ChatColor color) {
+        return valueOf(color.name());
     }
 
     public String getName() {
@@ -61,21 +76,6 @@ public enum SocketColor {
 
     public void addAccepts(SocketColor color) {
         this.accepts.add(color);
-    }
-
-    public static SocketColor fromName(String name) {
-        return colorByName.get(name);
-    }
-
-    public static SocketColor fromChatColor(ChatColor color) {
-        return valueOf(color.name());
-    }
-
-    static {
-        colorByName = new HashMap<>();
-        for (SocketColor color : values()) {
-            colorByName.put(color.getName(), color);
-        }
     }
 
 }

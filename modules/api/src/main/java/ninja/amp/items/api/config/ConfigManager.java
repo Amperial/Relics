@@ -10,11 +10,21 @@
  */
 package ninja.amp.items.api.config;
 
+import ninja.amp.items.api.ItemPlugin;
+import ninja.amp.items.api.config.transform.ArgTransform;
+import ninja.amp.items.api.config.transform.ConfigTransform;
+import ninja.amp.items.api.config.transform.ReferenceTransform;
+import ninja.amp.items.api.config.transform.replacer.ReplacerTransform;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,13 +37,14 @@ public class ConfigManager {
     private static int NESTING_DEPTH;
 
     private final Map<Config, ConfigAccessor> configs = new HashMap<>();
+    private final List<ConfigTransform> configTransforms = new ArrayList<>();
 
     /**
      * Creates a new config manager.
      *
      * @param plugin The item plugin instance
      */
-    public ConfigManager(Plugin plugin) {
+    public ConfigManager(ItemPlugin plugin) {
         // Save main config
         plugin.saveDefaultConfig();
 
@@ -42,6 +53,11 @@ public class ConfigManager {
 
         // Register custom configs
         registerCustomConfigs(EnumSet.allOf(DefaultConfig.class), plugin);
+
+        // Create config transforms
+        configTransforms.add(new ArgTransform(plugin));
+        configTransforms.add(new ReplacerTransform(plugin));
+        configTransforms.add(new ReferenceTransform(plugin));
     }
 
     /**
@@ -91,6 +107,30 @@ public class ConfigManager {
      */
     public FileConfiguration getConfig(Config configType) {
         return getConfigAccessor(configType).getConfig();
+    }
+
+    @SuppressWarnings("deprecation")
+    public ConfigurationSection loadAndTransform(String fileName, Plugin plugin, Object... args) {
+        File configFile = new File(plugin.getDataFolder(), fileName);
+        if (!configFile.exists()) {
+            plugin.saveResource(fileName, false);
+        }
+        return transformConfig(YamlConfiguration.loadConfiguration(configFile), args);
+    }
+
+    public ConfigurationSection transformConfig(ConfigurationSection config, Object... args) {
+        if (config.isList("default-args")) {
+            Object[] defaultArgs = config.getList("default-args").toArray();
+            if (defaultArgs.length > args.length) {
+                System.arraycopy(args, 0, defaultArgs, 0, args.length);
+                args = defaultArgs;
+            }
+            config.set("default-args", null);
+        }
+        for (ConfigTransform transform : configTransforms) {
+            config = transform.transform(config, args);
+        }
+        return config;
     }
 
     public static String getNestedPath(String file) {

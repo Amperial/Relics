@@ -12,11 +12,11 @@ package ninja.amp.items.api.config.transform.replacer;
 
 import java.util.regex.Pattern;
 
-public class EqualChanceListReplacer extends Replacer {
+public class EqualChanceList extends Replacer {
 
     private static final Pattern EQUAL_CHANCE = Pattern.compile("<[^<:,\\s]*(,[^<:,\\s>]*)*>");
 
-    public EqualChanceListReplacer(Replaceable value) {
+    public EqualChanceList(Replaceable value) {
         super(EQUAL_CHANCE.matcher(value.getString()), value);
     }
 

@@ -14,6 +14,8 @@ import java.util.List;
 
 public interface Damage extends GenericAttribute {
 
+    DamageStatType STAT_TYPE = new DamageStatType();
+
     double getDamage();
 
     void setDamage(double damage);
@@ -21,8 +23,6 @@ public interface Damage extends GenericAttribute {
     double getVariation();
 
     void setVariation(double variation);
-
-    DamageStatType STAT_TYPE = new DamageStatType();
 
     class DamageStatType extends GenericAttributeStatType {
 

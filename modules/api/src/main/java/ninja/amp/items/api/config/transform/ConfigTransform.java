@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 
 public abstract class ConfigTransform {
 
-    protected static final Pattern NUMBER = Pattern.compile("[+-]?\\d+(\\.\\d+)?");
+    protected static final Pattern NUMBER = Pattern.compile("-?\\d+(\\.\\d+)?");
     protected static final Random RANDOM = new Random();
 
     protected final ItemPlugin plugin;
