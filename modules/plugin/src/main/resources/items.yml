@@ -1,5 +1,6 @@
 items:
-- "swordofkainzo"
-- "gemofamp"
-- "lightgem"
-- "anchorgem"
+- "basic/sword"
+- "old/swordofkainzo"
+- "old/gemofamp"
+- "old/lightgem"
+- "old/anchorgem"

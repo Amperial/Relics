@@ -1,0 +1,2 @@
+socket1: "#{basic/sockets/tier1}"
+socket2: "#{basic/sockets/tier2}"

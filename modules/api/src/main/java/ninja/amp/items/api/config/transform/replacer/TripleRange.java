@@ -29,9 +29,10 @@ public class TripleRange extends Replacer {
         double min = Double.parseDouble(replace.substring(1, firstComma));
         double max = Double.parseDouble(replace.substring(firstComma + 1, lastComma));
         double fraction = Double.parseDouble(replace.substring(lastComma + 1, replace.length() - 1));
+        fraction = Math.max(0, Math.min(fraction, 1));
 
         double value = min + fraction * (max - min);
-        return replace.contains(".") ? Double.toString(value) : Integer.toString((int) value);
+        return replace.substring(1, lastComma).contains(".") ? Double.toString(value) : Integer.toString((int) value);
     }
 
 }

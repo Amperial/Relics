@@ -1,0 +1,20 @@
+default-args: [1]
+name: "&2Basic Sword"
+material: "DIAMOND_SWORD"
+item-type: "weapon-sword"
+attributes:
+  model:
+    type: "model"
+    damage: 1
+  info: "#{basic/info}"
+  description:
+    type: "text"
+    text:
+    - "This basic sword was"
+    - "randomly generated!"
+  damage:
+    type: "damage"
+    damage: "(%1$d)+(10,20)"
+    variation: "(0,5,(%1$d)/100)"
+    slot: "MAIN_HAND"
+  sockets: "#{basic/sockets/sockets}"

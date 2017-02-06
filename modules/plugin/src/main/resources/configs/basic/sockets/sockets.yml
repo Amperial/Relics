@@ -1,0 +1,4 @@
+default-args: [1]
+type: "group"
+spacing: false
+attributes: "#{basic/sockets/socket(0,4,%1$d/100)}"
