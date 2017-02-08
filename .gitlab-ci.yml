@@ -1,0 +1,20 @@
+image: maven:3.3.9-jdk-8
+variables:
+  MAVEN_OPTS: -Dmaven.repo.local=/cache/repository/maven
+stages:
+  - build
+  - deploy
+# jobs
+build:
+  stage: build
+  script:
+    - mvn clean package -P herocraft --settings .maven-settings.xml
+  artifacts:
+    paths:
+    - modules/plugin/target/AmpItems.jar
+deploy:
+  stage: deploy
+  script:
+    - mvn clean deploy -P herocraft --settings .maven-settings.xml
+  only:
+    - master
