@@ -107,18 +107,6 @@ public class PlayerEquipment implements Equipment {
     }
 
     @Override
-    public boolean canEquip(Item item) {
-        checkSlots();
-        return isSlotOpen(item.getType());
-    }
-
-    @Override
-    public boolean canEquip(Item item, Slot slot) {
-        checkSlot(slot);
-        return slot.isOpen() && slot.getType().equals(item.getType());
-    }
-
-    @Override
     public boolean equip(Item item) {
         checkSlots();
         for (Slot slot : getSlots(item.getType())) {
@@ -236,17 +224,14 @@ public class PlayerEquipment implements Equipment {
             ItemManager itemManager = plugin.getItemManager();
             ConfigurationSection slots = config.getConfigurationSection("slots");
             for (String name : slots.getKeys(false)) {
-                String type = slots.getString(name + ".type");
-                if (itemManager.hasItemType(type)) {
-                    Slot slot = new Slot(name, itemManager.getItemType(type));
-                    if (slots.isString(name + ".item-id")) {
-                        UUID itemId = UUID.fromString(slots.getString(name + ".item-id"));
-                        if (itemManager.findItem(player, itemId) != null) {
-                            slot.setItemId(itemId);
-                        }
+                Slot slot = new Slot(name, new ItemType(slots.getString(name + ".type")));
+                if (slots.isString(name + ".item-id")) {
+                    UUID itemId = UUID.fromString(slots.getString(name + ".item-id"));
+                    if (itemManager.findItem(player, itemId) != null) {
+                        slot.setItemId(itemId);
                     }
-                    addSlot(slot);
                 }
+                addSlot(slot);
             }
         }
     }

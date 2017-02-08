@@ -404,7 +404,7 @@ public class CustomItem implements Item {
             String name = ChatColor.translateAlternateColorCodes('&', config.getString("name"));
             UUID id = UUID.randomUUID();
             Material material = Material.getMaterial(config.getString("material"));
-            ItemType type = itemManager.getItemType(config.getString("item-type"));
+            ItemType type = new ItemType(config.getString("item-type"));
             AttributeGroup attribute = (AttributeGroup) DefaultAttributeType.GROUP.getFactory().loadFromConfig("attributes", config);
 
             // Create Item
@@ -424,7 +424,7 @@ public class CustomItem implements Item {
             String name = compound.getString("name");
             UUID id = UUID.fromString(compound.getString("id"));
             Material material = Material.getMaterial(compound.getString("material"));
-            ItemType type = itemManager.getItemType(compound.getString("item-type"));
+            ItemType type = new ItemType(compound.getString("item-type"));
             AttributeGroup attribute = (AttributeGroup) DefaultAttributeType.GROUP.getFactory().loadFromNBT("attributes", compound);
 
             // Create Item

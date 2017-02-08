@@ -39,10 +39,6 @@ public interface Equipment {
 
     boolean isEquipped(Item item);
 
-    boolean canEquip(Item item);
-
-    boolean canEquip(Item item, Slot slot);
-
     boolean equip(Item item);
 
     boolean equip(Item item, Slot slot);

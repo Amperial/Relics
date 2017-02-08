@@ -60,16 +60,6 @@ public interface ItemManager {
 
     void registerItemConfig(ItemConfig item, Plugin plugin);
 
-    boolean hasItemType(String type);
-
-    ItemType getItemType(String type);
-
-    Map<String, ItemType> getItemTypes();
-
-    void registerItemTypes(Collection<? extends ItemType> types, Plugin plugin);
-
-    void registerItemType(ItemType type, Plugin plugin);
-
     boolean hasAttributeType(String type);
 
     AttributeType getAttributeType(String type);

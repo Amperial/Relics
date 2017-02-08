@@ -11,11 +11,12 @@
 package ninja.amp.items.api.item.attribute.attributes.stats;
 
 import ninja.amp.items.api.item.attribute.attributes.Level;
+import ninja.amp.items.api.item.attribute.attributes.Requirement;
 
 import java.util.List;
 import java.util.Map;
 
-public interface LevelRequirement extends StatAttribute<LevelRequirement.LevelRequirementStatType>, Level {
+public interface LevelRequirement extends StatAttribute<LevelRequirement.LevelRequirementStatType>, Level, Requirement {
 
     class LevelRequirementStatType implements StatType<LevelRequirementStatType> {
 

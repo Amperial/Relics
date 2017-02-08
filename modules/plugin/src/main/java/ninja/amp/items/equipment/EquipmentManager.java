@@ -64,7 +64,7 @@ public class EquipmentManager implements ninja.amp.items.api.equipment.Equipment
 
     @Override
     public boolean canEquip(Player player, Item item) {
-        return getEquipment(player).hasSlot(item.getType());
+        return getEquipment(player).hasSlot(item.getType()) && item.canEquip(player);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class EquipmentManager implements ninja.amp.items.api.equipment.Equipment
 
         ItemType type = item.getType();
         Equipment playerEquipment = getEquipment(player);
-        if (playerEquipment.hasSlot(type)) {
+        if (playerEquipment.hasSlot(type) && item.canEquip(player)) {
             if (playerEquipment.isSlotOpen(type)) {
                 playerEquipment.equip(item);
                 messenger.sendShortMessage(player, AIMessage.ITEM_EQUIPPED, item.getName());
@@ -101,7 +101,7 @@ public class EquipmentManager implements ninja.amp.items.api.equipment.Equipment
         Messenger messenger = plugin.getMessenger();
         ItemType type = item.getType();
         Equipment playerEquipment = getEquipment(player);
-        if (playerEquipment.hasSlot(type)) {
+        if (playerEquipment.hasSlot(type) && item.canEquip(player)) {
             if (playerEquipment.isSlotOpen(type)) {
                 playerEquipment.equip(item);
             } else {

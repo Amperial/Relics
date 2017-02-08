@@ -10,7 +10,8 @@
  */
 package ninja.amp.items.api.item.attribute.attributes;
 
+import ninja.amp.items.api.item.Equippable;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
 
-public interface Requirement extends ItemAttribute {
+public interface Requirement extends ItemAttribute, Equippable {
 }

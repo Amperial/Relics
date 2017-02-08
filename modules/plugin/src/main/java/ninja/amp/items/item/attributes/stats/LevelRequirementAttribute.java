@@ -20,6 +20,7 @@ import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 public class LevelRequirementAttribute extends BasicStatAttribute<LevelRequirement.LevelRequirementStatType> implements LevelRequirement {
 
@@ -39,6 +40,19 @@ public class LevelRequirementAttribute extends BasicStatAttribute<LevelRequireme
     @Override
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    @Override
+    public boolean canEquip(Player player) {
+        return true;
+    }
+
+    @Override
+    public void onEquip(Player player) {
+    }
+
+    @Override
+    public void onUnEquip(Player player) {
     }
 
     @Override

@@ -41,21 +41,15 @@ public class ItemManager implements ninja.amp.items.api.item.ItemManager {
 
     private final ItemPlugin plugin;
     private final Map<String, AttributeType> attributeTypes;
-    private final Map<String, ItemType> itemTypes;
     private final Map<String, ItemConfig> items;
     private ItemFactory factory;
 
     public ItemManager(ItemPlugin plugin) {
         this.plugin = plugin;
         this.attributeTypes = new HashMap<>();
-        this.itemTypes = new HashMap<>();
         this.items = new HashMap<>();
 
         registerAttributeTypes(EnumSet.allOf(DefaultAttributeType.class), plugin);
-        registerItemTypes(EnumSet.allOf(DefaultItemType.class), plugin);
-        registerItemTypes(EnumSet.allOf(ArmorType.class), plugin);
-        registerItemTypes(EnumSet.allOf(ToolType.class), plugin);
-        registerItemTypes(EnumSet.allOf(WeaponType.class), plugin);
 
         // Load attribute type lore order
         FileConfiguration attributes = plugin.getConfigManager().getConfig(DefaultConfig.ATTRIBUTES);
@@ -197,31 +191,6 @@ public class ItemManager implements ninja.amp.items.api.item.ItemManager {
     public void registerItemConfig(ItemConfig config, Plugin plugin) {
         items.put(config.getItem().toLowerCase(), config);
         this.plugin.getConfigManager().registerCustomConfig(config, plugin);
-    }
-
-    @Override
-    public boolean hasItemType(String type) {
-        return itemTypes.containsKey(type.toLowerCase());
-    }
-
-    @Override
-    public ItemType getItemType(String type) {
-        return itemTypes.get(type.toLowerCase());
-    }
-
-    @Override
-    public Map<String, ItemType> getItemTypes() {
-        return Collections.unmodifiableMap(itemTypes);
-    }
-
-    @Override
-    public void registerItemTypes(Collection<? extends ItemType> types, Plugin plugin) {
-        types.forEach(type -> registerItemType(type, plugin));
-    }
-
-    @Override
-    public void registerItemType(ItemType type, Plugin plugin) {
-        itemTypes.put(type.getName().toLowerCase(), type);
     }
 
     @Override
