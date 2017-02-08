@@ -77,6 +77,11 @@ public class PlayerEquipment implements Equipment {
     }
 
     @Override
+    public Collection<Slot> getSlots() {
+        return slotsByName.values();
+    }
+
+    @Override
     public boolean isSlotOpen(String name) {
         return hasSlot(name) && getSlot(name).isOpen();
     }
@@ -92,17 +97,30 @@ public class PlayerEquipment implements Equipment {
     }
 
     @Override
+    public boolean isEquipped(Item item) {
+        for (Slot slot : getSlots()) {
+            if (slot.hasItem() && slot.getItemId().equals(item.getId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public boolean canEquip(Item item) {
+        checkSlots();
         return isSlotOpen(item.getType());
     }
 
     @Override
     public boolean canEquip(Item item, Slot slot) {
+        checkSlot(slot);
         return slot.isOpen() && slot.getType().equals(item.getType());
     }
 
     @Override
     public boolean equip(Item item) {
+        checkSlots();
         for (Slot slot : getSlots(item.getType())) {
             if (slot.isOpen()) {
                 slot.setItemId(item.getId());
@@ -115,6 +133,7 @@ public class PlayerEquipment implements Equipment {
 
     @Override
     public boolean equip(Item item, Slot slot) {
+        checkSlot(slot);
         if (slot.isOpen()) {
             slot.setItemId(item.getId());
             item.onEquip(getPlayer());
@@ -124,8 +143,49 @@ public class PlayerEquipment implements Equipment {
     }
 
     @Override
-    public Collection<Slot> getSlots() {
-        return slotsByName.values();
+    public boolean replaceEquip(Item item) {
+        checkSlots();
+        if (!equip(item)) {
+            for (Slot slot : getSlots(item.getType())) {
+                Player player = getPlayer();
+                Item equipped = plugin.getItemManager().findItem(player, slot.getItemId());
+                if (equipped != null) {
+                    equipped.onUnEquip(player);
+                    slot.setItemId(item.getId());
+                    item.onEquip(player);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean unEquip(Item item) {
+        checkSlots();
+        for (Slot slot : getSlots()) {
+            if (slot.hasItem() && slot.getItemId().equals(item.getId())) {
+                item.onUnEquip(getPlayer());
+                slot.setItemId(null);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void unEquipAll() {
+        ItemManager itemManager = plugin.getItemManager();
+        Player player = getPlayer();
+        for (Slot slot : getSlots()) {
+            if (slot.hasItem()) {
+                Item item = itemManager.findItem(player, slot.getItemId());
+                if (item != null) {
+                    item.onUnEquip(player);
+                }
+                slot.setItemId(null);
+            }
+        }
     }
 
     private void addSlot(Slot slot) {
@@ -137,9 +197,28 @@ public class PlayerEquipment implements Equipment {
         slotsByType.get(type).add(slot);
     }
 
+    private void checkSlot(Slot slot) {
+        if (slot.hasItem() && plugin.getItemManager().findItem(getPlayer(), slot.getItemId()) == null) {
+            slot.setItemId(null);
+        }
+    }
+
+    private void checkSlots() {
+        ItemManager itemManager = plugin.getItemManager();
+        Player player = getPlayer();
+        for (Slot slot : getSlots()) {
+            if (slot.hasItem()) {
+                if (itemManager.findItem(player, slot.getItemId()) == null) {
+                    slot.setItemId(null);
+                }
+            }
+        }
+    }
+
     @Override
     public void load() {
         // Get player config or default equipment
+        Player player = getPlayer();
         ConfigAccessor playerConfig = new ConfigAccessor(plugin, new PlayerConfig(getPlayer()));
         FileConfiguration config;
         if (playerConfig.exists()) {
@@ -161,7 +240,10 @@ public class PlayerEquipment implements Equipment {
                 if (itemManager.hasItemType(type)) {
                     Slot slot = new Slot(name, itemManager.getItemType(type));
                     if (slots.isString(name + ".item-id")) {
-                        slot.setItemId(UUID.fromString(slots.getString(name + ".item-id")));
+                        UUID itemId = UUID.fromString(slots.getString(name + ".item-id"));
+                        if (itemManager.findItem(player, itemId) != null) {
+                            slot.setItemId(itemId);
+                        }
                     }
                     addSlot(slot);
                 }

@@ -45,6 +45,7 @@ public class AmpItems extends JavaPlugin implements ItemPlugin {
     private CommandController commandController;
     private ItemManager itemManager;
     private EquipmentManager equipmentManager;
+    private PlayerListener playerListener;
     private ItemListener itemListener;
     private MenuListener menuListener;
 
@@ -59,11 +60,9 @@ public class AmpItems extends JavaPlugin implements ItemPlugin {
         commandController = new CommandController(this);
         itemManager = new ItemManager(this);
         equipmentManager = new EquipmentManager(this);
+        playerListener = new PlayerListener(this);
         itemListener = new ItemListener(this);
         menuListener = new MenuListener(this);
-
-        // Initialize item factories
-        itemManager.setDefaultFactories();
 
         // Create amp items command tree
 
@@ -108,6 +107,7 @@ public class AmpItems extends JavaPlugin implements ItemPlugin {
     @Override
     public void onDisable() {
         // The order managers are destroyed in is not important
+        menuListener.closeOpenMenus();
         menuListener = null;
         itemListener = null;
         equipmentManager = null;

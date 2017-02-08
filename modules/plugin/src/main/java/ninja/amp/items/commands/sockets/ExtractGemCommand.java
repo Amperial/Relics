@@ -11,6 +11,7 @@
 package ninja.amp.items.commands.sockets;
 
 import ninja.amp.items.api.ItemPlugin;
+import ninja.amp.items.api.equipment.EquipmentManager;
 import ninja.amp.items.api.item.Item;
 import ninja.amp.items.api.item.ItemManager;
 import ninja.amp.items.api.item.attribute.attributes.sockets.Gem;
@@ -37,6 +38,12 @@ public class ExtractGemCommand extends SocketCommand {
     public void execute(String command, Player player, List<String> args, Item item, Socket socket) {
         Messenger messenger = plugin.getMessenger();
         ItemManager itemManager = plugin.getItemManager();
+
+        // First make sure item is unequipped
+        EquipmentManager equipManager = plugin.getEquipmentManager();
+        if (equipManager.isEquipped(player, item)) {
+            equipManager.unEquip(player, item);
+        }
 
         // Get gem item
         Gem gem = socket.getGem();

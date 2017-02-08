@@ -15,10 +15,20 @@ import org.bukkit.entity.Player;
 
 public interface EquipmentManager {
 
+    void loadEquipment(Player player);
+
     Equipment getEquipment(Player player);
 
-    boolean canEquip(Player player, Item equip);
+    boolean isEquipped(Player player, Item item);
 
-    void equip(Player player, Item equip);
+    boolean canEquip(Player player, Item item);
+
+    void equip(Player player, Item item);
+
+    void replaceEquip(Player player, Item item);
+
+    void unEquip(Player player, Item item);
+
+    void unEquipAll(Player player);
 
 }

@@ -87,6 +87,8 @@ public class ItemManager implements ninja.amp.items.api.item.ItemManager {
         // Load items
         FileConfiguration itemConfig = plugin.getConfigManager().getConfig(DefaultConfig.ITEMS);
         itemConfig.getStringList("items").forEach(item -> registerItemConfig(new ItemConfig(item), plugin));
+
+        setDefaultFactories();
     }
 
     public void setDefaultFactories() {
@@ -96,17 +98,40 @@ public class ItemManager implements ninja.amp.items.api.item.ItemManager {
     }
 
     @Override
-    public ItemStack findInInventory(Player player, UUID itemId) {
-        return findInInventory(player.getInventory(), itemId);
+    public Item findItem(Player player, UUID itemId) {
+        return findItem(player.getInventory(), itemId);
     }
 
     @Override
-    public ItemStack findInInventory(Inventory inventory, UUID itemId) {
-        return findInContents(inventory.getContents(), itemId);
+    public Item findItem(Inventory inventory, UUID itemId) {
+        return findItem(inventory.getContents(), itemId);
     }
 
     @Override
-    public ItemStack findInContents(ItemStack[] contents, UUID itemId) {
+    public Item findItem(ItemStack[] contents, UUID itemId) {
+        for (ItemStack itemStack : contents) {
+            if (itemStack != null && itemStack.getType() != Material.AIR && isItem(itemStack)) {
+                Item item = getItem(itemStack);
+                if (item.getId().equals(itemId)) {
+                    return item;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public ItemStack findItemStack(Player player, UUID itemId) {
+        return findItemStack(player.getInventory(), itemId);
+    }
+
+    @Override
+    public ItemStack findItemStack(Inventory inventory, UUID itemId) {
+        return findItemStack(inventory.getContents(), itemId);
+    }
+
+    @Override
+    public ItemStack findItemStack(ItemStack[] contents, UUID itemId) {
         for (ItemStack itemStack : contents) {
             if (itemStack != null && itemStack.getType() != Material.AIR && isItem(itemStack)) {
                 Item item = getItem(itemStack);
@@ -120,12 +145,12 @@ public class ItemManager implements ninja.amp.items.api.item.ItemManager {
 
     @Override
     public boolean isItem(ItemStack itemStack) {
-        return factory.isItem(itemStack);
+        return itemStack != null && itemStack.getType() != Material.AIR && factory.isItem(itemStack);
     }
 
     @Override
     public Item getItem(ItemStack itemStack) {
-        return factory.isItem(itemStack) ? factory.loadFromItemStack(itemStack) : null;
+        return isItem(itemStack) ? factory.loadFromItemStack(itemStack) : null;
     }
 
     @Override

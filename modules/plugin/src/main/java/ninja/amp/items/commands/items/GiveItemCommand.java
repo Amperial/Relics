@@ -32,12 +32,11 @@ public class GiveItemCommand extends Command {
         setCommandUsage("/aitem item give <player> <item> [args...]");
         setPermission(new Permission("ampitems.item.give", PermissionDefault.OP));
         setArgumentRange(2, -1);
-        setPlayerOnly(true);
+        setPlayerOnly(false);
     }
 
     @Override
     public void execute(String command, CommandSender sender, List<String> args) {
-        Player player = (Player) sender;
         Messenger messenger = plugin.getMessenger();
         ItemManager itemManager = plugin.getItemManager();
 
@@ -45,7 +44,7 @@ public class GiveItemCommand extends Command {
         String receivingName = args.remove(0);
         Player receiving = Bukkit.getPlayerExact(receivingName);
         if (receiving == null) {
-            messenger.sendErrorMessage(player, AIMessage.ITEM_NOTONLINE, receivingName);
+            messenger.sendErrorMessage(sender, AIMessage.ITEM_NOTONLINE, receivingName);
             return;
         }
 
@@ -72,10 +71,10 @@ public class GiveItemCommand extends Command {
 
             receiving.getInventory().addItem(item.getItem());
 
-            messenger.sendMessage(player, AIMessage.ITEM_SPAWN, item.getName());
+            messenger.sendMessage(sender, AIMessage.ITEM_SPAWN, item.getName());
             messenger.sendMessage(receiving, AIMessage.ITEM_RECEIVE, item.getName());
         } else {
-            messenger.sendErrorMessage(player, AIMessage.ITEM_DOESNTEXIST, itemName);
+            messenger.sendErrorMessage(sender, AIMessage.ITEM_DOESNTEXIST, itemName);
         }
     }
 

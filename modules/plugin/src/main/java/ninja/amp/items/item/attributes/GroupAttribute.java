@@ -20,7 +20,6 @@ import ninja.amp.items.api.item.attribute.attributes.BasicAttributeFactory;
 import ninja.amp.items.api.item.attribute.attributes.stats.StatAttribute;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -121,21 +120,6 @@ public class GroupAttribute extends BasicAttributeContainer implements Attribute
     @Override
     public void removeAttribute(ItemAttribute attribute) {
         attributes.remove(attribute.getName());
-    }
-
-    @Override
-    public boolean canEquip(Player player) {
-        return getAttributes().stream().allMatch(attribute -> attribute.canEquip(player));
-    }
-
-    @Override
-    public void onEquip(Player player) {
-        forEach(attribute -> attribute.onEquip(player));
-    }
-
-    @Override
-    public void onUnEquip(Player player) {
-        forEach(attribute -> attribute.onUnEquip(player));
     }
 
     @Override

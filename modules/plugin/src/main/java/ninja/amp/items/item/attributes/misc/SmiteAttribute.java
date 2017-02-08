@@ -11,6 +11,7 @@
 package ninja.amp.items.item.attributes.misc;
 
 import ninja.amp.items.api.ItemPlugin;
+import ninja.amp.items.api.item.Clickable;
 import ninja.amp.items.api.item.attribute.attributes.BasicAttribute;
 import ninja.amp.items.api.item.attribute.attributes.BasicAttributeFactory;
 import ninja.amp.items.item.attributes.DefaultAttributeType;
@@ -19,6 +20,8 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
@@ -27,7 +30,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class SmiteAttribute extends BasicAttribute {
+public class SmiteAttribute extends BasicAttribute implements Clickable {
 
     private static final Set<Material> AIR;
 
@@ -48,16 +51,22 @@ public class SmiteAttribute extends BasicAttribute {
         this.range = range;
     }
 
-    public boolean canSmite(Player player) {
-        return gods.contains(player.getUniqueId()) || player.hasPermission(permission);
-    }
-
     public int getRange() {
         return range;
     }
 
-    public void smite(Player player) {
-        player.getWorld().strikeLightning(player.getTargetBlock(AIR, getRange()).getLocation());
+    public boolean canSmite(Player player) {
+        return gods.contains(player.getUniqueId()) || player.hasPermission(permission);
+    }
+
+    @Override
+    public void onClick(PlayerInteractEvent event, boolean equipped) {
+        if (equipped && event.getAction() == Action.RIGHT_CLICK_AIR) {
+            Player player = event.getPlayer();
+            if (canSmite(player)) {
+                player.getWorld().strikeLightning(player.getTargetBlock(AIR, getRange()).getLocation());
+            }
+        }
     }
 
     @Override

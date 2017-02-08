@@ -26,11 +26,17 @@ import java.util.UUID;
 
 public interface ItemManager {
 
-    ItemStack findInInventory(Player player, UUID itemId);
+    Item findItem(Player player, UUID itemId);
 
-    ItemStack findInInventory(Inventory inventory, UUID itemId);
+    Item findItem(Inventory inventory, UUID itemId);
 
-    ItemStack findInContents(ItemStack[] contents, UUID itemId);
+    Item findItem(ItemStack[] contents, UUID itemId);
+
+    ItemStack findItemStack(Player player, UUID itemId);
+
+    ItemStack findItemStack(Inventory inventory, UUID itemId);
+
+    ItemStack findItemStack(ItemStack[] contents, UUID itemId);
 
     boolean isItem(ItemStack itemStack);
 

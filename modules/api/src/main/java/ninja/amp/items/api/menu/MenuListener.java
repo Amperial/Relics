@@ -47,7 +47,7 @@ public class MenuListener implements Listener {
     /**
      * Closes all item menus currently open.
      */
-    public static void closeOpenMenus() {
+    public void closeOpenMenus() {
         Bukkit.getOnlinePlayers().stream()
                 .filter(player -> player.getOpenInventory() != null)
                 .forEach(player -> {

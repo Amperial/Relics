@@ -23,7 +23,6 @@ import ninja.amp.items.item.attributes.DefaultAttributeType;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -214,21 +213,6 @@ public class GemAttribute extends BasicAttribute implements Gem {
     @Override
     public void forEachDeep(Consumer<ItemAttribute> action, Predicate<ItemAttribute> predicate) {
         attributes.forEachDeep(action, predicate);
-    }
-
-    @Override
-    public boolean canEquip(Player player) {
-        return attributes.canEquip(player);
-    }
-
-    @Override
-    public void onEquip(Player player) {
-        attributes.onEquip(player);
-    }
-
-    @Override
-    public void onUnEquip(Player player) {
-        attributes.onUnEquip(player);
     }
 
     @Override

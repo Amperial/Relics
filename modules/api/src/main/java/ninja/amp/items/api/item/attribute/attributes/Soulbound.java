@@ -8,16 +8,9 @@
  * Unauthorized copying and/or distribution of AmpItems API,
  * via any medium is strictly prohibited.
  */
-package ninja.amp.items.api.equipment;
+package ninja.amp.items.api.item.attribute.attributes;
 
-import org.bukkit.entity.Player;
+import ninja.amp.items.api.item.attribute.ItemAttribute;
 
-public interface Equip {
-
-    boolean canEquip(Player player);
-
-    void onEquip(Player player);
-
-    void onUnEquip(Player player);
-
+public interface Soulbound extends ItemAttribute {
 }

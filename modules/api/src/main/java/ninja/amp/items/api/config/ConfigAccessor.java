@@ -120,6 +120,7 @@ public class ConfigAccessor {
             } catch (Exception resource) {
                 plugin.getLogger().log(Level.INFO, "Could not save default config for " + configFile);
                 try {
+                    configFile.getParentFile().mkdirs();
                     if (configFile.createNewFile()) {
                         plugin.getLogger().log(Level.INFO, "Generated empty config for " + configFile);
                     }

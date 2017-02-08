@@ -31,9 +31,13 @@ public interface Equipment {
 
     Collection<Slot> getSlots(ItemType type);
 
+    Collection<Slot> getSlots();
+
     boolean isSlotOpen(String name);
 
     boolean isSlotOpen(ItemType type);
+
+    boolean isEquipped(Item item);
 
     boolean canEquip(Item item);
 
@@ -43,7 +47,11 @@ public interface Equipment {
 
     boolean equip(Item item, Slot slot);
 
-    Collection<Slot> getSlots();
+    boolean replaceEquip(Item item);
+
+    boolean unEquip(Item item);
+
+    void unEquipAll();
 
     void load();
 

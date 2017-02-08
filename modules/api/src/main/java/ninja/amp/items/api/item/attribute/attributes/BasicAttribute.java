@@ -15,7 +15,6 @@ import ninja.amp.items.api.item.attribute.ItemAttribute;
 import ninja.amp.items.api.item.attribute.ItemLore;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
 public class BasicAttribute implements ItemAttribute {
 
@@ -46,19 +45,6 @@ public class BasicAttribute implements ItemAttribute {
 
     protected void setLore(ItemLore lore) {
         this.lore = lore;
-    }
-
-    @Override
-    public boolean canEquip(Player player) {
-        return true;
-    }
-
-    @Override
-    public void onEquip(Player player) {
-    }
-
-    @Override
-    public void onUnEquip(Player player) {
     }
 
     @Override

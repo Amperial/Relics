@@ -10,6 +10,8 @@
  */
 package ninja.amp.items.item;
 
+import ninja.amp.items.api.item.Clickable;
+import ninja.amp.items.api.item.Equippable;
 import ninja.amp.items.api.item.Item;
 import ninja.amp.items.api.item.ItemFactory;
 import ninja.amp.items.api.item.ItemType;
@@ -30,6 +32,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -232,17 +235,22 @@ public class CustomItem implements Item {
 
     @Override
     public boolean canEquip(Player player) {
-        return attributes.canEquip(player);
+        return getAttributesDeep(attribute -> attribute instanceof Equippable).stream().allMatch(attribute -> ((Equippable) attribute).canEquip(player));
     }
 
     @Override
     public void onEquip(Player player) {
-        attributes.onEquip(player);
+        forEachDeep(attribute -> ((Equippable) attribute).onEquip(player), attribute -> attribute instanceof Equippable);
     }
 
     @Override
     public void onUnEquip(Player player) {
-        attributes.onUnEquip(player);
+        forEachDeep(attribute -> ((Equippable) attribute).onUnEquip(player), attribute -> attribute instanceof Equippable);
+    }
+
+    @Override
+    public void onClick(PlayerInteractEvent event, boolean equipped) {
+        forEachDeep(attribute -> ((Clickable) attribute).onClick(event, equipped), attribute -> attribute instanceof Clickable);
     }
 
     @Override

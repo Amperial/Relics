@@ -10,12 +10,11 @@
  */
 package ninja.amp.items.api.item.attribute;
 
-import ninja.amp.items.api.equipment.Equip;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
 
 import java.util.function.Predicate;
 
-public interface ItemAttribute extends Equip {
+public interface ItemAttribute {
 
     static Predicate<ItemAttribute> type(Class<?> clazz) {
         return attribute -> clazz.isAssignableFrom(attribute.getClass());

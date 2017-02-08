@@ -12,6 +12,7 @@ package ninja.amp.items.commands.sockets;
 
 import ninja.amp.items.api.ItemPlugin;
 import ninja.amp.items.api.command.DualItemCommand;
+import ninja.amp.items.api.equipment.EquipmentManager;
 import ninja.amp.items.api.item.Item;
 import ninja.amp.items.api.item.attribute.attributes.sockets.Gem;
 import ninja.amp.items.api.item.attribute.attributes.sockets.Socket;
@@ -75,6 +76,15 @@ public class InfuseGemCommand extends DualItemCommand {
                 return;
             }
             socket = socketOptional.get();
+        }
+
+        // First make sure both items are unequipped
+        EquipmentManager equipManager = plugin.getEquipmentManager();
+        if (equipManager.isEquipped(player, mainHand)) {
+            equipManager.unEquip(player, mainHand);
+        }
+        if (equipManager.isEquipped(player, offHand)) {
+            equipManager.unEquip(player, offHand);
         }
 
         // Remove gem from gem item

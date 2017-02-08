@@ -128,6 +128,32 @@ public class Messenger {
     }
 
     /**
+     * Sends a short message to a recipient.
+     *
+     * @param recipient The recipient of the message. Type of recipient must be registered
+     * @param message   The message
+     * @param replace   Strings to replace any occurences of %s in the message with
+     */
+    public void sendShortMessage(Object recipient, Message message, Object... replace) {
+        for (String s : (replace == null ? message.getMessage() : String.format(message.getMessage(), (Object[]) replace)).split("\\\\n")) {
+            sendRawMessage(recipient, AIMessage.PREFIX_SHORT + s);
+        }
+    }
+
+    /**
+     * Sends a short error message to a recipient.
+     *
+     * @param recipient The recipient of the error message. Type of recipient must be registered
+     * @param message   The error message
+     * @param replace   Strings to replace any occurences of %s in the message with
+     */
+    public void sendShortErrorMessage(Object recipient, Message message, Object... replace) {
+        for (String s : (replace == null ? message.getMessage() : String.format(message.getMessage(), (Object[]) replace)).split("\\\\n")) {
+            sendRawMessage(recipient, AIMessage.PREFIX_ERROR_SHORT + s);
+        }
+    }
+
+    /**
      * Sends a raw message string to a recipient.
      *
      * @param recipient The recipient of the message. Type of recipient must be registered
