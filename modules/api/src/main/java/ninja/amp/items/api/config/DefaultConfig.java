@@ -19,7 +19,6 @@ public enum DefaultConfig implements Config {
     ATTRIBUTES("attributes.yml"),
     EQUIPMENT("equipment.yml"),
     ITEMS("items.yml"),
-    ITEM_TYPES("itemtypes.yml"),
     MESSAGE("lang.yml"),
     SOCKETS("sockets.yml");
 

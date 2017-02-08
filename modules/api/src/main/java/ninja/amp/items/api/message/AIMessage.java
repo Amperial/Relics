@@ -34,8 +34,8 @@ public enum AIMessage implements Message {
     ITEM_NOTCUSTOM("Item.NotCustom", "Item is not a custom item."),
     ITEM_NOTHOLDING("Item.NotHolding", "Not holding an item."),
 
-    ITEM_EQUIPPED("Item.Equipped", "Item %s&7 equipped!"),
-    ITEM_UNEQUIPPED("Item.UnEquipped", "Item %s&7 unequipped."),
+    ITEM_EQUIPPED("Item.Equipped", "%s&7 equipped!"),
+    ITEM_UNEQUIPPED("Item.UnEquipped", "%s&7 unequipped."),
     ITEM_NOTEQUIPPED("Item.NotEquipped", "Item is not equipped."),
     ITEM_CANTEQUIP("Item.CantEquip", "Cannot equip item."),
     ITEM_ALREADYEQUIPPED("Item.AlreadyEquipped", "Click again to replace equipped item"),

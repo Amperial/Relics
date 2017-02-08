@@ -12,10 +12,12 @@ package ninja.amp.items.equipment;
 
 import ninja.amp.items.api.ItemPlugin;
 import ninja.amp.items.api.equipment.Equipment;
+import ninja.amp.items.api.equipment.EquipmentChangedEvent;
 import ninja.amp.items.api.item.Item;
 import ninja.amp.items.api.item.ItemType;
 import ninja.amp.items.api.message.AIMessage;
 import ninja.amp.items.api.message.Messenger;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -77,6 +79,8 @@ public class EquipmentManager implements ninja.amp.items.api.equipment.Equipment
             if (playerEquipment.isSlotOpen(type)) {
                 playerEquipment.equip(item);
                 messenger.sendShortMessage(player, AIMessage.ITEM_EQUIPPED, item.getName());
+
+                equipmentChanged(player);
             } else {
                 UUID itemId = item.getId();
                 if (equipReplace.containsKey(itemId)) {
@@ -85,6 +89,8 @@ public class EquipmentManager implements ninja.amp.items.api.equipment.Equipment
                         playerEquipment.replaceEquip(item);
                         messenger.sendShortMessage(player, AIMessage.ITEM_EQUIPPED, item.getName());
                         equipReplace.remove(itemId);
+
+                        equipmentChanged(player);
                         return;
                     }
                 }
@@ -108,6 +114,8 @@ public class EquipmentManager implements ninja.amp.items.api.equipment.Equipment
                 playerEquipment.replaceEquip(item);
             }
             messenger.sendShortMessage(player, AIMessage.ITEM_EQUIPPED, item.getName());
+
+            equipmentChanged(player);
         } else {
             messenger.sendShortErrorMessage(player, AIMessage.ITEM_CANTEQUIP);
         }
@@ -121,6 +129,8 @@ public class EquipmentManager implements ninja.amp.items.api.equipment.Equipment
         if (playerEquipment.isEquipped(item)) {
             playerEquipment.unEquip(item);
             messenger.sendShortMessage(player, AIMessage.ITEM_UNEQUIPPED, item.getName());
+
+            equipmentChanged(player);
         } else {
             messenger.sendShortErrorMessage(player, AIMessage.ITEM_NOTEQUIPPED);
         }
@@ -129,6 +139,10 @@ public class EquipmentManager implements ninja.amp.items.api.equipment.Equipment
     @Override
     public void unEquipAll(Player player) {
         getEquipment(player).unEquipAll();
+    }
+
+    private void equipmentChanged(Player player) {
+        Bukkit.getServer().getPluginManager().callEvent(new EquipmentChangedEvent(player));
     }
 
 }

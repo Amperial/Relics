@@ -11,4 +11,17 @@
 package ninja.amp.items.api.item.attribute.attributes.stats;
 
 public interface StatSpecifier<T extends StatType<T>> {
+
+    class ALL<T extends StatType<T>> implements StatSpecifier<T> {
+        @Override
+        public boolean equals(Object obj) {
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            return 0;
+        }
+    }
+
 }

@@ -138,8 +138,8 @@ public class PlayerEquipment implements Equipment {
                 Player player = getPlayer();
                 Item equipped = plugin.getItemManager().findItem(player, slot.getItemId());
                 if (equipped != null) {
-                    equipped.onUnEquip(player);
                     slot.setItemId(item.getId());
+                    equipped.onUnEquip(player);
                     item.onEquip(player);
                     return true;
                 }
@@ -153,8 +153,8 @@ public class PlayerEquipment implements Equipment {
         checkSlots();
         for (Slot slot : getSlots()) {
             if (slot.hasItem() && slot.getItemId().equals(item.getId())) {
-                item.onUnEquip(getPlayer());
                 slot.setItemId(null);
+                item.onUnEquip(getPlayer());
                 return true;
             }
         }
@@ -168,10 +168,10 @@ public class PlayerEquipment implements Equipment {
         for (Slot slot : getSlots()) {
             if (slot.hasItem()) {
                 Item item = itemManager.findItem(player, slot.getItemId());
+                slot.setItemId(null);
                 if (item != null) {
                     item.onUnEquip(player);
                 }
-                slot.setItemId(null);
             }
         }
     }

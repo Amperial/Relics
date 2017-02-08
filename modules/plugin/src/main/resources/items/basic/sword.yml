@@ -1,6 +1,6 @@
 default-args: [1]
 name: "&2Basic Sword"
-material: "DIAMOND_SWORD"
+material: "IRON_SWORD"
 item-type: "weapon-sword"
 attributes:
   model:
