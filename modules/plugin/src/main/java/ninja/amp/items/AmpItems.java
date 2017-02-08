@@ -21,7 +21,9 @@ import ninja.amp.items.commands.AboutCommand;
 import ninja.amp.items.commands.HelpCommand;
 import ninja.amp.items.commands.ReloadCommand;
 import ninja.amp.items.commands.items.GetItemCommand;
+import ninja.amp.items.commands.items.GiveItemCommand;
 import ninja.amp.items.commands.items.ItemInfoCommand;
+import ninja.amp.items.commands.misc.TokenCommand;
 import ninja.amp.items.commands.sockets.ExtractGemCommand;
 import ninja.amp.items.commands.sockets.InfuseGemCommand;
 import ninja.amp.items.equipment.EquipmentManager;
@@ -68,9 +70,11 @@ public class AmpItems extends JavaPlugin implements ItemPlugin {
         // Item commands. These are added to both /aitem and /aitem item
         Command info = new ItemInfoCommand(this);
         Command get = new GetItemCommand(this);
+        Command give = new GiveItemCommand(this);
         CommandGroup item = new CommandGroup(this, "item")
                 .addChildCommand(info)
-                .addChildCommand(get);
+                .addChildCommand(get)
+                .addChildCommand(give);
         item.setPermission(new Permission("ampitems.item.all", PermissionDefault.OP));
 
         // Socket commands.
@@ -86,8 +90,10 @@ public class AmpItems extends JavaPlugin implements ItemPlugin {
                 .addChildCommand(new AboutCommand(this))
                 .addChildCommand(new HelpCommand(this))
                 .addChildCommand(new ReloadCommand(this))
+                .addChildCommand(new TokenCommand(this))
                 .addChildCommand(info)
                 .addChildCommand(get)
+                .addChildCommand(give)
                 .addChildCommand(item)
                 .addChildCommand(extract)
                 .addChildCommand(infuse)

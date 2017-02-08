@@ -13,6 +13,8 @@ package ninja.amp.items.api.config.transform;
 import ninja.amp.items.api.ItemPlugin;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.List;
+
 public class ArgTransform extends ConfigTransform {
 
     public ArgTransform(ItemPlugin plugin) {
@@ -20,18 +22,31 @@ public class ArgTransform extends ConfigTransform {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ConfigurationSection transform(ConfigurationSection section, Object[] args) {
         // Check all paths in config
         for (String key : section.getKeys(true)) {
-            // Args will appear as strings
             if (section.isString(key)) {
-                String string = section.getString(key);
-
                 // Format string with transform args
-                string = String.format(string, args);
+                String string = String.format(section.getString(key), args);
 
-                // Replace value at config path
+                // Replace string at config path
                 setValue(section, key, string);
+            } else if (section.isList(key)) {
+                List<Object> list = (List<Object>) section.getList(key);
+                for (int i = 0; i < list.size(); i++) {
+                    Object element = list.get(i);
+                    if (element instanceof String) {
+                        // Format string with transform args
+                        String string = String.format((String) element, args);
+
+                        // Replace value at list index
+                        setValue(list, i, string);
+                    }
+                }
+
+                // Replace list at config path
+                setValue(section, key, list);
             }
         }
         return section;

@@ -1,0 +1,34 @@
+name: "&4Token of ampayne2"
+material: "DIAMOND"
+item-type: "other"
+attributes:
+  info:
+    type: "group"
+    spacing: false
+    attributes:
+      rarity:
+        type: "rarity"
+        tier: 5
+      level:
+        type: "level"
+        level: 30
+  description:
+    type: "text"
+    text:
+    - "A token of favor from ampayne2!"
+  infuse:
+    type: "text"
+    text:
+    - "&dInfuse this gem into a socket!"
+  gem:
+    type: "gem"
+    name: "&7(&4Token of ampayne2)"
+    color: "dark-red"
+    attributes:
+      requirement:
+        type: "level-requirement"
+        level: 0
+      description:
+        type: "text"
+        text:
+        - "A token of favor from ampayne2!"

@@ -1,0 +1,35 @@
+default-args: ["", "DIAMOND", "dark-red", 0, 1, 0]
+name: "&dToken of %1$s"
+material: "%2$s"
+item-type: "other"
+attributes:
+  info:
+    type: "group"
+    spacing: false
+    attributes:
+      rarity:
+        type: "rarity"
+        tier: "%4$d"
+      level:
+        type: "level"
+        level: "%5$d"
+  description:
+    type: "text"
+    text:
+    - "A token of favor from %1$s!"
+  infuse:
+    type: "text"
+    text:
+    - "&dInfuse this gem into a socket!"
+  gem:
+    type: "gem"
+    name: "&7(&dToken of %1$s&7)"
+    color: "%3$s"
+    attributes:
+      requirement:
+        type: "level-requirement"
+        level: "%6$d"
+      description:
+        type: "text"
+        text:
+        - "A token of favor from %1$s!"

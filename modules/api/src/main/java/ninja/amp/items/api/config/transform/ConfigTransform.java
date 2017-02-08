@@ -13,6 +13,7 @@ package ninja.amp.items.api.config.transform;
 import ninja.amp.items.api.ItemPlugin;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.List;
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -44,6 +45,25 @@ public abstract class ConfigTransform {
             }
         }
         section.set(key, value);
+    }
+
+    protected static void setValue(List<Object> list, int index, Object value) {
+        if (value instanceof String) {
+            String string = (String) value;
+            if (NUMBER.matcher(string).matches()) {
+                double number = Double.valueOf(string);
+                if (string.contains(".")) {
+                    list.set(index, number);
+                } else {
+                    list.set(index, (int) number);
+                }
+                return;
+            } else if (string.isEmpty()) {
+                list.remove(index);
+                return;
+            }
+        }
+        list.set(index, value);
     }
 
     public abstract ConfigurationSection transform(ConfigurationSection section, Object[] args);

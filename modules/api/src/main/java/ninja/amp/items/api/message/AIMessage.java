@@ -26,6 +26,8 @@ public enum AIMessage implements Message {
     COMMAND_USAGE("Command.Usage", "Usage: %s"),
 
     ITEM_SPAWN("Item.Spawn", "Spawned item: %s&7!"),
+    ITEM_RECEIVE("Item.Receive", "Received item: %s&7!"),
+    ITEM_NOTONLINE("Item.NotOnline", "Player %s is not online!"),
     ITEM_DOESNTEXIST("Item.DoesntExist", "Item not found: %s"),
     ITEM_NOTCUSTOM("Item.NotCustom", "Item is not a custom item."),
     ITEM_NOTHOLDING("Item.NotHolding", "Not holding an item."),

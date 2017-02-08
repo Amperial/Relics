@@ -115,7 +115,18 @@ public class ConfigAccessor {
      */
     public ConfigAccessor saveDefaultConfig() {
         if (!configFile.exists()) {
-            plugin.saveResource(configType.getFileName(), false);
+            try {
+                plugin.saveResource(configType.getFileName(), false);
+            } catch (Exception resource) {
+                plugin.getLogger().log(Level.INFO, "Could not save default config for " + configFile);
+                try {
+                    if (configFile.createNewFile()) {
+                        plugin.getLogger().log(Level.INFO, "Generated empty config for " + configFile);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return this;
     }
