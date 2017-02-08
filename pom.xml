@@ -26,7 +26,24 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>heroes-repo</id>
+            <url>http://nexus.hc.to/content/repositories/herocraft/</url>
+        </repository>
     </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>heroes-repo</id>
+            <name>Public Releases</name>
+            <url>http://nexus.hc.to/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>heroes-repo</id>
+            <name>Public Releases</name>
+            <url>http://nexus.hc.to/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <build>
         <defaultGoal>clean install</defaultGoal>
@@ -61,21 +78,4 @@
             </plugin>
         </plugins>
     </build>
-    <profiles>
-        <profile>
-            <id>herocraft</id>
-            <distributionManagement>
-                <repository>
-                    <id>heroes-repo</id>
-                    <name>Public Releases</name>
-                    <url>http://nexus.hc.to/content/repositories/releases/</url>
-                </repository>
-                <snapshotRepository>
-                    <id>heroes-repo</id>
-                    <name>Public Releases</name>
-                    <url>http://nexus.hc.to/content/repositories/snapshots/</url>
-                </snapshotRepository>
-            </distributionManagement>
-        </profile>
-    </profiles>
 </project>

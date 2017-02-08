@@ -8,13 +8,13 @@ stages:
 build:
   stage: build
   script:
-    - mvn clean package -P herocraft --settings .maven-settings.xml
+    - mvn clean package --settings .maven-settings.xml
   artifacts:
     paths:
     - modules/plugin/target/AmpItems.jar
 deploy:
   stage: deploy
   script:
-    - mvn clean deploy -P herocraft --settings .maven-settings.xml
+    - mvn clean deploy --settings .maven-settings.xml
   only:
     - master
