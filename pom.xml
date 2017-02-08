@@ -61,4 +61,21 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>herocraft</id>
+            <distributionManagement>
+                <repository>
+                    <id>heroes-repo</id>
+                    <name>Public Releases</name>
+                    <url>http://nexus.hc.to/content/repositories/releases/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>heroes-repo</id>
+                    <name>Public Releases</name>
+                    <url>http://nexus.hc.to/content/repositories/snapshots/</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+    </profiles>
 </project>
