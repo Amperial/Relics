@@ -71,7 +71,6 @@ public class ItemListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        System.out.println("player interact");
         Item item = plugin.getItemManager().getItem(event.getItem());
         if (item != null) {
             if (handleItemUse(event.getPlayer(), item)) {
@@ -85,7 +84,6 @@ public class ItemListener implements Listener {
 
     @EventHandler
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-        System.out.println("interact entity");
         Player player = event.getPlayer();
         if (!handleItemUse(player, player.getInventory().getItemInMainHand())) {
             event.setCancelled(true);
@@ -96,7 +94,6 @@ public class ItemListener implements Listener {
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        System.out.println("on entity damage by entity");
         LivingEntity damager = getLivingDamager(event);
         if (damager != null) {
             ItemManager itemManager = plugin.getItemManager();
@@ -168,7 +165,6 @@ public class ItemListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        System.out.println("inventory click");
         if (!(event.getWhoClicked() instanceof Player)) {
             return;
         }
@@ -195,7 +191,6 @@ public class ItemListener implements Listener {
 
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
-        System.out.println("inventory drag");
         ItemManager itemManager = plugin.getItemManager();
         if (itemManager.isItem(event.getOldCursor()) || itemManager.isItem(event.getCursor())) {
             event.setCancelled(true);
@@ -216,7 +211,6 @@ public class ItemListener implements Listener {
 
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
-        System.out.println("drop item");
         ItemManager itemManager = plugin.getItemManager();
         ItemStack itemStack = event.getItemDrop().getItemStack();
         Item item = itemManager.getItem(itemStack);
@@ -227,7 +221,6 @@ public class ItemListener implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        System.out.println("player death");
         ItemManager itemManager = plugin.getItemManager();
         Player player = event.getEntity();
         Iterator<ItemStack> drops = event.getDrops().iterator();
