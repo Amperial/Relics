@@ -85,7 +85,7 @@ public class EquipmentManager implements ninja.amp.items.api.equipment.Equipment
                 UUID itemId = item.getId();
                 if (equipReplace.containsKey(itemId)) {
                     long lastClicked = equipReplace.get(itemId);
-                    if (System.currentTimeMillis() - lastClicked < 5000) {
+                    if (System.currentTimeMillis() - lastClicked < 1000) {
                         playerEquipment.replaceEquip(item);
                         messenger.sendShortMessage(player, AIMessage.ITEM_EQUIPPED, item.getName());
                         equipReplace.remove(itemId);

@@ -24,6 +24,8 @@ attributes:
     - "Legends say this sword"
     - "once belonged to"
     - "the almighty Kainzo"
+  bound:
+    type: "soulbound"
   damage:
     type: "damage"
     damage: 45

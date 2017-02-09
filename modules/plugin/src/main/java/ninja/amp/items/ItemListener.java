@@ -17,6 +17,8 @@ import ninja.amp.items.api.item.ItemManager;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
 import ninja.amp.items.api.item.attribute.attributes.Soulbound;
 import ninja.amp.items.api.item.attribute.attributes.stats.Damage;
+import ninja.amp.items.api.message.AIMessage;
+import ninja.amp.items.api.message.Messenger;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -32,21 +34,32 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
 
 public class ItemListener implements Listener {
 
     private final ItemPlugin plugin;
     private final Random random;
+    private final Map<UUID, Long> soulbound;
+    private final Map<UUID, List<Item>> deathItems;
 
     public ItemListener(ItemPlugin plugin) {
         this.plugin = plugin;
         this.random = new Random();
+        this.soulbound = new HashMap<>();
+        this.deathItems = new HashMap<>();
 
         // Register listener
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -130,12 +143,18 @@ public class ItemListener implements Listener {
 
     private boolean handleInventory(Player player, Inventory inventory, Item item, InventoryType.SlotType slot) {
         EquipmentManager equipManager = plugin.getEquipmentManager();
+        if (slot == InventoryType.SlotType.OUTSIDE) {
+            // Handled by item drop event
+            return true;
+        }
         switch (inventory.getType()) {
             case CHEST:
             case DISPENSER:
             case DROPPER:
             case HOPPER:
-                if (item.hasAttributeDeep(Soulbound.class)) {
+                Optional<Soulbound> soulbound = item.getAttributeDeep(Soulbound.class);
+                if (soulbound.isPresent() && soulbound.get().isBound()) {
+                    plugin.getMessenger().sendShortErrorMessage(player, AIMessage.SOULBOUND_MOVE);
                     return false;
                 }
             case CREATIVE:
@@ -198,7 +217,8 @@ public class ItemListener implements Listener {
     }
 
     private boolean handleItemDrop(Player player, Item item) {
-        if (item.hasAttributeDeep(Soulbound.class)) {
+        Optional<Soulbound> soulbound = item.getAttributeDeep(Soulbound.class);
+        if (soulbound.isPresent() && soulbound.get().isBound()) {
             return false;
         } else {
             EquipmentManager equipManager = plugin.getEquipmentManager();
@@ -215,6 +235,29 @@ public class ItemListener implements Listener {
         ItemStack itemStack = event.getItemDrop().getItemStack();
         Item item = itemManager.getItem(itemStack);
         if (item != null && !handleItemDrop(event.getPlayer(), item)) {
+            Messenger messenger = plugin.getMessenger();
+            Player player = event.getPlayer();
+
+            // Handle soulbound attribute
+            UUID itemId = item.getId();
+            if (soulbound.containsKey(itemId)) {
+                long lastDrop = soulbound.get(itemId);
+                if (System.currentTimeMillis() - lastDrop < 1000) {
+                    // Destroy item
+                    event.getItemDrop().remove();
+
+                    // Make sure to unequip item
+                    EquipmentManager equipManager = plugin.getEquipmentManager();
+                    if (equipManager.isEquipped(player, item)) {
+                        equipManager.unEquip(player, item);
+                    }
+
+                    messenger.sendShortMessage(player, AIMessage.SOULBOUND_DESTROY);
+                    return;
+                }
+            }
+            soulbound.put(itemId, System.currentTimeMillis());
+            messenger.sendShortErrorMessage(player, AIMessage.SOULBOUND_DROP);
             event.setCancelled(true);
         }
     }
@@ -223,13 +266,31 @@ public class ItemListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         ItemManager itemManager = plugin.getItemManager();
         Player player = event.getEntity();
+        List<Item> items = new ArrayList<>();
         Iterator<ItemStack> drops = event.getDrops().iterator();
         while (drops.hasNext()) {
             ItemStack itemStack = drops.next();
             Item item = itemManager.getItem(itemStack);
             if (item != null && !handleItemDrop(player, item)) {
+                items.add(item);
                 drops.remove();
             }
+        }
+        deathItems.put(player.getUniqueId(), items);
+    }
+
+    @EventHandler
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        Player player = event.getPlayer();
+        UUID playerId = player.getUniqueId();
+        if (deathItems.containsKey(playerId)) {
+            ItemManager itemManager = plugin.getItemManager();
+            List<Item> items = deathItems.get(playerId);
+            Inventory inventory = player.getInventory();
+            for (Item item : items) {
+                inventory.addItem(item.getItem());
+            }
+            deathItems.remove(playerId);
         }
     }
 

@@ -47,7 +47,11 @@ public enum AIMessage implements Message {
     SOCKET_EXTRACT("Socket.Extract", "Extracted gem %s&7 from socket!"),
     SOCKET_INFUSE("Socket.Infuse", "Infused gem %s&7 into the socket!"),
 
-    GEM_NOTHOLDING("Gem.NotHolding", "Not holding a gem in off hand.");
+    GEM_NOTHOLDING("Gem.NotHolding", "Not holding a gem in off hand."),
+
+    SOULBOUND_MOVE("Soulbound.Move", "Cannot move a soulbound item out of inventory."),
+    SOULBOUND_DROP("Soulbound.Drop", "Double-drop to destroy soulbound item."),
+    SOULBOUND_DESTROY("Soulbound.Destroy", "Soulbound item destroyed!");
 
     private final String path;
     private final String defaultMessage;

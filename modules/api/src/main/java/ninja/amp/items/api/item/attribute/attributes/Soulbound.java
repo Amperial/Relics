@@ -13,4 +13,9 @@ package ninja.amp.items.api.item.attribute.attributes;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
 
 public interface Soulbound extends ItemAttribute {
+
+    boolean isBound();
+
+    void setBound(boolean bound);
+
 }

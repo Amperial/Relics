@@ -22,13 +22,13 @@ import ninja.amp.items.item.attributes.stats.LevelRequirementAttribute;
 import ninja.amp.items.item.attributes.stats.MinecraftAttribute;
 
 public enum DefaultAttributeType implements AttributeType {
-    DAMAGE("damage", 4) {
+    DAMAGE("damage", Integer.MAX_VALUE) {
         @Override
         AttributeFactory<? extends ItemAttribute> loadFactory(ItemPlugin plugin) {
             return new DamageAttribute.Factory(plugin);
         }
     },
-    GEM("gem", 6) {
+    GEM("gem", 5) {
         @Override
         AttributeFactory<? extends ItemAttribute> loadFactory(ItemPlugin plugin) {
             return new GemAttribute.Factory(plugin);
@@ -52,7 +52,7 @@ public enum DefaultAttributeType implements AttributeType {
             return new LevelRequirementAttribute.Factory(plugin);
         }
     },
-    MINECRAFT("minecraft", 7) {
+    MINECRAFT("minecraft", Integer.MAX_VALUE) {
         @Override
         AttributeFactory<? extends ItemAttribute> loadFactory(ItemPlugin plugin) {
             return new MinecraftAttribute.Factory(plugin);
@@ -76,10 +76,16 @@ public enum DefaultAttributeType implements AttributeType {
             return new SmiteAttribute.Factory(plugin);
         }
     },
-    SOCKET("socket", 5) {
+    SOCKET("socket", 4) {
         @Override
         AttributeFactory<? extends ItemAttribute> loadFactory(ItemPlugin plugin) {
             return new SocketAttribute.Factory(plugin);
+        }
+    },
+    SOULBOUND("soulbound", 6) {
+        @Override
+        AttributeFactory<? extends ItemAttribute> loadFactory(ItemPlugin plugin) {
+            return new SoulboundAttribute.Factory(plugin);
         }
     },
     TEXT("text", 3) {

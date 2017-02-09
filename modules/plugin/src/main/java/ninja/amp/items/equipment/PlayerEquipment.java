@@ -22,6 +22,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -83,11 +84,13 @@ public class PlayerEquipment implements Equipment {
 
     @Override
     public boolean isSlotOpen(String name) {
+        checkSlots();
         return hasSlot(name) && getSlot(name).isOpen();
     }
 
     @Override
     public boolean isSlotOpen(ItemType type) {
+        checkSlots();
         for (Slot slot : getSlots(type)) {
             if (slot.isOpen()) {
                 return true;
@@ -112,7 +115,10 @@ public class PlayerEquipment implements Equipment {
         for (Slot slot : getSlots(item.getType())) {
             if (slot.isOpen()) {
                 slot.setItemId(item.getId());
-                item.onEquip(getPlayer());
+                Player player = getPlayer();
+                if (item.onEquip(player)) {
+                    updateItem(player, item);
+                }
                 return true;
             }
         }
@@ -124,7 +130,10 @@ public class PlayerEquipment implements Equipment {
         checkSlot(slot);
         if (slot.isOpen()) {
             slot.setItemId(item.getId());
-            item.onEquip(getPlayer());
+            Player player = getPlayer();
+            if (item.onEquip(player)) {
+                updateItem(player, item);
+            }
             return true;
         }
         return false;
@@ -139,8 +148,12 @@ public class PlayerEquipment implements Equipment {
                 Item equipped = plugin.getItemManager().findItem(player, slot.getItemId());
                 if (equipped != null) {
                     slot.setItemId(item.getId());
-                    equipped.onUnEquip(player);
-                    item.onEquip(player);
+                    if (equipped.onUnEquip(player)) {
+                        updateItem(player, equipped);
+                    }
+                    if (item.onEquip(player)) {
+                        updateItem(player, item);
+                    }
                     return true;
                 }
             }
@@ -154,7 +167,10 @@ public class PlayerEquipment implements Equipment {
         for (Slot slot : getSlots()) {
             if (slot.hasItem() && slot.getItemId().equals(item.getId())) {
                 slot.setItemId(null);
-                item.onUnEquip(getPlayer());
+                Player player = getPlayer();
+                if (item.onUnEquip(player)) {
+                    updateItem(player, item);
+                }
                 return true;
             }
         }
@@ -170,7 +186,9 @@ public class PlayerEquipment implements Equipment {
                 Item item = itemManager.findItem(player, slot.getItemId());
                 slot.setItemId(null);
                 if (item != null) {
-                    item.onUnEquip(player);
+                    if (item.onUnEquip(player)) {
+                        updateItem(player, item);
+                    }
                 }
             }
         }
@@ -200,6 +218,13 @@ public class PlayerEquipment implements Equipment {
                     slot.setItemId(null);
                 }
             }
+        }
+    }
+
+    private void updateItem(Player player, Item item) {
+        ItemStack itemStack = plugin.getItemManager().findItemStack(player.getInventory(), item.getId());
+        if (itemStack != null) {
+            item.updateItem(itemStack);
         }
     }
 

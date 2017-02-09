@@ -48,11 +48,13 @@ public class LevelRequirementAttribute extends BasicStatAttribute<LevelRequireme
     }
 
     @Override
-    public void onEquip(Player player) {
+    public boolean onEquip(Player player) {
+        return false;
     }
 
     @Override
-    public void onUnEquip(Player player) {
+    public boolean onUnEquip(Player player) {
+        return false;
     }
 
     @Override

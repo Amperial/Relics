@@ -15,7 +15,6 @@ import ninja.amp.items.api.config.DefaultConfig;
 import ninja.amp.items.api.config.ItemConfig;
 import ninja.amp.items.api.item.Item;
 import ninja.amp.items.api.item.ItemFactory;
-import ninja.amp.items.api.item.ItemType;
 import ninja.amp.items.api.item.attribute.AttributeType;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
 import ninja.amp.items.api.item.attribute.attributes.sockets.SocketColor;

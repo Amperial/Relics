@@ -14,10 +14,28 @@ import org.bukkit.entity.Player;
 
 public interface Equippable {
 
+    /**
+     * Checks if the equippable can be equipped to a player.
+     *
+     * @param player the player
+     * @return {@code true} if the equippable can be equipped, else {@code false}.
+     */
     boolean canEquip(Player player);
 
-    void onEquip(Player player);
+    /**
+     * Equips the equippable to a player and checks if the item should be updated.
+     *
+     * @param player the player
+     * @return {@code true} if the item should be updated, else {@code false}.
+     */
+    boolean onEquip(Player player);
 
-    void onUnEquip(Player player);
+    /**
+     * UnEquips the equippable from a player and checks if the item should be updated.
+     *
+     * @param player the player
+     * @return {@code true} if the item should be updated, else {@code false}.
+     */
+    boolean onUnEquip(Player player);
 
 }

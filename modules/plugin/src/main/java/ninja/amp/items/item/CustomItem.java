@@ -239,13 +239,27 @@ public class CustomItem implements Item {
     }
 
     @Override
-    public void onEquip(Player player) {
-        forEachDeep(attribute -> ((Equippable) attribute).onEquip(player), attribute -> attribute instanceof Equippable);
+    public boolean onEquip(Player player) {
+        Collection<ItemAttribute> attributes = getAttributesDeep(attribute -> attribute instanceof Equippable);
+        boolean update = false;
+        for (ItemAttribute attribute : attributes) {
+            if (((Equippable) attribute).onEquip(player)) {
+                update = true;
+            }
+        }
+        return update;
     }
 
     @Override
-    public void onUnEquip(Player player) {
-        forEachDeep(attribute -> ((Equippable) attribute).onUnEquip(player), attribute -> attribute instanceof Equippable);
+    public boolean onUnEquip(Player player) {
+        Collection<ItemAttribute> attributes = getAttributesDeep(attribute -> attribute instanceof Equippable);
+        boolean update = false;
+        for (ItemAttribute attribute : attributes) {
+            if (((Equippable) attribute).onUnEquip(player)) {
+                update = true;
+            }
+        }
+        return update;
     }
 
     @Override
