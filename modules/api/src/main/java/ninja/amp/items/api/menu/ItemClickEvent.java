@@ -31,7 +31,7 @@ public class ItemClickEvent {
     /**
      * Gets the player who clicked.
      *
-     * @return The player who clicked
+     * @return the player who clicked
      */
     public Player getPlayer() {
         return player;
@@ -49,7 +49,7 @@ public class ItemClickEvent {
     /**
      * Sets if the {@link ItemMenu} will go back to the parent menu.
      *
-     * @param goBack If the item menu will go back to the parent menu.
+     * @param goBack if the item menu will go back to the parent menu
      */
     public void setWillGoBack(boolean goBack) {
         this.goBack = goBack;
@@ -71,7 +71,7 @@ public class ItemClickEvent {
     /**
      * Sets if the item menu will close.
      *
-     * @param close If the item menu will close
+     * @param close if the item menu will close
      */
     public void setWillClose(boolean close) {
         this.close = close;
@@ -93,7 +93,7 @@ public class ItemClickEvent {
     /**
      * Sets if the item menu will update.
      *
-     * @param update If the item menu will update
+     * @param update if the item menu will update
      */
     public void setWillUpdate(boolean update) {
         this.update = update;

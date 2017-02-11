@@ -12,6 +12,12 @@ package ninja.amp.items.api.config.transform.replacer;
 
 import java.util.regex.Pattern;
 
+/**
+ * A replacer that searches for element lists of the format {@code <element,element,element...>},<br>
+ * replacing them with a single random element from the list.
+ *
+ * @author Austin Payne
+ */
 public class EqualChanceList extends Replacer {
 
     private static final Pattern EQUAL_CHANCE = Pattern.compile("<[^<:,\\s]*(,[^<:,\\s>]*)*>");

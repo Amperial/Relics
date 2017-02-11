@@ -20,7 +20,7 @@ public interface Config {
     /**
      * Gets the config's file name.
      *
-     * @return The file name of the config
+     * @return the file name of the config
      */
     String getFileName();
 

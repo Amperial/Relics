@@ -10,14 +10,32 @@
  */
 package ninja.amp.items.api.config;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
+/**
+ * Player configuration files used in the amp items plugin.
+ *
+ * @author Austin Payne
+ */
 public class PlayerConfig implements Config {
 
+    private final UUID playerId;
     private final String fileName;
 
     public PlayerConfig(Player player) {
+        this.playerId = player.getUniqueId();
         this.fileName = "players/" + ConfigManager.getNestedPath(player.getUniqueId().toString()) + ".yml";
+    }
+
+    public Player getPlayer() {
+        return Bukkit.getPlayer(playerId);
+    }
+
+    public UUID getPlayerId() {
+        return playerId;
     }
 
     @Override

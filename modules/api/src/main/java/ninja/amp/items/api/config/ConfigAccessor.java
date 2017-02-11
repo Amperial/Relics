@@ -17,10 +17,11 @@ import org.bukkit.plugin.Plugin;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.logging.Level;
 
 /**
- * Used to access a YamlConfiguration file.
+ * Used to access, reload, and save a YamlConfiguration file.
  *
  * @author Austin Payne
  */
@@ -34,24 +35,14 @@ public class ConfigAccessor {
     /**
      * Creates a new config accessor.
      *
-     * @param plugin     The plugin instance
-     * @param configType The type of the configuration file
-     * @param parent     The parent file
+     * @param plugin     the plugin instance
+     * @param configType the type of the configuration file
+     * @param parent     the parent file
      */
     public ConfigAccessor(Plugin plugin, Config configType, File parent) {
         this.plugin = plugin;
         this.configType = configType;
         this.configFile = new File(parent, configType.getFileName());
-    }
-
-    /**
-     * Creates a new config accessor with the parent file of the plugin instance.
-     *
-     * @param plugin     The plugin instance
-     * @param configType The type of the configuration file
-     */
-    public ConfigAccessor(Plugin plugin, Config configType) {
-        this(plugin, configType, plugin.getDataFolder());
     }
 
     /**
@@ -66,15 +57,14 @@ public class ConfigAccessor {
     /**
      * Reloads the configuration file from disk.
      *
-     * @return The config accessor
+     * @return the config accessor
      */
-    @SuppressWarnings("deprecation")
     public ConfigAccessor reloadConfig() {
         fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
 
         InputStream defConfigStream = plugin.getResource(configType.getFileName());
         if (defConfigStream != null) {
-            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream));
             fileConfiguration.setDefaults(defConfig);
         }
         return this;
@@ -83,7 +73,7 @@ public class ConfigAccessor {
     /**
      * Gets the config.
      *
-     * @return The configuration file
+     * @return the configuration file
      */
     public FileConfiguration getConfig() {
         if (fileConfiguration == null) {
@@ -95,7 +85,7 @@ public class ConfigAccessor {
     /**
      * Saves the config to disk.
      *
-     * @return The config accessor
+     * @return the config accessor
      */
     public ConfigAccessor saveConfig() {
         if (fileConfiguration != null) {
@@ -111,7 +101,7 @@ public class ConfigAccessor {
     /**
      * Generates the default config if it hasn't already been generated.
      *
-     * @return The config accessor
+     * @return the config accessor
      */
     public ConfigAccessor saveDefaultConfig() {
         if (!configFile.exists()) {
@@ -135,7 +125,7 @@ public class ConfigAccessor {
     /**
      * Gets the config type.
      *
-     * @return The type of the configuration file
+     * @return the type of the configuration file
      */
     public Config getConfigType() {
         return configType;

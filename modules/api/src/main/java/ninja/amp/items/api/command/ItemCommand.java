@@ -20,14 +20,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.Optional;
 
+/**
+ * A command that can only be executed if holding an Item in main hand.
+ *
+ * @author Austin Payne
+ */
 public abstract class ItemCommand extends Command {
 
     /**
      * Creates a new item command.
      *
-     * @param plugin The item plugin instance
-     * @param name   The name of the command
+     * @param plugin the item plugin instance
+     * @param name   the name of the command
      */
     public ItemCommand(ItemPlugin plugin, String name) {
         super(plugin, name);
@@ -44,17 +50,24 @@ public abstract class ItemCommand extends Command {
         if (heldItem == null) {
             messenger.sendErrorMessage(player, AIMessage.ITEM_NOTHOLDING);
         } else {
-            if (itemManager.isItem(heldItem)) {
-                Item item = itemManager.getItem(heldItem);
-
+            Optional<Item> item = itemManager.getItem(heldItem);
+            if (item.isPresent()) {
                 // Execute ItemCommand
-                execute(command, player, args, item);
+                execute(command, player, args, item.get());
             } else {
                 messenger.sendErrorMessage(player, AIMessage.ITEM_NOTCUSTOM);
             }
         }
     }
 
+    /**
+     * Executes the item command.
+     *
+     * @param command the command label
+     * @param player  the sender of the command
+     * @param args    the arguments sent with the command
+     * @param item    the item held in main hand
+     */
     public abstract void execute(String command, Player player, List<String> args, Item item);
 
 }

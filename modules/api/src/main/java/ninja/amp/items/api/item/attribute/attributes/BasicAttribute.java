@@ -16,6 +16,12 @@ import ninja.amp.items.api.item.attribute.ItemLore;
 import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.ChatColor;
 
+/**
+ * A basic item attribute implementation to simplify the creation of item attributes.<br>
+ * Handles the item attribute name and type, as well as setting the default item lore.
+ *
+ * @author Austin Payne
+ */
 public class BasicAttribute implements ItemAttribute {
 
     private final String name;

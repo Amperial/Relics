@@ -16,10 +16,29 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
 
+/**
+ * A config transform that attempts to replace strings containing various features with concrete values.
+ *
+ * @author Austin Payne
+ */
 public class ReplacerTransform extends ConfigTransform {
+
+    private final Replaceable replaceable;
 
     public ReplacerTransform(ItemPlugin plugin) {
         super(plugin);
+
+        // Create replaceable
+        replaceable = new Replaceable("");
+
+        // Add replacers, order here is important
+        // As the regex for each replacer increases in complexity, it becomes less specific
+        // Therefore each consecutive replacer assumes the previous replacers are all unable to find a match
+        replaceable.addReplacer(new PairRange(replaceable));
+        replaceable.addReplacer(new TripleRange(replaceable));
+        replaceable.addReplacer(new EqualChanceList(replaceable));
+        replaceable.addReplacer(new WeightedChanceList(replaceable));
+        replaceable.addReplacer(new Expression(replaceable));
     }
 
     @Override
@@ -53,17 +72,8 @@ public class ReplacerTransform extends ConfigTransform {
     }
 
     private String replace(String string) {
-        // Create replaceable for string
-        Replaceable replaceable = new Replaceable(string);
-
-        // Add replacers, order here is important
-        // As the regex for each replacer increases in complexity, it becomes less specific
-        // Therefore each consecutive replacer assumes the previous replacers are all unable to find a match
-        replaceable.addReplacer(new PairRange(replaceable));
-        replaceable.addReplacer(new TripleRange(replaceable));
-        replaceable.addReplacer(new EqualChanceList(replaceable));
-        replaceable.addReplacer(new WeightedChanceList(replaceable));
-        replaceable.addReplacer(new Expression(replaceable));
+        // Set the replaceable string
+        replaceable.setString(string);
 
         // Perform replacement
         return replaceable.replace();

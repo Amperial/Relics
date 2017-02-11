@@ -12,10 +12,25 @@ package ninja.amp.items.api.item.attribute.attributes;
 
 import ninja.amp.items.api.item.attribute.ItemAttribute;
 
+/**
+ * An item attribute that indicates the level of an item.
+ *
+ * @author Austin Payne
+ */
 public interface Level extends ItemAttribute {
 
+    /**
+     * Gets the level of the item.
+     *
+     * @return the item's level
+     */
     int getLevel();
 
+    /**
+     * Sets the level of the item.
+     *
+     * @param level the level
+     */
     void setLevel(int level);
 
 }

@@ -17,6 +17,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * An item lore implementation that handles totalling stats of different types and specifiers,<br>
+ * with the final goal of displaying the total stats of an item in one spot on the item lore.
+ *
+ * @param <T> the type of stat the stat group tracks
+ * @author Austin Payne
+ */
 public class StatGroup<T extends StatType<T>> implements ItemLore {
 
     private final Map<StatType<T>, Map<StatSpecifier<T>, StatTotal<T>>> stats;
@@ -25,6 +32,11 @@ public class StatGroup<T extends StatType<T>> implements ItemLore {
         stats = new HashMap<>();
     }
 
+    /**
+     * Adds a stat to the stat group.
+     *
+     * @param stat the stat to add
+     */
     public void addStat(StatAttribute<T> stat) {
         T type = stat.getStatType();
         StatSpecifier<T> specifier = stat.getStatSpecifier();

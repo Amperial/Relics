@@ -14,6 +14,13 @@ import ninja.amp.items.api.ItemPlugin;
 import ninja.amp.items.api.item.attribute.AttributeFactory;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
 
+/**
+ * A basic attribute factory implementation to simplify the creation of item attribute factories.<br>
+ * Holds on to an instance of the item plugin and provides it to the attribute factory.
+ *
+ * @param <T> the item attribute that this factory creates
+ * @author Austin Payne
+ */
 public abstract class BasicAttributeFactory<T extends ItemAttribute> implements AttributeFactory<T> {
 
     private ItemPlugin plugin;

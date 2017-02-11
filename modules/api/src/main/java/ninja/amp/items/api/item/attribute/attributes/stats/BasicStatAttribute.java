@@ -13,6 +13,13 @@ package ninja.amp.items.api.item.attribute.attributes.stats;
 import ninja.amp.items.api.item.attribute.AttributeType;
 import ninja.amp.items.api.item.attribute.attributes.BasicAttribute;
 
+/**
+ * A basic stat attribute implementation to simplify the creation of stat attributes.<br>
+ * Handles the attribute's stat type.
+ *
+ * @param <T> the type of stat the attribute tracks
+ * @author Austin Payne
+ */
 public abstract class BasicStatAttribute<T extends StatType<T>> extends BasicAttribute implements StatAttribute<T> {
 
     private T statType;

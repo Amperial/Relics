@@ -12,13 +12,18 @@ package ninja.amp.items.api.item;
 
 import org.bukkit.entity.Player;
 
+/**
+ * Represents an item or attribute that has to be equipped to use.
+ *
+ * @author Austin Payne
+ */
 public interface Equippable {
 
     /**
      * Checks if the equippable can be equipped to a player.
      *
      * @param player the player
-     * @return {@code true} if the equippable can be equipped, else {@code false}.
+     * @return {@code true} if the equippable can be equipped, else {@code false}
      */
     boolean canEquip(Player player);
 
@@ -26,7 +31,7 @@ public interface Equippable {
      * Equips the equippable to a player and checks if the item should be updated.
      *
      * @param player the player
-     * @return {@code true} if the item should be updated, else {@code false}.
+     * @return {@code true} if the item should be updated, else {@code false}
      */
     boolean onEquip(Player player);
 
@@ -34,7 +39,7 @@ public interface Equippable {
      * UnEquips the equippable from a player and checks if the item should be updated.
      *
      * @param player the player
-     * @return {@code true} if the item should be updated, else {@code false}.
+     * @return {@code true} if the item should be updated, else {@code false}
      */
     boolean onUnEquip(Player player);
 

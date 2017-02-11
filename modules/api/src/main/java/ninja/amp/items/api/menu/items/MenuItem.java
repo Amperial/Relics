@@ -44,7 +44,7 @@ public class MenuItem {
     /**
      * Gets the display name of the menu item.
      *
-     * @return The menu item's display name
+     * @return the menu item's display name
      */
     public String getDisplayName() {
         return displayName;
@@ -53,7 +53,7 @@ public class MenuItem {
     /**
      * Gets the icon of the menu item.
      *
-     * @return The menu item's icon
+     * @return the menu item's icon
      */
     public ItemStack getIcon() {
         return icon;
@@ -62,7 +62,7 @@ public class MenuItem {
     /**
      * Gets the lore of the menu item.
      *
-     * @return The menu item's lore
+     * @return the menu item's lore
      */
     public List<String> getLore() {
         return lore;
@@ -71,8 +71,8 @@ public class MenuItem {
     /**
      * Gets the item stack for a certain player.
      *
-     * @param player The player
-     * @return The final icon
+     * @param player the player
+     * @return the final icon
      */
     public ItemStack getFinalIcon(Player player) {
         return setNameAndLore(getIcon().clone(), getDisplayName(), getLore());
@@ -81,8 +81,8 @@ public class MenuItem {
     /**
      * Gets the item stack for a certain owner.
      *
-     * @param owner The owner of a character
-     * @return The final icon
+     * @param owner the owner of a character
+     * @return the final icon
      */
     public ItemStack getFinalIcon(Owner owner) {
         return getFinalIcon(owner.getPlayer());
@@ -95,10 +95,10 @@ public class MenuItem {
     /**
      * Sets the display name and lore of an ItemStack.
      *
-     * @param itemStack   The item stack
-     * @param displayName The display name
-     * @param lore        The lore
-     * @return The item stack
+     * @param itemStack   the item stack
+     * @param displayName the display name
+     * @param lore        the lore
+     * @return the item stack
      */
     public static ItemStack setNameAndLore(ItemStack itemStack, String displayName, List<String> lore) {
         ItemMeta meta = itemStack.getItemMeta();

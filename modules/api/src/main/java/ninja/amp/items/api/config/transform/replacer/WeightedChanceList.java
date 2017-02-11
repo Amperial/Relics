@@ -12,6 +12,12 @@ package ninja.amp.items.api.config.transform.replacer;
 
 import java.util.regex.Pattern;
 
+/**
+ * A replacer that searches for element lists of the format {@code <element:#,element:#,element:#...>},<br>
+ * replacing them with a single element from the list, randomly determined according to their proportional chance #.
+ *
+ * @author Austin Payne
+ */
 public class WeightedChanceList extends Replacer {
 
     private static final String VALUE = "[^<:,\\s]*:([1-9]\\d*|\\d\\.\\d*[1-9])+";

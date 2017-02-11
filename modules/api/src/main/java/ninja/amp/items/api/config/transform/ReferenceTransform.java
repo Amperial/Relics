@@ -16,6 +16,11 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.regex.Pattern;
 
+/**
+ * A config transform that replaces references to other configs with the transformed contents of those configs.
+ *
+ * @author Austin Payne
+ */
 public class ReferenceTransform extends ConfigTransform {
 
     private static final Pattern CONFIG = Pattern.compile("#\\{[\\w/-]*[\\w-]+}");

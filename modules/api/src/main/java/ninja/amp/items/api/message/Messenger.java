@@ -47,7 +47,7 @@ public class Messenger {
      * Creates a new message manager.<br>
      * Must be created after the {@link ninja.amp.items.api.config.ConfigManager}!
      *
-     * @param plugin The amp items plugin instance
+     * @param plugin the amp items plugin instance
      */
     public Messenger(ItemPlugin plugin) {
         this.plugin = plugin;
@@ -70,8 +70,8 @@ public class Messenger {
     /**
      * Adds the message defaults to the message config and loads them.
      *
-     * @param messages The messages to register
-     * @return The messenger
+     * @param messages the messages to register
+     * @return the messenger
      */
     public Messenger registerMessages(EnumSet<? extends Message> messages) {
         // Add missing messages to message config
@@ -92,9 +92,9 @@ public class Messenger {
     /**
      * Registers a recipient with a recipient handler.
      *
-     * @param recipientClass   The recipient's class
-     * @param recipientHandler The recipient handler
-     * @return The messenger
+     * @param recipientClass   the recipient's class
+     * @param recipientHandler the recipient handler
+     * @return the messenger
      */
     public Messenger registerRecipient(Class recipientClass, RecipientHandler recipientHandler) {
         recipientHandlers.put(recipientClass, recipientHandler);
@@ -104,9 +104,9 @@ public class Messenger {
     /**
      * Sends a message to a recipient.
      *
-     * @param recipient The recipient of the message. Type of recipient must be registered
-     * @param message   The message
-     * @param replace   Strings to replace any occurences of %s in the message with
+     * @param recipient the recipient of the message. Type of recipient must be registered
+     * @param message   the message
+     * @param replace   strings to replace any occurences of %s in the message with
      */
     public void sendMessage(Object recipient, Message message, Object... replace) {
         for (String s : (replace == null ? message.getMessage() : String.format(message.getMessage(), (Object[]) replace)).split("\\\\n")) {
@@ -117,9 +117,9 @@ public class Messenger {
     /**
      * Sends an error message to a recipient.
      *
-     * @param recipient The recipient of the error message. Type of recipient must be registered
-     * @param message   The error message
-     * @param replace   Strings to replace any occurences of %s in the message with
+     * @param recipient the recipient of the error message. Type of recipient must be registered
+     * @param message   the error message
+     * @param replace   strings to replace any occurences of %s in the message with
      */
     public void sendErrorMessage(Object recipient, Message message, Object... replace) {
         for (String s : (replace == null ? message.getMessage() : String.format(message.getMessage(), (Object[]) replace)).split("\\\\n")) {
@@ -130,9 +130,9 @@ public class Messenger {
     /**
      * Sends a short message to a recipient.
      *
-     * @param recipient The recipient of the message. Type of recipient must be registered
-     * @param message   The message
-     * @param replace   Strings to replace any occurences of %s in the message with
+     * @param recipient the recipient of the message. Type of recipient must be registered
+     * @param message   the message
+     * @param replace   strings to replace any occurences of %s in the message with
      */
     public void sendShortMessage(Object recipient, Message message, Object... replace) {
         for (String s : (replace == null ? message.getMessage() : String.format(message.getMessage(), (Object[]) replace)).split("\\\\n")) {
@@ -143,9 +143,9 @@ public class Messenger {
     /**
      * Sends a short error message to a recipient.
      *
-     * @param recipient The recipient of the error message. Type of recipient must be registered
-     * @param message   The error message
-     * @param replace   Strings to replace any occurences of %s in the message with
+     * @param recipient the recipient of the error message. Type of recipient must be registered
+     * @param message   the error message
+     * @param replace   strings to replace any occurences of %s in the message with
      */
     public void sendShortErrorMessage(Object recipient, Message message, Object... replace) {
         for (String s : (replace == null ? message.getMessage() : String.format(message.getMessage(), (Object[]) replace)).split("\\\\n")) {
@@ -156,8 +156,8 @@ public class Messenger {
     /**
      * Sends a raw message string to a recipient.
      *
-     * @param recipient The recipient of the message. Type of recipient must be registered
-     * @param message   The message
+     * @param recipient the recipient of the message. Type of recipient must be registered
+     * @param message   the message
      */
     public void sendRawMessage(Object recipient, Object message) {
         if (recipient != null && message != null) {
@@ -173,8 +173,8 @@ public class Messenger {
     /**
      * Logs one or more messages to the console.
      *
-     * @param level    The level to log the message at
-     * @param messages The message(s) to log
+     * @param level    the level to log the message at
+     * @param messages the message(s) to log
      */
     public void log(Level level, Object... messages) {
         for (Object message : messages) {
@@ -185,7 +185,7 @@ public class Messenger {
     /**
      * Decides whether or not to print the stack trace of an exception.
      *
-     * @param e The exception to debug
+     * @param e the exception to debug
      */
     public void debug(Exception e) {
         if (debug) {
@@ -196,7 +196,7 @@ public class Messenger {
     /**
      * Decides whether or not to print a debug message.
      *
-     * @param message The message to debug
+     * @param message the message to debug
      */
     public void debug(Object message) {
         if (debug) {
@@ -207,7 +207,7 @@ public class Messenger {
     /**
      * Gets the logger.
      *
-     * @return The logger
+     * @return the logger
      */
     public Logger getLogger() {
         return log;
@@ -221,8 +221,8 @@ public class Messenger {
         /**
          * Sends a message to the recipient.
          *
-         * @param recipient The recipient
-         * @param message   The message
+         * @param recipient the recipient
+         * @param message   the message
          */
         void sendMessage(Object recipient, String message);
 

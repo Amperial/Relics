@@ -20,28 +20,28 @@ public interface Message {
     /**
      * Gets the message string.
      *
-     * @return The message.
+     * @return the message
      */
     String getMessage();
 
     /**
      * Sets the message string.
      *
-     * @param message The message.
+     * @param message the message
      */
     void setMessage(String message);
 
     /**
      * Gets the path to the message.
      *
-     * @return The path to the message.
+     * @return the path to the message
      */
     String getPath();
 
     /**
      * Gets the default message string of the message.
      *
-     * @return The default message.
+     * @return the default message
      */
     String getDefault();
 

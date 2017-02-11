@@ -10,9 +10,21 @@
  */
 package ninja.amp.items.api.item.attribute.attributes.stats;
 
+/**
+ * A piece of information provided by stat attributes to determine whether the stat<br>
+ * should be totalled with or apart from other attributes of the same type.
+ *
+ * @param <T> the specifier's stat type
+ * @author Austin Payne
+ */
 public interface StatSpecifier<T extends StatType<T>> {
 
-    class ALL<T extends StatType<T>> implements StatSpecifier<T> {
+    /**
+     * A stat specifier that tells the stat group to always total the stat with other stats of the same type.
+     *
+     * @param <T> the specifier's stat type
+     */
+    class all<T extends StatType<T>> implements StatSpecifier<T> {
         @Override
         public boolean equals(Object obj) {
             return true;

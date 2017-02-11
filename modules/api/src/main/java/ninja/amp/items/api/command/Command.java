@@ -29,8 +29,8 @@ public abstract class Command extends CommandGroup {
     /**
      * Creates a new command.
      *
-     * @param plugin The item plugin instance
-     * @param name   The name of the command
+     * @param plugin the item plugin instance
+     * @param name   the name of the command
      */
     public Command(ItemPlugin plugin, String name) {
         super(plugin, name);
@@ -39,7 +39,7 @@ public abstract class Command extends CommandGroup {
     /**
      * Gets the command's command usage.
      *
-     * @return The command's command usage
+     * @return the command's command usage
      */
     public String getCommandUsage() {
         return commandUsage;
@@ -48,7 +48,7 @@ public abstract class Command extends CommandGroup {
     /**
      * Sets the command's command usage.
      *
-     * @param commandUsage The command usage
+     * @param commandUsage the command usage
      */
     public void setCommandUsage(String commandUsage) {
         this.commandUsage = commandUsage;
@@ -57,7 +57,7 @@ public abstract class Command extends CommandGroup {
     /**
      * Gets the command's description.
      *
-     * @return The command's description
+     * @return the command's description
      */
     public String getDescription() {
         return description;
@@ -66,7 +66,7 @@ public abstract class Command extends CommandGroup {
     /**
      * Sets the command's description.
      *
-     * @param description The description
+     * @param description the description
      */
     public void setDescription(String description) {
         this.description = description;
@@ -75,16 +75,16 @@ public abstract class Command extends CommandGroup {
     /**
      * Gets the command's visibility.
      *
-     * @return The command's visibility
+     * @return the command's visibility
      */
-    public boolean getVisible() {
+    public boolean isVisible() {
         return visible;
     }
 
     /**
      * Sets the command's visibility.
      *
-     * @param visible The visibility
+     * @param visible the visibility
      */
     public void setVisible(boolean visible) {
         this.visible = visible;

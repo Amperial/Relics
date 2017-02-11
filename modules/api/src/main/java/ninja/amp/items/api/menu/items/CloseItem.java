@@ -16,6 +16,8 @@ import org.bukkit.inventory.ItemStack;
 
 /**
  * A menu item that closes the item menu.
+ *
+ * @author Austin Payne
  */
 public class CloseItem extends StaticMenuItem {
 

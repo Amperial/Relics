@@ -15,6 +15,11 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
 
+/**
+ * A config transform that formats strings in the configuration section with the given args.
+ *
+ * @author Austin Payne
+ */
 public class ArgTransform extends ConfigTransform {
 
     public ArgTransform(ItemPlugin plugin) {

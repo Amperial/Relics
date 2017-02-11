@@ -12,6 +12,12 @@ package ninja.amp.items.api.config.transform.replacer;
 
 import java.util.regex.Pattern;
 
+/**
+ * A replacer that searches for number ranges of the form {@code (min,max,fraction)},<br>
+ * replacing them with a value between min and max linearly interpolated by fraction.
+ *
+ * @author Austin Payne
+ */
 public class TripleRange extends Replacer {
 
     private static final String VALUE = "-?\\d+(\\.\\d+)?";

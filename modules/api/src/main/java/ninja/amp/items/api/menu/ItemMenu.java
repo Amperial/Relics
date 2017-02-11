@@ -46,10 +46,10 @@ public class ItemMenu {
     /**
      * Creates an item menu.
      *
-     * @param name   The name of the inventory
-     * @param size   The item menu of the inventory
-     * @param plugin The item plugin instance
-     * @param parent The item menu's parent
+     * @param name   the name of the inventory
+     * @param size   the item menu of the inventory
+     * @param plugin the item plugin instance
+     * @param parent the item menu's parent
      */
     public ItemMenu(String name, Size size, ItemPlugin plugin, ItemMenu parent) {
         this.plugin = plugin;
@@ -62,9 +62,9 @@ public class ItemMenu {
     /**
      * Creates an item menu with no parent.
      *
-     * @param name   The name of the inventory
-     * @param size   The size of the inventory
-     * @param plugin The item plugin instance
+     * @param name   the name of the inventory
+     * @param size   the size of the inventory
+     * @param plugin the item plugin instance
      */
     public ItemMenu(String name, Size size, ItemPlugin plugin) {
         this(name, size, plugin, null);
@@ -73,7 +73,7 @@ public class ItemMenu {
     /**
      * Gets the name of the item menu.
      *
-     * @return The item menu's name
+     * @return the item menu's name
      */
     public String getName() {
         return name;
@@ -82,7 +82,7 @@ public class ItemMenu {
     /**
      * Gets the size of the item menu.
      *
-     * @return The item menu's size
+     * @return the item menu's size
      */
     public Size getSize() {
         return size;
@@ -100,7 +100,7 @@ public class ItemMenu {
     /**
      * Gets the parent of the item menu.
      *
-     * @return The item menu's parent
+     * @return the item menu's parent
      */
     public ItemMenu getParent() {
         return parent;
@@ -109,7 +109,7 @@ public class ItemMenu {
     /**
      * Sets the parent of the item menu.
      *
-     * @param parent The item menu to set as parent
+     * @param parent the item menu to set as parent
      */
     public void setParent(ItemMenu parent) {
         this.parent = parent;
@@ -118,9 +118,9 @@ public class ItemMenu {
     /**
      * Sets the menu item of a slot.
      *
-     * @param position The slot position
-     * @param menuItem The menu item
-     * @return The item menu
+     * @param position the slot position
+     * @param menuItem the menu item
+     * @return the item menu
      */
     public ItemMenu setItem(int position, MenuItem menuItem) {
         items[position] = menuItem;
@@ -130,8 +130,8 @@ public class ItemMenu {
     /**
      * Fills all empty slots in the item menu with a certain menu item.
      *
-     * @param menuItem The menu item to fill empty slots with
-     * @return The item menu
+     * @param menuItem the menu item to fill empty slots with
+     * @return the item menu
      */
     public ItemMenu fillEmptySlots(MenuItem menuItem) {
         for (int i = 0; i < items.length; i++) {
@@ -145,7 +145,7 @@ public class ItemMenu {
     /**
      * Fills all empty slots in the item menu with the default empty slot item.
      *
-     * @return The item menu
+     * @return the item menu
      */
     public ItemMenu fillEmptySlots() {
         return fillEmptySlots(EMPTY_SLOT_ITEM);
@@ -154,7 +154,7 @@ public class ItemMenu {
     /**
      * Opens the item menu for a player.
      *
-     * @param player The player
+     * @param player the player
      */
     public void open(Player player) {
         MenuHolder holder = MenuHolder.createInventory(this, size.toInt(), name);
@@ -165,7 +165,7 @@ public class ItemMenu {
     /**
      * Updates the item menu for a player.
      *
-     * @param player The player to update the item menu for
+     * @param player the player to update the item menu for
      */
     @SuppressWarnings("deprecation")
     public void update(Player player) {
@@ -182,8 +182,8 @@ public class ItemMenu {
      * Applies the item menu for a player to an inventory.<br>
      * This overrides the existing contents of the inventory.
      *
-     * @param inventory The inventory to apply the item menu to
-     * @param player    The player
+     * @param inventory the inventory to apply the item menu to
+     * @param player    the player
      */
     public void apply(Inventory inventory, Player player) {
         Owner owner = new Owner(player);
@@ -254,7 +254,7 @@ public class ItemMenu {
         /**
          * Gets the size's amount of slots.
          *
-         * @return The amount of slots
+         * @return the amount of slots
          */
         public int toInt() {
             return size;
@@ -263,8 +263,8 @@ public class ItemMenu {
         /**
          * Gets the required size for an amount of slots.
          *
-         * @param slots The amount of slots
-         * @return The required size
+         * @param slots the amount of slots
+         * @return the required size
          */
         public static Size fit(int slots) {
             if (slots < 10) {

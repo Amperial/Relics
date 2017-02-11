@@ -54,6 +54,7 @@ public class CustomItem implements Item {
     private final Material material;
     private final ItemType type;
     private final AttributeGroup attributes;
+    private boolean equipped = false;
 
     private CustomItem(String name, UUID id, Material material, ItemType type, AttributeGroup attributes) {
         this.name = name;
@@ -234,12 +235,18 @@ public class CustomItem implements Item {
     }
 
     @Override
+    public boolean isEquipped() {
+        return equipped;
+    }
+
+    @Override
     public boolean canEquip(Player player) {
         return getAttributesDeep(attribute -> attribute instanceof Equippable).stream().allMatch(attribute -> ((Equippable) attribute).canEquip(player));
     }
 
     @Override
     public boolean onEquip(Player player) {
+        equipped = true;
         Collection<ItemAttribute> attributes = getAttributesDeep(attribute -> attribute instanceof Equippable);
         boolean update = false;
         for (ItemAttribute attribute : attributes) {
@@ -252,6 +259,7 @@ public class CustomItem implements Item {
 
     @Override
     public boolean onUnEquip(Player player) {
+        equipped = false;
         Collection<ItemAttribute> attributes = getAttributesDeep(attribute -> attribute instanceof Equippable);
         boolean update = false;
         for (ItemAttribute attribute : attributes) {
@@ -342,8 +350,10 @@ public class CustomItem implements Item {
             }
         }
 
-        // Update modifiers
-        forEachDeep(attribute -> setModifier(modifiers, (GenericAttribute) attribute), ItemAttribute.type(GenericAttribute.class));
+        // Update modifiers if item is equipped
+        if (isEquipped()) {
+            forEachDeep(attribute -> setModifier(modifiers, (GenericAttribute) attribute), ItemAttribute.type(GenericAttribute.class));
+        }
 
         // Remove unused modifiers
         int i = 0;

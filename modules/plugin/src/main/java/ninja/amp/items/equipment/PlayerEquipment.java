@@ -12,8 +12,8 @@ package ninja.amp.items.equipment;
 
 import ninja.amp.items.api.ItemPlugin;
 import ninja.amp.items.api.config.ConfigAccessor;
+import ninja.amp.items.api.config.ConfigManager;
 import ninja.amp.items.api.config.DefaultConfig;
-import ninja.amp.items.api.config.PlayerConfig;
 import ninja.amp.items.api.equipment.Equipment;
 import ninja.amp.items.api.item.Item;
 import ninja.amp.items.api.item.ItemManager;
@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public class PlayerEquipment implements Equipment {
@@ -145,9 +146,10 @@ public class PlayerEquipment implements Equipment {
         if (!equip(item)) {
             for (Slot slot : getSlots(item.getType())) {
                 Player player = getPlayer();
-                Item equipped = plugin.getItemManager().findItem(player, slot.getItemId());
-                if (equipped != null) {
+                Optional<Item> equippedOptional = plugin.getItemManager().findItem(player, slot.getItemId());
+                if (equippedOptional.isPresent()) {
                     slot.setItemId(item.getId());
+                    Item equipped = equippedOptional.get();
                     if (equipped.onUnEquip(player)) {
                         updateItem(player, equipped);
                     }
@@ -183,9 +185,10 @@ public class PlayerEquipment implements Equipment {
         Player player = getPlayer();
         for (Slot slot : getSlots()) {
             if (slot.hasItem()) {
-                Item item = itemManager.findItem(player, slot.getItemId());
                 slot.setItemId(null);
-                if (item != null) {
+                Optional<Item> itemOptional = itemManager.findItem(player, slot.getItemId());
+                if (itemOptional.isPresent()) {
+                    Item item = itemOptional.get();
                     if (item.onUnEquip(player)) {
                         updateItem(player, item);
                     }
@@ -204,7 +207,7 @@ public class PlayerEquipment implements Equipment {
     }
 
     private void checkSlot(Slot slot) {
-        if (slot.hasItem() && plugin.getItemManager().findItem(getPlayer(), slot.getItemId()) == null) {
+        if (slot.hasItem() && plugin.getItemManager().findItem(getPlayer(), slot.getItemId()).isPresent()) {
             slot.setItemId(null);
         }
     }
@@ -222,22 +225,24 @@ public class PlayerEquipment implements Equipment {
     }
 
     private void updateItem(Player player, Item item) {
-        ItemStack itemStack = plugin.getItemManager().findItemStack(player.getInventory(), item.getId());
-        if (itemStack != null) {
-            item.updateItem(itemStack);
+        Optional<ItemStack> itemStack = plugin.getItemManager().findItemStack(player.getInventory(), item.getId());
+        if (itemStack.isPresent()) {
+            item.updateItem(itemStack.get());
         }
     }
 
     @Override
     public void load() {
-        // Get player config or default equipment
         Player player = getPlayer();
-        ConfigAccessor playerConfig = new ConfigAccessor(plugin, new PlayerConfig(getPlayer()));
+
+        // Get player config or default equipment
+        ConfigManager configManager = plugin.getConfigManager();
+        ConfigAccessor playerConfig = configManager.getPlayerConfigAccessor(player);
         FileConfiguration config;
         if (playerConfig.exists()) {
             config = playerConfig.getConfig();
         } else {
-            config = plugin.getConfigManager().getConfig(DefaultConfig.EQUIPMENT);
+            config = configManager.getConfig(DefaultConfig.EQUIPMENT);
         }
 
         // Clear existing slots
@@ -252,8 +257,10 @@ public class PlayerEquipment implements Equipment {
                 Slot slot = new Slot(name, new ItemType(slots.getString(name + ".type")));
                 if (slots.isString(name + ".item-id")) {
                     UUID itemId = UUID.fromString(slots.getString(name + ".item-id"));
-                    if (itemManager.findItem(player, itemId) != null) {
+                    Optional<Item> item = itemManager.findItem(player, itemId);
+                    if (item.isPresent()) {
                         slot.setItemId(itemId);
+                        item.get().onEquip(player);
                     }
                 }
                 addSlot(slot);
@@ -264,7 +271,7 @@ public class PlayerEquipment implements Equipment {
     @Override
     public void save() {
         // Get player config
-        ConfigAccessor playerConfig = new ConfigAccessor(plugin, new PlayerConfig(getPlayer()));
+        ConfigAccessor playerConfig = plugin.getConfigManager().getPlayerConfigAccessor(getPlayer());
         FileConfiguration config = playerConfig.getConfig();
 
         // Save slots

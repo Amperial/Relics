@@ -12,7 +12,16 @@ package ninja.amp.items.api.item;
 
 import java.util.Objects;
 
+/**
+ * Represents a type of custom item.
+ *
+ * @author Austin Payne
+ */
 public class ItemType {
+
+    /**
+     * Default item types that may be needed.
+     */
 
     public static final ItemType OTHER = new ItemType("other");
     public static final ItemType UNIDENTIFIED = new ItemType("unidentified");
@@ -42,6 +51,11 @@ public class ItemType {
         this.name = name;
     }
 
+    /**
+     * Gets the name of the item type.
+     *
+     * @return the item type's name
+     */
     public String getName() {
         return name;
     }

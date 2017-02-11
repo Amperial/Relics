@@ -12,6 +12,12 @@ package ninja.amp.items.api.config.transform.replacer;
 
 import java.util.regex.Pattern;
 
+/**
+ * A replacer that searches for simple math expressions containing numbers separated by the operators {@code +-*\^},<br>
+ * replacing them with the value of the evaluated expression.
+ *
+ * @author Austin Payne
+ */
 public class Expression extends Replacer {
 
     private static final String NUMBER = "-?\\d+(\\.\\d+)?";

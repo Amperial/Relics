@@ -34,6 +34,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public class ItemManager implements ninja.amp.items.api.item.ItemManager {
@@ -91,49 +92,49 @@ public class ItemManager implements ninja.amp.items.api.item.ItemManager {
     }
 
     @Override
-    public Item findItem(Player player, UUID itemId) {
+    public Optional<Item> findItem(Player player, UUID itemId) {
         return findItem(player.getInventory(), itemId);
     }
 
     @Override
-    public Item findItem(Inventory inventory, UUID itemId) {
+    public Optional<Item> findItem(Inventory inventory, UUID itemId) {
         return findItem(inventory.getContents(), itemId);
     }
 
     @Override
-    public Item findItem(ItemStack[] contents, UUID itemId) {
+    public Optional<Item> findItem(ItemStack[] contents, UUID itemId) {
         for (ItemStack itemStack : contents) {
-            if (itemStack != null && itemStack.getType() != Material.AIR && isItem(itemStack)) {
-                Item item = getItem(itemStack);
-                if (item.getId().equals(itemId)) {
+            if (itemStack != null && itemStack.getType() != Material.AIR) {
+                Optional<Item> item = getItem(itemStack);
+                if (item.isPresent() && item.get().getId().equals(itemId)) {
                     return item;
                 }
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
-    public ItemStack findItemStack(Player player, UUID itemId) {
+    public Optional<ItemStack> findItemStack(Player player, UUID itemId) {
         return findItemStack(player.getInventory(), itemId);
     }
 
     @Override
-    public ItemStack findItemStack(Inventory inventory, UUID itemId) {
+    public Optional<ItemStack> findItemStack(Inventory inventory, UUID itemId) {
         return findItemStack(inventory.getContents(), itemId);
     }
 
     @Override
-    public ItemStack findItemStack(ItemStack[] contents, UUID itemId) {
+    public Optional<ItemStack> findItemStack(ItemStack[] contents, UUID itemId) {
         for (ItemStack itemStack : contents) {
-            if (itemStack != null && itemStack.getType() != Material.AIR && isItem(itemStack)) {
-                Item item = getItem(itemStack);
-                if (item.getId().equals(itemId)) {
-                    return itemStack;
+            if (itemStack != null && itemStack.getType() != Material.AIR) {
+                Optional<Item> item = getItem(itemStack);
+                if (item.isPresent() && item.get().getId().equals(itemId)) {
+                    return Optional.of(itemStack);
                 }
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
@@ -142,8 +143,8 @@ public class ItemManager implements ninja.amp.items.api.item.ItemManager {
     }
 
     @Override
-    public Item getItem(ItemStack itemStack) {
-        return isItem(itemStack) ? factory.loadFromItemStack(itemStack) : null;
+    public Optional<Item> getItem(ItemStack itemStack) {
+        return isItem(itemStack) ? Optional.of(factory.loadFromItemStack(itemStack)) : Optional.empty();
     }
 
     @Override

@@ -27,9 +27,9 @@ public class PageList {
     /**
      * Creates a new page list.
      *
-     * @param name     The name of the page list
-     * @param pageSize The number of strings that should be displayed per page
-     * @param lines    The lines to be initially added to the page list
+     * @param name     the name of the page list
+     * @param pageSize the number of strings that should be displayed per page
+     * @param lines    the lines to be initially added to the page list
      */
     public PageList(String name, int pageSize, String... lines) {
         this.name = name;
@@ -44,7 +44,7 @@ public class PageList {
     /**
      * Gets the amount of pages in the page list.
      *
-     * @return The amount of pages
+     * @return the amount of pages
      */
     public int getTotalPages() {
         return pages.size();
@@ -53,8 +53,8 @@ public class PageList {
     /**
      * Gets the lines of a specified page in the page list.
      *
-     * @param pageNumber The page number of the lines
-     * @return The lines of the specified page
+     * @param pageNumber the page number of the lines
+     * @return the lines of the specified page
      */
     public List<String> getPage(int pageNumber) {
         pageNumber = Math.max(1, Math.min(pageNumber, pages.size()));
@@ -64,7 +64,7 @@ public class PageList {
     /**
      * Gets the lines of the last page in the page list.
      *
-     * @return The lines of the last page
+     * @return the lines of the last page
      */
     public List<String> getLastPage() {
         return pages.get(pages.size() - 1);
@@ -73,9 +73,9 @@ public class PageList {
     /**
      * Gets the line at the specified location in the page list.
      *
-     * @param pageNumber The page number of the line
-     * @param lineNumber The line number of the line
-     * @return The line at the specified location
+     * @param pageNumber the page number of the line
+     * @param lineNumber the line number of the line
+     * @return the line at the specified location
      */
     public String getLine(int pageNumber, int lineNumber) {
         List<String> page = getPage(pageNumber);
@@ -86,7 +86,7 @@ public class PageList {
     /**
      * Adds one or more lines to the page list.
      *
-     * @param lines The lines to add
+     * @param lines the lines to add
      */
     public void add(String... lines) {
         for (String line : lines) {
@@ -108,8 +108,8 @@ public class PageList {
     /**
      * Gets the int page number from a string, 1 if not an int.
      *
-     * @param pageNumber The string
-     * @return The page number
+     * @param pageNumber the string
+     * @return the page number
      */
     public static int getPageNumber(String pageNumber) {
         int page;

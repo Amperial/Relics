@@ -66,8 +66,8 @@ public class ItemListener implements Listener {
     }
 
     private boolean handleItemUse(Player player, ItemStack itemStack) {
-        Item item = plugin.getItemManager().getItem(itemStack);
-        return item == null || handleItemUse(player, item);
+        Optional<Item> item = plugin.getItemManager().getItem(itemStack);
+        return !item.isPresent() || handleItemUse(player, item.get());
     }
 
     private boolean handleItemUse(Player player, Item item) {
@@ -84,12 +84,12 @@ public class ItemListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        Item item = plugin.getItemManager().getItem(event.getItem());
-        if (item != null) {
-            if (handleItemUse(event.getPlayer(), item)) {
-                item.onClick(event, true);
+        Optional<Item> item = plugin.getItemManager().getItem(event.getItem());
+        if (item.isPresent()) {
+            if (handleItemUse(event.getPlayer(), item.get())) {
+                item.get().onClick(event, true);
             } else {
-                item.onClick(event, false);
+                item.get().onClick(event, false);
                 event.setCancelled(true);
             }
         }
@@ -111,12 +111,12 @@ public class ItemListener implements Listener {
         if (damager != null) {
             ItemManager itemManager = plugin.getItemManager();
             ItemStack itemStack = damager.getEquipment().getItemInMainHand();
-            Item item = itemManager.getItem(itemStack);
-            if (item != null) {
-                if (damager instanceof Player && !handleItemUse((Player) damager, item)) {
+            Optional<Item> item = itemManager.getItem(itemStack);
+            if (item.isPresent()) {
+                if (damager instanceof Player && !handleItemUse((Player) damager, item.get())) {
                     event.setCancelled(true);
                 } else {
-                    item.forEachDeep(attribute -> {
+                    item.get().forEachDeep(attribute -> {
                         event.setDamage(event.getDamage() + ((Damage) attribute).getVariation() * ((random.nextDouble() * 2) - 1));
                     }, ItemAttribute.type(Damage.class));
                 }
@@ -202,8 +202,8 @@ public class ItemListener implements Listener {
                 }
             }
         }
-        Item item = itemManager.getItem(itemStack);
-        if (item != null && !handleInventory(player, inventory, item, event.getSlotType())) {
+        Optional<Item> item = itemManager.getItem(itemStack);
+        if (item.isPresent() && !handleInventory(player, inventory, item.get(), event.getSlotType())) {
             event.setCancelled(true);
         }
     }
@@ -233,32 +233,35 @@ public class ItemListener implements Listener {
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         ItemManager itemManager = plugin.getItemManager();
         ItemStack itemStack = event.getItemDrop().getItemStack();
-        Item item = itemManager.getItem(itemStack);
-        if (item != null && !handleItemDrop(event.getPlayer(), item)) {
-            Messenger messenger = plugin.getMessenger();
-            Player player = event.getPlayer();
+        Optional<Item> itemOptional = itemManager.getItem(itemStack);
+        if (itemOptional.isPresent()) {
+            Item item = itemOptional.get();
+            if (!handleItemDrop(event.getPlayer(), item)) {
+                Messenger messenger = plugin.getMessenger();
+                Player player = event.getPlayer();
 
-            // Handle soulbound attribute
-            UUID itemId = item.getId();
-            if (soulbound.containsKey(itemId)) {
-                long lastDrop = soulbound.get(itemId);
-                if (System.currentTimeMillis() - lastDrop < 1000) {
-                    // Destroy item
-                    event.getItemDrop().remove();
+                // Handle soulbound attribute
+                UUID itemId = item.getId();
+                if (soulbound.containsKey(itemId)) {
+                    long lastDrop = soulbound.get(itemId);
+                    if (System.currentTimeMillis() - lastDrop < 1000) {
+                        // Destroy item
+                        event.getItemDrop().remove();
 
-                    // Make sure to unequip item
-                    EquipmentManager equipManager = plugin.getEquipmentManager();
-                    if (equipManager.isEquipped(player, item)) {
-                        equipManager.unEquip(player, item);
+                        // Make sure to unequip item
+                        EquipmentManager equipManager = plugin.getEquipmentManager();
+                        if (equipManager.isEquipped(player, item)) {
+                            equipManager.unEquip(player, item);
+                        }
+
+                        messenger.sendShortMessage(player, AIMessage.SOULBOUND_DESTROY);
+                        return;
                     }
-
-                    messenger.sendShortMessage(player, AIMessage.SOULBOUND_DESTROY);
-                    return;
                 }
+                soulbound.put(itemId, System.currentTimeMillis());
+                messenger.sendShortErrorMessage(player, AIMessage.SOULBOUND_DROP);
+                event.setCancelled(true);
             }
-            soulbound.put(itemId, System.currentTimeMillis());
-            messenger.sendShortErrorMessage(player, AIMessage.SOULBOUND_DROP);
-            event.setCancelled(true);
         }
     }
 
@@ -270,9 +273,9 @@ public class ItemListener implements Listener {
         Iterator<ItemStack> drops = event.getDrops().iterator();
         while (drops.hasNext()) {
             ItemStack itemStack = drops.next();
-            Item item = itemManager.getItem(itemStack);
-            if (item != null && !handleItemDrop(player, item)) {
-                items.add(item);
+            Optional<Item> item = itemManager.getItem(itemStack);
+            if (item.isPresent() && !handleItemDrop(player, item.get())) {
+                items.add(item.get());
                 drops.remove();
             }
         }

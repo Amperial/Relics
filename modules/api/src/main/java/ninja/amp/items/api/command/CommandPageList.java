@@ -31,7 +31,7 @@ public class CommandPageList extends PageList {
 
         for (CommandGroup command : plugin.getCommandController().getCommands()) {
             command.getChildren(true).stream()
-                    .filter(child -> ((Command) child).getVisible())
+                    .filter(child -> ((Command) child).isVisible())
                     .forEach(child -> add(Messenger.PRIMARY_COLOR + ((Command) child).getCommandUsage(), Messenger.SECONDARY_COLOR + "-" + ((Command) child).getDescription()));
         }
 
@@ -44,7 +44,7 @@ public class CommandPageList extends PageList {
     /**
      * Gets the page numbers list of the command page list.
      *
-     * @return The list of page numbers
+     * @return the list of page numbers
      */
     public List<String> getPageNumbersList() {
         return pageNumbersList;

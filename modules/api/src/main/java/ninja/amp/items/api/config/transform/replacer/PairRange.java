@@ -12,6 +12,12 @@ package ninja.amp.items.api.config.transform.replacer;
 
 import java.util.regex.Pattern;
 
+/**
+ * A replacer that searches for number ranges of the form {@code (min,max)},<br>
+ * replacing them with a random value between the min and max.
+ *
+ * @author Austin Payne
+ */
 public class PairRange extends Replacer {
 
     private static final String VALUE = "-?\\d+(\\.\\d+)?";

@@ -12,10 +12,25 @@ package ninja.amp.items.api.item.attribute.attributes;
 
 import ninja.amp.items.api.item.attribute.ItemAttribute;
 
+/**
+ * An item attribute that makes an item "bind" to a player and become unable to be dropped unless destroyed.
+ *
+ * @author Austin Payne
+ */
 public interface Soulbound extends ItemAttribute {
 
+    /**
+     * Checks if the soulbound item is bound.
+     *
+     * @return {@code true} if the item is bound, else {@code false}
+     */
     boolean isBound();
 
+    /**
+     * Sets if the soulbound item is bound.
+     *
+     * @param bound if the item should be soulbound
+     */
     void setBound(boolean bound);
 
 }

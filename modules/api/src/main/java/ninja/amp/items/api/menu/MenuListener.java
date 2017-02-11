@@ -29,7 +29,7 @@ public class MenuListener implements Listener {
     /**
      * Creates a new menu listener.
      *
-     * @param plugin The item plugin instance
+     * @param plugin the item plugin instance
      */
     public MenuListener(ItemPlugin plugin) {
         // Register listener

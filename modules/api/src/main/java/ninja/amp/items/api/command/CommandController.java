@@ -36,7 +36,7 @@ public class CommandController implements TabExecutor {
     /**
      * Creates a new command controller.
      *
-     * @param plugin The item plugin instance
+     * @param plugin the item plugin instance
      */
     public CommandController(ItemPlugin plugin) {
         this.plugin = plugin;
@@ -84,7 +84,7 @@ public class CommandController implements TabExecutor {
     /**
      * Gets the commands in the command controller.
      *
-     * @return The commands
+     * @return the commands
      */
     public Set<CommandGroup> getCommands() {
         return commands;
@@ -93,7 +93,7 @@ public class CommandController implements TabExecutor {
     /**
      * Adds a command to the command controller.
      *
-     * @param command The command to add
+     * @param command the command to add
      */
     public void addCommand(CommandGroup command) {
         commands.add(command);
@@ -106,7 +106,7 @@ public class CommandController implements TabExecutor {
     /**
      * Removes a command from the command controller.
      *
-     * @param command The command to remove
+     * @param command the command to remove
      */
     public void removeCommand(CommandGroup command) {
         commands.remove(command);
@@ -130,7 +130,7 @@ public class CommandController implements TabExecutor {
     /**
      * Gets the page list of commands in the command controller.
      *
-     * @return The command page list
+     * @return the command page list
      */
     public CommandPageList getPageList() {
         return pageList;

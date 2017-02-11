@@ -10,6 +10,11 @@
  */
 package ninja.amp.items.api.config;
 
+/**
+ * Item configuration files used in the amp items plugin.
+ *
+ * @author Austin Payne
+ */
 public class ItemConfig implements Config {
 
     private final String item;

@@ -40,11 +40,20 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class AmpItems extends JavaPlugin implements ItemPlugin {
 
+    /**
+     * Managers of the AmpItems plugin.
+     */
+
     private ConfigManager configManager;
     private Messenger messenger;
     private CommandController commandController;
     private ItemManager itemManager;
     private EquipmentManager equipmentManager;
+
+    /**
+     * Listeners of the AmpItems plugin.
+     */
+
     private PlayerListener playerListener;
     private ItemListener itemListener;
     private MenuListener menuListener;
@@ -54,12 +63,14 @@ public class AmpItems extends JavaPlugin implements ItemPlugin {
         // Attempt to load NMSHandler
         NMSHandler.getInterface();
 
-        // The order managers are created in is important
+        // Create managers (order is important)
         configManager = new ConfigManager(this);
         messenger = new Messenger(this);
         commandController = new CommandController(this);
         itemManager = new ItemManager(this);
         equipmentManager = new EquipmentManager(this);
+
+        // Create listeners
         playerListener = new PlayerListener(this);
         itemListener = new ItemListener(this);
         menuListener = new MenuListener(this);
@@ -143,10 +154,29 @@ public class AmpItems extends JavaPlugin implements ItemPlugin {
         return equipmentManager;
     }
 
+    /**
+     * Gets the item plugin's player listener.
+     *
+     * @return the item plugin's player listener
+     */
+    public PlayerListener getPlayerListener() {
+        return playerListener;
+    }
+
+    /**
+     * Gets the item plugin's item listener.
+     *
+     * @return the item plugin's item listener
+     */
     public ItemListener getItemListener() {
         return itemListener;
     }
 
+    /**
+     * Gets the item plugin's menu listener.
+     *
+     * @return the item plugin's menu listener
+     */
     public MenuListener getMenuListener() {
         return menuListener;
     }

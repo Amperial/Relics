@@ -17,6 +17,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.regex.Pattern;
 
+/**
+ * Used when loading configs to transform a config into a concrete state usable by the item factory.
+ *
+ * @author Austin Payne
+ */
 public abstract class ConfigTransform {
 
     protected static final Pattern NUMBER = Pattern.compile("-?\\d+(\\.\\d+)?");
@@ -66,6 +71,13 @@ public abstract class ConfigTransform {
         list.set(index, value);
     }
 
+    /**
+     * Transforms the the given configuration section with certain args.
+     *
+     * @param section the configuration section
+     * @param args    the args
+     * @return the transformed configuration section
+     */
     public abstract ConfigurationSection transform(ConfigurationSection section, Object[] args);
 
 }

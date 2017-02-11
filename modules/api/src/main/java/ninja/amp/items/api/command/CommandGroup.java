@@ -47,8 +47,8 @@ public class CommandGroup {
     /**
      * Creates a new command group.
      *
-     * @param plugin The item plugin instance
-     * @param name   The name of the command
+     * @param plugin the item plugin instance
+     * @param name   the name of the command
      */
     public CommandGroup(ItemPlugin plugin, String name) {
         this.plugin = plugin;
@@ -58,7 +58,7 @@ public class CommandGroup {
     /**
      * Gets the command group's name.
      *
-     * @return The command group's name
+     * @return the command group's name
      */
     public String getName() {
         return name;
@@ -67,7 +67,7 @@ public class CommandGroup {
     /**
      * Gets the plugin instance that created this command.
      *
-     * @return The plugin instance
+     * @return the plugin instance
      */
     public ItemPlugin getPlugin() {
         return plugin;
@@ -76,7 +76,7 @@ public class CommandGroup {
     /**
      * Gets the command group's permission node.
      *
-     * @return The command group's permission node
+     * @return the command group's permission node
      */
     public Permission getPermission() {
         return permission;
@@ -85,7 +85,7 @@ public class CommandGroup {
     /**
      * Sets the command group's permission node.
      *
-     * @param permission The command group's permission node
+     * @param permission the command group's permission node
      */
     public void setPermission(Permission permission) {
         this.permission = permission;
@@ -97,7 +97,7 @@ public class CommandGroup {
     /**
      * Gets the minimum required args length of the command group.
      *
-     * @return The minimum required args length
+     * @return the minimum required args length
      */
     public int getMinArgsLength() {
         return minArgsLength;
@@ -106,7 +106,7 @@ public class CommandGroup {
     /**
      * Gets the maximum required args length of the command group.
      *
-     * @return The maximum required args length
+     * @return the maximum required args length
      */
     public int getMaxArgsLength() {
         return maxArgsLength;
@@ -115,8 +115,8 @@ public class CommandGroup {
     /**
      * Sets the argument range of the command group.
      *
-     * @param minArgsLength The minimum required args length
-     * @param maxArgsLength The maximum required args length. -1 for no max
+     * @param minArgsLength the minimum required args length
+     * @param maxArgsLength the maximum required args length. -1 for no max
      */
     public void setArgumentRange(int minArgsLength, int maxArgsLength) {
         this.minArgsLength = minArgsLength;
@@ -135,7 +135,7 @@ public class CommandGroup {
     /**
      * Sets if the command group can only be run by a player.
      *
-     * @param playerOnly If the command group can only be run by a player
+     * @param playerOnly the the command group can only be run by a player
      */
     public void setPlayerOnly(boolean playerOnly) {
         this.playerOnly = playerOnly;
@@ -144,7 +144,7 @@ public class CommandGroup {
     /**
      * Checks to see if the command group has the child command.
      *
-     * @param name The name of the child command
+     * @param name the name of the child command
      * @return {@code true} if the command group has the child command
      */
     public boolean hasChildCommand(String name) {
@@ -154,8 +154,8 @@ public class CommandGroup {
     /**
      * Gets a child command of the command group.
      *
-     * @param name The name of the child command
-     * @return The child command
+     * @param name the name of the child command
+     * @return the child command
      */
     public CommandGroup getChildCommand(String name) {
         return children.get(name.toLowerCase());
@@ -164,12 +164,12 @@ public class CommandGroup {
     /**
      * Adds a child command to the command group.
      *
-     * @param command The child command
-     * @return The command group the child command was added to
+     * @param command the child command
+     * @return the command group the child command was added to
      */
     public CommandGroup addChildCommand(CommandGroup command) {
         children.put(command.getName().toLowerCase(), command);
-        if (command instanceof Command && ((Command) command).getVisible()) {
+        if (command instanceof Command && ((Command) command).isVisible()) {
             tabCompleteList.add(command.getName().toLowerCase());
         }
         if (permission != null && command.getPermission() != null) {
@@ -181,8 +181,8 @@ public class CommandGroup {
     /**
      * Gets the command group's children.
      *
-     * @param deep If the method should return all children, or only the command group's immediate children
-     * @return The command group's children
+     * @param deep the the method should return all children, or only the command group's immediate children
+     * @return the command group's children
      */
     public List<CommandGroup> getChildren(boolean deep) {
         if (deep) {
@@ -202,9 +202,9 @@ public class CommandGroup {
     /**
      * The command executor.
      *
-     * @param command The command label
-     * @param sender  The sender of the command
-     * @param args    The arguments sent with the command
+     * @param command the command label
+     * @param sender  the sender of the command
+     * @param args    the arguments sent with the command
      */
     public void execute(String command, CommandSender sender, List<String> args) {
         Messenger messenger = plugin.getMessenger();
@@ -240,8 +240,8 @@ public class CommandGroup {
     /**
      * Gets the tab completion list of the command group.
      *
-     * @param args The args already entered
-     * @return The tab completion list of the command group
+     * @param args the args already entered
+     * @return the tab completion list of the command group
      */
     public List<String> tabComplete(List<String> args) {
         switch (args.size()) {
@@ -255,9 +255,9 @@ public class CommandGroup {
     /**
      * Gets a list of possible tab completions from an initial list of suggestions.
      *
-     * @param arg         The string being tab completed
-     * @param suggestions The initial list of suggestions
-     * @return The list of possible tab completions
+     * @param arg         the string being tab completed
+     * @param suggestions the initial list of suggestions
+     * @return the list of possible tab completions
      */
     public static List<String> tabCompletions(String arg, List<String> suggestions) {
         if (arg.isEmpty()) {

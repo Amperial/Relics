@@ -17,6 +17,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Possible colors of socket and gem attributes.<br>
+ * These mirror the chat colors available in minecraft.
+ *
+ * @author Austin Payne
+ */
 public enum SocketColor {
     AQUA("aqua"),
     BLACK("black"),
@@ -54,26 +60,58 @@ public enum SocketColor {
         this.accepts = new HashSet<>();
     }
 
+    /**
+     * Gets a socket color by its name.
+     *
+     * @param name the name
+     * @return the socket color
+     */
     public static SocketColor fromName(String name) {
         return colorByName.get(name);
     }
 
+    /**
+     * Gets a socket color by its associated chat color.
+     *
+     * @param color the chat color
+     * @return the socket color
+     */
     public static SocketColor fromChatColor(ChatColor color) {
         return valueOf(color.name());
     }
 
+    /**
+     * Gets the name of the socket color.
+     *
+     * @return the socket color's name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Gets the chat color of the socket color.
+     *
+     * @return the socket color's chat color
+     */
     public ChatColor getChatColor() {
         return color;
     }
 
+    /**
+     * Gets the default colors of gem accepted by the socket color.
+     *
+     * @return the socket color's default accepts
+     */
     public Set<SocketColor> getAccepts() {
         return accepts;
     }
 
+    /**
+     * Adds colors to the default accepted gem colors.
+     *
+     * @param color the colors to add
+     */
     public void addAccepts(SocketColor color) {
         this.accepts.add(color);
     }
