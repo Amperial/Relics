@@ -42,12 +42,8 @@ public abstract class NMSHandler {
         return activeInterface;
     }
 
-    public abstract NBTTagCompound getTagCompoundCopy(ItemStack item);
+    public abstract NBTTagCompound getTagCompound(ItemStack item);
 
-    public abstract NBTTagCompound getTagCompoundDirect(ItemStack item);
-
-    public abstract ItemStack setTagCompoundCopy(ItemStack item, NBTTagCompound compound);
-
-    public abstract ItemStack setTagCompoundDirect(ItemStack item, NBTTagCompound compound);
+    public abstract ItemStack setTagCompound(ItemStack item, NBTTagCompound compound);
 
 }

@@ -49,12 +49,7 @@ public class Handler_v1_11_R1 extends NMSHandler {
     }
 
     @Override
-    public ninja.amp.items.nms.nbt.NBTTagCompound getTagCompoundCopy(ItemStack item) {
-        return getTagCompound(CraftItemStack.asNMSCopy(item));
-    }
-
-    @Override
-    public ninja.amp.items.nms.nbt.NBTTagCompound getTagCompoundDirect(ItemStack item) {
+    public ninja.amp.items.nms.nbt.NBTTagCompound getTagCompound(ItemStack item) {
         if (item instanceof CraftItemStack) {
             try {
                 return getTagCompound((net.minecraft.server.v1_11_R1.ItemStack) HANDLE_FIELD.get(item));
@@ -62,7 +57,7 @@ public class Handler_v1_11_R1 extends NMSHandler {
                 e.printStackTrace();
             }
         }
-        return getTagCompoundCopy(item);
+        return getTagCompound(CraftItemStack.asNMSCopy(item));
     }
 
     private ninja.amp.items.nms.nbt.NBTTagCompound getTagCompound(net.minecraft.server.v1_11_R1.ItemStack item) {
@@ -81,14 +76,7 @@ public class Handler_v1_11_R1 extends NMSHandler {
     }
 
     @Override
-    public ItemStack setTagCompoundCopy(ItemStack item, ninja.amp.items.nms.nbt.NBTTagCompound compound) {
-        net.minecraft.server.v1_11_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-        nmsItem.setTag((NBTTagCompound_v1_11_R1) compound);
-        return CraftItemStack.asBukkitCopy(nmsItem);
-    }
-
-    @Override
-    public ItemStack setTagCompoundDirect(ItemStack item, ninja.amp.items.nms.nbt.NBTTagCompound compound) {
+    public ItemStack setTagCompound(ItemStack item, ninja.amp.items.nms.nbt.NBTTagCompound compound) {
         if (item instanceof CraftItemStack) {
             CraftItemStack itemStack = (CraftItemStack) item;
             try {
@@ -99,7 +87,9 @@ public class Handler_v1_11_R1 extends NMSHandler {
             }
             return item;
         } else {
-            return setTagCompoundCopy(item, compound);
+            net.minecraft.server.v1_11_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+            nmsItem.setTag((NBTTagCompound_v1_11_R1) compound);
+            return CraftItemStack.asBukkitCopy(nmsItem);
         }
     }
 

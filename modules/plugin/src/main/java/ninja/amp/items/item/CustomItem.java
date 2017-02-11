@@ -327,7 +327,7 @@ public class CustomItem implements Item {
         item.setItemMeta(meta);
 
         // Get NBTTagCompound
-        NBTTagCompound compound = NMSHandler.getInterface().getTagCompoundDirect(item);
+        NBTTagCompound compound = NMSHandler.getInterface().getTagCompound(item);
 
         // Set item compound
         NBTTagCompound itemTag = NBTTagCompound.create();
@@ -371,7 +371,7 @@ public class CustomItem implements Item {
         compound.setBase("AttributeModifiers", modifiers);
 
         // Set NBTTagCompound
-        item = NMSHandler.getInterface().setTagCompoundDirect(item, compound);
+        item = NMSHandler.getInterface().setTagCompound(item, compound);
 
         return item;
     }
@@ -460,21 +460,21 @@ public class CustomItem implements Item {
         @Override
         public Item loadFromItemStack(ItemStack itemStack) {
             // Get ItemStack NBT
-            NBTTagCompound compound = NMSHandler.getInterface().getTagCompoundDirect(itemStack);
+            NBTTagCompound compound = NMSHandler.getInterface().getTagCompound(itemStack);
             NBTTagCompound itemTag = compound.getCompound(ITEM_TAG);
 
             // Load from NBT
             Item item = loadFromNBT(itemTag);
 
             // Set ItemStack NBT
-            NMSHandler.getInterface().setTagCompoundDirect(itemStack, compound);
+            NMSHandler.getInterface().setTagCompound(itemStack, compound);
 
             return item;
         }
 
         @Override
         public boolean isItem(ItemStack itemStack) {
-            return NMSHandler.getInterface().getTagCompoundDirect(itemStack).hasKey(ITEM_TAG);
+            return NMSHandler.getInterface().getTagCompound(itemStack).hasKey(ITEM_TAG);
         }
 
     }
