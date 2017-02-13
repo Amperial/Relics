@@ -24,7 +24,7 @@ public interface StatSpecifier<T extends StatType<T>> {
      *
      * @param <T> the specifier's stat type
      */
-    class all<T extends StatType<T>> implements StatSpecifier<T> {
+    class All<T extends StatType<T>> implements StatSpecifier<T> {
         @Override
         public boolean equals(Object obj) {
             return true;
