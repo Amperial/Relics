@@ -11,6 +11,7 @@
 package ninja.amp.items.item.attributes.stats;
 
 import ninja.amp.items.api.ItemPlugin;
+import ninja.amp.items.api.item.Equippable;
 import ninja.amp.items.api.item.attribute.AttributeType;
 import ninja.amp.items.api.item.attribute.attributes.BasicAttributeFactory;
 import ninja.amp.items.api.item.attribute.attributes.stats.BasicStatAttribute;
@@ -21,10 +22,11 @@ import ninja.amp.items.nms.nbt.NBTTagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public class MinecraftAttribute extends BasicStatAttribute<GenericAttribute.GenericAttributeStatType> implements GenericAttribute {
+public class MinecraftAttribute extends BasicStatAttribute<GenericAttribute.GenericAttributeStatType> implements GenericAttribute, Equippable {
 
     private final Type minecraftType;
     private Slot slot;
@@ -101,6 +103,21 @@ public class MinecraftAttribute extends BasicStatAttribute<GenericAttribute.Gene
     @Override
     public StatSpecifier<GenericAttributeStatType> getStatSpecifier() {
         return new GenericAttributeSpecifier(this);
+    }
+
+    @Override
+    public boolean canEquip(Player player) {
+        return true;
+    }
+
+    @Override
+    public boolean onEquip(Player player) {
+        return true;
+    }
+
+    @Override
+    public boolean onUnEquip(Player player) {
+        return true;
     }
 
     @Override
