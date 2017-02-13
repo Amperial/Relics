@@ -67,16 +67,16 @@ public class ItemListener implements Listener {
 
     private boolean handleItemUse(Player player, ItemStack itemStack) {
         Optional<Item> item = plugin.getItemManager().getItem(itemStack);
-        return !item.isPresent() || handleItemUse(player, item.get());
+        return !item.isPresent() || handleItemUse(player, item.get(), itemStack);
     }
 
-    private boolean handleItemUse(Player player, Item item) {
+    private boolean handleItemUse(Player player, Item item, ItemStack itemStack) {
         EquipmentManager equipManager = plugin.getEquipmentManager();
         if (equipManager.isEquipped(player, item)) {
             return true;
         } else {
             if (equipManager.canEquip(player, item)) {
-                equipManager.equip(player, item);
+                equipManager.equip(player, item, itemStack);
             }
             return false;
         }
@@ -84,9 +84,10 @@ public class ItemListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        Optional<Item> item = plugin.getItemManager().getItem(event.getItem());
+        ItemStack itemStack = event.getItem();
+        Optional<Item> item = plugin.getItemManager().getItem(itemStack);
         if (item.isPresent()) {
-            if (handleItemUse(event.getPlayer(), item.get())) {
+            if (handleItemUse(event.getPlayer(), item.get(), itemStack)) {
                 item.get().onClick(event, true);
             } else {
                 item.get().onClick(event, false);
@@ -113,7 +114,7 @@ public class ItemListener implements Listener {
             ItemStack itemStack = damager.getEquipment().getItemInMainHand();
             Optional<Item> item = itemManager.getItem(itemStack);
             if (item.isPresent()) {
-                if (damager instanceof Player && !handleItemUse((Player) damager, item.get())) {
+                if (damager instanceof Player && !handleItemUse((Player) damager, item.get(), itemStack)) {
                     event.setCancelled(true);
                 } else {
                     item.get().forEachDeep(attribute -> {
@@ -141,7 +142,7 @@ public class ItemListener implements Listener {
         return null;
     }
 
-    private boolean handleInventory(Player player, Inventory inventory, Item item, InventoryType.SlotType slot) {
+    private boolean handleInventory(Player player, Inventory inventory, Item item, ItemStack itemStack, InventoryType.SlotType slot) {
         EquipmentManager equipManager = plugin.getEquipmentManager();
         if (slot == InventoryType.SlotType.OUTSIDE) {
             // Handled by item drop event
@@ -161,12 +162,12 @@ public class ItemListener implements Listener {
             case ENDER_CHEST:
                 // UnEquip item if equipped
                 if (equipManager.isEquipped(player, item)) {
-                    equipManager.unEquip(player, item);
+                    equipManager.unEquip(player, item, itemStack);
                 }
             case PLAYER:
                 // Equip armor items
                 if (slot == InventoryType.SlotType.ARMOR) {
-                    equipManager.replaceEquip(player, item);
+                    equipManager.replaceEquip(player, item, itemStack);
                 }
                 return true;
             case ANVIL:
@@ -203,7 +204,7 @@ public class ItemListener implements Listener {
             }
         }
         Optional<Item> item = itemManager.getItem(itemStack);
-        if (item.isPresent() && !handleInventory(player, inventory, item.get(), event.getSlotType())) {
+        if (item.isPresent() && !handleInventory(player, inventory, item.get(), itemStack, event.getSlotType())) {
             event.setCancelled(true);
         }
     }
@@ -216,14 +217,14 @@ public class ItemListener implements Listener {
         }
     }
 
-    private boolean handleItemDrop(Player player, Item item) {
+    private boolean handleItemDrop(Player player, Item item, ItemStack itemStack) {
         Optional<Soulbound> soulbound = item.getAttributeDeep(Soulbound.class);
         if (soulbound.isPresent() && soulbound.get().isBound()) {
             return false;
         } else {
             EquipmentManager equipManager = plugin.getEquipmentManager();
             if (equipManager.isEquipped(player, item)) {
-                equipManager.unEquip(player, item);
+                equipManager.unEquip(player, item, itemStack);
             }
             return true;
         }
@@ -236,7 +237,7 @@ public class ItemListener implements Listener {
         Optional<Item> itemOptional = itemManager.getItem(itemStack);
         if (itemOptional.isPresent()) {
             Item item = itemOptional.get();
-            if (!handleItemDrop(event.getPlayer(), item)) {
+            if (!handleItemDrop(event.getPlayer(), item, itemStack)) {
                 Messenger messenger = plugin.getMessenger();
                 Player player = event.getPlayer();
 
@@ -251,7 +252,7 @@ public class ItemListener implements Listener {
                         // Make sure to unequip item
                         EquipmentManager equipManager = plugin.getEquipmentManager();
                         if (equipManager.isEquipped(player, item)) {
-                            equipManager.unEquip(player, item);
+                            equipManager.unEquip(player, item, itemStack);
                         }
 
                         messenger.sendShortMessage(player, AIMessage.SOULBOUND_DESTROY);
@@ -274,7 +275,7 @@ public class ItemListener implements Listener {
         while (drops.hasNext()) {
             ItemStack itemStack = drops.next();
             Optional<Item> item = itemManager.getItem(itemStack);
-            if (item.isPresent() && !handleItemDrop(player, item.get())) {
+            if (item.isPresent() && !handleItemDrop(player, item.get(), itemStack)) {
                 items.add(item.get());
                 drops.remove();
             }

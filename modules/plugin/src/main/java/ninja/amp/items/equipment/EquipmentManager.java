@@ -22,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -70,14 +71,14 @@ public class EquipmentManager implements ninja.amp.items.api.equipment.Equipment
     }
 
     @Override
-    public void equip(Player player, Item item) {
+    public void equip(Player player, Item item, ItemStack itemStack) {
         Messenger messenger = plugin.getMessenger();
 
         ItemType type = item.getType();
         Equipment playerEquipment = getEquipment(player);
         if (playerEquipment.hasSlot(type) && item.canEquip(player)) {
             if (playerEquipment.isSlotOpen(type)) {
-                playerEquipment.equip(item);
+                playerEquipment.equip(item, itemStack);
                 messenger.sendShortMessage(player, AIMessage.ITEM_EQUIPPED, item.getName());
 
                 equipmentChanged(player);
@@ -86,7 +87,7 @@ public class EquipmentManager implements ninja.amp.items.api.equipment.Equipment
                 if (equipReplace.containsKey(itemId)) {
                     long lastClicked = equipReplace.get(itemId);
                     if (System.currentTimeMillis() - lastClicked < 1000) {
-                        playerEquipment.replaceEquip(item);
+                        playerEquipment.replaceEquip(item, itemStack);
                         messenger.sendShortMessage(player, AIMessage.ITEM_EQUIPPED, item.getName());
                         equipReplace.remove(itemId);
 
@@ -103,15 +104,15 @@ public class EquipmentManager implements ninja.amp.items.api.equipment.Equipment
     }
 
     @Override
-    public void replaceEquip(Player player, Item item) {
+    public void replaceEquip(Player player, Item item, ItemStack itemStack) {
         Messenger messenger = plugin.getMessenger();
         ItemType type = item.getType();
         Equipment playerEquipment = getEquipment(player);
         if (playerEquipment.hasSlot(type) && item.canEquip(player)) {
             if (playerEquipment.isSlotOpen(type)) {
-                playerEquipment.equip(item);
+                playerEquipment.equip(item, itemStack);
             } else {
-                playerEquipment.replaceEquip(item);
+                playerEquipment.replaceEquip(item, itemStack);
             }
             messenger.sendShortMessage(player, AIMessage.ITEM_EQUIPPED, item.getName());
 
@@ -122,12 +123,12 @@ public class EquipmentManager implements ninja.amp.items.api.equipment.Equipment
     }
 
     @Override
-    public void unEquip(Player player, Item item) {
+    public void unEquip(Player player, Item item, ItemStack itemStack) {
         Messenger messenger = plugin.getMessenger();
 
         Equipment playerEquipment = getEquipment(player);
         if (playerEquipment.isEquipped(item)) {
-            playerEquipment.unEquip(item);
+            playerEquipment.unEquip(item, itemStack);
             messenger.sendShortMessage(player, AIMessage.ITEM_UNEQUIPPED, item.getName());
 
             equipmentChanged(player);

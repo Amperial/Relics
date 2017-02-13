@@ -12,6 +12,7 @@ package ninja.amp.items.api.equipment;
 
 import ninja.amp.items.api.item.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public interface EquipmentManager {
 
@@ -23,11 +24,11 @@ public interface EquipmentManager {
 
     boolean canEquip(Player player, Item item);
 
-    void equip(Player player, Item item);
+    void equip(Player player, Item item, ItemStack itemStack);
 
-    void replaceEquip(Player player, Item item);
+    void replaceEquip(Player player, Item item, ItemStack itemStack);
 
-    void unEquip(Player player, Item item);
+    void unEquip(Player player, Item item, ItemStack itemStack);
 
     void unEquipAll(Player player);
 

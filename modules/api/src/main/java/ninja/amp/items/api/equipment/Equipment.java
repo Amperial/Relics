@@ -13,6 +13,7 @@ package ninja.amp.items.api.equipment;
 import ninja.amp.items.api.item.Item;
 import ninja.amp.items.api.item.ItemType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -39,13 +40,13 @@ public interface Equipment {
 
     boolean isEquipped(Item item);
 
-    boolean equip(Item item);
+    boolean equip(Item item, ItemStack itemStack);
 
-    boolean equip(Item item, Slot slot);
+    boolean equip(Item item, ItemStack itemStack, Slot slot);
 
-    boolean replaceEquip(Item item);
+    boolean replaceEquip(Item item, ItemStack itemStack);
 
-    boolean unEquip(Item item);
+    boolean unEquip(Item item, ItemStack itemStack);
 
     void unEquipAll();
 

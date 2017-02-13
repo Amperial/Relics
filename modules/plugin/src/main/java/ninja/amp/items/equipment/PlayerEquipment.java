@@ -111,14 +111,14 @@ public class PlayerEquipment implements Equipment {
     }
 
     @Override
-    public boolean equip(Item item) {
+    public boolean equip(Item item, ItemStack itemStack) {
         checkSlots();
         for (Slot slot : getSlots(item.getType())) {
             if (slot.isOpen()) {
                 slot.setItemId(item.getId());
                 Player player = getPlayer();
                 if (item.onEquip(player)) {
-                    updateItem(player, item);
+                    updateItem(player, item, itemStack);
                 }
                 return true;
             }
@@ -127,13 +127,13 @@ public class PlayerEquipment implements Equipment {
     }
 
     @Override
-    public boolean equip(Item item, Slot slot) {
+    public boolean equip(Item item, ItemStack itemStack, Slot slot) {
         checkSlot(slot);
         if (slot.isOpen()) {
             slot.setItemId(item.getId());
             Player player = getPlayer();
             if (item.onEquip(player)) {
-                updateItem(player, item);
+                updateItem(player, item, itemStack);
             }
             return true;
         }
@@ -141,22 +141,25 @@ public class PlayerEquipment implements Equipment {
     }
 
     @Override
-    public boolean replaceEquip(Item item) {
+    public boolean replaceEquip(Item item, ItemStack itemStack) {
         checkSlots();
-        if (!equip(item)) {
+        if (!equip(item, itemStack)) {
+            ItemManager itemManager = plugin.getItemManager();
             for (Slot slot : getSlots(item.getType())) {
                 Player player = getPlayer();
-                Optional<Item> equippedOptional = plugin.getItemManager().findItem(player, slot.getItemId());
-                if (equippedOptional.isPresent()) {
-                    slot.setItemId(item.getId());
-                    Item equipped = equippedOptional.get();
-                    if (equipped.onUnEquip(player)) {
-                        updateItem(player, equipped);
+                Optional<ItemStack> equippedStack = itemManager.findItemStack(player, slot.getItemId());
+                if (equippedStack.isPresent()) {
+                    Optional<Item> equippedItem = itemManager.getItem(equippedStack.get());
+                    if (equippedItem.isPresent()) {
+                        slot.setItemId(item.getId());
+                        if (equippedItem.get().onUnEquip(player)) {
+                            updateItem(player, equippedItem.get(), equippedStack.get());
+                        }
+                        if (item.onEquip(player)) {
+                            updateItem(player, item, itemStack);
+                        }
+                        return true;
                     }
-                    if (item.onEquip(player)) {
-                        updateItem(player, item);
-                    }
-                    return true;
                 }
             }
         }
@@ -164,14 +167,14 @@ public class PlayerEquipment implements Equipment {
     }
 
     @Override
-    public boolean unEquip(Item item) {
+    public boolean unEquip(Item item, ItemStack itemStack) {
         checkSlots();
         for (Slot slot : getSlots()) {
             if (slot.hasItem() && slot.getItemId().equals(item.getId())) {
                 slot.setItemId(null);
                 Player player = getPlayer();
                 if (item.onUnEquip(player)) {
-                    updateItem(player, item);
+                    updateItem(player, item, itemStack);
                 }
                 return true;
             }
@@ -185,12 +188,14 @@ public class PlayerEquipment implements Equipment {
         Player player = getPlayer();
         for (Slot slot : getSlots()) {
             if (slot.hasItem()) {
+                Optional<ItemStack> itemStack = itemManager.findItemStack(player, slot.getItemId());
                 slot.setItemId(null);
-                Optional<Item> itemOptional = itemManager.findItem(player, slot.getItemId());
-                if (itemOptional.isPresent()) {
-                    Item item = itemOptional.get();
-                    if (item.onUnEquip(player)) {
-                        updateItem(player, item);
+                if (itemStack.isPresent()) {
+                    Optional<Item> item = itemManager.getItem(itemStack.get());
+                    if (item.isPresent()) {
+                        if (item.get().onUnEquip(player)) {
+                            updateItem(player, item.get(), itemStack.get());
+                        }
                     }
                 }
             }
@@ -224,11 +229,8 @@ public class PlayerEquipment implements Equipment {
         }
     }
 
-    private void updateItem(Player player, Item item) {
-        Optional<ItemStack> itemStack = plugin.getItemManager().findItemStack(player.getInventory(), item.getId());
-        if (itemStack.isPresent()) {
-            item.updateItem(itemStack.get());
-        }
+    private void updateItem(Player player, Item item, ItemStack itemStack) {
+        item.updateItem(itemStack);
     }
 
     @Override

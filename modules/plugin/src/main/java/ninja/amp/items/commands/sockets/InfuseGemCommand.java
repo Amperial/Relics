@@ -81,10 +81,10 @@ public class InfuseGemCommand extends DualItemCommand {
         // First make sure both items are unequipped
         EquipmentManager equipManager = plugin.getEquipmentManager();
         if (equipManager.isEquipped(player, mainHand)) {
-            equipManager.unEquip(player, mainHand);
+            equipManager.unEquip(player, mainHand, player.getInventory().getItemInMainHand());
         }
         if (equipManager.isEquipped(player, offHand)) {
-            equipManager.unEquip(player, offHand);
+            equipManager.unEquip(player, offHand, player.getInventory().getItemInOffHand());
         }
 
         // Remove gem from gem item
