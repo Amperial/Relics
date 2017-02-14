@@ -59,7 +59,7 @@ public class LevelRequirementAttribute extends BasicStatAttribute<LevelRequireme
 
     @Override
     public StatSpecifier<LevelRequirementStatType> getStatSpecifier() {
-        return new LevelRequirementStatSpecifier();
+        return new StatSpecifier.All<>();
     }
 
     @Override

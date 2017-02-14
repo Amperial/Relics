@@ -23,6 +23,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -148,19 +149,18 @@ public class PlayerEquipment implements Equipment {
             for (Slot slot : getSlots(item.getType())) {
                 Player player = getPlayer();
                 Optional<ItemStack> equippedStack = itemManager.findItemStack(player, slot.getItemId());
+                slot.setItemId(null);
                 if (equippedStack.isPresent()) {
                     Optional<Item> equippedItem = itemManager.getItem(equippedStack.get());
-                    if (equippedItem.isPresent()) {
-                        slot.setItemId(item.getId());
-                        if (equippedItem.get().onUnEquip(player)) {
-                            updateItem(player, equippedItem.get(), equippedStack.get());
-                        }
-                        if (item.onEquip(player)) {
-                            updateItem(player, item, itemStack);
-                        }
-                        return true;
+                    if (equippedItem.isPresent() && equippedItem.get().onUnEquip(player)) {
+                        updateItem(player, equippedItem.get(), equippedStack.get());
                     }
                 }
+                slot.setItemId(item.getId());
+                if (item.onEquip(player)) {
+                    updateItem(player, item, itemStack);
+                }
+                return true;
             }
         }
         return false;
@@ -230,7 +230,26 @@ public class PlayerEquipment implements Equipment {
     }
 
     private void updateItem(Player player, Item item, ItemStack itemStack) {
-        item.updateItem(itemStack);
+        ItemManager itemManager = plugin.getItemManager();
+        PlayerInventory inventory = player.getInventory();
+
+        // Find location of the item stack in player's inventory
+        int slot = -1;
+        ItemStack[] contents = inventory.getContents();
+        for (int i = 0; i < contents.length; i++) {
+            Optional<Item> invItem = itemManager.getItem(contents[i]);
+            if (invItem.isPresent() && invItem.get().getId().equals(item.getId())) {
+                slot = i;
+                break;
+            }
+        }
+
+        // Update item stack
+        itemStack = item.updateItem(itemStack);
+        if (slot >= 0) {
+            // Entirely replace item stack in inventory if possible
+            inventory.setItem(slot, itemStack);
+        }
     }
 
     @Override

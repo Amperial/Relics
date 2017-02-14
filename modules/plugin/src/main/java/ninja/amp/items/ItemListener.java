@@ -75,9 +75,7 @@ public class ItemListener implements Listener {
         if (equipManager.isEquipped(player, item)) {
             return true;
         } else {
-            if (equipManager.canEquip(player, item)) {
-                equipManager.equip(player, item, itemStack);
-            }
+            equipManager.equip(player, item, itemStack);
             return false;
         }
     }

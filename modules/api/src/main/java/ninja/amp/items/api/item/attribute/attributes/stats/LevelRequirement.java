@@ -55,16 +55,4 @@ public interface LevelRequirement extends StatAttribute<LevelRequirement.LevelRe
 
     }
 
-    class LevelRequirementStatSpecifier implements StatSpecifier<LevelRequirementStatType> {
-        @Override
-        public int hashCode() {
-            return 0;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            return this == o || o instanceof LevelRequirementStatSpecifier;
-        }
-    }
-
 }

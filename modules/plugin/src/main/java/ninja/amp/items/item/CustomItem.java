@@ -19,6 +19,7 @@ import ninja.amp.items.api.item.attribute.ItemAttribute;
 import ninja.amp.items.api.item.attribute.attributes.AttributeGroup;
 import ninja.amp.items.api.item.attribute.attributes.Model;
 import ninja.amp.items.api.item.attribute.attributes.stats.GenericAttribute;
+import ninja.amp.items.api.item.attribute.attributes.stats.LevelRequirement;
 import ninja.amp.items.api.item.attribute.attributes.stats.StatAttribute;
 import ninja.amp.items.api.item.attribute.attributes.stats.StatGroup;
 import ninja.amp.items.api.item.attribute.attributes.stats.StatType;
@@ -42,6 +43,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -241,7 +243,9 @@ public class CustomItem implements Item {
 
     @Override
     public boolean canEquip(Player player) {
-        return getAttributesDeep(attribute -> attribute instanceof Equippable).stream().allMatch(attribute -> ((Equippable) attribute).canEquip(player));
+        AtomicInteger levelRequirement = new AtomicInteger();
+        attributes.forEachDeep(a -> levelRequirement.getAndAdd(((LevelRequirement) a).getLevel()), ItemAttribute.type(LevelRequirement.class));
+        return levelRequirement.get() <= player.getLevel() && getAttributesDeep(ItemAttribute.type(Equippable.class)).stream().allMatch(a -> ((Equippable) a).canEquip(player));
     }
 
     @Override

@@ -22,8 +22,6 @@ public interface EquipmentManager {
 
     boolean isEquipped(Player player, Item item);
 
-    boolean canEquip(Player player, Item item);
-
     void equip(Player player, Item item, ItemStack itemStack);
 
     void replaceEquip(Player player, Item item, ItemStack itemStack);

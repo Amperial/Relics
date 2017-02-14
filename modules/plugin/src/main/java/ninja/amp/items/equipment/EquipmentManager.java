@@ -66,11 +66,6 @@ public class EquipmentManager implements ninja.amp.items.api.equipment.Equipment
     }
 
     @Override
-    public boolean canEquip(Player player, Item item) {
-        return getEquipment(player).hasSlot(item.getType()) && item.canEquip(player);
-    }
-
-    @Override
     public void equip(Player player, Item item, ItemStack itemStack) {
         Messenger messenger = plugin.getMessenger();
 
