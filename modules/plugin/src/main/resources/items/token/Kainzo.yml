@@ -1,5 +1,5 @@
-name: "&4Token of ampayne2"
-material: "REDSTONE_ORE"
+name: "&4Token of Kainzo"
+material: "IRON_INGOT"
 item-type: "other"
 attributes:
   info:
@@ -18,7 +18,7 @@ attributes:
     - "&dInfuse this gem into a socket!"
   gem:
     type: "gem"
-    name: "&7(&4Token of ampayne2)"
+    name: "&7(&4Token of Kainzo)"
     color: "blue"
     attributes:
       requirement:
@@ -27,4 +27,4 @@ attributes:
       description:
         type: "text"
         text:
-        - "A token of favor from ampayne2!"
+        - "A token of favor from Kainzo!"
