@@ -318,7 +318,7 @@ public class CustomItem implements Item {
         if (modelOptional.isPresent()) {
             Model model = (Model) modelOptional.get();
             item.setDurability(model.getModelDamage());
-            meta.setUnbreakable(true);
+            meta.spigot().setUnbreakable(true);
             meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         }
 

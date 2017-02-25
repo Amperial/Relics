@@ -16,10 +16,10 @@ package ninja.amp.items.api.message;
  * @author Austin Payne
  */
 public enum AIMessage implements Message {
-    PREFIX("Prefix", "&8[&bAmpItems&8] &7"),
-    PREFIX_SHORT("ShortPrefix", "&8[&bAI&8] &7"),
-    PREFIX_ERROR("ErrorPrefix", "&8[&bAmpItems&8] &4"),
-    PREFIX_ERROR_SHORT("ShortErrorPrefix", "&8[&bAI&8] &4"),
+    PREFIX("Prefix", "&8[&bAI&8] &7"),
+    PREFIX_SHORT("ShortPrefix", "&7"),
+    PREFIX_ERROR("ErrorPrefix", "&8[&bAI&8] &4"),
+    PREFIX_ERROR_SHORT("ShortErrorPrefix", "&4"),
     RELOAD("Reload", "Reloaded %s."),
 
     COMMAND_NOTAPLAYER("Command.NotAPlayer", "You must be a player to use this command."),
@@ -39,6 +39,7 @@ public enum AIMessage implements Message {
     ITEM_NOTEQUIPPED("Item.NotEquipped", "Item is not equipped."),
     ITEM_CANTEQUIP("Item.CantEquip", "Cannot equip item."),
     ITEM_ALREADYEQUIPPED("Item.AlreadyEquipped", "Click again to replace equipped item"),
+    ITEM_NEEDSREPAIR("Item.NeedsRepair", "%s&4 is in need of repair!"),
 
     SOCKET_NOTFOUND("Socket.NotFound", "Socket of name %s not found."),
     SOCKET_EMPTY("Socket.Empty", "Item doesn't have a gem to extract."),

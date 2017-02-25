@@ -1,5 +1,5 @@
 name: "&4Token of ampayne2"
-material: "DIAMOND"
+material: "REDSTONE_ORE"
 item-type: "other"
 attributes:
   info:
@@ -12,10 +12,6 @@ attributes:
       level:
         type: "level"
         level: 30
-  description:
-    type: "text"
-    text:
-    - "A token of favor from ampayne2!"
   infuse:
     type: "text"
     text:
@@ -23,7 +19,7 @@ attributes:
   gem:
     type: "gem"
     name: "&7(&4Token of ampayne2)"
-    color: "dark-red"
+    color: "blue"
     attributes:
       requirement:
         type: "level-requirement"

@@ -30,7 +30,7 @@ public class TokenCommand extends Command {
         super(plugin, "token");
         setDescription("Spawn a token item into a player's inventory.");
         setCommandUsage("/aitem token <player>");
-        setPermission(new Permission("ampitems.token", PermissionDefault.OP));
+        setPermission(new Permission("ampitems.token", PermissionDefault.TRUE));
         setArgumentRange(1, 1);
         setPlayerOnly(true);
     }

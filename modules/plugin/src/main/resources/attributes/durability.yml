@@ -1,0 +1,7 @@
+percents:
+  100: "&aFlawless"
+  75: "&ePristine"
+  50: "&6Used"
+  25: "&cWorn"
+  1: "&4Breaking"
+  0: "&0Broken"

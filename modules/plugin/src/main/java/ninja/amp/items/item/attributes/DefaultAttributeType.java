@@ -28,6 +28,12 @@ public enum DefaultAttributeType implements AttributeType {
             return new DamageAttribute.Factory(plugin);
         }
     },
+    DURABILITY("durability", 6) {
+        @Override
+        AttributeFactory<? extends ItemAttribute> loadFactory(ItemPlugin plugin) {
+            return new DurabilityAttribute.Factory(plugin);
+        }
+    },
     GEM("gem", 5) {
         @Override
         AttributeFactory<? extends ItemAttribute> loadFactory(ItemPlugin plugin) {
@@ -82,7 +88,7 @@ public enum DefaultAttributeType implements AttributeType {
             return new SocketAttribute.Factory(plugin);
         }
     },
-    SOULBOUND("soulbound", 6) {
+    SOULBOUND("soulbound", 7) {
         @Override
         AttributeFactory<? extends ItemAttribute> loadFactory(ItemPlugin plugin) {
             return new SoulboundAttribute.Factory(plugin);

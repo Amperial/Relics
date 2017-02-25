@@ -45,6 +45,13 @@
         </dependency>
         <dependency>
             <groupId>ninja.amp.items</groupId>
+            <artifactId>NMSHandler-v1_10_R1</artifactId>
+            <version>v1_10_R1-SNAPSHOT</version>
+            <type>jar</type>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>ninja.amp.items</groupId>
             <artifactId>NMSHandler-v1_11_R1</artifactId>
             <version>v1_11_R1-SNAPSHOT</version>
             <type>jar</type>

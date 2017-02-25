@@ -1,4 +1,4 @@
-default-args: ["", "DIAMOND", "dark-red", 0, 1, 0]
+default-args: ["?", "GOLD_NUGGET", "blue", 0, 1, 0]
 name: "&dToken of %1$s"
 material: "%2$s"
 item-type: "other"
@@ -13,10 +13,6 @@ attributes:
       level:
         type: "level"
         level: "%5$d"
-  description:
-    type: "text"
-    text:
-    - "A token of favor from %1$s!"
   infuse:
     type: "text"
     text:
