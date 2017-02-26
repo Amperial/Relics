@@ -90,7 +90,7 @@ public class NBTTagCompound_v1_10_R1 extends net.minecraft.server.v1_10_R1.NBTTa
         if (base instanceof NBTBase) {
             return (NBTBase) base;
         } else {
-            NBTBase apiBase = NBTUtil.fromNMSBase(base);
+            NBTBase apiBase = NBTUtil_v1_10_R1.fromNMSBase(base);
             setBase(key, apiBase);
             return apiBase;
         }

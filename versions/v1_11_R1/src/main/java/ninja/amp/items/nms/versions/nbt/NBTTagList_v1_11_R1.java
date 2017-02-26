@@ -43,7 +43,7 @@ public class NBTTagList_v1_11_R1 extends net.minecraft.server.v1_11_R1.NBTTagLis
 
     @Override
     public NBTBase removeBase(int index) {
-        return NBTUtil.fromNMSBase(remove(index));
+        return NBTUtil_v1_11_R1.fromNMSBase(remove(index));
     }
 
     @Override
@@ -52,7 +52,7 @@ public class NBTTagList_v1_11_R1 extends net.minecraft.server.v1_11_R1.NBTTagLis
         if (base instanceof NBTBase) {
             return (NBTBase) base;
         } else {
-            NBTBase apiBase = NBTUtil.fromNMSBase(base);
+            NBTBase apiBase = NBTUtil_v1_11_R1.fromNMSBase(base);
             addBase(index, apiBase);
             return apiBase;
         }

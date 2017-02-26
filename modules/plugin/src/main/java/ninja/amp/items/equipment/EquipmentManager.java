@@ -142,6 +142,8 @@ public class EquipmentManager implements ninja.amp.items.api.equipment.Equipment
     @Override
     public void unEquipAll(Player player) {
         getEquipment(player).unEquipAll();
+
+        equipmentChanged(player);
     }
 
     private void equipmentChanged(Player player) {

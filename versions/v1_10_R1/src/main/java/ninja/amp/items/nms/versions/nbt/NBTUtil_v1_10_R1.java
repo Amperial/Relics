@@ -21,9 +21,9 @@ import net.minecraft.server.v1_10_R1.NBTTagShort;
 import net.minecraft.server.v1_10_R1.NBTTagString;
 import ninja.amp.items.nms.nbt.NBTBase;
 
-public final class NBTUtil {
+public final class NBTUtil_v1_10_R1 {
 
-    private NBTUtil() {
+    private NBTUtil_v1_10_R1() {
     }
 
     public static NBTBase fromNMSBase(net.minecraft.server.v1_10_R1.NBTBase base) {
