@@ -15,6 +15,7 @@ import ninja.amp.items.api.equipment.Equipment;
 import ninja.amp.items.api.equipment.EquipmentChangedEvent;
 import ninja.amp.items.api.item.Item;
 import ninja.amp.items.api.item.ItemType;
+import ninja.amp.items.api.item.attribute.attributes.Durability;
 import ninja.amp.items.api.message.AIMessage;
 import ninja.amp.items.api.message.Messenger;
 import org.bukkit.Bukkit;
@@ -26,6 +27,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public class EquipmentManager implements ninja.amp.items.api.equipment.EquipmentManager, Listener {
@@ -71,6 +73,11 @@ public class EquipmentManager implements ninja.amp.items.api.equipment.Equipment
 
         ItemType type = item.getType();
         Equipment playerEquipment = getEquipment(player);
+        Optional<Durability> durability = item.getAttribute(Durability.class);
+        if (durability.isPresent() && !durability.get().isUsable()) {
+            messenger.sendShortErrorMessage(player, AIMessage.ITEM_NEEDSREPAIR, item.getName());
+            return;
+        }
         if (playerEquipment.hasSlot(type) && item.canEquip(player)) {
             if (playerEquipment.isSlotOpen(type)) {
                 playerEquipment.equip(item, itemStack);

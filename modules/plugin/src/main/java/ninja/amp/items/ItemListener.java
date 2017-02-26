@@ -15,6 +15,7 @@ import ninja.amp.items.api.equipment.EquipmentManager;
 import ninja.amp.items.api.item.Item;
 import ninja.amp.items.api.item.ItemManager;
 import ninja.amp.items.api.item.attribute.ItemAttribute;
+import ninja.amp.items.api.item.attribute.attributes.Durability;
 import ninja.amp.items.api.item.attribute.attributes.Soulbound;
 import ninja.amp.items.api.item.attribute.attributes.stats.Damage;
 import ninja.amp.items.api.message.AIMessage;
@@ -110,14 +111,26 @@ public class ItemListener implements Listener {
         if (damager != null) {
             ItemManager itemManager = plugin.getItemManager();
             ItemStack itemStack = damager.getEquipment().getItemInMainHand();
-            Optional<Item> item = itemManager.getItem(itemStack);
-            if (item.isPresent()) {
-                if (damager instanceof Player && !handleItemUse((Player) damager, item.get(), itemStack)) {
+            Optional<Item> itemOptional = itemManager.getItem(itemStack);
+            if (itemOptional.isPresent()) {
+                Item item = itemOptional.get();
+                if (damager instanceof Player && !handleItemUse((Player) damager, item, itemStack)) {
                     event.setCancelled(true);
-                } else {
-                    item.get().forEachDeep(attribute -> {
-                        event.setDamage(event.getDamage() + ((Damage) attribute).getVariation() * ((random.nextDouble() * 2) - 1));
-                    }, ItemAttribute.type(Damage.class));
+                    return;
+                }
+                Optional<Durability> durability = item.getAttribute(Durability.class);
+                if (durability.isPresent() && !durability.get().isUsable()) {
+                    if (damager instanceof Player) {
+                        plugin.getEquipmentManager().unEquip((Player) damager, item, itemStack);
+                    }
+                    event.setCancelled(true);
+                    return;
+                }
+                item.forEachDeep(attribute -> {
+                    event.setDamage(event.getDamage() + ((Damage) attribute).getVariation() * ((random.nextDouble() * 2) - 1));
+                }, ItemAttribute.type(Damage.class));
+                if (durability.isPresent() && durability.get().damage(1)) {
+                    damager.getEquipment().setItemInMainHand(item.updateItem(itemStack));
                 }
             }
         }
