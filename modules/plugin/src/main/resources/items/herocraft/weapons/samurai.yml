@@ -1,0 +1,18 @@
+default-args: [0]
+name: "&7&lSteel Katana"
+material: "DIAMOND_SWORD"
+item-type: "primary"
+attributes:
+  info: "#{info}"
+  description:
+    type: "text"
+    text:
+    - "&7Twohanded Slashing"
+    - "&6Sword of the Samurai"
+  sockets: "#{sockets/sockets}"
+  speed:
+    type: "minecraft"
+    minecraft-type: "ATTACK_SPEED"
+    amount: 1
+    operation: "ADD_SCALAR"
+    slot: "MAIN_HAND"

@@ -30,7 +30,7 @@ public class ExtractGemCommand extends SocketCommand {
         super(plugin, "extract", 0, Socket::hasGem, AIMessage.SOCKET_EMPTY);
         setDescription("Extracts the gem from a socket into your inventory.");
         setCommandUsage("/aitem socket extract [socket]");
-        setPermission(new Permission("ampitems.socket.extract", PermissionDefault.OP));
+        setPermission(new Permission("ampitems.socket.extract", PermissionDefault.TRUE));
         setArgumentRange(0, 1);
     }
 

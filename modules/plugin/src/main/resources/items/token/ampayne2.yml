@@ -12,14 +12,11 @@ attributes:
       level:
         type: "level"
         level: 20
-  infuse:
-    type: "text"
-    text:
-    - "&dInfuse this gem into a socket!"
+  infuse: "#{gems/infuse}"
   gem:
     type: "gem"
     name: "&7(&4Token of ampayne2)"
-    color: "blue"
+    color: "yellow"
     attributes:
       requirement:
         type: "level-requirement"

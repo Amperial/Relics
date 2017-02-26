@@ -1,0 +1,31 @@
+default-args: [0]
+name: "&9Gem of Endurance"
+material: "NETHER_STAR"
+item-type: "other"
+attributes:
+  info:
+    type: "group"
+    spacing: false
+    attributes:
+      rarity:
+        type: "rarity"
+        tier: "(0,6,%1$d/100)"
+      level:
+        type: "level"
+        level: "%1$d"
+  infuse: "#{gems/infuse}"
+  gem:
+    type: "gem"
+    name: "&7(&9Gem of Endurance&7)"
+    color: "blue"
+    attributes:
+      requirement:
+        type: "level-requirement"
+        level: "(0,%1$d,0.1)+1"
+      description:
+        type: "text"
+        text:
+        - "Gain an Endurance bonus!"
+      charisma:
+        type: "hero-attribute"
+        attributes: "#{attributes/types/endurance}"

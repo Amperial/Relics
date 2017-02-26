@@ -1,4 +1,4 @@
-default-args: ["?", "GOLD_NUGGET", "blue", 0, 1, 0]
+default-args: ["?", "GOLD_NUGGET", "yellow", 0, 1, 0]
 name: "&dToken of %1$s"
 material: "%2$s"
 item-type: "other"
@@ -13,10 +13,7 @@ attributes:
       level:
         type: "level"
         level: "%5$d"
-  infuse:
-    type: "text"
-    text:
-    - "&dInfuse this gem into a socket!"
+  infuse: "#{gems/infuse}"
   gem:
     type: "gem"
     name: "&7(&dToken of %1$s&7)"

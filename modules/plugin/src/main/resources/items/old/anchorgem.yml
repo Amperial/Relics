@@ -12,10 +12,7 @@ attributes:
       level:
         type: "level"
         level: 5
-  infuse:
-    type: "text"
-    text:
-    - "&dInfuse this gem into a socket!"
+  infuse: "#{gems/infuse}"
   gem:
     type: "gem"
     name: "&7(&8Unforgiving Anchor&7)"

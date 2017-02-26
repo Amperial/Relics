@@ -1,5 +1,6 @@
-name: "&fLight Gem Item"
-material: "FEATHER"
+default-args: [0]
+name: "&9Gem of Wisdom"
+material: "NETHER_STAR"
 item-type: "other"
 attributes:
   info:
@@ -8,25 +9,23 @@ attributes:
     attributes:
       rarity:
         type: "rarity"
-        tier: 2
+        tier: "(0,6,%1$d/100)"
       level:
         type: "level"
-        level: 5
+        level: "%1$d"
   infuse: "#{gems/infuse}"
   gem:
     type: "gem"
-    name: "&7(&fLight Gem&7)"
-    color: "white"
+    name: "&7(&9Gem of Wisdom&7)"
+    color: "blue"
     attributes:
       requirement:
         type: "level-requirement"
-        level: 1
+        level: "(0,%1$d,0.1)+1"
       description:
         type: "text"
         text:
-        - "Move at the speed of light!"
-      fast:
-        type: "minecraft"
-        minecraft-type: "MOVEMENT_SPEED"
-        amount: 0.5
-        operation: "ADD_SCALAR"
+        - "Gain a Wisdom bonus!"
+      charisma:
+        type: "hero-attribute"
+        attributes: "#{attributes/types/wisdom}"

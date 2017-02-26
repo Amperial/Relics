@@ -1,0 +1,17 @@
+default-args: [0]
+name: "&7&lIron Shield"
+material: "SHIELD"
+item-type: "secondary"
+attributes:
+  info: "#{info}"
+  description:
+    type: "text"
+    text:
+    - "&6A Paladin Shield"
+  sockets: "#{sockets/sockets}"
+  speed:
+    type: "minecraft"
+    minecraft-type: "ATTACK_SPEED"
+    amount: 1
+    operation: "ADD_SCALAR"
+    slot: "MAIN_HAND"

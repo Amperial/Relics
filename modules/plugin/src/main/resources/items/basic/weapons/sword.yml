@@ -1,12 +1,9 @@
-default-args: [1]
+default-args: [0]
 name: "&2Basic Sword"
 material: "IRON_SWORD"
-item-type: "weapon-sword"
+item-type: "primary"
 attributes:
-  model:
-    type: "model"
-    damage: 1
-  info: "#{basic/info}"
+  info: "#{info}"
   description:
     type: "text"
     text:
@@ -17,4 +14,4 @@ attributes:
     damage: "(%1$d)+(10,20)"
     variation: "(0,5,(%1$d)/100)"
     slot: "MAIN_HAND"
-  sockets: "#{basic/sockets/sockets}"
+  sockets: "#{sockets/sockets}"

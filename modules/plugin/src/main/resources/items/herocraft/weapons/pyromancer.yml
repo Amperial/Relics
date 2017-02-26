@@ -1,0 +1,17 @@
+default-args: [0]
+name: "&7&lIron Short-Axe"
+material: "GOLD_AXE"
+item-type: "primary"
+attributes:
+  info: "#{info}"
+  description:
+    type: "text"
+    text:
+    - "&6Axe of the Pyromancer"
+  sockets: "#{sockets/sockets}"
+  speed:
+    type: "minecraft"
+    minecraft-type: "ATTACK_SPEED"
+    amount: 1
+    operation: "ADD_SCALAR"
+    slot: "MAIN_HAND"

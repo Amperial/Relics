@@ -1,0 +1,2 @@
+default-args: [0]
+STRENGTH: "(0,%1$d,0.1)+1"

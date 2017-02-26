@@ -18,10 +18,7 @@ attributes:
     - "This gem can imbue a "
     - "weapon with the legendary"
     - "strength of Ampayne2"
-  infuse:
-    type: "text"
-    text:
-    - "&dInfuse this gem into a socket!"
+  infuse: "#{gems/infuse}"
   gem:
     type: "gem"
     name: "&7(&4Gem of Ampayne2&7)"

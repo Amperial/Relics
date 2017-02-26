@@ -1,0 +1,17 @@
+default-args: [0]
+name: "&7&lIron Longblade"
+material: "IRON_SWORD"
+item-type: "primary"
+attributes:
+  info: "#{info}"
+  description:
+    type: "text"
+    text:
+    - "&6A weapon for a Paladin"
+  sockets: "#{sockets/sockets}"
+  speed:
+    type: "minecraft"
+    minecraft-type: "ATTACK_SPEED"
+    amount: 1
+    operation: "ADD_SCALAR"
+    slot: "MAIN_HAND"

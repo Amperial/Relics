@@ -108,7 +108,7 @@ public class ConfigAccessor {
             try {
                 plugin.saveResource(configType.getFileName(), false);
             } catch (Exception resource) {
-                plugin.getLogger().log(Level.INFO, "Could not save default config for " + configFile);
+                plugin.getLogger().log(Level.INFO, "Default config for " + configFile + " not found");
                 try {
                     configFile.getParentFile().mkdirs();
                     if (configFile.createNewFile()) {

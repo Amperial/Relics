@@ -1,0 +1,4 @@
+default-args: [0]
+type: "group"
+spacing: false
+attributes: "#{sockets/amount/(0,4,%1$d/100)}"

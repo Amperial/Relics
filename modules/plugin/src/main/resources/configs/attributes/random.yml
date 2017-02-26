@@ -1,0 +1,2 @@
+type: "hero-attribute"
+attributes: "#{attributes/types/<strength,constitution,endurance,dexterity,intellect,wisdom,charisma>}"

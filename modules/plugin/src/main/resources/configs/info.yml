@@ -1,13 +1,13 @@
-default-args: [1]
+default-args: [0]
 type: "group"
 spacing: false
 attributes:
   rarity:
     type: "rarity"
-    tier: "(0,6,(%1$d)/100)"
+    tier: "(0,%1$d,0.1)"
   level:
     type: "level"
     level: "%1$d"
   requirement:
     type: "level-requirement"
-    level: "(0,30,(%1$d)/100)"
+    level: "(0,%1$d,0.5)"

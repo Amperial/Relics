@@ -60,7 +60,7 @@ public class RarityAttribute extends BasicAttribute implements Rarity {
             FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttributeType.RARITY);
             tiers = config.getStringList("tiers");
             tiers.replaceAll(tier -> ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', tier));
-            unknown = ChatColor.translateAlternateColorCodes('&', config.getString("unknown", "&8Unknown"));
+            unknown = ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', config.getString("unknown", "&8Unknown"));
         }
 
         @Override

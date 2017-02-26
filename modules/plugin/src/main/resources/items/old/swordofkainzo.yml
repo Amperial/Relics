@@ -1,10 +1,7 @@
 name: "&cSword of Kainzo"
 material: "DIAMOND_SWORD"
-item-type: "weapon-sword"
+item-type: "primary"
 attributes:
-  model:
-    type: "model"
-    damage: 1
   info:
     type: "group"
     spacing: false
@@ -80,7 +77,4 @@ attributes:
                   level:
                     type: "level"
                     level: 5
-              infuse:
-                type: "text"
-                text:
-                - "&dInfuse this gem into a socket!"
+              infuse: "#{gems/infuse}"

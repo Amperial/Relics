@@ -31,7 +31,7 @@ public class InfuseGemCommand extends DualItemCommand {
         super(plugin, "infuse");
         setDescription("Infuses the gem in your off hand into a socket.");
         setCommandUsage("/aitem socket infuse [socket]");
-        setPermission(new Permission("ampitems.socket.infuse", PermissionDefault.OP));
+        setPermission(new Permission("ampitems.socket.infuse", PermissionDefault.TRUE));
         setArgumentRange(0, 1);
     }
 
