@@ -1,2 +1,2 @@
 default-args: [0]
-DEXTERITY: "(0,%1$d,0.1)+1"
+DEXTERITY: "%1$d"

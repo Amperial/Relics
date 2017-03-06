@@ -54,6 +54,13 @@ public interface Item extends AttributeContainer, Equippable, Clickable {
     ItemType getType();
 
     /**
+     * Checks if the item is unbreakable.
+     *
+     * @return {@code true} if the item is unbreakable
+     */
+    boolean isUnbreakable();
+
+    /**
      * Creates an item stack representing the item.
      *
      * @return the item stack

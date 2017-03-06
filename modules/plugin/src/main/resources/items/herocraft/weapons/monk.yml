@@ -1,6 +1,7 @@
 default-args: [0]
 name: "&7&lIronsight Rod"
 material: "BLAZE_ROD"
+unbreakable: true
 item-type: "primary"
 attributes:
   info: "#{info}"

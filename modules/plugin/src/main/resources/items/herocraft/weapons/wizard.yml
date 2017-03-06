@@ -1,6 +1,7 @@
 default-args: [0]
 name: "&7&lOak Greatstaff"
 material: "DIAMOND_HOE"
+unbreakable: true
 item-type: "primary"
 attributes:
   info: "#{info}"

@@ -1,2 +1,2 @@
 default-args: [0]
-INTELLECT: "(0,%1$d,0.1)+1"
+INTELLECT: "%1$d"

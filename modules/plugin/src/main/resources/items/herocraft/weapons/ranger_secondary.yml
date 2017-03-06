@@ -1,6 +1,7 @@
 default-args: [0]
 name: "&7&lWooden Short-Axe"
 material: "WOOD_AXE"
+unbreakable: true
 item-type: "secondary"
 attributes:
   info: "#{info}"

@@ -1,6 +1,7 @@
 default-args: [0]
 name: "&7&lSwift Oak Hammer"
 material: "BONE"
+unbreakable: true
 item-type: "primary"
 attributes:
   info: "#{info}"

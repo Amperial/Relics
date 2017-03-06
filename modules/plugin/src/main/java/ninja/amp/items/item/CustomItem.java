@@ -54,15 +54,17 @@ public class CustomItem implements Item {
     private final String name;
     private final UUID id;
     private final Material material;
+    private final boolean unbreakable;
     private final ItemType type;
     private final AttributeGroup attributes;
     private boolean equipped = false;
 
-    private CustomItem(String name, UUID id, Material material, ItemType type, AttributeGroup attributes) {
+    private CustomItem(String name, UUID id, Material material, ItemType type, boolean unbreakable, AttributeGroup attributes) {
         this.name = name;
         this.id = id;
         this.material = material;
         this.type = type;
+        this.unbreakable = unbreakable;
         this.attributes = attributes;
     }
 
@@ -84,6 +86,11 @@ public class CustomItem implements Item {
     @Override
     public ItemType getType() {
         return type;
+    }
+
+    @Override
+    public boolean isUnbreakable() {
+        return unbreakable || hasAttribute(DefaultAttributeType.MODEL);
     }
 
     @Override
@@ -318,6 +325,10 @@ public class CustomItem implements Item {
         if (modelOptional.isPresent()) {
             Model model = (Model) modelOptional.get();
             item.setDurability(model.getModelDamage());
+        }
+
+        // Check for unbreakable
+        if (isUnbreakable()) {
             meta.spigot().setUnbreakable(true);
             meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         }
@@ -414,6 +425,7 @@ public class CustomItem implements Item {
         compound.setString("name", getName());
         compound.setString("id", getId().toString());
         compound.setString("material", getMaterial().name());
+        compound.setBoolean("unbreakable", isUnbreakable());
         compound.setString("item-type", getType().getName());
         compound.setBase("item-instance", NBTTagObject.create(this));
     }
@@ -432,11 +444,12 @@ public class CustomItem implements Item {
             String name = ChatColor.translateAlternateColorCodes('&', config.getString("name"));
             UUID id = UUID.randomUUID();
             Material material = Material.getMaterial(config.getString("material"));
+            boolean unbreakable = config.getBoolean("unbreakable", false);
             ItemType type = new ItemType(config.getString("item-type"));
             AttributeGroup attribute = (AttributeGroup) DefaultAttributeType.GROUP.getFactory().loadFromConfig("attributes", config);
 
             // Create Item
-            return new CustomItem(name, id, material, type, attribute);
+            return new CustomItem(name, id, material, type, unbreakable, attribute);
         }
 
         @Override
@@ -452,11 +465,12 @@ public class CustomItem implements Item {
             String name = compound.getString("name");
             UUID id = UUID.fromString(compound.getString("id"));
             Material material = Material.getMaterial(compound.getString("material"));
+            boolean unbreakable = compound.hasKey("unbreakable") && compound.getBoolean("unbreakable");
             ItemType type = new ItemType(compound.getString("item-type"));
             AttributeGroup attribute = (AttributeGroup) DefaultAttributeType.GROUP.getFactory().loadFromNBT("attributes", compound);
 
             // Create Item
-            Item item = new CustomItem(name, id, material, type, attribute);
+            Item item = new CustomItem(name, id, material, type, unbreakable, attribute);
             compound.setBase("item-instance", NBTTagObject.create(item));
             return item;
         }

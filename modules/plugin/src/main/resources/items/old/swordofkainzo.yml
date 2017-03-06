@@ -1,5 +1,6 @@
 name: "&cSword of Kainzo"
 material: "DIAMOND_SWORD"
+unbreakable: true
 item-type: "primary"
 attributes:
   info:
