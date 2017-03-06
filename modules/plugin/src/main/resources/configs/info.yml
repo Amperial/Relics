@@ -4,10 +4,10 @@ spacing: false
 attributes:
   rarity:
     type: "rarity"
-    tier: "(0,%1$d,0.1)"
+    tier: "%1$d-1"
   level:
     type: "level"
     level: "%1$d"
   requirement:
     type: "level-requirement"
-    level: "(0,%1$d,0.5)"
+    level: "%1$d-1"

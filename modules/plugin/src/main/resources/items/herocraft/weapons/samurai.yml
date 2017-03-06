@@ -9,7 +9,9 @@ attributes:
     text:
     - "&7Twohanded Slashing"
     - "&6Sword of the Samurai"
-  sockets: "#{sockets/sockets}"
+  socket:
+    type: "socket"
+    color: "blue"
   speed:
     type: "minecraft"
     minecraft-type: "ATTACK_SPEED"
