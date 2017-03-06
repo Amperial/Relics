@@ -2,20 +2,20 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>AmpItems-api</artifactId>
+    <artifactId>Relics-api</artifactId>
     <version>0.0-SNAPSHOT</version>
     <inceptionYear>2017</inceptionYear>
-    <name>AmpItems API</name>
+    <name>Relics API</name>
     <description>Item Attributes API</description>
 
     <organization>
-        <name>AmpItems</name>
+        <name>Relics</name>
         <url>http://github.com/ampayne2</url>
     </organization>
 
     <parent>
-        <groupId>ninja.amp.items</groupId>
-        <artifactId>AmpItems-Parent</artifactId>
+        <groupId>com.herocraftonline.items</groupId>
+        <artifactId>Relics-Parent</artifactId>
         <version>Parent</version>
         <relativePath>../../</relativePath>
     </parent>
@@ -34,7 +34,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>ninja.amp.items</groupId>
+            <groupId>com.herocraftonline.items</groupId>
             <artifactId>NMSHandler</artifactId>
             <version>0.0-SNAPSHOT</version>
         </dependency>
@@ -52,7 +52,7 @@
     </dependencies>
 
     <build>
-        <finalName>AmpItems-api</finalName>
+        <finalName>Relics-api</finalName>
         <sourceDirectory>src/main/java</sourceDirectory>
         <defaultGoal>clean install</defaultGoal>
         <plugins>

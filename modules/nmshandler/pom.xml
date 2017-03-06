@@ -5,12 +5,12 @@
     <artifactId>NMSHandler</artifactId>
     <version>0.0-SNAPSHOT</version>
     <inceptionYear>2017</inceptionYear>
-    <name>AmpItems NMS API</name>
+    <name>Relics NMS API</name>
     <description>Item Attributes API Plugin.</description>
 
     <parent>
-        <groupId>ninja.amp.items</groupId>
-        <artifactId>AmpItems-Parent</artifactId>
+        <groupId>com.herocraftonline.items</groupId>
+        <artifactId>Relics-Parent</artifactId>
         <version>Parent</version>
         <relativePath>../../</relativePath>
     </parent>

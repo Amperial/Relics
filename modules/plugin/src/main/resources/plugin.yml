@@ -1,8 +1,8 @@
-name: AmpItems
+name: Relics
 version: 0.0
 description: Item Attributes API Plugin
 author: ampayne2
-main: ninja.amp.items.AmpItems
+main: com.herocraftonline.items.Relics
 commands:
-  ampitems:
-    aliases: [ampitem, aitems, aitem]
+  relics:
+    aliases: [relic, rel]

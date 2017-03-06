@@ -2,20 +2,20 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>AmpItems</artifactId>
+    <artifactId>Relics</artifactId>
     <version>0.0-SNAPSHOT</version>
     <inceptionYear>2017</inceptionYear>
-    <name>AmpItems</name>
+    <name>Relics</name>
     <description>Item Attributes API Plugin.</description>
 
     <organization>
-        <name>AmpItems</name>
+        <name>Relics</name>
         <url>http://github.com/ampayne2</url>
     </organization>
 
     <parent>
-        <groupId>ninja.amp.items</groupId>
-        <artifactId>AmpItems-Parent</artifactId>
+        <groupId>com.herocraftonline.items</groupId>
+        <artifactId>Relics-Parent</artifactId>
         <version>Parent</version>
         <relativePath>../../</relativePath>
     </parent>
@@ -34,24 +34,24 @@
 
     <dependencies>
         <dependency>
-            <groupId>ninja.amp.items</groupId>
-            <artifactId>AmpItems-api</artifactId>
+            <groupId>com.herocraftonline.items</groupId>
+            <artifactId>Relics-api</artifactId>
             <version>0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>ninja.amp.items</groupId>
+            <groupId>com.herocraftonline.items</groupId>
             <artifactId>NMSHandler</artifactId>
             <version>0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>ninja.amp.items</groupId>
+            <groupId>com.herocraftonline.items</groupId>
             <artifactId>NMSHandler-v1_10_R1</artifactId>
             <version>v1_10_R1-SNAPSHOT</version>
             <type>jar</type>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>ninja.amp.items</groupId>
+            <groupId>com.herocraftonline.items</groupId>
             <artifactId>NMSHandler-v1_11_R1</artifactId>
             <version>v1_11_R1-SNAPSHOT</version>
             <type>jar</type>
@@ -66,7 +66,7 @@
     </dependencies>
 
     <build>
-        <finalName>AmpItems</finalName>
+        <finalName>Relics</finalName>
         <sourceDirectory>src/main/java</sourceDirectory>
         <defaultGoal>clean install</defaultGoal>
         <resources>
@@ -112,8 +112,8 @@
                             <minimizeJar>false</minimizeJar>
                             <artifactSet>
                                 <includes>
-                                    <include>ninja.amp.items:AmpItems-api</include>
-                                    <include>ninja.amp.items:NMSHandler*</include>
+                                    <include>com.herocraftonline.items:Relics-api</include>
+                                    <include>com.herocraftonline.items:NMSHandler*</include>
                                     <include>com.udojava:EvalEx</include>
                                 </includes>
                             </artifactSet>

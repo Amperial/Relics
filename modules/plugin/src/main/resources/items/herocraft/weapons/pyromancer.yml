@@ -1,4 +1,4 @@
-default-args: [0]
+default-args: [1]
 name: "&7&lIron Short-Axe"
 material: "GOLD_AXE"
 unbreakable: true

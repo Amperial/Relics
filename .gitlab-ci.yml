@@ -11,7 +11,7 @@ build:
     - mvn clean package --settings .maven-settings.xml
   artifacts:
     paths:
-    - modules/plugin/target/AmpItems.jar
+    - modules/plugin/target/Relics.jar
 deploy:
   stage: deploy
   script:

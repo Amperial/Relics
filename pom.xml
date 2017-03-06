@@ -2,11 +2,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ninja.amp.items</groupId>
-    <artifactId>AmpItems-Parent</artifactId>
+    <groupId>com.herocraftonline.items</groupId>
+    <artifactId>Relics-Parent</artifactId>
     <version>Parent</version>
     <inceptionYear>2017</inceptionYear>
-    <name>AmpItems Parent Project</name>
+    <name>Relics Parent Project</name>
     <packaging>pom</packaging>
 
     <modules>
