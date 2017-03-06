@@ -49,32 +49,16 @@ public class GiveItemCommand extends Command {
         }
 
         String itemName = args.remove(0);
-        if (itemManager.hasItemConfig(itemName)) {
-            Object[] itemArgs = args.toArray();
-
-            // Replace string arguments with numbers where possible
-            for (int i = 0; i < itemArgs.length; i++) {
-                try {
-                    String itemArg = (String) itemArgs[i];
-                    double value = Double.valueOf(itemArg);
-                    if (itemArg.contains(".")) {
-                        itemArgs[i] = value;
-                    } else {
-                        itemArgs[i] = (int) value;
-                    }
-                } catch (NumberFormatException e) {
-                    // Arg isn't a number
-                }
-            }
-
-            Item item = itemManager.getItem(itemName, itemArgs);
-
+        Item item = itemManager.getItem(itemName, args.toArray());
+        if (item == null) {
+            messenger.sendErrorMessage(sender, RelMessage.ITEM_DOESNTEXIST, itemName);
+        } else {
             receiving.getInventory().addItem(item.getItem());
 
             messenger.sendMessage(sender, RelMessage.ITEM_SPAWN, item.getName());
-            messenger.sendMessage(receiving, RelMessage.ITEM_RECEIVE, item.getName());
-        } else {
-            messenger.sendErrorMessage(sender, RelMessage.ITEM_DOESNTEXIST, itemName);
+            if (!sender.equals(receiving)) {
+                messenger.sendMessage(receiving, RelMessage.ITEM_RECEIVE, item.getName());
+            }
         }
     }
 

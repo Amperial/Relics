@@ -41,31 +41,13 @@ public class GetItemCommand extends Command {
         ItemManager itemManager = plugin.getItemManager();
 
         String itemName = args.remove(0);
-        if (itemManager.hasItemConfig(itemName)) {
-            Object[] itemArgs = args.toArray();
-
-            // Replace string arguments with numbers where possible
-            for (int i = 0; i < itemArgs.length; i++) {
-                try {
-                    String itemArg = (String) itemArgs[i];
-                    double value = Double.valueOf(itemArg);
-                    if (itemArg.contains(".")) {
-                        itemArgs[i] = value;
-                    } else {
-                        itemArgs[i] = (int) value;
-                    }
-                } catch (NumberFormatException e) {
-                    // Arg isn't a number
-                }
-            }
-
-            Item item = itemManager.getItem(itemName, itemArgs);
-
+        Item item = itemManager.getItem(itemName, args.toArray());
+        if (item == null) {
+            messenger.sendErrorMessage(player, RelMessage.ITEM_DOESNTEXIST, itemName);
+        } else {
             player.getInventory().addItem(item.getItem());
 
             messenger.sendMessage(player, RelMessage.ITEM_SPAWN, item.getName());
-        } else {
-            messenger.sendErrorMessage(player, RelMessage.ITEM_DOESNTEXIST, itemName);
         }
     }
 

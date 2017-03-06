@@ -154,6 +154,22 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
 
     @Override
     public Item getItem(ConfigurationSection config, Object... args) {
+        // Replace string arguments with numbers where possible
+        for (int i = 0; i < args.length; i++) {
+            if (args[i] instanceof String) {
+                try {
+                    String itemArg = (String) args[i];
+                    double value = Double.valueOf(itemArg);
+                    if (itemArg.contains(".")) {
+                        args[i] = value;
+                    } else {
+                        args[i] = (int) value;
+                    }
+                } catch (NumberFormatException e) {
+                    // Arg isn't a number
+                }
+            }
+        }
         return factory.loadFromConfig(plugin.getConfigManager().transformConfig(config, args));
     }
 
@@ -164,7 +180,7 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
 
     @Override
     public Item getItem(String item, Object... args) {
-        return getItem(getItemConfig(item.toLowerCase()), args);
+        return hasItemConfig(item) ? getItem(getItemConfig(item.toLowerCase()), args) : null;
     }
 
     @Override
