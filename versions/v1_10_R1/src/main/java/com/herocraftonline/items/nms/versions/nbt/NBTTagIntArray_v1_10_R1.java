@@ -10,8 +10,7 @@
  */
 package com.herocraftonline.items.nms.versions.nbt;
 
-
-import com.herocraftonline.items.nms.nbt.NBTTagIntArray;
+import com.herocraftonline.items.api.storage.nbt.NBTTagIntArray;
 
 public class NBTTagIntArray_v1_10_R1 extends net.minecraft.server.v1_10_R1.NBTTagIntArray implements NBTTagIntArray {
 

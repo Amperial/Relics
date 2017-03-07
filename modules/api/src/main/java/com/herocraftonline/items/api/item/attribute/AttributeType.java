@@ -10,7 +10,7 @@
  */
 package com.herocraftonline.items.api.item.attribute;
 
-import com.herocraftonline.items.api.config.Config;
+import com.herocraftonline.items.api.storage.config.Config;
 
 import java.util.function.Predicate;
 

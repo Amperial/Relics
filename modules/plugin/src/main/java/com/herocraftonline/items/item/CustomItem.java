@@ -23,12 +23,12 @@ import com.herocraftonline.items.api.item.attribute.attributes.stats.LevelRequir
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatGroup;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatType;
+import com.herocraftonline.items.api.storage.nbt.NBTBase;
+import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+import com.herocraftonline.items.api.storage.nbt.NBTTagList;
+import com.herocraftonline.items.api.storage.nbt.NBTTagObject;
 import com.herocraftonline.items.item.attributes.DefaultAttributeType;
 import com.herocraftonline.items.nms.NMSHandler;
-import com.herocraftonline.items.nms.nbt.NBTBase;
-import com.herocraftonline.items.nms.nbt.NBTTagCompound;
-import com.herocraftonline.items.nms.nbt.NBTTagList;
-import com.herocraftonline.items.nms.nbt.NBTTagObject;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;

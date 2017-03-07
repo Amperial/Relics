@@ -10,9 +10,9 @@
  */
 package com.herocraftonline.items.nms.versions.nbt;
 
-import com.herocraftonline.items.nms.nbt.NBTBase;
-import com.herocraftonline.items.nms.nbt.NBTTagCompound;
-import com.herocraftonline.items.nms.nbt.NBTTagList;
+import com.herocraftonline.items.api.storage.nbt.NBTBase;
+import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+import com.herocraftonline.items.api.storage.nbt.NBTTagList;
 
 public class NBTTagList_v1_10_R1 extends net.minecraft.server.v1_10_R1.NBTTagList implements NBTTagList {
 

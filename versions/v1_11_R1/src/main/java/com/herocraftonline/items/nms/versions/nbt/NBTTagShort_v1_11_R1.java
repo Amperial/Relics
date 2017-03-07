@@ -10,7 +10,7 @@
  */
 package com.herocraftonline.items.nms.versions.nbt;
 
-import com.herocraftonline.items.nms.nbt.NBTTagShort;
+import com.herocraftonline.items.api.storage.nbt.NBTTagShort;
 
 public class NBTTagShort_v1_11_R1 extends net.minecraft.server.v1_11_R1.NBTTagShort implements NBTTagShort {
 

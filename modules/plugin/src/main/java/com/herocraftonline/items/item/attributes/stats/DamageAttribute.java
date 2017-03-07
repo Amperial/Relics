@@ -13,8 +13,8 @@ package com.herocraftonline.items.item.attributes.stats;
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.attribute.attributes.BasicAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.Damage;
+import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.attributes.DefaultAttributeType;
-import com.herocraftonline.items.nms.nbt.NBTTagCompound;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class DamageAttribute extends MinecraftAttribute implements Damage {

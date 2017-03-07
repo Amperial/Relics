@@ -11,10 +11,10 @@
 package com.herocraftonline.items.api;
 
 import com.herocraftonline.items.api.command.CommandController;
-import com.herocraftonline.items.api.config.ConfigManager;
 import com.herocraftonline.items.api.equipment.EquipmentManager;
 import com.herocraftonline.items.api.item.ItemManager;
 import com.herocraftonline.items.api.message.Messenger;
+import com.herocraftonline.items.api.storage.config.ConfigManager;
 import org.bukkit.plugin.Plugin;
 
 /**

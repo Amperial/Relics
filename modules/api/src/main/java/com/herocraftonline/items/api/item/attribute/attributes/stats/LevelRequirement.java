@@ -10,8 +10,8 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes.stats;
 
+import com.herocraftonline.items.api.item.attribute.Requirement;
 import com.herocraftonline.items.api.item.attribute.attributes.Level;
-import com.herocraftonline.items.api.item.attribute.attributes.Requirement;
 
 import java.util.List;
 import java.util.Map;

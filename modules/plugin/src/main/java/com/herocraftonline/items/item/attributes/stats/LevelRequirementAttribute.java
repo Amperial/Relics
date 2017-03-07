@@ -15,8 +15,8 @@ import com.herocraftonline.items.api.item.attribute.attributes.BasicAttributeFac
 import com.herocraftonline.items.api.item.attribute.attributes.stats.BasicStatAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.LevelRequirement;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatSpecifier;
+import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.attributes.DefaultAttributeType;
-import com.herocraftonline.items.nms.nbt.NBTTagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;

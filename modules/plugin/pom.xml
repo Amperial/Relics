@@ -114,7 +114,6 @@
                                 <includes>
                                     <include>com.herocraftonline.items:Relics-api</include>
                                     <include>com.herocraftonline.items:NMSHandler*</include>
-                                    <include>com.udojava:EvalEx</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

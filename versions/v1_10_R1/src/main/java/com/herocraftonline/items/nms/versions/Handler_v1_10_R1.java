@@ -10,8 +10,8 @@
  */
 package com.herocraftonline.items.nms.versions;
 
+import com.herocraftonline.items.api.storage.nbt.NBTBase;
 import com.herocraftonline.items.nms.NMSHandler;
-import com.herocraftonline.items.nms.nbt.NBTBase;
 import com.herocraftonline.items.nms.versions.nbt.*;
 import net.minecraft.server.v1_10_R1.NBTTagCompound;
 import net.minecraft.server.v1_10_R1.NBTTagList;
@@ -49,7 +49,7 @@ public class Handler_v1_10_R1 extends NMSHandler {
     }
 
     @Override
-    public com.herocraftonline.items.nms.nbt.NBTTagCompound getTagCompound(ItemStack item) {
+    public com.herocraftonline.items.api.storage.nbt.NBTTagCompound getTagCompound(ItemStack item) {
         if (item instanceof CraftItemStack) {
             try {
                 return getTagCompound((net.minecraft.server.v1_10_R1.ItemStack) HANDLE_FIELD.get(item));
@@ -60,7 +60,7 @@ public class Handler_v1_10_R1 extends NMSHandler {
         return getTagCompound(CraftItemStack.asNMSCopy(item));
     }
 
-    private com.herocraftonline.items.nms.nbt.NBTTagCompound getTagCompound(net.minecraft.server.v1_10_R1.ItemStack item) {
+    private com.herocraftonline.items.api.storage.nbt.NBTTagCompound getTagCompound(net.minecraft.server.v1_10_R1.ItemStack item) {
         if (item.hasTag()) {
             NBTTagCompound tag = item.getTag();
             if (tag instanceof NBTTagCompound_v1_10_R1) {
@@ -76,7 +76,7 @@ public class Handler_v1_10_R1 extends NMSHandler {
     }
 
     @Override
-    public ItemStack setTagCompound(ItemStack item, com.herocraftonline.items.nms.nbt.NBTTagCompound compound) {
+    public ItemStack setTagCompound(ItemStack item, com.herocraftonline.items.api.storage.nbt.NBTTagCompound compound) {
         if (item instanceof CraftItemStack) {
             CraftItemStack itemStack = (CraftItemStack) item;
             try {

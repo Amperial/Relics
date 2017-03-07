@@ -10,7 +10,7 @@
  */
 package com.herocraftonline.items.nms.versions.nbt;
 
-import com.herocraftonline.items.nms.nbt.NBTBase;
+import com.herocraftonline.items.api.storage.nbt.NBTBase;
 import net.minecraft.server.v1_11_R1.NBTTagByte;
 import net.minecraft.server.v1_11_R1.NBTTagByteArray;
 import net.minecraft.server.v1_11_R1.NBTTagDouble;

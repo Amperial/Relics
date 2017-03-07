@@ -10,8 +10,8 @@
  */
 package com.herocraftonline.items.nms.versions.nbt;
 
-import com.herocraftonline.items.nms.nbt.NBTBase;
-import com.herocraftonline.items.nms.nbt.NBTTagCompound;
+import com.herocraftonline.items.api.storage.nbt.NBTBase;
+import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 
 import java.util.Set;
 

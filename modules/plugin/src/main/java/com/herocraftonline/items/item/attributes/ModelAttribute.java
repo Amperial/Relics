@@ -14,7 +14,7 @@ import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.attribute.attributes.BasicAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.BasicAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.Model;
-import com.herocraftonline.items.nms.nbt.NBTTagCompound;
+import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class ModelAttribute extends BasicAttribute implements Model {

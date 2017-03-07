@@ -10,6 +10,7 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes;
 
+import com.herocraftonline.items.api.item.attribute.AttributeContainer;
 import com.herocraftonline.items.api.item.attribute.AttributeType;
 import com.herocraftonline.items.api.item.attribute.ItemAttribute;
 

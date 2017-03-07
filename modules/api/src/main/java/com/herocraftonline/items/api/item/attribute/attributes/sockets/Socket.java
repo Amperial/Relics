@@ -10,8 +10,8 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes.sockets;
 
+import com.herocraftonline.items.api.item.attribute.AttributeContainer;
 import com.herocraftonline.items.api.item.attribute.ItemAttribute;
-import com.herocraftonline.items.api.item.attribute.attributes.AttributeContainer;
 
 import java.util.Set;
 

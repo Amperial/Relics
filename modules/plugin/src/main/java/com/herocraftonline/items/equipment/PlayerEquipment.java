@@ -11,13 +11,13 @@
 package com.herocraftonline.items.equipment;
 
 import com.herocraftonline.items.api.ItemPlugin;
-import com.herocraftonline.items.api.config.ConfigAccessor;
-import com.herocraftonline.items.api.config.ConfigManager;
-import com.herocraftonline.items.api.config.DefaultConfig;
 import com.herocraftonline.items.api.equipment.Equipment;
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.ItemManager;
 import com.herocraftonline.items.api.item.ItemType;
+import com.herocraftonline.items.api.storage.config.ConfigAccessor;
+import com.herocraftonline.items.api.storage.config.ConfigManager;
+import com.herocraftonline.items.api.storage.config.DefaultConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;

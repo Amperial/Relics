@@ -19,10 +19,10 @@ import com.herocraftonline.items.api.item.attribute.attributes.BasicAttributeFac
 import com.herocraftonline.items.api.item.attribute.attributes.sockets.Gem;
 import com.herocraftonline.items.api.item.attribute.attributes.sockets.Socket;
 import com.herocraftonline.items.api.item.attribute.attributes.sockets.SocketColor;
+import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+import com.herocraftonline.items.api.storage.nbt.NBTTagList;
+import com.herocraftonline.items.api.storage.nbt.NBTTagString;
 import com.herocraftonline.items.item.attributes.DefaultAttributeType;
-import com.herocraftonline.items.nms.nbt.NBTTagCompound;
-import com.herocraftonline.items.nms.nbt.NBTTagList;
-import com.herocraftonline.items.nms.nbt.NBTTagString;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 

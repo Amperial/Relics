@@ -12,13 +12,13 @@ package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.ItemManager;
+import com.herocraftonline.items.api.item.attribute.AttributeContainer;
 import com.herocraftonline.items.api.item.attribute.ItemAttribute;
-import com.herocraftonline.items.api.item.attribute.attributes.AttributeContainer;
 import com.herocraftonline.items.api.item.attribute.attributes.AttributeGroup;
 import com.herocraftonline.items.api.item.attribute.attributes.BasicAttributeContainer;
 import com.herocraftonline.items.api.item.attribute.attributes.BasicAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatAttribute;
-import com.herocraftonline.items.nms.nbt.NBTTagCompound;
+import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Collection;

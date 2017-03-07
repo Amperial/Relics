@@ -11,15 +11,15 @@
 package com.herocraftonline.items.item;
 
 import com.herocraftonline.items.api.ItemPlugin;
-import com.herocraftonline.items.api.config.DefaultConfig;
-import com.herocraftonline.items.api.config.ItemConfig;
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.ItemFactory;
 import com.herocraftonline.items.api.item.attribute.AttributeType;
 import com.herocraftonline.items.api.item.attribute.ItemAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.sockets.SocketColor;
+import com.herocraftonline.items.api.storage.config.DefaultConfig;
+import com.herocraftonline.items.api.storage.config.ItemConfig;
+import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.attributes.DefaultAttributeType;
-import com.herocraftonline.items.nms.nbt.NBTTagCompound;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;

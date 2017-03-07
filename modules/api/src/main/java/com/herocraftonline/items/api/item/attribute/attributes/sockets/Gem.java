@@ -11,8 +11,8 @@
 package com.herocraftonline.items.api.item.attribute.attributes.sockets;
 
 import com.herocraftonline.items.api.item.Item;
+import com.herocraftonline.items.api.item.attribute.AttributeContainer;
 import com.herocraftonline.items.api.item.attribute.ItemAttribute;
-import com.herocraftonline.items.api.item.attribute.attributes.AttributeContainer;
 
 /**
  * An item attribute that can be infused into socket attributes.<br>

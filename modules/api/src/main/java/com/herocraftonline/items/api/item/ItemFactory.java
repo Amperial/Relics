@@ -10,7 +10,7 @@
  */
 package com.herocraftonline.items.api.item;
 
-import com.herocraftonline.items.nms.nbt.NBTTagCompound;
+import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 

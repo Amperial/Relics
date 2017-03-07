@@ -10,7 +10,7 @@
  */
 package com.herocraftonline.items.nms.versions.nbt;
 
-import com.herocraftonline.items.nms.nbt.NBTTagObject;
+import com.herocraftonline.items.api.storage.nbt.NBTTagObject;
 
 public class NBTTagObject_v1_10_R1<T> extends NBTTagByte_v1_10_R1 implements NBTTagObject<T> {
 

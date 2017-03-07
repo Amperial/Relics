@@ -10,7 +10,7 @@
  */
 package com.herocraftonline.items.nms.versions.nbt;
 
-import com.herocraftonline.items.nms.nbt.NBTTagDouble;
+import com.herocraftonline.items.api.storage.nbt.NBTTagDouble;
 
 public class NBTTagDouble_v1_10_R1 extends net.minecraft.server.v1_10_R1.NBTTagDouble implements NBTTagDouble {
 

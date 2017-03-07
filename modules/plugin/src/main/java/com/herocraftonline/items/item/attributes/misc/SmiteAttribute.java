@@ -12,10 +12,11 @@ package com.herocraftonline.items.item.attributes.misc;
 
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.Clickable;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.BasicAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.BasicAttributeFactory;
+import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.attributes.DefaultAttributeType;
-import com.herocraftonline.items.nms.nbt.NBTTagCompound;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -60,8 +61,8 @@ public class SmiteAttribute extends BasicAttribute implements Clickable {
     }
 
     @Override
-    public void onClick(PlayerInteractEvent event, boolean equipped) {
-        if (equipped && event.getAction() == Action.RIGHT_CLICK_AIR) {
+    public void onClick(PlayerInteractEvent event, Item item) {
+        if (item.isEquipped() && event.getAction() == Action.RIGHT_CLICK_AIR) {
             Player player = event.getPlayer();
             if (canSmite(player)) {
                 player.getWorld().strikeLightning(player.getTargetBlock(AIR, getRange()).getLocation());

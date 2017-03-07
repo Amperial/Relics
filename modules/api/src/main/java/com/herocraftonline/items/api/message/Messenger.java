@@ -11,9 +11,9 @@
 package com.herocraftonline.items.api.message;
 
 import com.herocraftonline.items.api.ItemPlugin;
-import com.herocraftonline.items.api.config.ConfigAccessor;
-import com.herocraftonline.items.api.config.ConfigManager;
-import com.herocraftonline.items.api.config.DefaultConfig;
+import com.herocraftonline.items.api.storage.config.ConfigAccessor;
+import com.herocraftonline.items.api.storage.config.ConfigManager;
+import com.herocraftonline.items.api.storage.config.DefaultConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
