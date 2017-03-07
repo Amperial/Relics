@@ -10,14 +10,14 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes;
 
-import com.herocraftonline.items.api.item.attribute.ItemAttribute;
+import com.herocraftonline.items.api.item.attribute.Attribute;
 
 /**
- * An item attribute that indicates the level of an item.
+ * An attribute that indicates the level of an item.
  *
  * @author Austin Payne
  */
-public interface Level extends ItemAttribute {
+public interface Level extends Attribute<Level> {
 
     /**
      * Gets the level of the item.

@@ -8,19 +8,19 @@
  * Unauthorized copying and/or distribution of Relics API,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.item.attribute.attributes.sockets;
+package com.herocraftonline.items.api.item.attribute.attributes.gems;
 
+import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.AttributeContainer;
-import com.herocraftonline.items.api.item.attribute.ItemAttribute;
 
 import java.util.Set;
 
 /**
- * An item attribute that can contain a gem.
+ * An attribute that can contain a gem.
  *
  * @author Austin Payne
  */
-public interface Socket extends ItemAttribute, AttributeContainer {
+public interface Socket extends Attribute<Socket>, AttributeContainer {
 
     /**
      * Gets the color of the socket.

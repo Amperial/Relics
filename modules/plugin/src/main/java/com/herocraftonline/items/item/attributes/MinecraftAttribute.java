@@ -8,25 +8,113 @@
  * Unauthorized copying and/or distribution of Relics,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.item.attributes.stats;
+package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.Equippable;
 import com.herocraftonline.items.api.item.attribute.AttributeType;
-import com.herocraftonline.items.api.item.attribute.attributes.BasicAttributeFactory;
-import com.herocraftonline.items.api.item.attribute.attributes.stats.BasicStatAttribute;
-import com.herocraftonline.items.api.item.attribute.attributes.stats.GenericAttribute;
+import com.herocraftonline.items.api.item.attribute.attributes.Minecraft;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
+import com.herocraftonline.items.api.item.attribute.attributes.stats.BaseStatAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatSpecifier;
+import com.herocraftonline.items.api.item.attribute.attributes.stats.StatTotal;
+import com.herocraftonline.items.api.item.attribute.attributes.stats.StatType;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
-import com.herocraftonline.items.item.attributes.DefaultAttributeType;
+import com.herocraftonline.items.item.DefaultAttribute;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-public class MinecraftAttribute extends BasicStatAttribute<GenericAttribute.GenericAttributeStatType> implements GenericAttribute, Equippable {
+public class MinecraftAttribute extends BaseStatAttribute<Minecraft> implements Minecraft, Equippable {
+
+    private static final StatType<Minecraft> STAT_TYPE = new MinecraftStatType();
+
+    /**
+     * Handles totalling the generic minecraft attributes of an item and adding them to the item's lore.
+     */
+    protected static class MinecraftStatType implements StatType<Minecraft> {
+        @Override
+        public Position getPosition() {
+            return Position.BOTTOM;
+        }
+
+        @Override
+        public StatTotal<Minecraft> newTotal(StatSpecifier<Minecraft> specifier) {
+            return new StatTotal<Minecraft>(specifier) {
+                double amount = 0;
+
+                @Override
+                public void addStat(Minecraft stat) {
+                    amount += stat.getAmount();
+                }
+
+                @Override
+                public void addTo(List<String> lore, String prefix) {
+                    MinecraftStatSpecifier specifier = (MinecraftStatSpecifier) getStatSpecifier();
+                    lore.add(prefix + formatModifier(specifier.operation, specifier.type, specifier.stacking, amount));
+                }
+
+                @Override
+                public boolean shouldAddLore() {
+                    return amount > 0 || amount < 0;
+                }
+            };
+        }
+
+        @Override
+        public void addTo(List<String> lore, Map<StatSpecifier<Minecraft>, StatTotal<Minecraft>> stats) {
+            stats.entrySet().stream()
+                    .collect(Collectors.groupingBy(e -> ((MinecraftStatSpecifier) e.getKey()).slot, Collectors.mapping(Map.Entry::getValue, Collectors.toList())))
+                    .entrySet().forEach(slot -> {
+                lore.add(ChatColor.GRAY + slot.getKey().getDisplayName());
+                slot.getValue().forEach(total -> total.addTo(lore, "  "));
+            });
+        }
+
+        public String formatModifier(Operation operation, Type type, boolean stacking, double amount) {
+            return operation.prefix(amount, stacking) + operation.amount(amount) + operation.suffix() + " " + type.getDisplayName();
+        }
+    }
+
+    /**
+     * A generic minecraft attribute stat specifier that separates stats by slot, type, operation, and stacking.
+     */
+    protected static class MinecraftStatSpecifier implements StatSpecifier<Minecraft> {
+        protected final Slot slot;
+        protected final Type type;
+        protected final Operation operation;
+        protected final boolean stacking;
+
+        public MinecraftStatSpecifier(Minecraft attribute) {
+            this.slot = attribute.getSlot();
+            this.type = attribute.getMinecraftType();
+            this.operation = attribute.getOperation();
+            this.stacking = attribute.isStacking();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof MinecraftStatSpecifier)) return false;
+            MinecraftStatSpecifier that = (MinecraftStatSpecifier) o;
+            return stacking == that.stacking &&
+                    slot == that.slot &&
+                    type == that.type &&
+                    operation == that.operation;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(slot, type, operation, stacking);
+        }
+    }
 
     private final Type minecraftType;
     private Slot slot;
@@ -35,7 +123,7 @@ public class MinecraftAttribute extends BasicStatAttribute<GenericAttribute.Gene
     private UUID uuid;
     private double amount;
 
-    public MinecraftAttribute(String name, AttributeType attributeType, GenericAttributeStatType statType, Type minecraftType, Slot slot, Operation operation, boolean stacking, double amount) {
+    public MinecraftAttribute(String name, AttributeType<Minecraft> attributeType, StatType<Minecraft> statType, Type minecraftType, Slot slot, Operation operation, boolean stacking, double amount) {
         super(name, attributeType, statType);
 
         this.minecraftType = minecraftType;
@@ -46,7 +134,7 @@ public class MinecraftAttribute extends BasicStatAttribute<GenericAttribute.Gene
     }
 
     public MinecraftAttribute(String name, Type minecraftType, Slot slot, Operation operation, boolean stacking, double amount) {
-        this(name, DefaultAttributeType.MINECRAFT, GenericAttribute.STAT_TYPE, minecraftType, slot, operation, stacking, amount);
+        this(name, DefaultAttribute.MINECRAFT, STAT_TYPE, minecraftType, slot, operation, stacking, amount);
     }
 
     @Override
@@ -101,8 +189,8 @@ public class MinecraftAttribute extends BasicStatAttribute<GenericAttribute.Gene
     }
 
     @Override
-    public StatSpecifier<GenericAttributeStatType> getStatSpecifier() {
-        return new GenericAttributeSpecifier(this);
+    public StatSpecifier<Minecraft> getStatSpecifier() {
+        return new MinecraftStatSpecifier(this);
     }
 
     @Override
@@ -130,13 +218,12 @@ public class MinecraftAttribute extends BasicStatAttribute<GenericAttribute.Gene
         compound.setDouble("amount", getAmount());
     }
 
-    public static class Factory extends BasicAttributeFactory<MinecraftAttribute> {
-
+    public static class Factory extends BaseAttributeFactory<Minecraft> {
         public Factory(ItemPlugin plugin) {
             super(plugin);
 
             // Load config strings for minecraft attribute types and slots
-            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttributeType.MINECRAFT);
+            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttribute.MINECRAFT);
             for (Type type : Type.values()) {
                 if (config.isString("type." + type.name())) {
                     type.setDisplayName(config.getString("type." + type.name()));
@@ -176,7 +263,6 @@ public class MinecraftAttribute extends BasicStatAttribute<GenericAttribute.Gene
             // Create minecraft attribute
             return new MinecraftAttribute(name, minecraftType, slot, operation, stacking, amount);
         }
-
     }
 
 }

@@ -14,8 +14,8 @@ import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.command.DualItemCommand;
 import com.herocraftonline.items.api.equipment.EquipmentManager;
 import com.herocraftonline.items.api.item.Item;
-import com.herocraftonline.items.api.item.attribute.attributes.sockets.Gem;
-import com.herocraftonline.items.api.item.attribute.attributes.sockets.Socket;
+import com.herocraftonline.items.api.item.attribute.attributes.gems.Gem;
+import com.herocraftonline.items.api.item.attribute.attributes.gems.Socket;
 import com.herocraftonline.items.api.message.Messenger;
 import com.herocraftonline.items.api.message.RelMessage;
 import org.bukkit.entity.Player;
@@ -52,7 +52,7 @@ public class InfuseGemCommand extends DualItemCommand {
         Socket socket;
         if (args.size() > 0) {
             String name = args.get(0);
-            Optional<Socket> socketOptional = mainHand.getAttributeDeep(name, Socket.class);
+            Optional<Socket> socketOptional = mainHand.getAttributeDeep(Socket.class, name);
             if (!socketOptional.isPresent()) {
                 messenger.sendErrorMessage(player, RelMessage.SOCKET_NOTFOUND, name);
                 return;
@@ -70,7 +70,7 @@ public class InfuseGemCommand extends DualItemCommand {
                 messenger.sendErrorMessage(player, RelMessage.SOCKET_FULL);
                 return;
             }
-            Optional<Socket> socketOptional = mainHand.getAttributeDeep(s -> (!s.hasGem() && s.acceptsGem(gem)), Socket.class);
+            Optional<Socket> socketOptional = mainHand.getAttributeDeep(Socket.class, s -> (!s.hasGem() && s.acceptsGem(gem)));
             if (!socketOptional.isPresent()) {
                 messenger.sendErrorMessage(player, RelMessage.SOCKET_NOACCEPT);
                 return;

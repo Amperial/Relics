@@ -15,11 +15,11 @@ import com.herocraftonline.items.api.item.Equippable;
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.ItemFactory;
 import com.herocraftonline.items.api.item.ItemType;
-import com.herocraftonline.items.api.item.attribute.ItemAttribute;
-import com.herocraftonline.items.api.item.attribute.attributes.AttributeGroup;
+import com.herocraftonline.items.api.item.attribute.Attribute;
+import com.herocraftonline.items.api.item.attribute.attributes.Group;
+import com.herocraftonline.items.api.item.attribute.attributes.Minecraft;
 import com.herocraftonline.items.api.item.attribute.attributes.Model;
-import com.herocraftonline.items.api.item.attribute.attributes.stats.GenericAttribute;
-import com.herocraftonline.items.api.item.attribute.attributes.stats.LevelRequirement;
+import com.herocraftonline.items.api.item.attribute.attributes.requirements.Requirement;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatGroup;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatType;
@@ -27,7 +27,6 @@ import com.herocraftonline.items.api.storage.nbt.NBTBase;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.api.storage.nbt.NBTTagList;
 import com.herocraftonline.items.api.storage.nbt.NBTTagObject;
-import com.herocraftonline.items.item.attributes.DefaultAttributeType;
 import com.herocraftonline.items.nms.NMSHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -43,7 +42,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -56,10 +54,10 @@ public class CustomItem implements Item {
     private final Material material;
     private final boolean unbreakable;
     private final ItemType type;
-    private final AttributeGroup attributes;
+    private final Group attributes;
     private boolean equipped = false;
 
-    private CustomItem(String name, UUID id, Material material, ItemType type, boolean unbreakable, AttributeGroup attributes) {
+    private CustomItem(String name, UUID id, Material material, ItemType type, boolean unbreakable, Group attributes) {
         this.name = name;
         this.id = id;
         this.material = material;
@@ -90,17 +88,7 @@ public class CustomItem implements Item {
 
     @Override
     public boolean isUnbreakable() {
-        return unbreakable || hasAttribute(DefaultAttributeType.MODEL);
-    }
-
-    @Override
-    public boolean hasAttribute(Class<?> clazz) {
-        return attributes.hasAttribute(clazz);
-    }
-
-    @Override
-    public boolean hasAttributeDeep(Class<?> clazz) {
-        return attributes.hasAttributeDeep(clazz);
+        return unbreakable || hasAttribute(DefaultAttribute.MODEL);
     }
 
     @Override
@@ -109,137 +97,167 @@ public class CustomItem implements Item {
     }
 
     @Override
+    public boolean hasAttribute(Class<? extends Attribute> type) {
+        return attributes.hasAttribute(type);
+    }
+
+    @Override
+    public boolean hasAttribute(Predicate<Attribute> predicate) {
+        return attributes.hasAttribute(predicate);
+    }
+
+    @Override
+    public Optional<Attribute> getAttribute(String name) {
+        return attributes.getAttribute(name);
+    }
+
+    @Override
+    public Optional<Attribute> getAttribute(Predicate<Attribute> predicate) {
+        return attributes.getAttribute(predicate);
+    }
+
+    @Override
+    public <T extends Attribute> Optional<T> getAttribute(Class<T> type) {
+        return attributes.getAttribute(type);
+    }
+
+    @Override
+    public <T extends Attribute> Optional<T> getAttribute(Class<T> type, String name) {
+        return attributes.getAttribute(type, name);
+    }
+
+    @Override
+    public <T extends Attribute> Optional<T> getAttribute(Class<T> type, Predicate<T> predicate) {
+        return attributes.getAttribute(type, predicate);
+    }
+
+    @Override
+    public Collection<Attribute> getAttributes() {
+        return attributes.getAttributes();
+    }
+
+    @Override
+    public Collection<Attribute> getAttributes(Predicate<Attribute> predicate) {
+        return attributes.getAttributes(predicate);
+    }
+
+    @Override
+    public <T extends Attribute> Collection<T> getAttributes(Class<T> type) {
+        return attributes.getAttributes(type);
+    }
+
+    @Override
+    public <T extends Attribute> Collection<T> getAttributes(Class<T> type, Predicate<T> predicate) {
+        return attributes.getAttributes(type, predicate);
+    }
+
+    @Override
+    public void forEach(Consumer<Attribute> action) {
+        attributes.forEach(action);
+    }
+
+    @Override
+    public void forEach(Predicate<Attribute> predicate, Consumer<Attribute> action) {
+        attributes.forEach(predicate, action);
+    }
+
+    @Override
+    public <T extends Attribute> void forEach(Class<T> type, Consumer<T> action) {
+        attributes.forEach(type, action);
+    }
+
+    @Override
+    public <T extends Attribute> void forEach(Class<T> type, Predicate<T> predicate, Consumer<T> action) {
+        attributes.forEach(type, predicate, action);
+    }
+
+    @Override
     public boolean hasAttributeDeep(String name) {
         return attributes.hasAttributeDeep(name);
     }
 
     @Override
-    public boolean hasAttribute(Predicate<ItemAttribute> predicate) {
-        return attributes.hasAttribute(predicate);
+    public boolean hasAttributeDeep(Class<? extends Attribute> type) {
+        return attributes.hasAttributeDeep(type);
     }
 
     @Override
-    public boolean hasAttributeDeep(Predicate<ItemAttribute> predicate) {
+    public boolean hasAttributeDeep(Predicate<Attribute> predicate) {
         return attributes.hasAttributeDeep(predicate);
     }
 
     @Override
-    public Optional<ItemAttribute> getAttribute(String name) {
-        return attributes.getAttribute(name);
-    }
-
-    @Override
-    public Optional<ItemAttribute> getAttributeDeep(String name) {
+    public Optional<Attribute> getAttributeDeep(String name) {
         return attributes.getAttributeDeep(name);
     }
 
     @Override
-    public Optional<ItemAttribute> getAttribute(Predicate<ItemAttribute> predicate) {
-        return attributes.getAttribute(predicate);
-    }
-
-    @Override
-    public Optional<ItemAttribute> getAttributeDeep(Predicate<ItemAttribute> predicate) {
+    public Optional<Attribute> getAttributeDeep(Predicate<Attribute> predicate) {
         return attributes.getAttributeDeep(predicate);
     }
 
     @Override
-    public Collection<ItemAttribute> getAttributes() {
-        return attributes.getAttributes();
+    public <T extends Attribute> Optional<T> getAttributeDeep(Class<T> type) {
+        return attributes.getAttributeDeep(type);
     }
 
     @Override
-    public Collection<ItemAttribute> getAttributesDeep() {
+    public <T extends Attribute> Optional<T> getAttributeDeep(Class<T> type, String name) {
+        return attributes.getAttributeDeep(type, name);
+    }
+
+    @Override
+    public <T extends Attribute> Optional<T> getAttributeDeep(Class<T> type, Predicate<T> predicate) {
+        return attributes.getAttributeDeep(type, predicate);
+    }
+
+    @Override
+    public Collection<Attribute> getAttributesDeep() {
         return attributes.getAttributesDeep();
     }
 
     @Override
-    public Collection<ItemAttribute> getAttributes(Predicate<ItemAttribute> predicate) {
-        return attributes.getAttributes(predicate);
-    }
-
-    @Override
-    public Collection<ItemAttribute> getAttributesDeep(Predicate<ItemAttribute> predicate) {
+    public Collection<Attribute> getAttributesDeep(Predicate<Attribute> predicate) {
         return attributes.getAttributesDeep(predicate);
     }
 
     @Override
-    public <T extends ItemAttribute> Optional<T> getAttribute(Class<T> clazz) {
-        return attributes.getAttribute(clazz);
+    public <T extends Attribute> Collection<T> getAttributesDeep(Class<T> type) {
+        return attributes.getAttributesDeep(type);
     }
 
     @Override
-    public <T extends ItemAttribute> Optional<T> getAttribute(String name, Class<T> clazz) {
-        return attributes.getAttribute(name, clazz);
+    public <T extends Attribute> Collection<T> getAttributesDeep(Class<T> type, Predicate<T> predicate) {
+        return attributes.getAttributesDeep(type, predicate);
     }
 
     @Override
-    public <T extends ItemAttribute> Optional<T> getAttributeDeep(Class<T> clazz) {
-        return attributes.getAttributeDeep(clazz);
-    }
-
-    @Override
-    public <T extends ItemAttribute> Optional<T> getAttributeDeep(String name, Class<T> clazz) {
-        return attributes.getAttributeDeep(name, clazz);
-    }
-
-    @Override
-    public <T extends ItemAttribute> Optional<T> getAttribute(Predicate<T> predicate, Class<T> clazz) {
-        return attributes.getAttribute(predicate, clazz);
-    }
-
-    @Override
-    public <T extends ItemAttribute> Optional<T> getAttributeDeep(Predicate<T> predicate, Class<T> clazz) {
-        return attributes.getAttributeDeep(predicate, clazz);
-    }
-
-    @Override
-    public <T extends ItemAttribute> Collection<T> getAttributes(Class<T> clazz) {
-        return attributes.getAttributes(clazz);
-    }
-
-    @Override
-    public <T extends ItemAttribute> Collection<T> getAttributesDeep(Class<T> clazz) {
-        return attributes.getAttributesDeep(clazz);
-    }
-
-    @Override
-    public <T extends ItemAttribute> Collection<T> getAttributes(Predicate<T> predicate, Class<T> clazz) {
-        return attributes.getAttributes(predicate, clazz);
-    }
-
-    @Override
-    public <T extends ItemAttribute> Collection<T> getAttributesDeep(Predicate<T> predicate, Class<T> clazz) {
-        return attributes.getAttributesDeep(predicate, clazz);
-    }
-
-    @Override
-    public void forEach(Consumer<ItemAttribute> action) {
-        attributes.forEach(action);
-    }
-
-    @Override
-    public void forEachDeep(Consumer<ItemAttribute> action) {
+    public void forEachDeep(Consumer<Attribute> action) {
         attributes.forEachDeep(action);
     }
 
     @Override
-    public void forEach(Consumer<ItemAttribute> action, Predicate<ItemAttribute> predicate) {
-        attributes.forEach(action, predicate);
+    public void forEachDeep(Predicate<Attribute> predicate, Consumer<Attribute> action) {
+        attributes.forEachDeep(predicate, action);
     }
 
     @Override
-    public void forEachDeep(Consumer<ItemAttribute> action, Predicate<ItemAttribute> predicate) {
-        attributes.forEachDeep(action, predicate);
+    public <T extends Attribute> void forEachDeep(Class<T> type, Consumer<T> action) {
+        attributes.forEachDeep(type, action);
     }
 
     @Override
-    public void addAttribute(ItemAttribute... attributes) {
+    public <T extends Attribute> void forEachDeep(Class<T> type, Predicate<T> predicate, Consumer<T> action) {
+        attributes.forEachDeep(type, predicate, action);
+    }
+
+    @Override
+    public void addAttribute(Attribute... attributes) {
         this.attributes.addAttribute(attributes);
     }
 
     @Override
-    public void removeAttribute(ItemAttribute attribute) {
+    public void removeAttribute(Attribute attribute) {
         attributes.removeAttribute(attribute);
     }
 
@@ -250,17 +268,15 @@ public class CustomItem implements Item {
 
     @Override
     public boolean canEquip(Player player) {
-        AtomicInteger levelRequirement = new AtomicInteger();
-        attributes.forEachDeep(a -> levelRequirement.getAndAdd(((LevelRequirement) a).getLevel()), ItemAttribute.type(LevelRequirement.class));
-        return levelRequirement.get() <= player.getLevel() && getAttributesDeep(ItemAttribute.type(Equippable.class)).stream().allMatch(a -> ((Equippable) a).canEquip(player));
+        return getAttributesDeep(Requirement.class).stream().allMatch(a -> a.test(player, this));
     }
 
     @Override
     public boolean onEquip(Player player) {
         equipped = true;
-        Collection<ItemAttribute> attributes = getAttributesDeep(attribute -> attribute instanceof Equippable);
+        Collection<Attribute> attributes = getAttributesDeep(attribute -> attribute instanceof Equippable);
         boolean update = false;
-        for (ItemAttribute attribute : attributes) {
+        for (Attribute attribute : attributes) {
             if (((Equippable) attribute).onEquip(player)) {
                 update = true;
             }
@@ -271,9 +287,9 @@ public class CustomItem implements Item {
     @Override
     public boolean onUnEquip(Player player) {
         equipped = false;
-        Collection<ItemAttribute> attributes = getAttributesDeep(attribute -> attribute instanceof Equippable);
+        Collection<Attribute> attributes = getAttributesDeep(attribute -> attribute instanceof Equippable);
         boolean update = false;
-        for (ItemAttribute attribute : attributes) {
+        for (Attribute attribute : attributes) {
             if (((Equippable) attribute).onUnEquip(player)) {
                 update = true;
             }
@@ -282,8 +298,8 @@ public class CustomItem implements Item {
     }
 
     @Override
-    public void onClick(PlayerInteractEvent event, boolean equipped) {
-        forEachDeep(attribute -> ((Clickable) attribute).onClick(event, equipped), attribute -> attribute instanceof Clickable);
+    public void onClick(PlayerInteractEvent event, Item item) {
+        forEachDeep(attribute -> attribute instanceof Clickable, attribute -> ((Clickable) attribute).onClick(event, item));
     }
 
     @Override
@@ -297,7 +313,7 @@ public class CustomItem implements Item {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked, deprecation")
     public ItemStack updateItem(ItemStack item) {
         // Get ItemMeta
         ItemMeta meta = item.getItemMeta();
@@ -321,7 +337,7 @@ public class CustomItem implements Item {
         meta.setLore(lore);
 
         // Check for model attribute
-        Optional<ItemAttribute> modelOptional = attributes.getAttribute(DefaultAttributeType.MODEL);
+        Optional<Attribute> modelOptional = attributes.getAttribute(DefaultAttribute.MODEL);
         if (modelOptional.isPresent()) {
             Model model = (Model) modelOptional.get();
             item.setDurability(model.getModelDamage());
@@ -334,7 +350,7 @@ public class CustomItem implements Item {
         }
 
         // Check for generic attributes
-        if (hasAttributeDeep(ItemAttribute.type(GenericAttribute.class))) {
+        if (hasAttributeDeep(Minecraft.class)) {
             meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         }
 
@@ -367,7 +383,7 @@ public class CustomItem implements Item {
 
         // Update modifiers if item is equipped
         if (isEquipped()) {
-            forEachDeep(attribute -> setModifier(modifiers, (GenericAttribute) attribute), ItemAttribute.type(GenericAttribute.class));
+            forEachDeep(Minecraft.class, attribute -> setModifier(modifiers, attribute));
         }
 
         // Remove unused modifiers
@@ -394,20 +410,20 @@ public class CustomItem implements Item {
     @SuppressWarnings("unchecked")
     private void addStatGroup(List<String> lore, StatType.Position position) {
         StatGroup stats = new StatGroup();
-        attributes.forEachDeep(a -> {
+        attributes.forEachDeep(a -> a instanceof StatAttribute, a -> {
             if (((StatAttribute) a).getStatType().getPosition() == position) {
                 stats.addStat((StatAttribute) a);
             }
-        }, a -> a instanceof StatAttribute);
+        });
         stats.addTo(lore, "");
     }
 
-    private void setModifier(NBTTagList modifiers, GenericAttribute attribute) {
+    private void setModifier(NBTTagList modifiers, Minecraft attribute) {
         NBTTagCompound modifier = NBTTagCompound.create();
         modifier.setString("AttributeName", attribute.getMinecraftType().getName());
         modifier.setString("Name", ITEM_TAG + ":" + attribute.getName());
         modifier.setDouble("Amount", attribute.getAmount());
-        if (attribute.getSlot() == GenericAttribute.Slot.ANY) {
+        if (attribute.getSlot() == Minecraft.Slot.ANY) {
             modifier.remove("Slot");
         } else {
             modifier.setString("Slot", attribute.getSlot().getName());
@@ -431,7 +447,6 @@ public class CustomItem implements Item {
     }
 
     public static class DefaultItemFactory implements ItemFactory {
-
         private ItemManager itemManager;
 
         public DefaultItemFactory(ItemManager itemManager) {
@@ -446,7 +461,7 @@ public class CustomItem implements Item {
             Material material = Material.getMaterial(config.getString("material"));
             boolean unbreakable = config.getBoolean("unbreakable", false);
             ItemType type = new ItemType(config.getString("item-type"));
-            AttributeGroup attribute = (AttributeGroup) DefaultAttributeType.GROUP.getFactory().loadFromConfig("attributes", config);
+            Group attribute = DefaultAttribute.GROUP.getFactory().loadFromConfig("attributes", config);
 
             // Create Item
             return new CustomItem(name, id, material, type, unbreakable, attribute);
@@ -467,7 +482,7 @@ public class CustomItem implements Item {
             Material material = Material.getMaterial(compound.getString("material"));
             boolean unbreakable = compound.hasKey("unbreakable") && compound.getBoolean("unbreakable");
             ItemType type = new ItemType(compound.getString("item-type"));
-            AttributeGroup attribute = (AttributeGroup) DefaultAttributeType.GROUP.getFactory().loadFromNBT("attributes", compound);
+            Group attribute = DefaultAttribute.GROUP.getFactory().loadFromNBT("attributes", compound);
 
             // Create Item
             Item item = new CustomItem(name, id, material, type, unbreakable, attribute);
@@ -504,7 +519,6 @@ public class CustomItem implements Item {
             // TODO: Remove old item tag
             return compound.hasKey("amp-item") || compound.hasKey(ITEM_TAG);
         }
-
     }
 
 }

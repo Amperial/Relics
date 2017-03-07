@@ -10,14 +10,15 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes;
 
-import com.herocraftonline.items.api.item.attribute.ItemAttribute;
+import com.herocraftonline.items.api.item.attribute.Attribute;
 
 /**
- * An item attribute that displays the item with a set durability, used in resource packs with custom item models.
+ * An attribute that displays the item with a set durability, used in resource packs with custom item models.<br>
+ * This attribute requires that the item is unbreakable, this will always be true even if unbreakable is set to false.
  *
  * @author Austin Payne
  */
-public interface Model extends ItemAttribute {
+public interface Model extends Attribute<Model> {
 
     /**
      * Gets the damage value of the custom model.

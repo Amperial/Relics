@@ -11,18 +11,19 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
-import com.herocraftonline.items.api.item.attribute.attributes.BasicAttribute;
-import com.herocraftonline.items.api.item.attribute.attributes.BasicAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.Model;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+import com.herocraftonline.items.item.DefaultAttribute;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class ModelAttribute extends BasicAttribute implements Model {
+public class ModelAttribute extends BaseAttribute<Model> implements Model {
 
     private short modelDamage;
 
     public ModelAttribute(String name, short modelDamage) {
-        super(name, DefaultAttributeType.MODEL);
+        super(name, DefaultAttribute.MODEL);
 
         this.modelDamage = modelDamage;
     }
@@ -43,8 +44,7 @@ public class ModelAttribute extends BasicAttribute implements Model {
         compound.setShort("damage", getModelDamage());
     }
 
-    public static class Factory extends BasicAttributeFactory<Model> {
-
+    public static class Factory extends BaseAttributeFactory<Model> {
         public Factory(ItemPlugin plugin) {
             super(plugin);
         }
@@ -66,7 +66,6 @@ public class ModelAttribute extends BasicAttribute implements Model {
             // Create model attribute
             return new ModelAttribute(name, modelDamage);
         }
-
     }
 
 }

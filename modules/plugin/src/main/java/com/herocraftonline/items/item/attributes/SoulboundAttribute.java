@@ -11,22 +11,22 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
-import com.herocraftonline.items.api.item.Equippable;
-import com.herocraftonline.items.api.item.attribute.attributes.BasicAttribute;
-import com.herocraftonline.items.api.item.attribute.attributes.BasicAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.Soulbound;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+import com.herocraftonline.items.item.DefaultAttribute;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-public class SoulboundAttribute extends BasicAttribute implements Soulbound, Equippable {
+public class SoulboundAttribute extends BaseAttribute<Soulbound> implements Soulbound {
 
     private boolean bound;
 
     public SoulboundAttribute(String name, String equip, String bound, boolean isBound) {
-        super(name, DefaultAttributeType.SOULBOUND);
+        super(name, DefaultAttribute.SOULBOUND);
 
         this.bound = isBound;
 
@@ -68,8 +68,7 @@ public class SoulboundAttribute extends BasicAttribute implements Soulbound, Equ
         compound.setBoolean("bound", isBound());
     }
 
-    public static class Factory extends BasicAttributeFactory<SoulboundAttribute> {
-
+    public static class Factory extends BaseAttributeFactory<Soulbound> {
         private final String equip;
         private final String bound;
 
@@ -77,7 +76,7 @@ public class SoulboundAttribute extends BasicAttribute implements Soulbound, Equ
             super(plugin);
 
             // Load soulbound text
-            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttributeType.SOULBOUND);
+            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttribute.SOULBOUND);
             equip = ChatColor.translateAlternateColorCodes('&', config.getString("equip", "&4Becomes soulbound on equip!"));
             bound = ChatColor.translateAlternateColorCodes('&', config.getString("bound", "&dThis item is soulbound!"));
         }
@@ -96,7 +95,6 @@ public class SoulboundAttribute extends BasicAttribute implements Soulbound, Equ
             // Create soulbound attribute
             return new SoulboundAttribute(name, equip, bound, isBound);
         }
-
     }
 
 }

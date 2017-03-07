@@ -17,43 +17,44 @@ import java.util.function.Predicate;
 /**
  * An attribute on a custom item.
  *
+ * @param <T> the type of attribute
  * @author Austin Payne
  */
-public interface ItemAttribute {
+public interface Attribute<T extends Attribute<T>> {
 
     /**
      * Gets a predicate that checks if the item attribute is of the given type.
      *
-     * @param clazz the attribute type
+     * @param type the attribute type
      * @return the predicate
      */
-    static Predicate<ItemAttribute> type(Class<?> clazz) {
-        return attribute -> clazz.isAssignableFrom(attribute.getClass());
+    static Predicate<Attribute> predicate(Class<?> type) {
+        return attribute -> type.isAssignableFrom(attribute.getClass());
     }
 
     /**
-     * Gets the name of the item attribute.
+     * Gets the name of the attribute.
      *
-     * @return the item attribute's name
+     * @return the attribute's name
      */
     String getName();
 
     /**
-     * Gets the type of the item attribute.
+     * Gets the type of the attribute.
      *
-     * @return the item attribute's type
+     * @return the attribute's type
      */
-    AttributeType getType();
+    AttributeType<T> getType();
 
     /**
-     * Gets the lore of the item attribute.
+     * Gets the lore of the attribute.
      *
-     * @return the item attribute's lore
+     * @return the attribute's lore
      */
-    ItemLore getLore();
+    AttributeLore getLore();
 
     /**
-     * Saves all necessary item attribute information to an nbt tag compound.
+     * Saves all necessary attribute information to an nbt tag compound.
      *
      * @param compound the tag compound
      */

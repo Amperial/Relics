@@ -20,11 +20,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 public interface Clickable {
 
     /**
-     * Handles a player interact event on the clickable.
+     * Handles a player interact event with the held item.
      *
-     * @param event    the player interact event
-     * @param equipped {@code true} if the item of the clickable is equipped, else false
+     * @param event the player interact event
+     * @param item  the held item
      */
-    void onClick(PlayerInteractEvent event, boolean equipped);
+    void onClick(PlayerInteractEvent event, Item item);
 
 }

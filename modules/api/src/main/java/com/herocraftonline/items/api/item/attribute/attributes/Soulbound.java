@@ -10,14 +10,15 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes;
 
-import com.herocraftonline.items.api.item.attribute.ItemAttribute;
+import com.herocraftonline.items.api.item.Equippable;
+import com.herocraftonline.items.api.item.attribute.Attribute;
 
 /**
- * An item attribute that makes an item "bind" to a player and become unable to be dropped unless destroyed.
+ * An attribute that makes an item "bind" to a player and become unable to be dropped unless destroyed.
  *
  * @author Austin Payne
  */
-public interface Soulbound extends ItemAttribute {
+public interface Soulbound extends Attribute<Soulbound>, Equippable {
 
     /**
      * Checks if the soulbound item is bound.

@@ -11,27 +11,27 @@
 package com.herocraftonline.items.api.item.attribute.attributes.stats;
 
 import com.herocraftonline.items.api.item.attribute.AttributeType;
-import com.herocraftonline.items.api.item.attribute.attributes.BasicAttribute;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 
 /**
- * A basic stat attribute implementation to simplify the creation of stat attributes.<br>
+ * A base stat attribute implementation to simplify the creation of stat attributes.<br>
  * Handles the attribute's stat type.
  *
- * @param <T> the type of stat the attribute tracks
+ * @param <T> the type of stat
  * @author Austin Payne
  */
-public abstract class BasicStatAttribute<T extends StatType<T>> extends BasicAttribute implements StatAttribute<T> {
+public abstract class BaseStatAttribute<T extends StatAttribute<T>> extends BaseAttribute<T> implements StatAttribute<T> {
 
-    private T statType;
+    private StatType<T> statType;
 
-    public BasicStatAttribute(String name, AttributeType attributeType, T statType) {
+    public BaseStatAttribute(String name, AttributeType<T> attributeType, StatType<T> statType) {
         super(name, attributeType);
 
         this.statType = statType;
     }
 
     @Override
-    public T getStatType() {
+    public StatType<T> getStatType() {
         return statType;
     }
 

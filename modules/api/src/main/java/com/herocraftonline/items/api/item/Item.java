@@ -10,8 +10,8 @@
  */
 package com.herocraftonline.items.api.item;
 
+import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.AttributeContainer;
-import com.herocraftonline.items.api.item.attribute.ItemAttribute;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -87,14 +87,14 @@ public interface Item extends AttributeContainer, Clickable, Equippable {
      *
      * @param attributes the attributes to add
      */
-    void addAttribute(ItemAttribute... attributes);
+    void addAttribute(Attribute... attributes);
 
     /**
      * Removes an attribute from the custom item.
      *
      * @param attribute the attribute to remove
      */
-    void removeAttribute(ItemAttribute attribute);
+    void removeAttribute(Attribute attribute);
 
     /**
      * Saves all necessary item information to an nbt tag compound.

@@ -8,24 +8,24 @@
  * Unauthorized copying and/or distribution of Relics API,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.item.attribute.attributes;
+package com.herocraftonline.items.api.item.attribute.attributes.base;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.AttributeFactory;
-import com.herocraftonline.items.api.item.attribute.ItemAttribute;
 
 /**
- * A basic attribute factory implementation to simplify the creation of item attribute factories.<br>
+ * A basic attribute factory implementation to simplify the creation of attribute factories.<br>
  * Holds on to an instance of the item plugin and provides it to the attribute factory.
  *
- * @param <T> the item attribute that this factory creates
+ * @param <T> the type of attribute created by the factory
  * @author Austin Payne
  */
-public abstract class BasicAttributeFactory<T extends ItemAttribute> implements AttributeFactory<T> {
+public abstract class BaseAttributeFactory<T extends Attribute<T>> implements AttributeFactory<T> {
 
-    private ItemPlugin plugin;
+    private final ItemPlugin plugin;
 
-    public BasicAttributeFactory(ItemPlugin plugin) {
+    public BaseAttributeFactory(ItemPlugin plugin) {
         this.plugin = plugin;
     }
 

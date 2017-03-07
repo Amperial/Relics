@@ -8,7 +8,7 @@
  * Unauthorized copying and/or distribution of Relics API,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.item.attribute.attributes.sockets;
+package com.herocraftonline.items.api.item.attribute.attributes.gems;
 
 import org.bukkit.ChatColor;
 

@@ -11,10 +11,11 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
-import com.herocraftonline.items.api.item.attribute.attributes.BasicAttribute;
-import com.herocraftonline.items.api.item.attribute.attributes.BasicAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.Durability;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+import com.herocraftonline.items.item.DefaultAttribute;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -22,13 +23,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DurabilityAttribute extends BasicAttribute implements Durability {
+public class DurabilityAttribute extends BaseAttribute<Durability> implements Durability {
 
     private int max;
     private int current;
 
     public DurabilityAttribute(String name, int max, int current, Map<Double, String> levels) {
-        super(name, DefaultAttributeType.DURABILITY);
+        super(name, DefaultAttribute.DURABILITY);
 
         this.max = max;
         this.current = current;
@@ -97,14 +98,13 @@ public class DurabilityAttribute extends BasicAttribute implements Durability {
         super.saveToNBT(compound);
     }
 
-    public static class Factory extends BasicAttributeFactory<DurabilityAttribute> {
-
+    public static class Factory extends BaseAttributeFactory<Durability> {
         private final Map<Double, String> levels = new HashMap<>();
 
         public Factory(ItemPlugin plugin) {
             super(plugin);
 
-            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttributeType.DURABILITY);
+            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttribute.DURABILITY);
             ConfigurationSection percents = config.getConfigurationSection("percents");
             for (String key : percents.getKeys(false)) {
                 String text = ChatColor.translateAlternateColorCodes('&', percents.getString(key));
@@ -130,7 +130,6 @@ public class DurabilityAttribute extends BasicAttribute implements Durability {
             // Create durability attribute
             return new DurabilityAttribute(name, max, current, levels);
         }
-
     }
 
 }

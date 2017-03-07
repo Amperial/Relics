@@ -10,14 +10,14 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes;
 
-import com.herocraftonline.items.api.item.attribute.ItemAttribute;
+import com.herocraftonline.items.api.item.attribute.Attribute;
 
 /**
- * An item attribute that indicates the rarity of an item.
+ * An attribute that indicates the rarity of an item.
  *
  * @author Austin Payne
  */
-public interface Rarity extends ItemAttribute {
+public interface Rarity extends Attribute<Rarity> {
 
     /**
      * Gets the rarity of the item.

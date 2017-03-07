@@ -11,22 +11,23 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
-import com.herocraftonline.items.api.item.attribute.attributes.BasicAttribute;
-import com.herocraftonline.items.api.item.attribute.attributes.BasicAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.Rarity;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+import com.herocraftonline.items.item.DefaultAttribute;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.List;
 
-public class RarityAttribute extends BasicAttribute implements Rarity {
+public class RarityAttribute extends BaseAttribute<Rarity> implements Rarity {
 
     private int rarity;
 
     public RarityAttribute(String name, int rarity, String text) {
-        super(name, DefaultAttributeType.RARITY);
+        super(name, DefaultAttribute.RARITY);
 
         this.rarity = rarity;
 
@@ -49,15 +50,14 @@ public class RarityAttribute extends BasicAttribute implements Rarity {
         compound.setInt("tier", getRarity());
     }
 
-    public static class Factory extends BasicAttributeFactory<Rarity> {
-
+    public static class Factory extends BaseAttributeFactory<Rarity> {
         private final List<String> tiers;
         private final String unknown;
 
         public Factory(ItemPlugin plugin) {
             super(plugin);
 
-            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttributeType.RARITY);
+            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttribute.RARITY);
             tiers = config.getStringList("tiers");
             tiers.replaceAll(tier -> ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', tier));
             unknown = ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', config.getString("unknown", "&8Unknown"));
@@ -82,7 +82,6 @@ public class RarityAttribute extends BasicAttribute implements Rarity {
             // Create rarity attribute
             return new RarityAttribute(name, rarity, text);
         }
-
     }
 
 }

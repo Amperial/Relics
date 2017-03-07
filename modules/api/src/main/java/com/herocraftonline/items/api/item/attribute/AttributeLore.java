@@ -13,20 +13,20 @@ package com.herocraftonline.items.api.item.attribute;
 import java.util.List;
 
 /**
- * Handles building an item's lore.
+ * Handles adding an attribute's lore to an item.
  *
  * @author Austin Payne
  */
-public interface ItemLore {
+public interface AttributeLore {
 
     /**
-     * An empty item lore.
+     * An empty attribute lore.
      */
-    ItemLore NONE = (lore, prefix) -> {
+    AttributeLore NONE = (lore, prefix) -> {
     };
 
     /**
-     * Adds the item lore to the given list of lore strings.
+     * Adds the attribute lore to the given list of lore strings.
      *
      * @param lore   the lore strings
      * @param prefix the current lore string prefix

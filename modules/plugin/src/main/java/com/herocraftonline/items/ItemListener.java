@@ -14,10 +14,9 @@ import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.equipment.EquipmentManager;
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.ItemManager;
-import com.herocraftonline.items.api.item.attribute.ItemAttribute;
+import com.herocraftonline.items.api.item.attribute.attributes.Damage;
 import com.herocraftonline.items.api.item.attribute.attributes.Durability;
 import com.herocraftonline.items.api.item.attribute.attributes.Soulbound;
-import com.herocraftonline.items.api.item.attribute.attributes.stats.Damage;
 import com.herocraftonline.items.api.message.Messenger;
 import com.herocraftonline.items.api.message.RelMessage;
 import org.bukkit.entity.Entity;
@@ -85,12 +84,13 @@ public class ItemListener implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         ItemStack itemStack = event.getItem();
-        Optional<Item> item = plugin.getItemManager().getItem(itemStack);
-        if (item.isPresent()) {
-            if (handleItemUse(event.getPlayer(), item.get(), itemStack)) {
-                item.get().onClick(event, true);
+        Optional<Item> itemOptional = plugin.getItemManager().getItem(itemStack);
+        if (itemOptional.isPresent()) {
+            Item item = itemOptional.get();
+            if (handleItemUse(event.getPlayer(), item, itemStack)) {
+                item.onClick(event, item);
             } else {
-                item.get().onClick(event, false);
+                item.onClick(event, item);
                 event.setCancelled(true);
             }
         }
@@ -127,9 +127,9 @@ public class ItemListener implements Listener {
                     event.setCancelled(true);
                     return;
                 }
-                item.forEachDeep(attribute -> {
-                    event.setDamage(event.getDamage() + ((Damage) attribute).getVariation() * ((random.nextDouble() * 2) - 1));
-                }, ItemAttribute.type(Damage.class));
+                item.forEachDeep(Damage.class, attribute -> {
+                    event.setDamage(event.getDamage() + attribute.getVariation() * ((random.nextDouble() * 2) - 1));
+                });
                 if (durability.isPresent() && durability.get().damage(1)) {
                     damager.getEquipment().setItemInMainHand(item.updateItem(itemStack));
                 }

@@ -11,12 +11,13 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
-import com.herocraftonline.items.api.item.attribute.attributes.BasicAttribute;
-import com.herocraftonline.items.api.item.attribute.attributes.BasicAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.Text;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.api.storage.nbt.NBTTagList;
 import com.herocraftonline.items.api.storage.nbt.NBTTagString;
+import com.herocraftonline.items.item.DefaultAttribute;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -25,12 +26,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TextAttribute extends BasicAttribute implements Text {
+public class TextAttribute extends BaseAttribute<Text> implements Text {
 
     private final List<String> text;
 
     public TextAttribute(String name, List<String> text) {
-        super(name, DefaultAttributeType.TEXT);
+        super(name, DefaultAttribute.TEXT);
 
         this.text = text;
 
@@ -57,8 +58,7 @@ public class TextAttribute extends BasicAttribute implements Text {
         compound.setBase("text", list);
     }
 
-    public static class Factory extends BasicAttributeFactory<Text> {
-
+    public static class Factory extends BaseAttributeFactory<Text> {
         public Factory(ItemPlugin plugin) {
             super(plugin);
         }
@@ -87,7 +87,6 @@ public class TextAttribute extends BasicAttribute implements Text {
             // Create text attribute
             return new TextAttribute(name, text);
         }
-
     }
 
 }

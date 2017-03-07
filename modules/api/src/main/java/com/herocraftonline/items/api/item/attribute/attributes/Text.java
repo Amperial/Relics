@@ -10,16 +10,16 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes;
 
-import com.herocraftonline.items.api.item.attribute.ItemAttribute;
+import com.herocraftonline.items.api.item.attribute.Attribute;
 
 import java.util.List;
 
 /**
- * An item attribute whose purpose is to add text to the item's lore.
+ * An attribute whose purpose is to add text to the item's lore.
  *
  * @author Austin Payne
  */
-public interface Text extends ItemAttribute {
+public interface Text extends Attribute<Text> {
 
     /**
      * Gets the text of the attribute.

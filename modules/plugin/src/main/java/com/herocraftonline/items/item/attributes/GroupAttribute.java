@@ -12,13 +12,14 @@ package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.ItemManager;
+import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.AttributeContainer;
-import com.herocraftonline.items.api.item.attribute.ItemAttribute;
-import com.herocraftonline.items.api.item.attribute.attributes.AttributeGroup;
-import com.herocraftonline.items.api.item.attribute.attributes.BasicAttributeContainer;
-import com.herocraftonline.items.api.item.attribute.attributes.BasicAttributeFactory;
+import com.herocraftonline.items.api.item.attribute.attributes.Group;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeContainer;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatAttribute;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+import com.herocraftonline.items.item.DefaultAttribute;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Collection;
@@ -29,13 +30,13 @@ import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class GroupAttribute extends BasicAttributeContainer implements AttributeGroup {
+public class GroupAttribute extends BaseAttributeContainer<Group> implements Group {
 
-    private final Map<String, ItemAttribute> attributes;
+    private final Map<String, Attribute> attributes;
     private final boolean spacing;
 
-    public GroupAttribute(String name, Map<String, ItemAttribute> attributes, boolean spacing) {
-        super(name, DefaultAttributeType.GROUP);
+    public GroupAttribute(String name, Map<String, Attribute> attributes, boolean spacing) {
+        super(name, DefaultAttribute.GROUP);
 
         this.attributes = attributes;
         this.spacing = spacing;
@@ -59,18 +60,8 @@ public class GroupAttribute extends BasicAttributeContainer implements Attribute
     }
 
     @Override
-    public Collection<ItemAttribute> getAttributes() {
-        return attributes.values();
-    }
-
-    @Override
-    public Map<String, ItemAttribute> getAttributesByName() {
-        return attributes;
-    }
-
-    @Override
-    public boolean hasAttributeDeep(Predicate<ItemAttribute> predicate) {
-        for (ItemAttribute attribute : getAttributes()) {
+    public boolean hasAttributeDeep(Predicate<Attribute> predicate) {
+        for (Attribute attribute : getAttributes()) {
             if (predicate.test(attribute)) {
                 return true;
             }
@@ -85,13 +76,13 @@ public class GroupAttribute extends BasicAttributeContainer implements Attribute
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends ItemAttribute> Optional<T> getAttributeDeep(Predicate<T> predicate, Class<T> clazz) {
-        for (ItemAttribute attribute : getAttributes()) {
-            if (clazz.isAssignableFrom(attribute.getClass()) && predicate.test((T) attribute)) {
+    public <T extends Attribute> Optional<T> getAttributeDeep(Class<T> type, Predicate<T> predicate) {
+        for (Attribute attribute : getAttributes()) {
+            if (type.isAssignableFrom(attribute.getClass()) && predicate.test((T) attribute)) {
                 return Optional.of((T) attribute);
             }
             if (attribute instanceof AttributeContainer) {
-                Optional<T> optional = ((AttributeContainer) attribute).getAttributeDeep(predicate, clazz);
+                Optional<T> optional = ((AttributeContainer) attribute).getAttributeDeep(type, predicate);
                 if (optional.isPresent()) {
                     return optional;
                 }
@@ -101,8 +92,8 @@ public class GroupAttribute extends BasicAttributeContainer implements Attribute
     }
 
     @Override
-    public void forEachDeep(Consumer<ItemAttribute> action) {
-        for (ItemAttribute attribute : getAttributes()) {
+    public void forEachDeep(Consumer<Attribute> action) {
+        for (Attribute attribute : getAttributes()) {
             action.accept(attribute);
             if (attribute instanceof AttributeContainer) {
                 ((AttributeContainer) attribute).forEachDeep(action);
@@ -111,14 +102,24 @@ public class GroupAttribute extends BasicAttributeContainer implements Attribute
     }
 
     @Override
-    public void addAttribute(ItemAttribute... attributes) {
-        for (ItemAttribute attribute : attributes) {
+    public Collection<Attribute> getAttributes() {
+        return attributes.values();
+    }
+
+    @Override
+    public Map<String, Attribute> getAttributesByName() {
+        return attributes;
+    }
+
+    @Override
+    public void addAttribute(Attribute... attributes) {
+        for (Attribute attribute : attributes) {
             this.attributes.put(attribute.getName(), attribute);
         }
     }
 
     @Override
-    public void removeAttribute(ItemAttribute attribute) {
+    public void removeAttribute(Attribute attribute) {
         attributes.remove(attribute.getName());
     }
 
@@ -126,7 +127,7 @@ public class GroupAttribute extends BasicAttributeContainer implements Attribute
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
         NBTTagCompound attributes = NBTTagCompound.create();
-        for (ItemAttribute attribute : getAttributes()) {
+        for (Attribute attribute : getAttributes()) {
             NBTTagCompound attributeCompound = NBTTagCompound.create();
             attribute.saveToNBT(attributeCompound);
             attributes.setBase(attribute.getName(), attributeCompound);
@@ -135,23 +136,22 @@ public class GroupAttribute extends BasicAttributeContainer implements Attribute
         compound.setBoolean("spacing", spacing);
     }
 
-    public static class Factory extends BasicAttributeFactory<AttributeGroup> {
-
+    public static class Factory extends BaseAttributeFactory<Group> {
         public Factory(ItemPlugin plugin) {
             super(plugin);
         }
 
         @Override
-        public AttributeGroup loadFromConfig(String name, ConfigurationSection config) {
+        public Group loadFromConfig(String name, ConfigurationSection config) {
             ItemManager itemManager = getPlugin().getItemManager();
 
             // Load attributes
-            Map<String, ItemAttribute> attributeMap = new TreeMap<>();
+            Map<String, Attribute> attributeMap = new TreeMap<>();
             if (config.isConfigurationSection("attributes")) {
                 ConfigurationSection attributes = config.getConfigurationSection("attributes");
                 attributes.getKeys(false).stream().filter(attributes::isConfigurationSection).forEach(attributeName -> {
                     ConfigurationSection attributeSection = attributes.getConfigurationSection(attributeName);
-                    ItemAttribute attribute = itemManager.loadAttribute(attributeName, attributeSection);
+                    Attribute attribute = itemManager.loadAttribute(attributeName, attributeSection);
                     if (attribute != null) {
                         attributeMap.put(attributeName, attribute);
                     }
@@ -163,16 +163,16 @@ public class GroupAttribute extends BasicAttributeContainer implements Attribute
         }
 
         @Override
-        public AttributeGroup loadFromNBT(String name, NBTTagCompound compound) {
+        public Group loadFromNBT(String name, NBTTagCompound compound) {
             ItemManager itemManager = getPlugin().getItemManager();
 
             // Load attributes
-            Map<String, ItemAttribute> attributeMap = new TreeMap<>();
+            Map<String, Attribute> attributeMap = new TreeMap<>();
             if (compound.hasKey("attributes")) {
                 NBTTagCompound attributes = compound.getCompound("attributes");
                 attributes.getKeySet().forEach(attributeName -> {
                     NBTTagCompound attributeCompound = attributes.getCompound(attributeName);
-                    ItemAttribute attribute = itemManager.loadAttribute(attributeName, attributeCompound);
+                    Attribute attribute = itemManager.loadAttribute(attributeName, attributeCompound);
                     if (attribute != null) {
                         attributeMap.put(attributeName, attribute);
                     }
@@ -182,7 +182,6 @@ public class GroupAttribute extends BasicAttributeContainer implements Attribute
             // Create attribute group
             return new GroupAttribute(name, attributeMap, compound.getBoolean("spacing"));
         }
-
     }
 
 }

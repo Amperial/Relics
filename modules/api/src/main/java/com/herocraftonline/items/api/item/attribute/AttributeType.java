@@ -15,12 +15,13 @@ import com.herocraftonline.items.api.storage.config.Config;
 import java.util.function.Predicate;
 
 /**
- * The type of an item attribute.<br>
- * Used so the item plugin can create new attribute instances without knowing implementation details.
+ * The type of an attribute. Makes the name and lore position of the attribute available.<br>
+ * Also provides a factory to create new attribute instances without knowing implementation details.
  *
+ * @param <T> the type of attribute
  * @author Austin Payne
  */
-public interface AttributeType extends Config, Predicate<ItemAttribute> {
+public interface AttributeType<T extends Attribute<T>> extends Config, Predicate<Attribute> {
 
     /**
      * Gets the name of the attribute type.
@@ -48,6 +49,6 @@ public interface AttributeType extends Config, Predicate<ItemAttribute> {
      *
      * @return the attribute type's attribute factory
      */
-    AttributeFactory<? extends ItemAttribute> getFactory();
+    AttributeFactory<T> getFactory();
 
 }

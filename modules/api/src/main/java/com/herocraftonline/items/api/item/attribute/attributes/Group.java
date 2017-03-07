@@ -10,8 +10,8 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes;
 
+import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.AttributeContainer;
-import com.herocraftonline.items.api.item.attribute.ItemAttribute;
 
 import java.util.Map;
 
@@ -21,27 +21,27 @@ import java.util.Map;
  *
  * @author Austin Payne
  */
-public interface AttributeGroup extends ItemAttribute, AttributeContainer {
+public interface Group extends Attribute<Group>, AttributeContainer {
 
     /**
      * Gets the attributes in the attribute group by name.
      *
      * @return the attribute group's attributes and their names
      */
-    Map<String, ? extends ItemAttribute> getAttributesByName();
+    Map<String, ? extends Attribute> getAttributesByName();
 
     /**
      * Adds attributes to the attribute group.
      *
      * @param attributes the attributes to add
      */
-    void addAttribute(ItemAttribute... attributes);
+    void addAttribute(Attribute... attributes);
 
     /**
      * Removes an attribute from the attribute group.
      *
      * @param attribute the attribute to remove
      */
-    void removeAttribute(ItemAttribute attribute);
+    void removeAttribute(Attribute attribute);
 
 }

@@ -10,8 +10,8 @@
  */
 package com.herocraftonline.items.api.item;
 
+import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.AttributeType;
-import com.herocraftonline.items.api.item.attribute.ItemAttribute;
 import com.herocraftonline.items.api.storage.config.ItemConfig;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import org.bukkit.configuration.ConfigurationSection;
@@ -222,7 +222,7 @@ public interface ItemManager {
      * @param config the configuration section
      * @return the item attribute
      */
-    ItemAttribute loadAttribute(String name, ConfigurationSection config);
+    Attribute loadAttribute(String name, ConfigurationSection config);
 
     /**
      * Loads an item attribute with the given name from an nbt tag compound.
@@ -231,7 +231,7 @@ public interface ItemManager {
      * @param compound the tag compound
      * @return the item attribute
      */
-    ItemAttribute loadAttribute(String name, NBTTagCompound compound);
+    Attribute loadAttribute(String name, NBTTagCompound compound);
 
     /**
      * Gets the item manager's item factory.

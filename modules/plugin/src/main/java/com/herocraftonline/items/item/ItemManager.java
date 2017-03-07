@@ -13,13 +13,12 @@ package com.herocraftonline.items.item;
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.ItemFactory;
+import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.AttributeType;
-import com.herocraftonline.items.api.item.attribute.ItemAttribute;
-import com.herocraftonline.items.api.item.attribute.attributes.sockets.SocketColor;
+import com.herocraftonline.items.api.item.attribute.attributes.gems.SocketColor;
 import com.herocraftonline.items.api.storage.config.DefaultConfig;
 import com.herocraftonline.items.api.storage.config.ItemConfig;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
-import com.herocraftonline.items.item.attributes.DefaultAttributeType;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -30,7 +29,6 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +47,7 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
         this.attributeTypes = new HashMap<>();
         this.items = new HashMap<>();
 
-        registerAttributeTypes(EnumSet.allOf(DefaultAttributeType.class), plugin);
+        registerAttributeTypes(DefaultAttribute.getTypes(), plugin);
 
         // Load attribute type lore order
         FileConfiguration attributes = plugin.getConfigManager().getConfig(DefaultConfig.ATTRIBUTES);
@@ -88,7 +86,7 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
     public void setDefaultFactories() {
         factory = new CustomItem.DefaultItemFactory(this);
 
-        DefaultAttributeType.loadFactories(plugin);
+        DefaultAttribute.loadFactories(plugin);
     }
 
     @Override
@@ -236,13 +234,13 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
     }
 
     @Override
-    public ItemAttribute loadAttribute(String name, ConfigurationSection config) {
+    public Attribute loadAttribute(String name, ConfigurationSection config) {
         String type = config.getString("type");
         return hasAttributeType(type) ? getAttributeType(type).getFactory().loadFromConfig(name, config) : null;
     }
 
     @Override
-    public ItemAttribute loadAttribute(String name, NBTTagCompound compound) {
+    public Attribute loadAttribute(String name, NBTTagCompound compound) {
         String type = compound.getString("type");
         return hasAttributeType(type) ? getAttributeType(type).getFactory().loadFromNBT(name, compound) : null;
     }

@@ -8,15 +8,15 @@
  * Unauthorized copying and/or distribution of Relics,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.item.attributes.misc;
+package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.Clickable;
 import com.herocraftonline.items.api.item.Item;
-import com.herocraftonline.items.api.item.attribute.attributes.BasicAttribute;
-import com.herocraftonline.items.api.item.attribute.attributes.BasicAttributeFactory;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
-import com.herocraftonline.items.item.attributes.DefaultAttributeType;
+import com.herocraftonline.items.item.DefaultAttribute;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -31,7 +31,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class SmiteAttribute extends BasicAttribute implements Clickable {
+public class SmiteAttribute extends BaseAttribute<SmiteAttribute> implements Clickable {
 
     private static final Set<Material> AIR;
 
@@ -45,7 +45,7 @@ public class SmiteAttribute extends BasicAttribute implements Clickable {
     private final int range;
 
     public SmiteAttribute(String name, Permission permission, Set<UUID> gods, int range) {
-        super(name, DefaultAttributeType.SMITE);
+        super(name, DefaultAttribute.SMITE);
 
         this.permission = permission;
         this.gods = gods;
@@ -62,7 +62,7 @@ public class SmiteAttribute extends BasicAttribute implements Clickable {
 
     @Override
     public void onClick(PlayerInteractEvent event, Item item) {
-        if (item.isEquipped() && event.getAction() == Action.RIGHT_CLICK_AIR) {
+        if (item.isEquipped() && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
             Player player = event.getPlayer();
             if (canSmite(player)) {
                 player.getWorld().strikeLightning(player.getTargetBlock(AIR, getRange()).getLocation());
@@ -76,15 +76,14 @@ public class SmiteAttribute extends BasicAttribute implements Clickable {
         compound.setInt("range", getRange());
     }
 
-    public static class Factory extends BasicAttributeFactory<SmiteAttribute> {
-
+    public static class Factory extends BaseAttributeFactory<SmiteAttribute> {
         private final Permission permission = new Permission("relics.attribute.smite", PermissionDefault.FALSE);
         private final Set<UUID> gods = new HashSet<>();
 
         public Factory(ItemPlugin plugin) {
             super(plugin);
 
-            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttributeType.SMITE);
+            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttribute.SMITE);
             gods.addAll(config.getStringList("gods").stream().map(UUID::fromString).collect(Collectors.toList()));
         }
 
@@ -105,7 +104,6 @@ public class SmiteAttribute extends BasicAttribute implements Clickable {
             // Create smite attribute
             return new SmiteAttribute(name, permission, gods, range);
         }
-
     }
 
 }

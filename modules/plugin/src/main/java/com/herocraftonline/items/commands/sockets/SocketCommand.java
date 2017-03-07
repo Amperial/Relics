@@ -13,7 +13,7 @@ package com.herocraftonline.items.commands.sockets;
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.command.ItemCommand;
 import com.herocraftonline.items.api.item.Item;
-import com.herocraftonline.items.api.item.attribute.attributes.sockets.Socket;
+import com.herocraftonline.items.api.item.attribute.attributes.gems.Socket;
 import com.herocraftonline.items.api.message.Message;
 import com.herocraftonline.items.api.message.Messenger;
 import com.herocraftonline.items.api.message.RelMessage;
@@ -52,7 +52,7 @@ public abstract class SocketCommand extends ItemCommand {
         Socket socket;
         if (args.size() > socketArg) {
             String name = args.get(socketArg);
-            Optional<Socket> optional = item.getAttributeDeep(name, Socket.class);
+            Optional<Socket> optional = item.getAttributeDeep(Socket.class, name);
             if (!optional.isPresent()) {
                 messenger.sendErrorMessage(player, RelMessage.SOCKET_NOTFOUND, name);
                 return;
@@ -63,7 +63,7 @@ public abstract class SocketCommand extends ItemCommand {
                 return;
             }
         } else {
-            Optional<Socket> optional = item.getAttributeDeep(socketPredicate, Socket.class);
+            Optional<Socket> optional = item.getAttributeDeep(Socket.class, socketPredicate);
             if (!optional.isPresent()) {
                 messenger.sendErrorMessage(player, predicateError);
                 return;

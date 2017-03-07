@@ -10,22 +10,22 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes.stats;
 
-import com.herocraftonline.items.api.item.attribute.ItemAttribute;
+import com.herocraftonline.items.api.item.attribute.Attribute;
 
 /**
- * An item attribute that represents a stat which can be summed and displayed in a single spot on the item lore.
+ * An item attribute that represents a stat which can be totalled and displayed in a single spot on the item lore.
  *
- * @param <T> the type of stat the attribute tracks
+ * @param <T> the type of stat
  * @author Austin Payne
  */
-public interface StatAttribute<T extends StatType<T>> extends ItemAttribute {
+public interface StatAttribute<T extends StatAttribute<T>> extends Attribute<T> {
 
     /**
      * Gets the type of stat tracked.
      *
      * @return the stat's type
      */
-    T getStatType();
+    StatType<T> getStatType();
 
     /**
      * Gets the stat specifier of the stat.

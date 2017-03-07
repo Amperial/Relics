@@ -8,26 +8,27 @@
  * Unauthorized copying and/or distribution of Relics,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.item.attributes.stats;
+package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
-import com.herocraftonline.items.api.item.attribute.attributes.BasicAttributeFactory;
-import com.herocraftonline.items.api.item.attribute.attributes.stats.BasicStatAttribute;
-import com.herocraftonline.items.api.item.attribute.attributes.stats.LevelRequirement;
+import com.herocraftonline.items.api.item.Item;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
+import com.herocraftonline.items.api.item.attribute.attributes.requirements.LevelRequirement;
+import com.herocraftonline.items.api.item.attribute.attributes.stats.BaseStatAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatSpecifier;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
-import com.herocraftonline.items.item.attributes.DefaultAttributeType;
+import com.herocraftonline.items.item.DefaultAttribute;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-public class LevelRequirementAttribute extends BasicStatAttribute<LevelRequirement.LevelRequirementStatType> implements LevelRequirement {
+public class LevelRequirementAttribute extends BaseStatAttribute<LevelRequirement> implements LevelRequirement {
 
     private int level;
 
     public LevelRequirementAttribute(String name, LevelRequirementStatType statType, int level) {
-        super(name, DefaultAttributeType.LEVEL_REQUIREMENT, statType);
+        super(name, DefaultAttribute.LEVEL_REQUIREMENT, statType);
 
         this.level = level;
     }
@@ -58,7 +59,7 @@ public class LevelRequirementAttribute extends BasicStatAttribute<LevelRequireme
     }
 
     @Override
-    public StatSpecifier<LevelRequirementStatType> getStatSpecifier() {
+    public StatSpecifier<LevelRequirement> getStatSpecifier() {
         return new StatSpecifier.All<>();
     }
 
@@ -68,14 +69,18 @@ public class LevelRequirementAttribute extends BasicStatAttribute<LevelRequireme
         compound.setInt("level", getLevel());
     }
 
-    public static class Factory extends BasicAttributeFactory<LevelRequirementAttribute> {
+    @Override
+    public boolean test(Player player, Item item) {
+        return player.getLevel() >= item.getAttributesDeep(LevelRequirement.class).stream().mapToInt(LevelRequirement::getLevel).sum();
+    }
 
+    public static class Factory extends BaseAttributeFactory<LevelRequirement> {
         private final LevelRequirementStatType statType;
 
         public Factory(ItemPlugin plugin) {
             super(plugin);
 
-            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttributeType.LEVEL_REQUIREMENT);
+            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttribute.LEVEL_REQUIREMENT);
             String text = ChatColor.translateAlternateColorCodes('&', config.getString("text", "&eLevel Requirement:"));
             statType = new LevelRequirementStatType(text);
         }
@@ -97,7 +102,6 @@ public class LevelRequirementAttribute extends BasicStatAttribute<LevelRequireme
             // Create level requirement attribute
             return new LevelRequirementAttribute(name, statType, level);
         }
-
     }
 
 }

@@ -8,21 +8,21 @@
  * Unauthorized copying and/or distribution of Relics,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.item.attributes.sockets;
+package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.ItemManager;
+import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.AttributeType;
-import com.herocraftonline.items.api.item.attribute.ItemAttribute;
-import com.herocraftonline.items.api.item.attribute.attributes.BasicAttributeContainer;
-import com.herocraftonline.items.api.item.attribute.attributes.BasicAttributeFactory;
-import com.herocraftonline.items.api.item.attribute.attributes.sockets.Gem;
-import com.herocraftonline.items.api.item.attribute.attributes.sockets.Socket;
-import com.herocraftonline.items.api.item.attribute.attributes.sockets.SocketColor;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeContainer;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
+import com.herocraftonline.items.api.item.attribute.attributes.gems.Gem;
+import com.herocraftonline.items.api.item.attribute.attributes.gems.Socket;
+import com.herocraftonline.items.api.item.attribute.attributes.gems.SocketColor;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.api.storage.nbt.NBTTagList;
 import com.herocraftonline.items.api.storage.nbt.NBTTagString;
-import com.herocraftonline.items.item.attributes.DefaultAttributeType;
+import com.herocraftonline.items.item.DefaultAttribute;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -37,13 +37,13 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class SocketAttribute extends BasicAttributeContainer implements Socket {
+public class SocketAttribute extends BaseAttributeContainer<Socket> implements Socket {
 
     private SocketColor color;
     private Set<SocketColor> accepts;
     private Gem gem;
 
-    public SocketAttribute(String name, AttributeType type, SocketColor color, Set<SocketColor> accepts) {
+    public SocketAttribute(String name, AttributeType<Socket> type, SocketColor color, Set<SocketColor> accepts) {
         super(name, type);
 
         this.color = color;
@@ -62,7 +62,7 @@ public class SocketAttribute extends BasicAttributeContainer implements Socket {
     }
 
     public SocketAttribute(String name, SocketColor color, Set<SocketColor> accepts) {
-        this(name, DefaultAttributeType.SOCKET, color, accepts);
+        this(name, DefaultAttribute.SOCKET, color, accepts);
     }
 
     @Override
@@ -106,12 +106,12 @@ public class SocketAttribute extends BasicAttributeContainer implements Socket {
     }
 
     @Override
-    public boolean hasAttribute(Predicate<ItemAttribute> predicate) {
+    public boolean hasAttribute(Predicate<Attribute> predicate) {
         return hasGem() && predicate.test(getGem());
     }
 
     @Override
-    public boolean hasAttributeDeep(Predicate<ItemAttribute> predicate) {
+    public boolean hasAttributeDeep(Predicate<Attribute> predicate) {
         if (hasGem()) {
             Gem gem = getGem();
             return predicate.test(gem) || gem.hasAttributeDeep(predicate);
@@ -121,8 +121,8 @@ public class SocketAttribute extends BasicAttributeContainer implements Socket {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends ItemAttribute> Optional<T> getAttribute(Predicate<T> predicate, Class<T> clazz) {
-        if (hasGem() && clazz.isAssignableFrom(getGem().getClass())) {
+    public <T extends Attribute> Optional<T> getAttribute(Class<T> type, Predicate<T> predicate) {
+        if (hasGem() && type.isAssignableFrom(getGem().getClass())) {
             T gem = (T) getGem();
             if (predicate.test(gem)) {
                 return Optional.of(gem);
@@ -133,21 +133,21 @@ public class SocketAttribute extends BasicAttributeContainer implements Socket {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends ItemAttribute> Optional<T> getAttributeDeep(Predicate<T> predicate, Class<T> clazz) {
+    public <T extends Attribute> Optional<T> getAttributeDeep(Class<T> type, Predicate<T> predicate) {
         if (hasGem()) {
-            if (clazz.isAssignableFrom(getGem().getClass())) {
+            if (type.isAssignableFrom(getGem().getClass())) {
                 T gem = (T) getGem();
                 if (predicate.test(gem)) {
                     return Optional.of(gem);
                 }
             }
-            return getGem().getAttributeDeep(predicate, clazz);
+            return getGem().getAttributeDeep(type, predicate);
         }
         return Optional.empty();
     }
 
     @Override
-    public Collection<ItemAttribute> getAttributes() {
+    public Collection<Attribute> getAttributes() {
         if (hasGem()) {
             return Collections.singleton(getGem());
         }
@@ -156,7 +156,7 @@ public class SocketAttribute extends BasicAttributeContainer implements Socket {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends ItemAttribute> Collection<T> getAttributesDeep(Class<T> clazz) {
+    public <T extends Attribute> Collection<T> getAttributesDeep(Class<T> clazz) {
         if (hasGem()) {
             Gem gem = getGem();
             List<T> attributes = new ArrayList<>(gem.getAttributesDeep(clazz));
@@ -169,14 +169,14 @@ public class SocketAttribute extends BasicAttributeContainer implements Socket {
     }
 
     @Override
-    public void forEach(Consumer<ItemAttribute> action) {
+    public void forEach(Consumer<Attribute> action) {
         if (hasGem()) {
             action.accept(getGem());
         }
     }
 
     @Override
-    public void forEachDeep(Consumer<ItemAttribute> action) {
+    public void forEachDeep(Consumer<Attribute> action) {
         if (hasGem()) {
             Gem gem = getGem();
             action.accept(gem);
@@ -202,8 +202,7 @@ public class SocketAttribute extends BasicAttributeContainer implements Socket {
         }
     }
 
-    public static class Factory extends BasicAttributeFactory<Socket> {
-
+    public static class Factory extends BaseAttributeFactory<Socket> {
         public Factory(ItemPlugin plugin) {
             super(plugin);
         }
@@ -229,7 +228,7 @@ public class SocketAttribute extends BasicAttributeContainer implements Socket {
             // Load gem
             if (config.isConfigurationSection("gem")) {
                 ConfigurationSection gemSection = config.getConfigurationSection("gem");
-                ItemAttribute gem = itemManager.loadAttribute("gem", gemSection);
+                Attribute gem = itemManager.loadAttribute("gem", gemSection);
                 if (gem != null && gem instanceof Gem) {
                     socket.setGem((Gem) gem);
                 }
@@ -261,7 +260,7 @@ public class SocketAttribute extends BasicAttributeContainer implements Socket {
             // Load gem
             if (compound.hasKey("gem")) {
                 NBTTagCompound gemCompound = compound.getCompound("gem");
-                ItemAttribute gem = itemManager.loadAttribute("gem", gemCompound);
+                Attribute gem = itemManager.loadAttribute("gem", gemCompound);
                 if (gem != null && gem instanceof Gem) {
                     socket.setGem((Gem) gem);
                 }
@@ -269,7 +268,6 @@ public class SocketAttribute extends BasicAttributeContainer implements Socket {
 
             return socket;
         }
-
     }
 
 }

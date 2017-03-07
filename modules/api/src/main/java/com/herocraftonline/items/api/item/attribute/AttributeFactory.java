@@ -14,12 +14,12 @@ import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
- * Creates item attribute instances from config and nbt.
+ * Creates attribute instances from config and nbt.
  *
- * @param <T> the item attribute that this factory creates
+ * @param <T> the type of attribute created by the factory
  * @author Austin Payne
  */
-public interface AttributeFactory<T extends ItemAttribute> {
+public interface AttributeFactory<T extends Attribute<T>> {
 
     /**
      * Loads an item attribute with the given name from a configuration section.

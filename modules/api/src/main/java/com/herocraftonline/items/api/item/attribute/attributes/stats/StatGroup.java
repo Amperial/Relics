@@ -10,7 +10,7 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes.stats;
 
-import com.herocraftonline.items.api.item.attribute.ItemLore;
+import com.herocraftonline.items.api.item.attribute.AttributeLore;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,13 +18,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * An item lore implementation that handles totalling stats of different types and specifiers,<br>
+ * An attribute lore implementation that handles totalling stats of different types and specifiers,<br>
  * with the final goal of displaying the total stats of an item in one spot on the item lore.
  *
  * @param <T> the type of stat the stat group tracks
  * @author Austin Payne
  */
-public class StatGroup<T extends StatType<T>> implements ItemLore {
+public class StatGroup<T extends StatAttribute<T>> implements AttributeLore {
 
     private final Map<StatType<T>, Map<StatSpecifier<T>, StatTotal<T>>> stats;
 
@@ -37,8 +37,8 @@ public class StatGroup<T extends StatType<T>> implements ItemLore {
      *
      * @param stat the stat to add
      */
-    public void addStat(StatAttribute<T> stat) {
-        T type = stat.getStatType();
+    public void addStat(T stat) {
+        StatType<T> type = stat.getStatType();
         StatSpecifier<T> specifier = stat.getStatSpecifier();
 
         if (!stats.containsKey(type)) {

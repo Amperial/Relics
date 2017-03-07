@@ -8,19 +8,19 @@
  * Unauthorized copying and/or distribution of Relics API,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.item.attribute.attributes.sockets;
+package com.herocraftonline.items.api.item.attribute.attributes.gems;
 
 import com.herocraftonline.items.api.item.Item;
+import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.AttributeContainer;
-import com.herocraftonline.items.api.item.attribute.ItemAttribute;
 
 /**
- * An item attribute that can be infused into socket attributes.<br>
+ * An attribute that can be infused into socket attributes.<br>
  * Gems can also contain attributes of their own, and remember an item representation of themselves.
  *
  * @author Austin Payne
  */
-public interface Gem extends ItemAttribute, AttributeContainer {
+public interface Gem extends Attribute<Gem>, AttributeContainer {
 
     /**
      * Gets the display name of the gem.

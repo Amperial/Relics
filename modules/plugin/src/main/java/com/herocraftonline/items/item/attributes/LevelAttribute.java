@@ -11,20 +11,21 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
-import com.herocraftonline.items.api.item.attribute.attributes.BasicAttribute;
-import com.herocraftonline.items.api.item.attribute.attributes.BasicAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.Level;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+import com.herocraftonline.items.item.DefaultAttribute;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
-public class LevelAttribute extends BasicAttribute implements Level {
+public class LevelAttribute extends BaseAttribute<Level> implements Level {
 
     private int level;
 
     public LevelAttribute(String name, String text, int level) {
-        super(name, DefaultAttributeType.LEVEL);
+        super(name, DefaultAttribute.LEVEL);
 
         this.level = level;
 
@@ -47,14 +48,13 @@ public class LevelAttribute extends BasicAttribute implements Level {
         compound.setInt("level", getLevel());
     }
 
-    public static class Factory extends BasicAttributeFactory<LevelAttribute> {
-
+    public static class Factory extends BaseAttributeFactory<Level> {
         private final String text;
 
         public Factory(ItemPlugin plugin) {
             super(plugin);
 
-            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttributeType.LEVEL);
+            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttribute.LEVEL);
             text = ChatColor.translateAlternateColorCodes('&', config.getString("text", "&eItem Level"));
         }
 
@@ -75,7 +75,6 @@ public class LevelAttribute extends BasicAttribute implements Level {
             // Create level attribute
             return new LevelAttribute(name, text, level);
         }
-
     }
 
 }

@@ -14,11 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The type of a stat attribute.
+ * Handles creating stat totals and adding the totals to an item's lore.
  *
+ * @param <T> the type of stat
  * @author Austin Payne
  */
-public interface StatType<T extends StatType<T>> {
+public interface StatType<T extends StatAttribute<T>> {
 
     /**
      * Gets the stat position of the stat attribute.

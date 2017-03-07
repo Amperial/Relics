@@ -8,30 +8,31 @@
  * Unauthorized copying and/or distribution of Relics API,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.item.attribute.attributes;
+package com.herocraftonline.items.api.item.attribute.attributes.base;
 
+import com.herocraftonline.items.api.item.attribute.Attribute;
+import com.herocraftonline.items.api.item.attribute.AttributeLore;
 import com.herocraftonline.items.api.item.attribute.AttributeType;
-import com.herocraftonline.items.api.item.attribute.ItemAttribute;
-import com.herocraftonline.items.api.item.attribute.ItemLore;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import org.bukkit.ChatColor;
 
 /**
- * A basic item attribute implementation to simplify the creation of item attributes.<br>
+ * A base attribute implementation to simplify the creation of attributes.<br>
  * Handles the item attribute name and type, as well as setting the default item lore.
  *
+ * @param <T> the type of attribute
  * @author Austin Payne
  */
-public class BasicAttribute implements ItemAttribute {
+public class BaseAttribute<T extends Attribute<T>> implements Attribute<T> {
 
     private final String name;
-    private final AttributeType type;
-    private ItemLore lore;
+    private final AttributeType<T> type;
+    private AttributeLore lore;
 
-    public BasicAttribute(String name, AttributeType type) {
+    public BaseAttribute(String name, AttributeType<T> type) {
         this.name = ChatColor.translateAlternateColorCodes('&', name);
         this.type = type;
-        this.lore = ItemLore.NONE;
+        this.lore = AttributeLore.NONE;
     }
 
     @Override
@@ -40,16 +41,16 @@ public class BasicAttribute implements ItemAttribute {
     }
 
     @Override
-    public AttributeType getType() {
+    public AttributeType<T> getType() {
         return type;
     }
 
     @Override
-    public ItemLore getLore() {
+    public AttributeLore getLore() {
         return lore;
     }
 
-    protected void setLore(ItemLore lore) {
+    protected void setLore(AttributeLore lore) {
         this.lore = lore;
     }
 

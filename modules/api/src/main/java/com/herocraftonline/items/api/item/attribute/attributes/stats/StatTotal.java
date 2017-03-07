@@ -10,15 +10,15 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes.stats;
 
-import com.herocraftonline.items.api.item.attribute.ItemLore;
+import com.herocraftonline.items.api.item.attribute.AttributeLore;
 
 /**
  * An item lore implementation that handles totalling stats of the same type and specifier.
  *
- * @param <T> the type of stat the stat total tracks
+ * @param <T> the type of stat to be totalled
  * @author Austin Payne
  */
-public abstract class StatTotal<T extends StatType<T>> implements ItemLore {
+public abstract class StatTotal<T extends StatAttribute<T>> implements AttributeLore {
 
     private final StatSpecifier<T> specifier;
 
@@ -40,7 +40,7 @@ public abstract class StatTotal<T extends StatType<T>> implements ItemLore {
      *
      * @param stat the stat to add
      */
-    public abstract void addStat(StatAttribute<T> stat);
+    public abstract void addStat(T stat);
 
     /**
      * Checks if the stat total should add its lore to the item lore.
