@@ -95,6 +95,15 @@ public interface ItemManager {
     boolean isItem(ItemStack itemStack);
 
     /**
+     * Loads an item of a certain name with the given args and gets its itemstack.
+     *
+     * @param name the item name
+     * @param args the args
+     * @return the generated itemstack
+     */
+    Optional<ItemStack> getItemStack(String name, Object... args);
+
+    /**
      * Gets the item represented by an item stack.
      *
      * @param itemStack the item stack
@@ -135,7 +144,7 @@ public interface ItemManager {
      * @param args the args
      * @return the generated item
      */
-    Item getItem(String item, Object... args);
+    Optional<Item> getItem(String item, Object... args);
 
     /**
      * Checks if an item config of a certain name is registered.

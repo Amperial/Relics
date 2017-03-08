@@ -22,6 +22,7 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
 import java.util.List;
+import java.util.Optional;
 
 public class GetItemCommand extends Command {
 
@@ -41,13 +42,15 @@ public class GetItemCommand extends Command {
         ItemManager itemManager = plugin.getItemManager();
 
         String itemName = args.remove(0);
-        Item item = itemManager.getItem(itemName, args.toArray());
-        if (item == null) {
-            messenger.sendErrorMessage(player, RelMessage.ITEM_DOESNTEXIST, itemName);
-        } else {
+        Optional<Item> itemOptional = itemManager.getItem(itemName, args.toArray());
+        if (itemOptional.isPresent()) {
+            Item item = itemOptional.get();
+
             player.getInventory().addItem(item.getItem());
 
             messenger.sendMessage(player, RelMessage.ITEM_SPAWN, item.getName());
+        } else {
+            messenger.sendErrorMessage(player, RelMessage.ITEM_DOESNTEXIST, itemName);
         }
     }
 

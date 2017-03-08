@@ -550,6 +550,11 @@ public class CustomItem implements Item {
                 compound.remove(ITEM_TAG_OLD);
             }
 
+            // Ensure ItemStack is a custom item
+            if (!compound.hasKey(ITEM_TAG)) {
+                return null;
+            }
+
             // Get custom item compound
             NBTTagCompound itemTag = compound.getCompound(ITEM_TAG);
 

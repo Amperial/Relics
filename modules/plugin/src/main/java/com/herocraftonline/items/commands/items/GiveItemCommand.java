@@ -23,6 +23,7 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
 import java.util.List;
+import java.util.Optional;
 
 public class GiveItemCommand extends Command {
 
@@ -49,16 +50,18 @@ public class GiveItemCommand extends Command {
         }
 
         String itemName = args.remove(0);
-        Item item = itemManager.getItem(itemName, args.toArray());
-        if (item == null) {
-            messenger.sendErrorMessage(sender, RelMessage.ITEM_DOESNTEXIST, itemName);
-        } else {
+        Optional<Item> itemOptional = itemManager.getItem(itemName, args.toArray());
+        if (itemOptional.isPresent()) {
+            Item item = itemOptional.get();
+
             receiving.getInventory().addItem(item.getItem());
 
             messenger.sendMessage(sender, RelMessage.ITEM_SPAWN, item.getName());
             if (!sender.equals(receiving)) {
                 messenger.sendMessage(receiving, RelMessage.ITEM_RECEIVE, item.getName());
             }
+        } else {
+            messenger.sendErrorMessage(sender, RelMessage.ITEM_DOESNTEXIST, itemName);
         }
     }
 

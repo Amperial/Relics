@@ -141,17 +141,38 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
     }
 
     @Override
+    public Optional<ItemStack> getItemStack(String name, Object... args) {
+        return getItem(name, args).flatMap(item -> Optional.of(item.getItem()));
+    }
+
+    @Override
     public Optional<Item> getItem(ItemStack itemStack) {
-        return isItem(itemStack) ? Optional.of(factory.loadFromItemStack(itemStack)) : Optional.empty();
+        return Optional.ofNullable(factory.loadFromItemStack(itemStack));
     }
 
     @Override
     public Item getItem(NBTTagCompound compound) {
+        // Ensure compound isnt null for some reason
+        if (compound == null) {
+            return null;
+        }
+
+        // Load item from nbt
         return factory.loadFromNBT(compound);
     }
 
     @Override
     public Item getItem(ConfigurationSection config, Object... args) {
+        // Ensure config isnt null for some reason
+        if (config == null) {
+            return null;
+        }
+
+        // Ensure args arent null for some reason
+        if (args == null) {
+            args = new Object[0];
+        }
+
         // Replace string arguments with numbers where possible
         for (int i = 0; i < args.length; i++) {
             if (args[i] instanceof String) {
@@ -168,17 +189,24 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
                 }
             }
         }
+
+        // Load item from config
         return factory.loadFromConfig(plugin.getConfigManager().transformConfig(config, args));
     }
 
     @Override
     public Item getItem(ItemConfig config, Object... args) {
+        // Ensure config isnt null for some reason
+        if (config == null) {
+            return null;
+        }
+
         return getItem(plugin.getConfigManager().getConfig(config), args);
     }
 
     @Override
-    public Item getItem(String item, Object... args) {
-        return hasItemConfig(item) ? getItem(getItemConfig(item.toLowerCase()), args) : null;
+    public Optional<Item> getItem(String item, Object... args) {
+        return Optional.ofNullable(getItem(getItemConfig(item.toLowerCase()), args));
     }
 
     @Override

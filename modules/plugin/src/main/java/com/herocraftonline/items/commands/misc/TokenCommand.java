@@ -23,6 +23,7 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
 import java.util.List;
+import java.util.Optional;
 
 public class TokenCommand extends Command {
 
@@ -49,8 +50,9 @@ public class TokenCommand extends Command {
         }
 
         String itemName = "token/" + player.getName();
-        if (itemManager.hasItemConfig(itemName)) {
-            Item item = itemManager.getItem(itemName);
+        Optional<Item> itemOptional = itemManager.getItem(itemName);
+        if (itemOptional.isPresent()) {
+            Item item = itemOptional.get();
 
             receiving.getInventory().addItem(item.getItem());
 
