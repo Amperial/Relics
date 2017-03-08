@@ -27,13 +27,13 @@ public class NBTTagString_v1_11_R1 extends net.minecraft.server.v1_11_R1.NBTTagS
     }
 
     @Override
-    public NBTTagString newInstance() {
-        return new NBTTagString_v1_11_R1();
+    public NBTTagString newInstance(String data) {
+        return new NBTTagString_v1_11_R1(data);
     }
 
     @Override
-    public NBTTagString newInstance(String data) {
-        return new NBTTagString_v1_11_R1(data);
+    public NBTTagString newInstance() {
+        return new NBTTagString_v1_11_R1();
     }
 
     @Override

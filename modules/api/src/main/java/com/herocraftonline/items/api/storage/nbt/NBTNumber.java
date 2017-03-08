@@ -12,16 +12,16 @@ package com.herocraftonline.items.api.storage.nbt;
 
 public interface NBTNumber extends NBTBase {
 
-    long asLong();
-
-    int asInt();
+    byte asByte();
 
     short asShort();
 
-    byte asByte();
+    int asInt();
 
-    double asDouble();
+    long asLong();
 
     float asFloat();
+
+    double asDouble();
 
 }

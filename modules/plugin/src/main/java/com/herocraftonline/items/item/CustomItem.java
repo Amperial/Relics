@@ -23,14 +23,13 @@ import com.herocraftonline.items.api.item.attribute.attributes.requirements.Requ
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatGroup;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatType;
-import com.herocraftonline.items.api.storage.nbt.NBTBase;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.api.storage.nbt.NBTTagList;
-import com.herocraftonline.items.api.storage.nbt.NBTTagObject;
 import com.herocraftonline.items.nms.NMSHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
@@ -39,7 +38,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -47,28 +48,47 @@ import java.util.function.Predicate;
 
 public class CustomItem implements Item {
 
+    // Base item tags to avoid overriding other custom nbt
+    private static final String ITEM_TAG_OLD = "amp-item";
     private static final String ITEM_TAG = "relics-item";
 
-    private final String name;
+    // Specific item tags for various item information
+    private static final String ID_TAG = "id";
+    private static final String NAME_TAG = "name";
+    private static final String MATERIAL_TAG = "material";
+    private static final String ENCHANTMENTS_TAG = "enchantments";
+    private static final String UNBREAKABLE_TAG = "unbreakable";
+    private static final String TYPE_TAG = "item-type";
+    private static final String ATTRIBUTES_TAG = "attributes";
+    private static final String INSTANCE_TAG = "item-instance";
+
+    // Generic minecraft attribute tags
+    private static final String MODIFIERS = "AttributeModifiers";
+    private static final String MODIFIER_ATTRIBUTE_NAME = "AttributeName";
+    private static final String MODIFIER_NAME = "Name";
+    private static final String MODIFIER_AMOUNT = "Amount";
+    private static final String MODIFIER_SLOT = "Slot";
+    private static final String MODIFIER_OPERATION = "Operation";
+    private static final String MODIFIER_UUID_MOST = "UUIDMost";
+    private static final String MODIFIER_UUID_LEAST = "UUIDLeast";
+
     private final UUID id;
+    private final String name;
     private final Material material;
+    private final Map<Enchantment, Integer> enchantments;
     private final boolean unbreakable;
     private final ItemType type;
     private final Group attributes;
     private boolean equipped = false;
 
-    private CustomItem(String name, UUID id, Material material, ItemType type, boolean unbreakable, Group attributes) {
-        this.name = name;
+    private CustomItem(UUID id, String name, Material material, Map<Enchantment, Integer> enchantments, boolean unbreakable, ItemType type, Group attributes) {
         this.id = id;
+        this.name = name;
         this.material = material;
-        this.type = type;
+        this.enchantments = enchantments;
         this.unbreakable = unbreakable;
+        this.type = type;
         this.attributes = attributes;
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 
     @Override
@@ -77,18 +97,28 @@ public class CustomItem implements Item {
     }
 
     @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
     public Material getMaterial() {
         return material;
     }
 
     @Override
-    public ItemType getType() {
-        return type;
+    public Map<Enchantment, Integer> getEnchantments() {
+        return enchantments;
     }
 
     @Override
     public boolean isUnbreakable() {
         return unbreakable || hasAttribute(DefaultAttribute.MODEL);
+    }
+
+    @Override
+    public ItemType getType() {
+        return type;
     }
 
     @Override
@@ -313,37 +343,23 @@ public class CustomItem implements Item {
     }
 
     @Override
-    @SuppressWarnings("unchecked, deprecation")
+    @SuppressWarnings("deprecation")
     public ItemStack updateItem(ItemStack item) {
         // Get ItemMeta
         ItemMeta meta = item.getItemMeta();
+
+        // Set item name
         meta.setDisplayName(getName());
 
-        // Build lore
-        List<String> lore = new ArrayList<>();
-        // Add stats to top of lore
-        if (attributes.hasAttributeDeep(StatAttribute.class)) {
-            addStatGroup(lore, StatType.Position.FARTHEST_TOP);
-            addStatGroup(lore, StatType.Position.TOP);
-        }
-        // Add lore of all attributes
-        attributes.getLore().addTo(lore, "");
-        // Add stats to bottom of lore
-        if (attributes.hasAttributeDeep(StatAttribute.class)) {
-            lore.add("");
-            addStatGroup(lore, StatType.Position.BOTTOM);
-            addStatGroup(lore, StatType.Position.FARTHEST_BOTTOM);
-        }
-        meta.setLore(lore);
+        // Set item lore
+        meta.setLore(createLore());
 
-        // Check for model attribute
-        Optional<Attribute> modelOptional = attributes.getAttribute(DefaultAttribute.MODEL);
-        if (modelOptional.isPresent()) {
-            Model model = (Model) modelOptional.get();
-            item.setDurability(model.getModelDamage());
+        // Set item enchantments
+        for (Map.Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
+            meta.addEnchant(enchantment.getKey(), enchantment.getValue(), true);
         }
 
-        // Check for unbreakable
+        // Set unbreakable
         if (isUnbreakable()) {
             meta.spigot().setUnbreakable(true);
             meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
@@ -357,49 +373,23 @@ public class CustomItem implements Item {
         // Set ItemMeta
         item.setItemMeta(meta);
 
+        // Check for model attribute
+        Optional<Attribute> modelOptional = attributes.getAttribute(DefaultAttribute.MODEL);
+        if (modelOptional.isPresent()) {
+            Model model = (Model) modelOptional.get();
+            item.setDurability(model.getModelDamage());
+        }
+
         // Get NBTTagCompound
         NBTTagCompound compound = NMSHandler.getInterface().getTagCompound(item);
 
-        // Set item compound
+        // Save item to compound
         NBTTagCompound itemTag = NBTTagCompound.create();
         saveToNBT(itemTag);
         compound.setBase(ITEM_TAG, itemTag);
 
-        // Get attribute modifiers
-        NBTTagList modifiers;
-        if (compound.hasKey("AttributeModifiers")) {
-            modifiers = compound.getList("AttributeModifiers", 10);
-        } else {
-            modifiers = NBTTagList.create();
-        }
-
-        // Temporarily tag modifiers to remove unused ones later
-        for (int i = 0; i < modifiers.size(); i++) {
-            NBTTagCompound modifier = modifiers.getCompound(i);
-            if (modifier.getString("Name").startsWith(ITEM_TAG)) {
-                modifier.setBoolean("Updated", false);
-            }
-        }
-
-        // Update modifiers if item is equipped
-        if (isEquipped()) {
-            forEachDeep(Minecraft.class, attribute -> setModifier(modifiers, attribute));
-        }
-
-        // Remove unused modifiers
-        int i = 0;
-        while (i < modifiers.size()) {
-            NBTTagCompound modifier = modifiers.getCompound(i);
-            if (modifier.getString("Name").startsWith(ITEM_TAG) && !modifier.getBoolean("Updated")) {
-                modifiers.removeBase(i);
-            } else {
-                modifier.remove("Updated");
-                i++;
-            }
-        }
-
-        // Set attribute modifiers
-        compound.setBase("AttributeModifiers", modifiers);
+        // Save minecraft attribute modifiers to compound
+        setModifiers(compound);
 
         // Set NBTTagCompound
         item = NMSHandler.getInterface().setTagCompound(item, compound);
@@ -407,43 +397,82 @@ public class CustomItem implements Item {
         return item;
     }
 
+    private List<String> createLore() {
+        List<String> lore = new ArrayList<>();
+
+        // Add stats to top of lore
+        if (attributes.hasAttributeDeep(StatAttribute.class)) {
+            addStatGroup(lore, StatType.Position.FARTHEST_TOP);
+            addStatGroup(lore, StatType.Position.TOP);
+        }
+        // Add lore of all attributes
+        attributes.getLore().addTo(lore, "");
+        // Add stats to bottom of lore
+        if (attributes.hasAttributeDeep(StatAttribute.class)) {
+            lore.add("");
+            addStatGroup(lore, StatType.Position.BOTTOM);
+            addStatGroup(lore, StatType.Position.FARTHEST_BOTTOM);
+        }
+
+        return lore;
+    }
+
     @SuppressWarnings("unchecked")
     private void addStatGroup(List<String> lore, StatType.Position position) {
         StatGroup stats = new StatGroup();
-        attributes.forEachDeep(a -> a instanceof StatAttribute, a -> {
-            if (((StatAttribute) a).getStatType().getPosition() == position) {
-                stats.addStat((StatAttribute) a);
-            }
-        });
+        attributes.forEachDeep(StatAttribute.class,
+                a -> a.getStatType().getPosition() == position,
+                (Consumer<StatAttribute>) stats::addStat);
         stats.addTo(lore, "");
     }
 
-    private void setModifier(NBTTagList modifiers, Minecraft attribute) {
-        NBTTagCompound modifier = NBTTagCompound.create();
-        modifier.setString("AttributeName", attribute.getMinecraftType().getName());
-        modifier.setString("Name", ITEM_TAG + ":" + attribute.getName());
-        modifier.setDouble("Amount", attribute.getAmount());
-        if (attribute.getSlot() == Minecraft.Slot.ANY) {
-            modifier.remove("Slot");
-        } else {
-            modifier.setString("Slot", attribute.getSlot().getName());
+    private void setModifiers(NBTTagCompound compound) {
+        // Get current attribute modifiers
+        NBTTagList modifiers = compound.hasKey(MODIFIERS) ? compound.getList(MODIFIERS, 10) : NBTTagList.create();
+
+        // Remove current relics attribute modifiers
+        int i = 0;
+        while (i < modifiers.size()) {
+            if (modifiers.getCompound(i).getString(MODIFIER_NAME).startsWith(ITEM_TAG)) {
+                modifiers.removeBase(i);
+            } else {
+                i++;
+            }
         }
-        modifier.setInt("Operation", attribute.getOperation().ordinal());
-        modifier.setLong("UUIDMost", attribute.getUUID().getMostSignificantBits());
-        modifier.setLong("UUIDLeast", attribute.getUUID().getLeastSignificantBits());
-        modifier.setBoolean("Updated", true);
-        modifiers.addBase(modifier);
+
+        // Set relics attribute modifiers if item is equipped
+        if (isEquipped()) {
+            forEachDeep(Minecraft.class, attribute -> modifiers.addBase(createModifier(attribute)));
+        }
+
+        // Set attribute modifiers
+        compound.setBase(MODIFIERS, modifiers);
+    }
+
+    private NBTTagCompound createModifier(Minecraft attribute) {
+        NBTTagCompound modifier = NBTTagCompound.create();
+        modifier.setString(MODIFIER_ATTRIBUTE_NAME, attribute.getMinecraftType().getName());
+        modifier.setString(MODIFIER_NAME, ITEM_TAG + ":" + attribute.getName());
+        modifier.setDouble(MODIFIER_AMOUNT, attribute.getAmount());
+        if (attribute.getSlot() != Minecraft.Slot.ANY) {
+            modifier.setString(MODIFIER_SLOT, attribute.getSlot().getName());
+        }
+        modifier.setInt(MODIFIER_OPERATION, attribute.getOperation().ordinal());
+        modifier.setLong(MODIFIER_UUID_MOST, attribute.getUUID().getMostSignificantBits());
+        modifier.setLong(MODIFIER_UUID_LEAST, attribute.getUUID().getLeastSignificantBits());
+        return modifier;
     }
 
     @Override
     public void saveToNBT(NBTTagCompound compound) {
         attributes.saveToNBT(compound);
-        compound.setString("name", getName());
-        compound.setString("id", getId().toString());
-        compound.setString("material", getMaterial().name());
-        compound.setBoolean("unbreakable", isUnbreakable());
-        compound.setString("item-type", getType().getName());
-        compound.setBase("item-instance", NBTTagObject.create(this));
+        compound.setString(ID_TAG, getId().toString());
+        compound.setString(NAME_TAG, getName());
+        compound.setString(MATERIAL_TAG, getMaterial().name());
+        // TODO: Save enchantments
+        compound.setBoolean(UNBREAKABLE_TAG, isUnbreakable());
+        compound.setString(TYPE_TAG, getType().getName());
+        compound.setObject(INSTANCE_TAG, this);
     }
 
     public static class DefaultItemFactory implements ItemFactory {
@@ -455,38 +484,46 @@ public class CustomItem implements Item {
 
         @Override
         public Item loadFromConfig(ConfigurationSection config) {
-            // Load name, id, material, type, and attributes
-            String name = ChatColor.translateAlternateColorCodes('&', config.getString("name"));
+            // Load id, name, material, enchantments, unbreakable, type, and attributes
             UUID id = UUID.randomUUID();
-            Material material = Material.getMaterial(config.getString("material"));
-            boolean unbreakable = config.getBoolean("unbreakable", false);
-            ItemType type = new ItemType(config.getString("item-type"));
-            Group attribute = DefaultAttribute.GROUP.getFactory().loadFromConfig("attributes", config);
+            String name = ChatColor.translateAlternateColorCodes('&', config.getString(NAME_TAG));
+            Material material = Material.getMaterial(config.getString(MATERIAL_TAG));
+            // TODO: Load enchantments
+            Map<Enchantment, Integer> enchantments = new HashMap<>();
+            boolean unbreakable = config.getBoolean(UNBREAKABLE_TAG, false);
+            ItemType type = new ItemType(config.getString(TYPE_TAG, ItemType.OTHER.getName()));
+            Group attribute = DefaultAttribute.GROUP.getFactory().loadFromConfig(ATTRIBUTES_TAG, config);
 
             // Create Item
-            return new CustomItem(name, id, material, type, unbreakable, attribute);
+            return new CustomItem(id, name, material, enchantments, unbreakable, type, attribute);
         }
 
         @Override
         public Item loadFromNBT(NBTTagCompound compound) {
-            if (compound.hasKey("item-instance")) {
-                NBTBase itemInstance = compound.getBase("item-instance");
-                if (itemInstance instanceof NBTTagObject) {
-                    return (Item) ((NBTTagObject) itemInstance).getObject();
+            // Check if compound already has a loaded item instance
+            if (compound.hasKey(INSTANCE_TAG)) {
+                Object itemInstance = compound.getObject(INSTANCE_TAG);
+                if (itemInstance != null) {
+                    return (Item) itemInstance;
                 }
             }
 
-            // Load name, id, material, type, and attributes
-            String name = compound.getString("name");
-            UUID id = UUID.fromString(compound.getString("id"));
-            Material material = Material.getMaterial(compound.getString("material"));
-            boolean unbreakable = compound.hasKey("unbreakable") && compound.getBoolean("unbreakable");
-            ItemType type = new ItemType(compound.getString("item-type"));
-            Group attribute = DefaultAttribute.GROUP.getFactory().loadFromNBT("attributes", compound);
+            // Load id, name, material, enchantments, unbreakable, type, and attributes
+            UUID id = UUID.fromString(compound.getString(ID_TAG));
+            String name = compound.getString(NAME_TAG);
+            Material material = Material.getMaterial(compound.getString(MATERIAL_TAG));
+            // TODO: Load enchantments
+            Map<Enchantment, Integer> enchantments = new HashMap<>();
+            boolean unbreakable = compound.getBoolean(UNBREAKABLE_TAG);
+            ItemType type = new ItemType(compound.getString(TYPE_TAG));
+            Group attribute = DefaultAttribute.GROUP.getFactory().loadFromNBT(ATTRIBUTES_TAG, compound);
 
             // Create Item
-            Item item = new CustomItem(name, id, material, type, unbreakable, attribute);
-            compound.setBase("item-instance", NBTTagObject.create(item));
+            Item item = new CustomItem(id, name, material, enchantments, unbreakable, type, attribute);
+
+            // Store a loaded item instance on the compound for performance
+            compound.setObject(INSTANCE_TAG, item);
+
             return item;
         }
 
@@ -495,10 +532,10 @@ public class CustomItem implements Item {
             // Get ItemStack NBT
             NBTTagCompound compound = NMSHandler.getInterface().getTagCompound(itemStack);
 
-            // TODO: Remove old item tag
-            if (compound.hasKey("amp-item")) {
-                compound.setBase(ITEM_TAG, compound.getCompound("amp-item"));
-                compound.remove("amp-item");
+            // TODO: Phase out old item tag
+            if (compound.hasKey(ITEM_TAG_OLD)) {
+                compound.setBase(ITEM_TAG, compound.getCompound(ITEM_TAG_OLD));
+                compound.remove(ITEM_TAG_OLD);
             }
 
             // Get custom item compound
@@ -516,8 +553,8 @@ public class CustomItem implements Item {
         @Override
         public boolean isItem(ItemStack itemStack) {
             NBTTagCompound compound = NMSHandler.getInterface().getTagCompound(itemStack);
-            // TODO: Remove old item tag
-            return compound.hasKey("amp-item") || compound.hasKey(ITEM_TAG);
+            // TODO: Phase out old item tag
+            return compound.hasKey(ITEM_TAG_OLD) || compound.hasKey(ITEM_TAG);
         }
     }
 

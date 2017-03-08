@@ -20,33 +20,11 @@ public interface NBTTagCompound extends NBTBase {
 
     NBTTagCompound newInstance();
 
+    boolean hasKey(String key);
+
     Set<String> getKeySet();
 
-    void setBase(String key, NBTBase value);
-
-    void setByte(String key, byte value);
-
-    void setShort(String key, short value);
-
-    void setInt(String key, int value);
-
-    void setLong(String key, long value);
-
-    void setFloat(String key, float value);
-
-    void setDouble(String key, double value);
-
-    void setString(String key, String value);
-
-    void setByteArray(String key, byte[] value);
-
-    void setIntArray(String key, int[] value);
-
-    void setBoolean(String key, boolean value);
-
-    NBTBase getBase(String key);
-
-    boolean hasKey(String key);
+    boolean getBoolean(String key);
 
     byte getByte(String key);
 
@@ -60,17 +38,43 @@ public interface NBTTagCompound extends NBTBase {
 
     double getDouble(String key);
 
-    String getString(String key);
-
     byte[] getByteArray(String key);
 
     int[] getIntArray(String key);
 
-    NBTTagCompound getCompound(String key);
+    String getString(String key);
+
+    Object getObject(String key);
 
     NBTTagList getList(String key, int typeId);
 
-    boolean getBoolean(String key);
+    NBTTagCompound getCompound(String key);
+
+    NBTBase getBase(String key);
+
+    void setBoolean(String key, boolean value);
+
+    void setByte(String key, byte value);
+
+    void setShort(String key, short value);
+
+    void setInt(String key, int value);
+
+    void setLong(String key, long value);
+
+    void setFloat(String key, float value);
+
+    void setDouble(String key, double value);
+
+    void setByteArray(String key, byte[] value);
+
+    void setIntArray(String key, int[] value);
+
+    void setString(String key, String value);
+
+    void setObject(String key, Object value);
+
+    void setBase(String key, NBTBase value);
 
     void remove(String key);
 

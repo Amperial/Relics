@@ -35,33 +35,6 @@ public class NBTTagList_v1_11_R1 extends net.minecraft.server.v1_11_R1.NBTTagLis
     }
 
     @Override
-    public void addBase(NBTBase base) {
-        add((net.minecraft.server.v1_11_R1.NBTBase) base);
-    }
-
-    @Override
-    public void addBase(int index, NBTBase base) {
-        a(index, (net.minecraft.server.v1_11_R1.NBTBase) base);
-    }
-
-    @Override
-    public NBTBase removeBase(int index) {
-        return NBTUtil_v1_11_R1.fromNMSBase(remove(index));
-    }
-
-    @Override
-    public NBTBase getBase(int index) {
-        net.minecraft.server.v1_11_R1.NBTBase base = h(index);
-        if (base instanceof NBTBase) {
-            return (NBTBase) base;
-        } else {
-            NBTBase apiBase = NBTUtil_v1_11_R1.fromNMSBase(base);
-            addBase(index, apiBase);
-            return apiBase;
-        }
-    }
-
-    @Override
     public int getInt(int index) {
         return c(index);
     }
@@ -77,6 +50,11 @@ public class NBTTagList_v1_11_R1 extends net.minecraft.server.v1_11_R1.NBTTagLis
     }
 
     @Override
+    public int[] getIntArray(int index) {
+        return d(index);
+    }
+
+    @Override
     public NBTTagCompound getCompound(int index) {
         net.minecraft.server.v1_11_R1.NBTTagCompound compound = super.get(index);
         if (compound instanceof NBTTagCompound_v1_11_R1) {
@@ -89,8 +67,30 @@ public class NBTTagList_v1_11_R1 extends net.minecraft.server.v1_11_R1.NBTTagLis
     }
 
     @Override
-    public int[] getIntArray(int index) {
-        return d(index);
+    public NBTBase getBase(int index) {
+        net.minecraft.server.v1_11_R1.NBTBase base = h(index);
+        if (base instanceof NBTBase) {
+            return (NBTBase) base;
+        } else {
+            NBTBase apiBase = NBTUtil_v1_11_R1.fromNMSBase(base);
+            addBase(index, apiBase);
+            return apiBase;
+        }
+    }
+
+    @Override
+    public void addBase(NBTBase base) {
+        add((net.minecraft.server.v1_11_R1.NBTBase) base);
+    }
+
+    @Override
+    public void addBase(int index, NBTBase base) {
+        a(index, (net.minecraft.server.v1_11_R1.NBTBase) base);
+    }
+
+    @Override
+    public NBTBase removeBase(int index) {
+        return NBTUtil_v1_11_R1.fromNMSBase(remove(index));
     }
 
     @Override

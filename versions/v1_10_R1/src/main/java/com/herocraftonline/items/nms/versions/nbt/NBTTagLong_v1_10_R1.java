@@ -28,13 +28,8 @@ public class NBTTagLong_v1_10_R1 extends net.minecraft.server.v1_10_R1.NBTTagLon
     }
 
     @Override
-    public long asLong() {
-        return d();
-    }
-
-    @Override
-    public int asInt() {
-        return e();
+    public byte asByte() {
+        return g();
     }
 
     @Override
@@ -43,18 +38,23 @@ public class NBTTagLong_v1_10_R1 extends net.minecraft.server.v1_10_R1.NBTTagLon
     }
 
     @Override
-    public byte asByte() {
-        return g();
+    public int asInt() {
+        return e();
     }
 
     @Override
-    public double asDouble() {
-        return h();
+    public long asLong() {
+        return d();
     }
 
     @Override
     public float asFloat() {
         return i();
+    }
+
+    @Override
+    public double asDouble() {
+        return h();
     }
 
     @Override

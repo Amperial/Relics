@@ -12,17 +12,17 @@ package com.herocraftonline.items.api.storage.nbt;
 
 public interface NBTTagString extends NBTBase {
 
-    static NBTTagString create() {
-        return ((NBTTagString) NBT_INSTANCES[8]).newInstance();
-    }
-
     static NBTTagString create(String data) {
         return ((NBTTagString) NBT_INSTANCES[8]).newInstance(data);
     }
 
-    NBTTagString newInstance();
+    static NBTTagString create() {
+        return ((NBTTagString) NBT_INSTANCES[8]).newInstance();
+    }
 
     NBTTagString newInstance(String data);
+
+    NBTTagString newInstance();
 
     String getString();
 

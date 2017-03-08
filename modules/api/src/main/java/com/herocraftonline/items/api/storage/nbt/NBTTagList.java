@@ -18,25 +18,25 @@ public interface NBTTagList extends NBTBase {
 
     NBTTagList newInstance();
 
-    void addBase(NBTBase base);
-
-    void addBase(int index, NBTBase base);
-
-    NBTBase removeBase(int index);
-
-    NBTBase getBase(int index);
-
     int getInt(int index);
 
     float getFloat(int index);
 
     double getDouble(int index);
 
+    int[] getIntArray(int index);
+
     String getString(int index);
 
     NBTTagCompound getCompound(int index);
 
-    int[] getIntArray(int index);
+    NBTBase getBase(int index);
+
+    void addBase(NBTBase base);
+
+    void addBase(int index, NBTBase base);
+
+    NBTBase removeBase(int index);
 
     int size();
 

@@ -12,6 +12,7 @@ package com.herocraftonline.items.nms.versions.nbt;
 
 import com.herocraftonline.items.api.storage.nbt.NBTBase;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+import com.herocraftonline.items.api.storage.nbt.NBTTagObject;
 
 import java.util.Set;
 
@@ -35,8 +36,48 @@ public class NBTTagCompound_v1_10_R1 extends net.minecraft.server.v1_10_R1.NBTTa
     }
 
     @Override
-    public void setBase(String key, NBTBase base) {
-        set(key, (net.minecraft.server.v1_10_R1.NBTBase) base);
+    public Object getObject(String key) {
+        net.minecraft.server.v1_10_R1.NBTBase object = super.get(key);
+        if (object instanceof NBTTagObject) {
+            return ((NBTTagObject) object).getObject();
+        }
+        return null;
+    }
+
+    @Override
+    public NBTTagList_v1_10_R1 getList(String key, int typeId) {
+        net.minecraft.server.v1_10_R1.NBTTagList list = super.getList(key, typeId);
+        if (list instanceof NBTTagList_v1_10_R1) {
+            return (NBTTagList_v1_10_R1) list;
+        } else {
+            NBTTagList_v1_10_R1 apiList = new NBTTagList_v1_10_R1(list);
+            setBase(key, apiList);
+            return apiList;
+        }
+    }
+
+    @Override
+    public NBTTagCompound_v1_10_R1 getCompound(String key) {
+        net.minecraft.server.v1_10_R1.NBTTagCompound compound = super.getCompound(key);
+        if (compound instanceof NBTTagCompound_v1_10_R1) {
+            return (NBTTagCompound_v1_10_R1) compound;
+        } else {
+            NBTTagCompound_v1_10_R1 apiCompound = new NBTTagCompound_v1_10_R1(compound);
+            setBase(key, apiCompound);
+            return apiCompound;
+        }
+    }
+
+    @Override
+    public NBTBase getBase(String key) {
+        net.minecraft.server.v1_10_R1.NBTBase base = get(key);
+        if (base instanceof NBTBase) {
+            return (NBTBase) base;
+        } else {
+            NBTBase apiBase = NBTUtil_v1_10_R1.fromNMSBase(base);
+            setBase(key, apiBase);
+            return apiBase;
+        }
     }
 
     @Override
@@ -70,11 +111,6 @@ public class NBTTagCompound_v1_10_R1 extends net.minecraft.server.v1_10_R1.NBTTa
     }
 
     @Override
-    public void setString(String key, String value) {
-        set(key, new NBTTagString_v1_10_R1(value));
-    }
-
-    @Override
     public void setByteArray(String key, byte[] value) {
         set(key, new NBTTagByteArray_v1_10_R1(value));
     }
@@ -85,39 +121,18 @@ public class NBTTagCompound_v1_10_R1 extends net.minecraft.server.v1_10_R1.NBTTa
     }
 
     @Override
-    public NBTBase getBase(String key) {
-        net.minecraft.server.v1_10_R1.NBTBase base = get(key);
-        if (base instanceof NBTBase) {
-            return (NBTBase) base;
-        } else {
-            NBTBase apiBase = NBTUtil_v1_10_R1.fromNMSBase(base);
-            setBase(key, apiBase);
-            return apiBase;
-        }
+    public void setString(String key, String value) {
+        set(key, new NBTTagString_v1_10_R1(value));
     }
 
     @Override
-    public NBTTagCompound_v1_10_R1 getCompound(String key) {
-        net.minecraft.server.v1_10_R1.NBTTagCompound compound = super.getCompound(key);
-        if (compound instanceof NBTTagCompound_v1_10_R1) {
-            return (NBTTagCompound_v1_10_R1) compound;
-        } else {
-            NBTTagCompound_v1_10_R1 apiCompound = new NBTTagCompound_v1_10_R1(compound);
-            setBase(key, apiCompound);
-            return apiCompound;
-        }
+    public void setObject(String key, Object value) {
+        set(key, new NBTTagObject_v1_10_R1<>(value));
     }
 
     @Override
-    public NBTTagList_v1_10_R1 getList(String key, int typeId) {
-        net.minecraft.server.v1_10_R1.NBTTagList list = super.getList(key, typeId);
-        if (list instanceof NBTTagList_v1_10_R1) {
-            return (NBTTagList_v1_10_R1) list;
-        } else {
-            NBTTagList_v1_10_R1 apiList = new NBTTagList_v1_10_R1(list);
-            setBase(key, apiList);
-            return apiList;
-        }
+    public void setBase(String key, NBTBase base) {
+        set(key, (net.minecraft.server.v1_10_R1.NBTBase) base);
     }
 
     @Override

@@ -14,8 +14,10 @@ import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.AttributeContainer;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -47,11 +49,11 @@ public interface Item extends AttributeContainer, Clickable, Equippable {
     Material getMaterial();
 
     /**
-     * Gets the type of the item.
+     * Gets the enchantments of the item.
      *
-     * @return the item's type
+     * @return the item's enchantments
      */
-    ItemType getType();
+    Map<Enchantment, Integer> getEnchantments();
 
     /**
      * Checks if the item is unbreakable.
@@ -59,6 +61,13 @@ public interface Item extends AttributeContainer, Clickable, Equippable {
      * @return {@code true} if the item is unbreakable
      */
     boolean isUnbreakable();
+
+    /**
+     * Gets the type of the item.
+     *
+     * @return the item's type
+     */
+    ItemType getType();
 
     /**
      * Checks if the item is currently equipped.
