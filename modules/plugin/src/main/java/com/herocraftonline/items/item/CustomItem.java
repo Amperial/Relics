@@ -498,7 +498,7 @@ public class CustomItem implements Item {
             // TODO: Remove old item tag
             if (compound.hasKey("amp-item")) {
                 compound.setBase(ITEM_TAG, compound.getCompound("amp-item"));
-                compound.setBase("amp-item", null);
+                compound.remove("amp-item");
             }
 
             // Get custom item compound

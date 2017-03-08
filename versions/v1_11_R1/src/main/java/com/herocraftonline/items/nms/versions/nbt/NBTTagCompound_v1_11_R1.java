@@ -125,7 +125,10 @@ public class NBTTagCompound_v1_11_R1 extends net.minecraft.server.v1_11_R1.NBTTa
         NBTTagCompound_v1_11_R1 clone = new NBTTagCompound_v1_11_R1();
 
         for (String key : getKeySet()) {
-            clone.set(key, get(key).clone());
+            net.minecraft.server.v1_11_R1.NBTBase value = get(key);
+            if (value != null) {
+                clone.set(key, value.clone());
+            }
         }
 
         return clone;

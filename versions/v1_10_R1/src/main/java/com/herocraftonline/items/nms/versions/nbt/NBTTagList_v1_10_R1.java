@@ -19,7 +19,10 @@ public class NBTTagList_v1_10_R1 extends net.minecraft.server.v1_10_R1.NBTTagLis
     public NBTTagList_v1_10_R1(net.minecraft.server.v1_10_R1.NBTTagList list) {
         int size = list.size();
         for (int i = 0; i < size; i++) {
-            add(list.h(i).clone());
+            net.minecraft.server.v1_10_R1.NBTBase element = list.h(i);
+            if (element != null) {
+                add(element.clone());
+            }
         }
     }
 
@@ -101,7 +104,10 @@ public class NBTTagList_v1_10_R1 extends net.minecraft.server.v1_10_R1.NBTTagLis
 
         int size = size();
         for (int i = 0; i < size; i++) {
-            clone.add(h(i).clone());
+            net.minecraft.server.v1_10_R1.NBTBase element = h(i);
+            if (element != null) {
+                clone.add(element.clone());
+            }
         }
 
         return clone;
