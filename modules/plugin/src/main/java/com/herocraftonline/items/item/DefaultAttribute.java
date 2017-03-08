@@ -35,6 +35,7 @@ public final class DefaultAttribute {
     public static final AttributeType<Durability> DURABILITY = new BaseAttributeType<>("durability", 6, DurabilityAttribute.Factory::new);
     public static final AttributeType<Gem> GEM = new BaseAttributeType<>("gem", 5, GemAttribute.Factory::new);
     public static final AttributeType<Group> GROUP = new BaseAttributeType<>("group", 0, GroupAttribute.Factory::new);
+    public static final AttributeType<LaunchEntityAttribute> LAUNCH_ENTITY = new BaseAttributeType<>("launch-entity", Integer.MAX_VALUE, LaunchEntityAttribute.Factory::new);
     public static final AttributeType<Level> LEVEL = new BaseAttributeType<>("level", 2, LevelAttribute.Factory::new);
     public static final AttributeType<LevelRequirement> LEVEL_REQUIREMENT = new BaseAttributeType<>("level-requirement", Integer.MIN_VALUE, LevelRequirementAttribute.Factory::new);
     public static final AttributeType<Minecraft> MINECRAFT = new BaseAttributeType<>("minecraft", Integer.MAX_VALUE, MinecraftAttribute.Factory::new);
@@ -52,6 +53,7 @@ public final class DefaultAttribute {
         types.add(DURABILITY);
         types.add(GEM);
         types.add(GROUP);
+        types.add(LAUNCH_ENTITY);
         types.add(LEVEL);
         types.add(LEVEL_REQUIREMENT);
         types.add(MINECRAFT);
