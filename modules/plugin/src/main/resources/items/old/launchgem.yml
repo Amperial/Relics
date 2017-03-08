@@ -1,5 +1,6 @@
-name: "&4Gem of TNT"
-material: "TNT"
+default-args: ["PRIMED_TNT", 1]
+name: "&4Gem of %1$s"
+material: "ARROW"
 item-type: "other"
 attributes:
   info:
@@ -15,7 +16,7 @@ attributes:
   infuse: "#{gems/infuse}"
   gem:
     type: "gem"
-    name: "&7(&4Gem of TNT&7)"
+    name: "&7(&4Gem of %1$s&7)"
     color: "blue"
     attributes:
       requirement:
@@ -24,8 +25,8 @@ attributes:
       description:
         type: "text"
         text:
-        - "Launch TNT at your foes!"
+        - "Launch %1$s at your foes!"
       tnt:
         type: "launch-entity"
-        entity: "PRIMED_TNT"
-        velocity: 1
+        entity: "%1$s"
+        velocity: "%2$d"

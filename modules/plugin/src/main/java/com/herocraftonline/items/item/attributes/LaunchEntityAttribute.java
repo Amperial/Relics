@@ -22,6 +22,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.util.Vector;
 
 public class LaunchEntityAttribute extends BaseAttribute<LaunchEntityAttribute> implements Clickable {
 
@@ -47,7 +48,8 @@ public class LaunchEntityAttribute extends BaseAttribute<LaunchEntityAttribute> 
     public void onClick(PlayerInteractEvent event, Item item) {
         if (item.isEquipped() && event.getAction() == Action.LEFT_CLICK_AIR) {
             Location loc = event.getPlayer().getEyeLocation();
-            loc.getWorld().spawnEntity(loc, getEntity()).setVelocity(loc.getDirection().normalize().multiply(velocity));
+            Vector direction = loc.getDirection().normalize();
+            loc.getWorld().spawnEntity(loc.add(direction), getEntity()).setVelocity(direction.multiply(getVelocity()));
         }
     }
 
