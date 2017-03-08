@@ -469,7 +469,11 @@ public class CustomItem implements Item {
         compound.setString(ID_TAG, getId().toString());
         compound.setString(NAME_TAG, getName());
         compound.setString(MATERIAL_TAG, getMaterial().name());
-        // TODO: Save enchantments
+        NBTTagCompound enchants = NBTTagCompound.create();
+        for (Map.Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
+            enchants.setInt(enchantment.getKey().getName(), enchantment.getValue());
+        }
+        compound.setBase(ENCHANTMENTS_TAG, enchants);
         compound.setBoolean(UNBREAKABLE_TAG, isUnbreakable());
         compound.setString(TYPE_TAG, getType().getName());
         compound.setObject(INSTANCE_TAG, this);
@@ -488,8 +492,13 @@ public class CustomItem implements Item {
             UUID id = UUID.randomUUID();
             String name = ChatColor.translateAlternateColorCodes('&', config.getString(NAME_TAG));
             Material material = Material.getMaterial(config.getString(MATERIAL_TAG));
-            // TODO: Load enchantments
             Map<Enchantment, Integer> enchantments = new HashMap<>();
+            if (config.isConfigurationSection(ENCHANTMENTS_TAG)) {
+                ConfigurationSection enchants = config.getConfigurationSection(ENCHANTMENTS_TAG);
+                for (String enchant : enchants.getKeys(false)) {
+                    enchantments.put(Enchantment.getByName(enchant), enchants.getInt(enchant));
+                }
+            }
             boolean unbreakable = config.getBoolean(UNBREAKABLE_TAG, false);
             ItemType type = new ItemType(config.getString(TYPE_TAG, ItemType.OTHER.getName()));
             Group attribute = DefaultAttribute.GROUP.getFactory().loadFromConfig(ATTRIBUTES_TAG, config);
@@ -512,8 +521,11 @@ public class CustomItem implements Item {
             UUID id = UUID.fromString(compound.getString(ID_TAG));
             String name = compound.getString(NAME_TAG);
             Material material = Material.getMaterial(compound.getString(MATERIAL_TAG));
-            // TODO: Load enchantments
             Map<Enchantment, Integer> enchantments = new HashMap<>();
+            NBTTagCompound enchants = compound.getCompound(ENCHANTMENTS_TAG);
+            for (String enchant : enchants.getKeySet()) {
+                enchantments.put(Enchantment.getByName(enchant), enchants.getInt(enchant));
+            }
             boolean unbreakable = compound.getBoolean(UNBREAKABLE_TAG);
             ItemType type = new ItemType(compound.getString(TYPE_TAG));
             Group attribute = DefaultAttribute.GROUP.getFactory().loadFromNBT(ATTRIBUTES_TAG, compound);
