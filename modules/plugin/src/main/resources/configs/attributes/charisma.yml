@@ -1,2 +1,2 @@
 default-args: [0]
-CHARISMA: "%1$d"
+CHARISMA: "%1$s"

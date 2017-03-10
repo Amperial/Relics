@@ -1,2 +1,2 @@
 default-args: [0]
-WISDOM: "%1$d"
+ENDURANCE: "%1$s"

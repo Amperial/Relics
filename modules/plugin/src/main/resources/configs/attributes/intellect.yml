@@ -1,2 +1,2 @@
 default-args: [0]
-DEXTERITY: "%1$d"
+INTELLECT: "%1$s"

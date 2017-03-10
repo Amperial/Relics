@@ -88,7 +88,7 @@ public class LevelRequirementAttribute extends BaseStatAttribute<LevelRequiremen
         @Override
         public LevelRequirementAttribute loadFromConfig(String name, ConfigurationSection config) {
             // Load level
-            int level = Math.min(config.getInt("level", 0), 0);
+            int level = Math.max(config.getInt("level", 0), 0);
 
             // Create level requirement attribute
             return new LevelRequirementAttribute(name, statType, level);

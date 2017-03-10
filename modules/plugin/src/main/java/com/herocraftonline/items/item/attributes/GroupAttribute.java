@@ -42,6 +42,7 @@ public class GroupAttribute extends BaseAttributeContainer<Group> implements Gro
         this.spacing = spacing;
 
         setLore((lore, prefix) -> {
+            int lines = lore.size();
             getAttributes().stream()
                     .sorted(Comparator.comparingInt(a -> a.getType().getLorePosition()))
                     .forEachOrdered(a -> {
@@ -53,7 +54,7 @@ public class GroupAttribute extends BaseAttributeContainer<Group> implements Gro
                             }
                         }
                     });
-            if (spacing && getAttributes().size() > 0) {
+            if (spacing && lore.size() > lines) {
                 lore.remove(lore.size() - 1);
             }
         });

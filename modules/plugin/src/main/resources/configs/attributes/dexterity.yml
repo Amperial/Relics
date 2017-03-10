@@ -1,2 +1,2 @@
 default-args: [0]
-ENDURANCE: "%1$d"
+DEXTERITY: "%1$s"

@@ -1,2 +1,2 @@
 default-args: [0]
-STRENGTH: "%1$d"
+WISDOM: "%1$s"

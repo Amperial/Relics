@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
  */
 public class ReferenceTransform extends ConfigTransform {
 
-    private static final Pattern CONFIG = Pattern.compile("#\\{[\\w/-]*[\\w-]+}");
+    private static final Pattern CONFIG = Pattern.compile("#\\{[\\w/-]*[\\w-]+(\\[([\\S\\t ])*])?}");
 
     public ReferenceTransform(ItemPlugin plugin) {
         super(plugin);
@@ -36,10 +36,30 @@ public class ReferenceTransform extends ConfigTransform {
             String string = section.getString(key);
             // Check if string matches regex
             if (CONFIG.matcher(string).matches()) {
-                String path = string.substring(2, string.length() - 1);
+                String path;
+                Object[] argz;
+
+                // Get path and arguments to pass to referenced config
+                if (string.contains("[")) {
+                    int bracket = string.indexOf("[");
+
+                    // Get path to referenced config
+                    path = string.substring(2, bracket);
+
+                    // Parse new args
+                    String[] split = string.substring(bracket + 1, string.length() - 2).split(",");
+                    argz = new Object[split.length];
+                    System.arraycopy(split, 0, argz, 0, split.length);
+                } else {
+                    // Get path to referenced config
+                    path = string.substring(2, string.length() - 1);
+
+                    // Use current args
+                    argz = args;
+                }
 
                 // Load and transform nested config
-                ConfigurationSection value = configManager.loadAndTransform("configs/" + path + ".yml", plugin, args);
+                ConfigurationSection value = configManager.loadAndTransform("configs/" + path + ".yml", plugin, argz);
 
                 // Replace value at config path
                 setValue(section, key, value);

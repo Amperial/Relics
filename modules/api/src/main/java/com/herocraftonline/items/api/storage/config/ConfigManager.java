@@ -44,6 +44,7 @@ public class ConfigManager {
     private final ItemPlugin plugin;
     private final Map<Config, ConfigAccessor> configs = new HashMap<>();
     private final List<ConfigTransform> configTransforms = new ArrayList<>();
+    private final ConfigTransform replacerTransform;
 
     /**
      * Creates a new config manager.
@@ -63,8 +64,9 @@ public class ConfigManager {
         registerCustomConfigs(EnumSet.allOf(DefaultConfig.class), plugin);
 
         // Create config transforms
+        replacerTransform = new ReplacerTransform(plugin);
         configTransforms.add(new ArgTransform(plugin));
-        configTransforms.add(new ReplacerTransform(plugin));
+        configTransforms.add(replacerTransform);
         configTransforms.add(new ReferenceTransform(plugin));
     }
 
@@ -162,6 +164,7 @@ public class ConfigManager {
      */
     public ConfigurationSection transformConfig(ConfigurationSection config, Object... args) {
         if (config.isList("default-args")) {
+            config = replacerTransform.transform(config, args);
             Object[] defaultArgs = config.getList("default-args").toArray();
             if (defaultArgs.length > args.length) {
                 System.arraycopy(args, 0, defaultArgs, 0, args.length);
