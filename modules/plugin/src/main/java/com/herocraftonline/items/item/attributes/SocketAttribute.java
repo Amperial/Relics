@@ -212,7 +212,7 @@ public class SocketAttribute extends BaseAttributeContainer<Socket> implements S
             ItemManager itemManager = getPlugin().getItemManager();
 
             // Load color and accepts
-            SocketColor color = SocketColor.fromName(config.getString("color"));
+            SocketColor color = SocketColor.fromName(config.getString("color", "yellow"));
             Set<SocketColor> accepts;
             if (config.isList("accepts")) {
                 accepts = new HashSet<>();

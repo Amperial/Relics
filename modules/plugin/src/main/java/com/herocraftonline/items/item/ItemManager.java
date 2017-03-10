@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class ItemManager implements com.herocraftonline.items.api.item.ItemManager {
 
@@ -154,6 +155,7 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
     public Item getItem(NBTTagCompound compound) {
         // Ensure compound isnt null for some reason
         if (compound == null) {
+            plugin.getMessenger().log(Level.WARNING, "Attempted to get item from null compound");
             return null;
         }
 
@@ -165,12 +167,17 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
     public Item getItem(ConfigurationSection config, Object... args) {
         // Ensure config isnt null for some reason
         if (config == null) {
+            plugin.getMessenger().log(Level.WARNING, "Attempted to get item from null config");
             return null;
         }
 
-        // Ensure args arent null for some reason
+        // Copy the args in case api is being used in a weird way
+        Object[] old = args;
         if (args == null) {
             args = new Object[0];
+        } else {
+            args = new Object[args.length];
+            System.arraycopy(old, 0, args, 0, args.length);
         }
 
         // Replace string arguments with numbers where possible
@@ -191,13 +198,19 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
         }
 
         // Load item from config
-        return factory.loadFromConfig(plugin.getConfigManager().transformConfig(config, args));
+        Item item = factory.loadFromConfig(plugin.getConfigManager().transformConfig(config, args));
+
+        // Item loaded debug
+        plugin.getMessenger().debug("Loaded item " + item.getName() + " from config");
+
+        return item;
     }
 
     @Override
     public Item getItem(ItemConfig config, Object... args) {
         // Ensure config isnt null for some reason
         if (config == null) {
+            plugin.getMessenger().log(Level.WARNING, "Attempted to get item from null config");
             return null;
         }
 
@@ -211,7 +224,14 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
 
     @Override
     public boolean hasItemConfig(String item) {
-        return items.containsKey(item.toLowerCase());
+        // Look for registered item config
+        // TODO: Add a way to not require the full item config path?
+        boolean found = items.containsKey(item.toLowerCase());
+
+        // Item config debug
+        plugin.getMessenger().debug("Item config " + item + (found ? " found" : " not found"));
+
+        return found;
     }
 
     @Override

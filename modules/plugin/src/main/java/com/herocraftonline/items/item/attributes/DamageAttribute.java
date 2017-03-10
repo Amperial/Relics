@@ -112,8 +112,8 @@ public class DamageAttribute extends MinecraftAttribute implements Damage {
             Slot slot = Slot.valueOf(config.getString("slot", "ANY"));
             Operation operation = Operation.valueOf(config.getString("operation", "ADD_NUMBER"));
             boolean stacking = config.getBoolean("stacking", true);
-            double damage = config.getDouble("damage", 0);
-            double variation = config.getDouble("variation", 0);
+            double damage = Math.max(config.getDouble("damage", 0), 0);
+            double variation = Math.abs(config.getDouble("variation", 0));
 
             // Create damage attribute
             return new DamageAttribute(name, slot, operation, stacking, damage, variation);

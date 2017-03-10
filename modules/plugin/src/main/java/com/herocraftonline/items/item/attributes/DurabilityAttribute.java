@@ -115,7 +115,7 @@ public class DurabilityAttribute extends BaseAttribute<Durability> implements Du
         @Override
         public DurabilityAttribute loadFromConfig(String name, ConfigurationSection config) {
             // Load max durability
-            int max = config.getInt("max");
+            int max = Math.max(config.getInt("max", 1), 1);
 
             // Create durability attribute
             return new DurabilityAttribute(name, max, max, levels);

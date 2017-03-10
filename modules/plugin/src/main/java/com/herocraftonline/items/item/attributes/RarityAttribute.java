@@ -66,7 +66,7 @@ public class RarityAttribute extends BaseAttribute<Rarity> implements Rarity {
         @Override
         public Rarity loadFromConfig(String name, ConfigurationSection config) {
             // Load rarity
-            int rarity = config.getInt("tier");
+            int rarity = Math.max(config.getInt("tier", 0), 0);
             String text = rarity < tiers.size() ? tiers.get(rarity) : unknown;
 
             // Create rarity attribute

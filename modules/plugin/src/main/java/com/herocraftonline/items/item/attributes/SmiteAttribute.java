@@ -90,7 +90,7 @@ public class SmiteAttribute extends BaseAttribute<SmiteAttribute> implements Cli
         @Override
         public SmiteAttribute loadFromConfig(String name, ConfigurationSection config) {
             // Load range
-            int range = config.getInt("range", 64);
+            int range = Math.abs(config.getInt("range", 64));
 
             // Create smite attribute
             return new SmiteAttribute(name, permission, gods, range);

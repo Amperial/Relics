@@ -61,7 +61,7 @@ public class LevelAttribute extends BaseAttribute<Level> implements Level {
         @Override
         public LevelAttribute loadFromConfig(String name, ConfigurationSection config) {
             // Load level
-            int level = config.getInt("level", 1);
+            int level = Math.max(config.getInt("level", 1), 1);
 
             // Create level attribute
             return new LevelAttribute(name, text, level);

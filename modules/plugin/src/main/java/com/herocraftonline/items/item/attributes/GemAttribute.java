@@ -260,8 +260,8 @@ public class GemAttribute extends BaseAttribute<Gem> implements Gem {
             ItemManager itemManager = getPlugin().getItemManager();
 
             // Load name, color, and attributes
-            String displayName = ChatColor.translateAlternateColorCodes('&', config.getString("name"));
-            SocketColor color = SocketColor.fromName(config.getString("color"));
+            String displayName = ChatColor.translateAlternateColorCodes('&', config.getString("name", "?"));
+            SocketColor color = SocketColor.fromName(config.getString("color", "yellow"));
             Group attributes = DefaultAttribute.GROUP.getFactory().loadFromConfig("attributes", config);
 
             // Create gem
