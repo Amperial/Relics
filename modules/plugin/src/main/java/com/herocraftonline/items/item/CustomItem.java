@@ -541,6 +541,11 @@ public class CustomItem implements Item {
 
         @Override
         public Item loadFromItemStack(ItemStack itemStack) {
+            // ItemStack is definitely not a custom item
+            if (itemStack == null || itemStack.getType() == Material.AIR) {
+                return null;
+            }
+
             // Get ItemStack NBT
             NBTTagCompound compound = NMSHandler.getInterface().getTagCompound(itemStack);
 
@@ -569,6 +574,11 @@ public class CustomItem implements Item {
 
         @Override
         public boolean isItem(ItemStack itemStack) {
+            // ItemStack is definitely not a custom item
+            if (itemStack == null || itemStack.getType() == Material.AIR) {
+                return false;
+            }
+
             NBTTagCompound compound = NMSHandler.getInterface().getTagCompound(itemStack);
             // TODO: Phase out old item tag
             return compound.hasKey(ITEM_TAG_OLD) || compound.hasKey(ITEM_TAG);

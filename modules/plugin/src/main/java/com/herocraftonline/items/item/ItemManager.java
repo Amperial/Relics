@@ -138,7 +138,7 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
 
     @Override
     public boolean isItem(ItemStack itemStack) {
-        return itemStack != null && itemStack.getType() != Material.AIR && factory.isItem(itemStack);
+        return factory.isItem(itemStack);
     }
 
     @Override
