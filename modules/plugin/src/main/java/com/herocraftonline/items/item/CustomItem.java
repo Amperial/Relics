@@ -489,7 +489,7 @@ public class CustomItem implements Item {
         @Override
         public Item loadFromConfig(ConfigurationSection config) {
             // Load id, name, material, enchantments, unbreakable, type, and attributes
-            UUID id = UUID.randomUUID();
+            UUID id = config.isString(ID_TAG) ? UUID.fromString(config.getString(ID_TAG)) : UUID.randomUUID();
             String name = ChatColor.translateAlternateColorCodes('&', config.getString(NAME_TAG));
             Material material = Material.getMaterial(config.getString(MATERIAL_TAG));
             Map<Enchantment, Integer> enchantments = new HashMap<>();
