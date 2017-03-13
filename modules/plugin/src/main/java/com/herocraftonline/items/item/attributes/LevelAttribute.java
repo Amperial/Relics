@@ -29,23 +29,33 @@ public class LevelAttribute extends BaseAttribute<Level> implements Level {
 
         this.level = level;
 
-        setLore((lore, prefix) -> lore.add(prefix + text + " " + getLevel()));
+        setLore((lore, prefix) -> lore.add(prefix + text + " " + getValue()));
     }
 
     @Override
-    public int getLevel() {
+    public Integer getValue() {
         return level;
     }
 
     @Override
-    public void setLevel(int level) {
-        this.level = level;
+    public void setValue(Integer value) {
+        level = value;
+    }
+
+    @Override
+    public int compareTo(Level o) {
+        return getValue() - o.getValue();
+    }
+
+    @Override
+    public Integer sum(Integer value) {
+        return getValue() + value;
     }
 
     @Override
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
-        compound.setInt("level", getLevel());
+        compound.setInt("level", getValue());
     }
 
     public static class Factory extends BaseAttributeFactory<Level> {

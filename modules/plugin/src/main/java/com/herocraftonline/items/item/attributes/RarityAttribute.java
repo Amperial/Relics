@@ -35,19 +35,24 @@ public class RarityAttribute extends BaseAttribute<Rarity> implements Rarity {
     }
 
     @Override
-    public int getRarity() {
+    public Integer getValue() {
         return rarity;
     }
 
     @Override
-    public void setRarity(int rarity) {
-        this.rarity = rarity;
+    public void setValue(Integer value) {
+        rarity = value;
+    }
+
+    @Override
+    public int compareTo(Rarity o) {
+        return getValue() - o.getValue();
     }
 
     @Override
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
-        compound.setInt("tier", getRarity());
+        compound.setInt("tier", getValue());
     }
 
     public static class Factory extends BaseAttributeFactory<Rarity> {

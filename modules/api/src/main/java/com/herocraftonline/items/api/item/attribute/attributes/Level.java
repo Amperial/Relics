@@ -10,27 +10,13 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes;
 
-import com.herocraftonline.items.api.item.attribute.Attribute;
+import com.herocraftonline.items.api.item.attribute.ComparableAttribute;
+import com.herocraftonline.items.api.item.attribute.SummableAttribute;
 
 /**
  * An attribute that indicates the level of an item.
  *
  * @author Austin Payne
  */
-public interface Level extends Attribute<Level> {
-
-    /**
-     * Gets the level of the item.
-     *
-     * @return the item's level
-     */
-    int getLevel();
-
-    /**
-     * Sets the level of the item.
-     *
-     * @param level the level
-     */
-    void setLevel(int level);
-
+public interface Level extends ComparableAttribute<Level>, SummableAttribute<Level, Integer> {
 }

@@ -10,27 +10,13 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes;
 
-import com.herocraftonline.items.api.item.attribute.Attribute;
+import com.herocraftonline.items.api.item.attribute.ComparableAttribute;
+import com.herocraftonline.items.api.item.attribute.ValueAttribute;
 
 /**
  * An attribute that indicates the rarity of an item.
  *
  * @author Austin Payne
  */
-public interface Rarity extends Attribute<Rarity> {
-
-    /**
-     * Gets the rarity of the item.
-     *
-     * @return the item's rarity
-     */
-    int getRarity();
-
-    /**
-     * Sets the rarity of the item.
-     *
-     * @param rarity the rarity
-     */
-    void setRarity(int rarity);
-
+public interface Rarity extends ComparableAttribute<Rarity>, ValueAttribute<Rarity, Integer> {
 }
