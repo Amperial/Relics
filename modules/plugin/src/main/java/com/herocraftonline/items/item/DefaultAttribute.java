@@ -21,6 +21,8 @@ import com.herocraftonline.items.api.item.attribute.attributes.Rarity;
 import com.herocraftonline.items.api.item.attribute.attributes.Soulbound;
 import com.herocraftonline.items.api.item.attribute.attributes.Text;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeType;
+import com.herocraftonline.items.api.item.attribute.attributes.effects.PotionEffect;
+import com.herocraftonline.items.api.item.attribute.attributes.effects.SoundEffect;
 import com.herocraftonline.items.api.item.attribute.attributes.gems.Gem;
 import com.herocraftonline.items.api.item.attribute.attributes.gems.Socket;
 import com.herocraftonline.items.api.item.attribute.attributes.requirements.LevelRequirement;
@@ -40,10 +42,12 @@ public final class DefaultAttribute {
     public static final AttributeType<LevelRequirement> LEVEL_REQUIREMENT = new BaseAttributeType<>("level-requirement", Integer.MIN_VALUE, LevelRequirementAttribute.Factory::new);
     public static final AttributeType<Minecraft> MINECRAFT = new BaseAttributeType<>("minecraft", Integer.MAX_VALUE, MinecraftAttribute.Factory::new);
     public static final AttributeType<Model> MODEL = new BaseAttributeType<>("model", Integer.MAX_VALUE, ModelAttribute.Factory::new);
+    public static final AttributeType<PotionEffect> POTION_EFFECT = new BaseAttributeType<>("potion-effect", Integer.MAX_VALUE, PotionEffectAttribute.Factory::new);
     public static final AttributeType<Rarity> RARITY = new BaseAttributeType<>("rarity", 1, RarityAttribute.Factory::new);
     public static final AttributeType<SmiteAttribute> SMITE = new BaseAttributeType<>("smite", Integer.MAX_VALUE, SmiteAttribute.Factory::new);
     public static final AttributeType<Socket> SOCKET = new BaseAttributeType<>("socket", 4, SocketAttribute.Factory::new);
     public static final AttributeType<Soulbound> SOULBOUND = new BaseAttributeType<>("soulbound", 7, SoulboundAttribute.Factory::new);
+    public static final AttributeType<SoundEffect> SOUND_EFFECT = new BaseAttributeType<>("sound-effect", Integer.MAX_VALUE, SoundEffectAttribute.Factory::new);
     public static final AttributeType<Text> TEXT = new BaseAttributeType<>("text", 3, TextAttribute.Factory::new);
 
     private static final Collection<AttributeType> types = new ArrayList<>();
@@ -58,10 +62,12 @@ public final class DefaultAttribute {
         types.add(LEVEL_REQUIREMENT);
         types.add(MINECRAFT);
         types.add(MODEL);
+        types.add(POTION_EFFECT);
         types.add(RARITY);
         types.add(SMITE);
         types.add(SOCKET);
         types.add(SOULBOUND);
+        types.add(SOUND_EFFECT);
         types.add(TEXT);
     }
 
