@@ -56,6 +56,11 @@ public class SoundEffectAttribute extends BaseAttribute<SoundEffect> implements 
     }
 
     @Override
+    public void stop(Player player) {
+        player.stopSound(getSound());
+    }
+
+    @Override
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
         compound.setString("sound", getSound().name());

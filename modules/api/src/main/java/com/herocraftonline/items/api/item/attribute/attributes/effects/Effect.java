@@ -9,4 +9,6 @@ public interface Effect<T extends Attribute<T>> extends Attribute<T> {
 
     void play(Player player);
 
+    void stop(Player player);
+
 }

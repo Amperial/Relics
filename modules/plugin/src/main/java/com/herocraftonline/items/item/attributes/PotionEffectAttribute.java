@@ -37,20 +37,8 @@ public class PotionEffectAttribute extends BaseAttribute<PotionEffect> implement
     }
 
     @Override
-    public boolean canEquip(Player player) {
-        return true;
-    }
-
-    @Override
-    public boolean onEquip(Player player) {
-        play(player);
-        return false;
-    }
-
-    @Override
-    public boolean onUnEquip(Player player) {
+    public void stop(Player player) {
         player.removePotionEffect(getEffect().getType());
-        return false;
     }
 
     @Override
