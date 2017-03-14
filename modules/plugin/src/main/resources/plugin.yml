@@ -3,6 +3,7 @@ version: 0.0
 description: Item Attributes API Plugin
 author: ampayne2
 main: com.herocraftonline.items.Relics
+softdepend: [EffectLib]
 commands:
   relics:
-    aliases: [relic, rel]
+    aliases: [relic, rel, aitem]

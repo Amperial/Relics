@@ -15,7 +15,10 @@ import com.herocraftonline.items.api.equipment.EquipmentManager;
 import com.herocraftonline.items.api.item.ItemManager;
 import com.herocraftonline.items.api.message.Messenger;
 import com.herocraftonline.items.api.storage.config.ConfigManager;
+import de.slikey.effectlib.EffectManager;
 import org.bukkit.plugin.Plugin;
+
+import java.util.Optional;
 
 /**
  * The main class of the Relics plugin api.
@@ -58,5 +61,12 @@ public interface ItemPlugin extends Plugin {
      * @return the item plugin's equipment manager
      */
     EquipmentManager getEquipmentManager();
+
+    /**
+     * Gets the item plugin's effect lib integration.
+     *
+     * @return the item plugin's effect manager
+     */
+    Optional<EffectManager> getEffectManager();
 
 }

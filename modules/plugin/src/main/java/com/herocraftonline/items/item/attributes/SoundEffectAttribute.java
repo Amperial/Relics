@@ -1,3 +1,13 @@
+/*
+ * This file is part of Relics.
+ *
+ * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ *
+ * All Rights Reserved.
+ *
+ * Unauthorized copying and/or distribution of Relics,
+ * via any medium is strictly prohibited.
+ */
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
@@ -42,13 +52,8 @@ public class SoundEffectAttribute extends BaseAttribute<SoundEffect> implements 
     }
 
     @Override
-    public boolean isGlobal() {
-        return global;
-    }
-
-    @Override
     public void play(Player player) {
-        if (isGlobal()) {
+        if (global) {
             player.getWorld().playSound(player.getLocation(), getSound(), getVolume(), getPitch());
         } else {
             player.playSound(player.getLocation(), getSound(), getVolume(), getPitch());
@@ -66,7 +71,7 @@ public class SoundEffectAttribute extends BaseAttribute<SoundEffect> implements 
         compound.setString("sound", getSound().name());
         compound.setFloat("volume", getVolume());
         compound.setFloat("pitch", getPitch());
-        compound.setBoolean("global", isGlobal());
+        compound.setBoolean("global", global);
     }
 
     public static class Factory extends BaseAttributeFactory<SoundEffect> {
@@ -78,8 +83,8 @@ public class SoundEffectAttribute extends BaseAttribute<SoundEffect> implements 
         public SoundEffect loadFromConfig(String name, ConfigurationSection config) {
             // Load sound, volume, pitch, and global
             Sound sound = Sound.valueOf(config.getString("sound"));
-            float volume = (float) config.getDouble("volume", 1d);
-            float pitch = (float) config.getDouble("pitch", 1d);
+            float volume = (float) config.getDouble("volume", 1);
+            float pitch = (float) config.getDouble("pitch", 1);
             boolean global = config.getBoolean("global", false);
 
             // Load sound effect attribute

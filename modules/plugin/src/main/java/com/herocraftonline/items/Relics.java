@@ -29,9 +29,14 @@ import com.herocraftonline.items.commands.sockets.InfuseGemCommand;
 import com.herocraftonline.items.equipment.EquipmentManager;
 import com.herocraftonline.items.item.ItemManager;
 import com.herocraftonline.items.nms.NMSHandler;
+import de.slikey.effectlib.EffectLib;
+import de.slikey.effectlib.EffectManager;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Optional;
 
 /**
  * The main class of the Relics plugin.
@@ -49,6 +54,7 @@ public class Relics extends JavaPlugin implements ItemPlugin {
     private CommandController commandController;
     private ItemManager itemManager;
     private EquipmentManager equipmentManager;
+    private Optional<EffectManager> effectManager;
 
     /**
      * Listeners of the Relics plugin.
@@ -60,6 +66,14 @@ public class Relics extends JavaPlugin implements ItemPlugin {
 
     @Override
     public void onEnable() {
+        // Attempt to load plugin integrations
+        Plugin effectLib = getServer().getPluginManager().getPlugin("EffectLib");
+        if (effectLib instanceof EffectLib) {
+            effectManager = Optional.of(new EffectManager(this));
+        } else {
+            effectManager = Optional.empty();
+        }
+
         // Attempt to load NMSHandler
         NMSHandler.getInterface();
 
@@ -127,6 +141,10 @@ public class Relics extends JavaPlugin implements ItemPlugin {
         commandController = null;
         messenger = null;
         configManager = null;
+        if (effectManager.isPresent()) {
+            effectManager.get().dispose();
+        }
+        effectManager = null;
     }
 
     @Override
@@ -152,6 +170,11 @@ public class Relics extends JavaPlugin implements ItemPlugin {
     @Override
     public EquipmentManager getEquipmentManager() {
         return equipmentManager;
+    }
+
+    @Override
+    public Optional<EffectManager> getEffectManager() {
+        return effectManager;
     }
 
     /**
