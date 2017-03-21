@@ -113,7 +113,7 @@ public class CustomItem implements Item {
 
     @Override
     public boolean isUnbreakable() {
-        return unbreakable || hasAttribute(DefaultAttribute.MODEL);
+        return unbreakable || hasAttribute(Model.class);
     }
 
     @Override
@@ -344,7 +344,7 @@ public class CustomItem implements Item {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ItemStack updateItem(ItemStack item) {
+    public ItemStack updateItem(final ItemStack item) {
         // Get ItemMeta
         ItemMeta meta = item.getItemMeta();
 
@@ -374,11 +374,7 @@ public class CustomItem implements Item {
         item.setItemMeta(meta);
 
         // Check for model attribute
-        Optional<Attribute> modelOptional = attributes.getAttribute(DefaultAttribute.MODEL);
-        if (modelOptional.isPresent()) {
-            Model model = (Model) modelOptional.get();
-            item.setDurability(model.getModelDamage());
-        }
+        attributes.getAttribute(Model.class).ifPresent(model -> model.apply(item));
 
         // Get NBTTagCompound
         NBTTagCompound compound = NMSHandler.getInterface().getTagCompound(item);
@@ -391,10 +387,8 @@ public class CustomItem implements Item {
         // Save minecraft attribute modifiers to compound
         setModifiers(compound);
 
-        // Set NBTTagCompound
-        item = NMSHandler.getInterface().setTagCompound(item, compound);
-
-        return item;
+        // Set NBTTagCompound and return item
+        return NMSHandler.getInterface().setTagCompound(item, compound);
     }
 
     private List<String> createLore() {

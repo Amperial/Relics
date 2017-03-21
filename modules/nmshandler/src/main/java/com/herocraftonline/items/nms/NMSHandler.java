@@ -16,16 +16,22 @@ import org.bukkit.inventory.ItemStack;
 
 public abstract class NMSHandler {
 
+    private static String activeVersion;
     private static NMSHandler activeInterface;
+
+    public static String getVersion() {
+        if (activeVersion == null) {
+            // Get minecraft version
+            String packageName = Bukkit.getServer().getClass().getPackage().getName();
+            activeVersion = packageName.substring(packageName.lastIndexOf('.') + 1);
+        }
+
+        return activeVersion;
+    }
 
     public static NMSHandler getInterface() {
         if (activeInterface == null) {
-            // Get minecraft version
-            String packageName = Bukkit.getServer().getClass().getPackage().getName();
-            String version = packageName.substring(packageName.lastIndexOf('.') + 1);
-            if (version.equals("craftbukkit")) {
-                version = "pre";
-            }
+            String version = getVersion();
 
             try {
                 final Class<?> clazz = Class.forName("com.herocraftonline.items.nms.versions.Handler_" + version);

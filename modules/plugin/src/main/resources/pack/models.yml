@@ -1,0 +1,16 @@
+# Here we define models by name, model file, and materials that can use the model.
+# The given texture pack will be modified so that these materials are able to use the models.
+# Custom items can refer to these models by name and they will automatically be handled.
+models:
+  scimitar:
+    model: "item/scimitar"
+    assets:
+    - "textures/items/scimitar.png"
+    materials:
+    - "DIAMOND_SWORD"
+# Here we define item materials and their base model files.
+item:
+  DIAMOND_SWORD: "diamond_sword"
+# Here we define block materials and their base model files.
+block:
+  DIAMOND_BLOCK: "diamond_block"

@@ -13,6 +13,7 @@ package com.herocraftonline.items.api;
 import com.herocraftonline.items.api.command.CommandController;
 import com.herocraftonline.items.api.equipment.EquipmentManager;
 import com.herocraftonline.items.api.item.ItemManager;
+import com.herocraftonline.items.api.item.model.ModelManager;
 import com.herocraftonline.items.api.message.Messenger;
 import com.herocraftonline.items.api.storage.config.ConfigManager;
 import de.slikey.effectlib.EffectManager;
@@ -54,6 +55,13 @@ public interface ItemPlugin extends Plugin {
      * @return the item plugin's item manager
      */
     ItemManager getItemManager();
+
+    /**
+     * Gets the item plugin's model manager.
+     *
+     * @return the item plugin's model manager
+     */
+    ModelManager getModelManager();
 
     /**
      * Gets the item plugin's equipment manager.

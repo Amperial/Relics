@@ -28,6 +28,7 @@ import com.herocraftonline.items.commands.sockets.ExtractGemCommand;
 import com.herocraftonline.items.commands.sockets.InfuseGemCommand;
 import com.herocraftonline.items.equipment.EquipmentManager;
 import com.herocraftonline.items.item.ItemManager;
+import com.herocraftonline.items.item.models.ModelManager;
 import com.herocraftonline.items.nms.NMSHandler;
 import de.slikey.effectlib.EffectLib;
 import de.slikey.effectlib.EffectManager;
@@ -53,6 +54,7 @@ public class Relics extends JavaPlugin implements ItemPlugin {
     private Messenger messenger;
     private CommandController commandController;
     private ItemManager itemManager;
+    private ModelManager modelManager;
     private EquipmentManager equipmentManager;
     private Optional<EffectManager> effectManager;
 
@@ -82,6 +84,7 @@ public class Relics extends JavaPlugin implements ItemPlugin {
         messenger = new Messenger(this);
         commandController = new CommandController(this);
         itemManager = new ItemManager(this);
+        modelManager = new ModelManager(this);
         equipmentManager = new EquipmentManager(this);
 
         // Create listeners
@@ -137,6 +140,7 @@ public class Relics extends JavaPlugin implements ItemPlugin {
         itemListener = null;
         equipmentManager = null;
         itemManager = null;
+        modelManager = null;
         commandController.unregisterCommands();
         commandController = null;
         messenger = null;
@@ -165,6 +169,11 @@ public class Relics extends JavaPlugin implements ItemPlugin {
     @Override
     public ItemManager getItemManager() {
         return itemManager;
+    }
+
+    @Override
+    public com.herocraftonline.items.api.item.model.ModelManager getModelManager() {
+        return modelManager;
     }
 
     @Override

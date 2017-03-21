@@ -5,6 +5,9 @@ enchantments:
   DAMAGE_ALL: 5
 item-type: "primary"
 attributes:
+  model:
+    type: "model"
+    model: "scimitar"
   info:
     type: "group"
     spacing: false
