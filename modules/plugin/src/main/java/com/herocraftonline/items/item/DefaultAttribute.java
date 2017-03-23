@@ -25,6 +25,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.effects.PotionEff
 import com.herocraftonline.items.api.item.attribute.attributes.effects.SoundEffect;
 import com.herocraftonline.items.api.item.attribute.attributes.gems.Gem;
 import com.herocraftonline.items.api.item.attribute.attributes.gems.Socket;
+import com.herocraftonline.items.api.item.attribute.attributes.projectiles.Velocity;
 import com.herocraftonline.items.api.item.attribute.attributes.requirements.LevelRequirement;
 import com.herocraftonline.items.item.attributes.*;
 
@@ -49,6 +50,7 @@ public final class DefaultAttribute {
     public static final AttributeType<Soulbound> SOULBOUND = new BaseAttributeType<>("soulbound", 7, SoulboundAttribute.Factory::new);
     public static final AttributeType<SoundEffect> SOUND_EFFECT = new BaseAttributeType<>("sound-effect", Integer.MAX_VALUE, SoundEffectAttribute.Factory::new);
     public static final AttributeType<Text> TEXT = new BaseAttributeType<>("text", 3, TextAttribute.Factory::new);
+    public static final AttributeType<Velocity> VELOCITY = new BaseAttributeType<>("velocity", Integer.MAX_VALUE, VelocityAttribute.Factory::new);
 
     private static final Collection<AttributeType> types = new ArrayList<>();
 
@@ -69,6 +71,7 @@ public final class DefaultAttribute {
         types.add(SOULBOUND);
         types.add(SOUND_EFFECT);
         types.add(TEXT);
+        types.add(VELOCITY);
     }
 
     private DefaultAttribute() {

@@ -64,6 +64,7 @@ public class Relics extends JavaPlugin implements ItemPlugin {
 
     private PlayerListener playerListener;
     private ItemListener itemListener;
+    private AttributeListener attributeListener;
     private MenuListener menuListener;
 
     @Override
@@ -90,6 +91,7 @@ public class Relics extends JavaPlugin implements ItemPlugin {
         // Create listeners
         playerListener = new PlayerListener(this);
         itemListener = new ItemListener(this);
+        attributeListener = new AttributeListener(this);
         menuListener = new MenuListener(this);
 
         // Create relics command tree
@@ -137,6 +139,7 @@ public class Relics extends JavaPlugin implements ItemPlugin {
         // The order managers are destroyed in is not important
         menuListener.closeOpenMenus();
         menuListener = null;
+        attributeListener = null;
         itemListener = null;
         equipmentManager = null;
         itemManager = null;
@@ -202,6 +205,15 @@ public class Relics extends JavaPlugin implements ItemPlugin {
      */
     public ItemListener getItemListener() {
         return itemListener;
+    }
+
+    /**
+     * Gets the item plugin's attribute listener.
+     *
+     * @return the item plugin's attribute listener
+     */
+    public AttributeListener getAttributeListener() {
+        return attributeListener;
     }
 
     /**
