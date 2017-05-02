@@ -10,12 +10,10 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes.effects;
 
-import com.herocraftonline.items.api.item.attribute.Attribute;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.Triggerable;
-import org.bukkit.entity.Player;
+import org.bukkit.Particle;
 
-public interface Effect<T extends Effect<T>> extends Attribute<T>, Triggerable {
+public interface ParticleEffect extends Effect<ParticleEffect> {
 
-    void stop(Player player);
+    Particle getEffect();
 
 }

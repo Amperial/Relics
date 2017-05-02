@@ -1,0 +1,89 @@
+NEW TODO:
+======
+- #{config} is the only way right now
+    - add #{config(arg1, arg2, ...)} to specify new args to be passed to the subconfig
+- Actually fancy equipment system
+- enchantments and other basic item features
+- heroes class requirements
+- texture pack generation (base + models -> generated) (abstract away durabilities, use model names)
+
+NEAR FUTURE ORDERED TODO:
+=========================
+- Polish lore stuff
+    - allow group attribute to sort lore also per-attribute instead of just per-attribute-type
+
+- transformer to generate attribute type tags based on standard attribute name->type config
+
+- Item Leveling (attribute, system)
+    - add levelUp(int amount) method to each attribute type
+    - add level-up attribute
+        contains attribute types to be leveled up upon item level up, and by how much for each type
+    - on item level up:
+        remove all gems from sockets temporarily. level these up on their own if they have their own level-up attributes
+        for all attributes, levelUp(amount defined in level-up attribute for the type, if defined)
+
+EASY ADDITION: Unidentified item attribute, Identify command
+
+TODO SOULBOUND IS NO-DROP BOUND ON PICKUP
+TODO BIND ON EQUIP IS NO-DROP BOUND ON EQUIP
+
+
+- Track kills with the weapon (mobs, players?) (attribute, system)
+- Custom Durability (attribute, system)
+- Commands (system)
+- Item Sets (system)
+=========================
+
+TODO FEATURES IN PLUGIN:
+========================
+- Custom Weight (attribute)
+- Item Sets (attribute, system)
+- Item Restrictions (attribute, part of equipment)
+- Commands (system)
+========================
+
+TODO FEATURES IN HEROES:
+===================
+- Skill Attributes (passive, active) (attribute)
+- Forge Materials (attribute)
+- Class Restrictions (attribute)
+- Attribute Restrictions (attribute)
+- Dodge Chance (attribute)
+- Critical Chance (attribute)
+- Stats (health, shield, mana) (increase, decrease) (max, regen) (flat, percent) (attribute)
+- Exp Bonus (attribute)
+- Loot Tables (system)
+- Skills (system)
+===================
+
+ITEM EQUIPMENT:
+===============
+
+4 armor slots
+27 storage slots
+9 hotbar slots
+off-hand slot
+
+armor can be equipped by right click or placing into the slot
+
+Each player has a configurable map of equippable slots
+These slots can each have a single item of a certain type (armor types, main weapon, ring, etc.) equipped at any given type.
+Certain slot types should only exist once (armor types etc.), while others are configurable (rings, etc.)
+
+Equippable slots can be mapped to inventory slots.
+Items equipped to mapped slots must stay in the mapped inventory slot.
+If no item is currently equipped to a mapped slot, the inventory slot does not have to be empty or contain a custom item.
+If an item is in a mapped slot when an item is equipped to that slot, the item in that slot is moved elsewhere in the inventory.
+Equippable slots are not required to be mapped to inventory slots, these item can exist anywhere in player's inventory (rings, etc.)
+Certain equippable slot mappings cannot change (armor types etc.), while others are configurable by plugin configs and each player (main weapon etc.)
+
+Currently equipped items cannot be modified (edit gems, settings, etc). The player must unequip the item to modify it.
+Currently equipped items cannot be manually dropped or moved outside of player's inventory (plugin can drop if player dies etc. though)
+
+Item Equipment needs to handle the cases of other plugins causing items to move out of mapped slot or even player's inventory.
+===============
+
+ITEM SETS:
+==========
+Items can be part of configurable item sets which makes the items stronger if player has multiple items of the set equipped.
+==========

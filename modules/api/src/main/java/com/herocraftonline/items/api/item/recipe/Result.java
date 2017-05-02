@@ -10,5 +10,5 @@
  */
 package com.herocraftonline.items.api.item.recipe;
 
-public interface Ingredient {
+public interface Result {
 }

@@ -1,0 +1,23 @@
+recipes:
+  rare-sword:
+    ingredients:
+      pommel:
+        material: "NETHER_STAR"
+        predicates:
+        - ""
+      handle:
+        material: "STICK"
+        predicates: []
+      blade:
+        material: "DIAMOND"
+        predicates: []
+    shape:
+      3: "blade"
+      5: "handle"
+      7: "pommel"
+    preview:
+      name: ""
+      args: []
+    result:
+      name: ""
+      args: []
