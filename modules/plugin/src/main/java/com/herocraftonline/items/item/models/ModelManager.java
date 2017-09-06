@@ -35,6 +35,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
@@ -48,11 +49,8 @@ public class ModelManager implements com.herocraftonline.items.api.item.model.Mo
         this.plugin = plugin;
         this.models = new HashMap<>();
 
-        // Load configured models
-        Map<Material, List<Model>> models = loadModels();
-
-        // Generate resource pack
-        generatePack(models);
+        // Load configured models and generate pack
+        loadModels();
     }
 
     @Override
@@ -74,8 +72,12 @@ public class ModelManager implements com.herocraftonline.items.api.item.model.Mo
         });
     }
 
-    private Map<Material, List<Model>> loadModels() {
+    private void loadModels() {
         ConfigurationSection config = plugin.getConfigManager().getConfig(DefaultConfig.MODELS);
+
+        // Load the base model names for item and block materials
+        Map<Material, String> itemModels = getMaterialModels(config, "item");
+        Map<Material, String> blockModels = getMaterialModels(config, "block");
 
         // Materials with models and their associated models
         Map<Material, List<Model>> materialModels = new HashMap<>();
@@ -115,21 +117,28 @@ public class ModelManager implements com.herocraftonline.items.api.item.model.Mo
                     materialModels.get(material).add(model);
                 }
             }
+
+            // Set durabilities of custom item models
+            for (Material material : itemModels.keySet()) {
+                if (materialModels.containsKey(material)) {
+                    int maxDurability = material.getMaxDurability();
+                    List<Model> models = materialModels.get(material);
+                    int modelLimit = Math.min(models.size(), maxDurability);
+                    for (int i = 0; i < modelLimit; i++) {
+                        ((ItemModel) models.get(i)).setDurability((short) (i + 1));
+                    }
+                }
+            }
         }
 
-        return materialModels;
+        generatePack(materialModels, itemModels, blockModels);
     }
 
-    private void generatePack(Map<Material, List<Model>> materialModels) {
-        ConfigurationSection config = plugin.getConfigManager().getConfig(DefaultConfig.MODELS);
-
-        // Load the base model names for item and block materials
-        Map<Material, String> items = getMaterialModels(config, "item");
-        Map<Material, String> blocks = getMaterialModels(config, "block");
-
+    private void generatePack(Map<Material, List<Model>> materialModels, Map<Material, String> itemModels, Map<Material, String> blockModels) {
         // Save base pack files and example input pack
         plugin.saveResource("pack/models/base/v1_10_R1.zip", false);
         plugin.saveResource("pack/models/base/v1_11_R1.zip", false);
+        plugin.saveResource("pack/models/base/v1_12_R1.zip", false);
         plugin.saveResource("pack/input.zip", false);
 
         try {
@@ -139,6 +148,7 @@ public class ModelManager implements com.herocraftonline.items.api.item.model.Mo
             File outputFile = new File(plugin.getDataFolder(), "pack/output.zip");
             if (!inputFile.exists() || !baseFile.exists() || (outputFile.exists() && !outputFile.delete())) {
                 // Must have an input zip, base zip, and location to write output zip
+                plugin.getMessenger().log(Level.WARNING, "Input resource pack and base model files required to generate resource pack for custom models.");
                 return;
             }
 
@@ -151,7 +161,7 @@ public class ModelManager implements com.herocraftonline.items.api.item.model.Mo
             Set<String> entries = new HashSet<>();
 
             // Process zip entries for items
-            for (Map.Entry<Material, String> item : items.entrySet()) {
+            for (Map.Entry<Material, String> item : itemModels.entrySet()) {
                 Material material = item.getKey();
                 if (!materialModels.containsKey(material)) {
                     // Material is not associated with any custom models
@@ -181,7 +191,6 @@ public class ModelManager implements com.herocraftonline.items.api.item.model.Mo
                 int modelLimit = Math.min(models.size(), maxDurability);
                 for (int i = 0; i < modelLimit; i++) {
                     ItemModel model = (ItemModel) models.get(i);
-                    model.setDurability((short) (i + 1));
 
                     // Create override json to display model
                     JsonObject override = new JsonObject();
@@ -212,7 +221,7 @@ public class ModelManager implements com.herocraftonline.items.api.item.model.Mo
             }
 
             // Process zip entries for blocks
-            for (Map.Entry<Material, String> block : blocks.entrySet()) {
+            for (Map.Entry<Material, String> block : blockModels.entrySet()) {
                 // TODO Process block models
             }
 

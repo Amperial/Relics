@@ -2,11 +2,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>NMSHandler</artifactId>
-    <version>0.0-SNAPSHOT</version>
+    <artifactId>NMSHandler-v1_12_R1</artifactId>
+    <version>v1_12_R1-SNAPSHOT</version>
     <inceptionYear>2017</inceptionYear>
-    <name>Relics NMS API</name>
-    <description>Item Attributes API Plugin.</description>
+    <name>Relics NMS 1_12_R1 Compatibility</name>
+    <packaging>jar</packaging>
 
     <parent>
         <groupId>com.herocraftonline.items</groupId>
@@ -22,17 +22,34 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.10-R0.1-SNAPSHOT</version>
+            <groupId>com.herocraftonline.items</groupId>
+            <artifactId>NMSHandler</artifactId>
+            <version>0.0-SNAPSHOT</version>
             <type>jar</type>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>com.herocraftonline.items</groupId>
-            <artifactId>Relics-api</artifactId>
-            <version>0.0-SNAPSHOT</version>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.12.1-R0.1-SNAPSHOT</version>
+            <type>jar</type>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.12.1-R0.1-SNAPSHOT</version>
+            <type>jar</type>
+            <scope>provided</scope>
+            <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.spigotmc</groupId>
+                    <artifactId>minecraft-server</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
