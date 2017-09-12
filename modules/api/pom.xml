@@ -31,8 +31,8 @@
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
         <repository>
-            <id>elmakers-repo</id>
-            <url>http://maven.elmakers.com/repository/</url>
+            <id>herocraft-thirdparty</id>
+            <url>http://nexus.hc.to/content/repositories/thirdparty/</url>
         </repository>
     </repositories>
 
