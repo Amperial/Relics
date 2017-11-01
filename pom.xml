@@ -22,6 +22,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
+    <repository>
         <repository>
             <id>heroes-repo</id>
             <url>http://nexus.hc.to/content/repositories/herocraft/</url>
