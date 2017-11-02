@@ -162,6 +162,7 @@ public class ItemListener implements Listener {
         }
         switch (inventory.getType()) {
             case CHEST:
+            case ANVIL:
             case DISPENSER:
             case DROPPER:
             case HOPPER:
@@ -182,8 +183,6 @@ public class ItemListener implements Listener {
                     equipManager.replaceEquip(player, item, itemStack);
                 }
                 return true;
-            //Remove this case to see if this helps Relics from poopping from items
-            //case ANVIL:
             case BEACON:
             case BREWING:
             case CRAFTING:
