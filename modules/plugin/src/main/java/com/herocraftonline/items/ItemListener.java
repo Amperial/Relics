@@ -182,7 +182,8 @@ public class ItemListener implements Listener {
                     equipManager.replaceEquip(player, item, itemStack);
                 }
                 return true;
-            case ANVIL:
+            //Remove this case to see if this helps Relics from poopping from items
+            //case ANVIL:
             case BEACON:
             case BREWING:
             case CRAFTING:
