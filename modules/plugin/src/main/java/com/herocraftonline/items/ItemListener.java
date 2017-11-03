@@ -196,14 +196,41 @@ public class ItemListener implements Listener {
                     Optional<Damage> damageOptional = item.getAttribute(Damage.class);
                     if (damageOptional.isPresent()) {
                         Damage damage = damageOptional.get();
-
-                        Bukkit.broadcastMessage("Rel: " + event.getDamage());
-
                         event.setDamage(damage.getDamage() + damage.getVariation() * (damage.getVariation() * ((random.nextDouble() * 2) - 1)));
                     }
                 }
             }
         }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onEntityDamageByEntity1(EntityDamageByEntityEvent event) {
+        Bukkit.broadcastMessage("Arrow Damage LOWEST: " + event.getDamage());
+    }
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onEntityDamageByEntity2(EntityDamageByEntityEvent event) {
+        Bukkit.broadcastMessage("Arrow Damage LOW: " + event.getDamage());
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onEntityDamageByEntity3(EntityDamageByEntityEvent event) {
+        Bukkit.broadcastMessage("Arrow Damage NORMAL: " + event.getDamage());
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onEntityDamageByEntity4(EntityDamageByEntityEvent event) {
+        Bukkit.broadcastMessage("Arrow Damage HIGH: " + event.getDamage());
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onEntityDamageByEntity5(EntityDamageByEntityEvent event) {
+        Bukkit.broadcastMessage("Arrow Damage HIGHEST: " + event.getDamage());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onEntityDamageByEntity6(EntityDamageByEntityEvent event) {
+        Bukkit.broadcastMessage("Arrow Damage MONITOR: " + event.getDamage());
     }
 
     private LivingEntity getLivingDamager(EntityDamageByEntityEvent event) {
