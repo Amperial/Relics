@@ -195,7 +195,7 @@ public class ItemListener implements Listener {
                     Optional<Damage> damageOptional = item.getAttribute(Damage.class);
                     if (damageOptional.isPresent()) {
                         Damage damage = damageOptional.get();
-                        event.setDamage(event.getDamage() + damage.getVariation() * (damage.getVariation() * ((random.nextDouble() * 2) - 1)));
+                        event.setDamage(damage.getDamage() + damage.getVariation() * (damage.getVariation() * ((random.nextDouble() * 2) - 1)));
                     }
                 }
             }
