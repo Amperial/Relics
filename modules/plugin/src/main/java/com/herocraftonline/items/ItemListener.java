@@ -19,15 +19,13 @@ import com.herocraftonline.items.api.item.attribute.attributes.Durability;
 import com.herocraftonline.items.api.item.attribute.attributes.Soulbound;
 import com.herocraftonline.items.api.message.Messenger;
 import com.herocraftonline.items.api.message.RelMessage;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -38,6 +36,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.ArrayList;
@@ -50,6 +49,8 @@ import java.util.Random;
 import java.util.UUID;
 
 public class ItemListener implements Listener {
+
+    private static final String FIRED_BOW_META_KEY = "relics:bow-fired";
 
     private final ItemPlugin plugin;
     private final Random random;
@@ -107,31 +108,95 @@ public class ItemListener implements Listener {
     }
 
     @EventHandler
+    public void onEntityShootBow(EntityShootBowEvent event) {
+
+        LivingEntity shooter = event.getEntity();
+
+        ItemManager itemManager = plugin.getItemManager();
+        ItemStack itemStack = event.getBow();
+        Optional<Item> itemOptional = itemManager.getItem(itemStack);
+
+        if (itemOptional.isPresent()) {
+
+            Item item = itemOptional.get();
+
+            if (shooter instanceof  Player && !handleItemUse((Player) shooter, item, itemStack)) {
+                event.setCancelled(true);
+                return;
+            }
+
+            Optional<Durability> durability = item.getAttribute(Durability.class);
+            if (durability.isPresent() && !durability.get().isUsable()) {
+                if (shooter instanceof Player) {
+                    plugin.getEquipmentManager().unEquip((Player) shooter, item, itemStack);
+                }
+                event.setCancelled(true);
+                return;
+            }
+
+            if (event.getProjectile().getType() == EntityType.ARROW) {
+                Arrow arrow = (Arrow) event.getProjectile();
+                arrow.setMetadata(FIRED_BOW_META_KEY, new FixedMetadataValue(plugin, item));
+            }
+
+            if (durability.isPresent() && durability.get().damage(1)) {
+                shooter.getEquipment().setItemInMainHand(item.updateItem(itemStack));
+            }
+        }
+    }
+
+    @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        LivingEntity damager = getLivingDamager(event);
-        if (damager != null) {
-            ItemManager itemManager = plugin.getItemManager();
-            ItemStack itemStack = damager.getEquipment().getItemInMainHand();
-            Optional<Item> itemOptional = itemManager.getItem(itemStack);
-            if (itemOptional.isPresent()) {
-                Item item = itemOptional.get();
-                if (damager instanceof Player && !handleItemUse((Player) damager, item, itemStack)) {
-                    event.setCancelled(true);
-                    return;
-                }
-                Optional<Durability> durability = item.getAttribute(Durability.class);
-                if (durability.isPresent() && !durability.get().isUsable()) {
-                    if (damager instanceof Player) {
-                        plugin.getEquipmentManager().unEquip((Player) damager, item, itemStack);
+
+        EntityDamageEvent.DamageCause cause = event.getCause();
+        if (cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
+            if (event.getDamager() instanceof LivingEntity) {
+                LivingEntity damager = (LivingEntity) event.getDamager();
+                ItemManager itemManager = plugin.getItemManager();
+                ItemStack itemStack = damager.getEquipment().getItemInMainHand();
+                Optional<Item> itemOptional = itemManager.getItem(itemStack);
+                if (itemOptional.isPresent()) {
+                    Item item = itemOptional.get();
+                    if (damager instanceof Player && !handleItemUse((Player) damager, item, itemStack)) {
+                        event.setCancelled(true);
+                        return;
                     }
-                    event.setCancelled(true);
-                    return;
+                    Optional<Durability> durabilityOptional = item.getAttribute(Durability.class);
+                    if (durabilityOptional.isPresent() && !durabilityOptional.get().isUsable()) {
+                        if (damager instanceof Player) {
+                            plugin.getEquipmentManager().unEquip((Player) damager, item, itemStack);
+                        }
+                        event.setCancelled(true);
+                        return;
+                    }
+
+                    Optional<Damage> damageOptional = item.getAttribute(Damage.class);
+                    if (damageOptional.isPresent()) {
+                        Damage damage = damageOptional.get();
+                        event.setDamage(event.getDamage() + damage.getVariation() * (damage.getVariation() * ((random.nextDouble() * 2) - 1)));
+                    }
+
+//                    item.forEachDeep(Damage.class, attribute -> {
+//                        event.setDamage(event.getDamage() + attribute.getVariation() * ((random.nextDouble() * 2) - 1));
+//                    });
+
+                    if (durabilityOptional.isPresent() && durabilityOptional.get().damage(1)) {
+                        damager.getEquipment().setItemInMainHand(item.updateItem(itemStack));
+                    }
                 }
-                item.forEachDeep(Damage.class, attribute -> {
-                    event.setDamage(event.getDamage() + attribute.getVariation() * ((random.nextDouble() * 2) - 1));
-                });
-                if (durability.isPresent() && durability.get().damage(1)) {
-                    damager.getEquipment().setItemInMainHand(item.updateItem(itemStack));
+            }
+        }
+        else if (cause == EntityDamageEvent.DamageCause.PROJECTILE) {
+            if (event.getDamager() instanceof Arrow) {
+                Arrow arrow = (Arrow) event.getDamager();
+
+                if (arrow.hasMetadata(FIRED_BOW_META_KEY)) {
+                    Item item = (Item) arrow.getMetadata(FIRED_BOW_META_KEY).get(0);
+                    Optional<Damage> damageOptional = item.getAttribute(Damage.class);
+                    if (damageOptional.isPresent()) {
+                        Damage damage = damageOptional.get();
+                        event.setDamage(event.getDamage() + damage.getVariation() * (damage.getVariation() * ((random.nextDouble() * 2) - 1)));
+                    }
                 }
             }
         }
