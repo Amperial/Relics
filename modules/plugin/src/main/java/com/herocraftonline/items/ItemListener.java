@@ -19,6 +19,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.Durability;
 import com.herocraftonline.items.api.item.attribute.attributes.Soulbound;
 import com.herocraftonline.items.api.message.Messenger;
 import com.herocraftonline.items.api.message.RelMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -82,7 +83,7 @@ public class ItemListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
         ItemStack itemStack = event.getItem();
         Optional<Item> itemOptional = plugin.getItemManager().getItem(itemStack);
@@ -97,7 +98,7 @@ public class ItemListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
         if (!handleItemUse(player, player.getInventory().getItemInMainHand())) {
@@ -107,7 +108,7 @@ public class ItemListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityShootBow(EntityShootBowEvent event) {
 
         LivingEntity shooter = event.getEntity();
@@ -145,7 +146,7 @@ public class ItemListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
 
         EntityDamageEvent.DamageCause cause = event.getCause();
@@ -191,10 +192,13 @@ public class ItemListener implements Listener {
                 Arrow arrow = (Arrow) event.getDamager();
 
                 if (arrow.hasMetadata(FIRED_BOW_META_KEY)) {
-                    Item item = (Item) arrow.getMetadata(FIRED_BOW_META_KEY).get(0);
+                    Item item = (Item) arrow.getMetadata(FIRED_BOW_META_KEY).get(0).value();
                     Optional<Damage> damageOptional = item.getAttribute(Damage.class);
                     if (damageOptional.isPresent()) {
                         Damage damage = damageOptional.get();
+
+                        Bukkit.broadcastMessage("Rel: " + event.getDamage());
+
                         event.setDamage(damage.getDamage() + damage.getVariation() * (damage.getVariation() * ((random.nextDouble() * 2) - 1)));
                     }
                 }
