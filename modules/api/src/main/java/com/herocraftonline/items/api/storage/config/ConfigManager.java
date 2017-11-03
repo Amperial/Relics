@@ -172,6 +172,24 @@ public class ConfigManager {
             }
             config.set("default-args", null);
         }
+
+        // Replace string arguments with numbers where possible
+        for (int i = 0; i < args.length; i++) {
+            if (args[i] instanceof String) {
+                try {
+                    String itemArg = (String) args[i];
+                    double value = Double.valueOf(itemArg);
+                    if (itemArg.contains(".")) {
+                        args[i] = value;
+                    } else {
+                        args[i] = (int) value;
+                    }
+                } catch (NumberFormatException e) {
+                    // Arg isn't a number
+                }
+            }
+        }
+
         for (ConfigTransform transform : configTransforms) {
             config = transform.transform(config, args);
         }
