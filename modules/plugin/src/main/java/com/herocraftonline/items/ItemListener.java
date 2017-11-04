@@ -111,7 +111,10 @@ public class ItemListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityShootBow(EntityShootBowEvent event) {
 
+        if (!(event.getProjectile() instanceof Arrow)) return;
+
         LivingEntity shooter = event.getEntity();
+        Arrow arrow = (Arrow) event.getProjectile();
 
         ItemManager itemManager = plugin.getItemManager();
         ItemStack itemStack = event.getBow();
@@ -135,10 +138,18 @@ public class ItemListener implements Listener {
                 return;
             }
 
-            if (event.getProjectile().getType() == EntityType.ARROW) {
-                Arrow arrow = (Arrow) event.getProjectile();
-                arrow.setMetadata(FIRED_BOW_META_KEY, new FixedMetadataValue(plugin, item));
+            double variation = 0;
+            for (Damage attribute : item.getAttributes(Damage.class)) {
+                variation += attribute.getVariation();
             }
+
+            Bukkit.broadcastMessage("REL ARROW DAMAGE: " + arrow.spigot().getDamage());
+            arrow.spigot().setDamage(arrow.spigot().getDamage() + variation * ((random.nextDouble() * 2) - 1));
+
+//            if (event.getProjectile().getType() == EntityType.ARROW) {
+//                Arrow arrow = (Arrow) event.getProjectile();
+//                arrow.setMetadata(FIRED_BOW_META_KEY, new FixedMetadataValue(plugin, item));
+//            }
 
             if (durability.isPresent() && durability.get().damage(1)) {
                 shooter.getEquipment().setItemInMainHand(item.updateItem(itemStack));
@@ -171,17 +182,21 @@ public class ItemListener implements Listener {
                         return;
                     }
 
-                    Optional<Damage> damageOptional = item.getAttribute(Damage.class);
-                    if (damageOptional.isPresent()) {
-                        Damage damage = damageOptional.get();
-                        Bukkit.broadcastMessage("Rel pre set damage melee: " + event.getDamage());
-                        event.setDamage(event.getDamage() + (damage.getVariation() * ((random.nextDouble() * 2) - 1)));
-                        Bukkit.broadcastMessage("Rel post set damage melee: " + event.getDamage());
-                    }
-
 //                    item.forEachDeep(Damage.class, attribute -> {
 //                        event.setDamage(event.getDamage() + attribute.getVariation() * ((random.nextDouble() * 2) - 1));
 //                    });
+
+//                    Optional<Damage> damageOptional = item.getAttribute(Damage.class);
+//                    if (damageOptional.isPresent()) {
+//                        Damage damage = damageOptional.get();
+//                        event.setDamage(event.getDamage() + (damage.getVariation() * ((random.nextDouble() * 2) - 1)));
+//                    }
+
+                    double variation = 0;
+                    for (Damage attribute : item.getAttributes(Damage.class)) {
+                        variation += attribute.getVariation();
+                    }
+                    event.setDamage(event.getDamage() + variation * ((random.nextDouble() * 2) - 1));
 
                     if (durabilityOptional.isPresent() && durabilityOptional.get().damage(1)) {
                         damager.getEquipment().setItemInMainHand(item.updateItem(itemStack));
@@ -189,20 +204,20 @@ public class ItemListener implements Listener {
                 }
             }
         }
-        else if (cause == EntityDamageEvent.DamageCause.PROJECTILE) {
-            if (event.getDamager() instanceof Arrow) {
-                Arrow arrow = (Arrow) event.getDamager();
-
-                if (arrow.hasMetadata(FIRED_BOW_META_KEY)) {
-                    Item item = (Item) arrow.getMetadata(FIRED_BOW_META_KEY).get(0).value();
-                    Optional<Damage> damageOptional = item.getAttribute(Damage.class);
-                    if (damageOptional.isPresent()) {
-                        Damage damage = damageOptional.get();
-                        event.setDamage(damage.getDamage() + (damage.getVariation() * ((random.nextDouble() * 2) - 1)));
-                    }
-                }
-            }
-        }
+//        else if (cause == EntityDamageEvent.DamageCause.PROJECTILE) {
+//            if (event.getDamager() instanceof Arrow) {
+//                Arrow arrow = (Arrow) event.getDamager();
+//
+//                if (arrow.hasMetadata(FIRED_BOW_META_KEY)) {
+//                    Item item = (Item) arrow.getMetadata(FIRED_BOW_META_KEY).get(0).value();
+//                    Optional<Damage> damageOptional = item.getAttribute(Damage.class);
+//                    if (damageOptional.isPresent()) {
+//                        Damage damage = damageOptional.get();
+//                        event.setDamage(damage.getDamage() + (damage.getVariation() * ((random.nextDouble() * 2) - 1)));
+//                    }
+//                }
+//            }
+//        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
