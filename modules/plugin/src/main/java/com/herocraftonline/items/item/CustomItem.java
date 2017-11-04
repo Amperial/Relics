@@ -367,7 +367,7 @@ public class CustomItem implements Item {
 
         // Check for generic attributes
         if (hasAttributeDeep(Minecraft.class)) {
-            //meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         }
 
         // Set ItemMeta
