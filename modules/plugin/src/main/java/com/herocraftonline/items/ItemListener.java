@@ -175,7 +175,7 @@ public class ItemListener implements Listener {
                     if (damageOptional.isPresent()) {
                         Damage damage = damageOptional.get();
                         Bukkit.broadcastMessage("Rel pre set damage melee: " + event.getDamage());
-                        event.setDamage(event.getDamage() + damage.getVariation() * (damage.getVariation() * ((random.nextDouble() * 2) - 1)));
+                        event.setDamage(event.getDamage() + (damage.getVariation() * ((random.nextDouble() * 2) - 1)));
                         Bukkit.broadcastMessage("Rel post set damage melee: " + event.getDamage());
                     }
 
@@ -198,7 +198,7 @@ public class ItemListener implements Listener {
                     Optional<Damage> damageOptional = item.getAttribute(Damage.class);
                     if (damageOptional.isPresent()) {
                         Damage damage = damageOptional.get();
-                        event.setDamage(damage.getDamage() + damage.getVariation() * (damage.getVariation() * ((random.nextDouble() * 2) - 1)));
+                        event.setDamage(damage.getDamage() + (damage.getVariation() * ((random.nextDouble() * 2) - 1)));
                     }
                 }
             }
