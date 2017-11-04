@@ -143,8 +143,9 @@ public class ItemListener implements Listener {
                 variation += attribute.getVariation();
             }
 
-            Bukkit.broadcastMessage("REL ARROW DAMAGE: " + arrow.spigot().getDamage());
+            Bukkit.broadcastMessage("REL ARROW DAMAGE pre: " + arrow.spigot().getDamage());
             arrow.spigot().setDamage(arrow.spigot().getDamage() + variation * ((random.nextDouble() * 2) - 1));
+            Bukkit.broadcastMessage("REL ARROW DAMAGE post: " + arrow.spigot().getDamage());
 
 //            if (event.getProjectile().getType() == EntityType.ARROW) {
 //                Arrow arrow = (Arrow) event.getProjectile();
