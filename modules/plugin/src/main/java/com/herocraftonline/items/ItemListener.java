@@ -138,14 +138,14 @@ public class ItemListener implements Listener {
                 return;
             }
 
+            double damage = 0;
             double variation = 0;
             for (Damage attribute : item.getAttributes(Damage.class)) {
+                damage += attribute.getDamage();
                 variation += attribute.getVariation();
             }
 
-            Bukkit.broadcastMessage("REL ARROW DAMAGE pre: " + arrow.spigot().getDamage());
-            arrow.spigot().setDamage(arrow.spigot().getDamage() + variation * ((random.nextDouble() * 2) - 1));
-            Bukkit.broadcastMessage("REL ARROW DAMAGE post: " + arrow.spigot().getDamage());
+            arrow.spigot().setDamage(damage + (variation * ((random.nextDouble() * 2) - 1)));
 
 //            if (event.getProjectile().getType() == EntityType.ARROW) {
 //                Arrow arrow = (Arrow) event.getProjectile();
@@ -221,35 +221,35 @@ public class ItemListener implements Listener {
 //        }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onEntityDamageByEntity1(EntityDamageByEntityEvent event) {
-        Bukkit.broadcastMessage("Arrow Damage LOWEST: " + event.getDamage());
-    }
-
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    public void onEntityDamageByEntity2(EntityDamageByEntityEvent event) {
-        Bukkit.broadcastMessage("Arrow Damage LOW: " + event.getDamage());
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onEntityDamageByEntity3(EntityDamageByEntityEvent event) {
-        Bukkit.broadcastMessage("Arrow Damage NORMAL: " + event.getDamage());
-    }
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onEntityDamageByEntity4(EntityDamageByEntityEvent event) {
-        Bukkit.broadcastMessage("Arrow Damage HIGH: " + event.getDamage());
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onEntityDamageByEntity5(EntityDamageByEntityEvent event) {
-        Bukkit.broadcastMessage("Arrow Damage HIGHEST: " + event.getDamage());
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onEntityDamageByEntity6(EntityDamageByEntityEvent event) {
-        Bukkit.broadcastMessage("Arrow Damage MONITOR: " + event.getDamage());
-    }
+//    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+//    public void onEntityDamageByEntity1(EntityDamageByEntityEvent event) {
+//        Bukkit.broadcastMessage("Arrow Damage LOWEST: " + event.getDamage());
+//    }
+//
+//    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+//    public void onEntityDamageByEntity2(EntityDamageByEntityEvent event) {
+//        Bukkit.broadcastMessage("Arrow Damage LOW: " + event.getDamage());
+//    }
+//
+//    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+//    public void onEntityDamageByEntity3(EntityDamageByEntityEvent event) {
+//        Bukkit.broadcastMessage("Arrow Damage NORMAL: " + event.getDamage());
+//    }
+//
+//    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+//    public void onEntityDamageByEntity4(EntityDamageByEntityEvent event) {
+//        Bukkit.broadcastMessage("Arrow Damage HIGH: " + event.getDamage());
+//    }
+//
+//    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+//    public void onEntityDamageByEntity5(EntityDamageByEntityEvent event) {
+//        Bukkit.broadcastMessage("Arrow Damage HIGHEST: " + event.getDamage());
+//    }
+//
+//    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+//    public void onEntityDamageByEntity6(EntityDamageByEntityEvent event) {
+//        Bukkit.broadcastMessage("Arrow Damage MONITOR: " + event.getDamage());
+//    }
 
     private LivingEntity getLivingDamager(EntityDamageByEntityEvent event) {
         EntityDamageEvent.DamageCause cause = event.getCause();
