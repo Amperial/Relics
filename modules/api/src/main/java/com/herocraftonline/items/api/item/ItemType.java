@@ -90,25 +90,56 @@ public class ItemType {
     }
 
     /**
+     * Checks if the this item type has a parent
+     *
+     * @return {@code true} if a perent exists, {@code false} otherwise
+     */
+    public boolean hasParent() {
+        return parent != null;
+    }
+
+    /**
      * Gets the parent item type of this item type.
      *
      * @return the parent item type
      */
-    public Optional<ItemType> getParent() {
-        return Optional.of(parent);
+    public ItemType getParent() {
+        return parent;
+    }
+
+    /**
+     * Checks if this item type is, or is a child of the given item type
+     *
+     * @param itemType the item type to check against
+     * @return {@code true} this item type is or is a child of the given item type, {@code false} otherwise
+     */
+    public boolean isType(ItemType itemType) {
+        if (itemType == null) return false;
+        ItemType current = this;
+        do {
+            if (current.equals(itemType)) {
+                return true;
+            }
+        }
+        while ((current = parent) != null);
+
+        return false;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ItemType)) return false;
-        ItemType itemType = (ItemType) o;
-        return Objects.equals(name, itemType.name);
+        return equals((ItemType) o);
+    }
+
+    public boolean equals(ItemType other) {
+        return name.equalsIgnoreCase(other.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(name.toLowerCase());
     }
 
 }

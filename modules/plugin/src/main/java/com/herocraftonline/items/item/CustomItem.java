@@ -122,6 +122,11 @@ public class CustomItem implements Item {
     }
 
     @Override
+    public boolean isType(ItemType itemType) {
+        return getType().isType(itemType);
+    }
+
+    @Override
     public boolean hasAttribute(String name) {
         return attributes.hasAttribute(name);
     }
