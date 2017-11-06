@@ -13,6 +13,7 @@ package com.herocraftonline.items.item;
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.ItemFactory;
+import com.herocraftonline.items.api.item.ItemType;
 import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.AttributeType;
 import com.herocraftonline.items.api.item.attribute.attributes.gems.SocketColor;
@@ -39,12 +40,14 @@ import java.util.logging.Level;
 public class ItemManager implements com.herocraftonline.items.api.item.ItemManager {
 
     private final ItemPlugin plugin;
+    private final Map<String, ItemType> itemTypes;
     private final Map<String, AttributeType> attributeTypes;
     private final Map<String, ItemConfig> items;
     private ItemFactory factory;
 
     public ItemManager(ItemPlugin plugin) {
         this.plugin = plugin;
+        this.itemTypes = new HashMap<>();
         this.attributeTypes = new HashMap<>();
         this.items = new HashMap<>();
 
@@ -82,6 +85,7 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
         itemConfig.getStringList("items").forEach(item -> registerItemConfig(new ItemConfig(item), plugin));
 
         setDefaultFactories();
+        registerDefaultItemTypes();
     }
 
     public void setDefaultFactories() {
@@ -197,6 +201,26 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
     }
 
     @Override
+    public boolean hasItemType(String name) {
+        return itemTypes.containsKey(name);
+    }
+
+    @Override
+    public ItemType getItemType(String name) {
+        return itemTypes.getOrDefault(name.toLowerCase(), ItemType.UNKNOWN);
+    }
+
+    @Override
+    public void registerItemTypes(Collection<? extends ItemType> itemTypes) {
+        itemTypes.forEach(this::registerItemType);
+    }
+
+    @Override
+    public void registerItemType(ItemType itemType) {
+        itemTypes.put(itemType.getName().toLowerCase(), itemType);
+    }
+
+    @Override
     public boolean hasItemConfig(String item) {
         // Look for registered item config
         // TODO: Add a way to not require the full item config path?
@@ -270,6 +294,33 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
     @Override
     public ItemFactory getFactory() {
         return factory;
+    }
+
+    private void registerDefaultItemTypes() {
+        registerItemType(ItemType.UNKNOWN);
+        registerItemType(ItemType.MAIN_HAND);
+        registerItemType(ItemType.TOOL);
+        registerItemType(ItemType.TOOL_AXE);
+        registerItemType(ItemType.TOOL_HOE);
+        registerItemType(ItemType.TOOL_PICKAXE);
+        registerItemType(ItemType.TOOL_SHEARS);
+        registerItemType(ItemType.TOOL_SHOVEL);
+        registerItemType(ItemType.WEAPON);
+        registerItemType(ItemType.WEAPON_AXE);
+        registerItemType(ItemType.WEAPON_BOW);
+        registerItemType(ItemType.WEAPON_HOE);
+        registerItemType(ItemType.WEAPON_PICKAXE);
+        registerItemType(ItemType.WEAPON_SHEARS);
+        registerItemType(ItemType.WEAPON_SHOVEL);
+        registerItemType(ItemType.WEAPON_SWORD);
+        registerItemType(ItemType.OFF_HAND);
+        registerItemType(ItemType.SHIELD);
+        registerItemType(ItemType.ARROW);
+        registerItemType(ItemType.ARMOR);
+        registerItemType(ItemType.HELMET);
+        registerItemType(ItemType.CHESTPLATE);
+        registerItemType(ItemType.LEGGINGS);
+        registerItemType(ItemType.BOOTS);
     }
 
 }

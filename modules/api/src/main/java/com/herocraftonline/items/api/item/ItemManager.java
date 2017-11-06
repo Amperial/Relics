@@ -147,6 +147,31 @@ public interface ItemManager {
     Optional<Item> getItem(String item, Object... args);
 
     /**
+     * Checks if an item type of a certain name is registered
+     *
+     * @param name the item type name
+     * @return {@code true} if the item type is registered, else {@code false}
+     */
+    boolean hasItemType(String name);
+
+    /**
+     * Gets the item type with the given name.
+     *
+     * @param name the name of the item type
+     * @return the item type
+     */
+    ItemType getItemType(String name);
+
+    void registerItemTypes(Collection<? extends ItemType> itemTypes);
+
+    /**
+     * Registers the given item type.
+     *
+     * @param itemType the item type to register
+     */
+    void registerItemType(ItemType itemType);
+
+    /**
      * Checks if an item config of a certain name is registered.
      *
      * @param item the item name
