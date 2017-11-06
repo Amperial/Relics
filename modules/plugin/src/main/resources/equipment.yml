@@ -1,13 +1,13 @@
 slots:
+  main-hand:
+    item-type: "main-hand"
+  off-hand:
+    item-type: "off-hand"
   helmet:
-    type: "helmet"
+    item-type: "helmet"
   chestplate:
-    type: "chestplate"
+    item-type: "chestplate"
   leggings:
-    type: "leggings"
+    item-type: "leggings"
   boots:
-    type: "boots"
-  primary:
-    type: "primary"
-  secondary:
-    type: "secondary"
+    item-type: "boots"

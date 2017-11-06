@@ -110,20 +110,24 @@ public class ItemType {
     /**
      * Checks if this item type is, or is a child of the given item type
      *
-     * @param itemType the item type to check against
+     * @param other the item type to check against
      * @return {@code true} this item type is or is a child of the given item type, {@code false} otherwise
      */
-    public boolean isType(ItemType itemType) {
-        if (itemType == null) return false;
+    public boolean isType(ItemType other) {
+        if (other == null) return false;
         ItemType current = this;
         do {
-            if (current.equals(itemType)) {
+            if (current.equals(other)) {
                 return true;
             }
         }
         while ((current = parent) != null);
 
         return false;
+    }
+
+    public boolean isParentOf(ItemType other) {
+        return other != null && other.isType(this);
     }
 
     @Override

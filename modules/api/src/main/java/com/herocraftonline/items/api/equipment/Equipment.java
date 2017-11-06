@@ -12,6 +12,7 @@ package com.herocraftonline.items.api.equipment;
 
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.ItemType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -20,9 +21,9 @@ import java.util.UUID;
 
 public interface Equipment {
 
-    Player getPlayer();
+    LivingEntity getHolder();
 
-    UUID getPlayerId();
+    UUID getHolderId();
 
     boolean hasSlot(String name);
 

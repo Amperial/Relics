@@ -50,12 +50,12 @@ public class PlayerEquipment implements Equipment {
     }
 
     @Override
-    public Player getPlayer() {
+    public Player getHolder() {
         return Bukkit.getPlayer(playerId);
     }
 
     @Override
-    public UUID getPlayerId() {
+    public UUID getHolderId() {
         return playerId;
     }
 
@@ -117,7 +117,7 @@ public class PlayerEquipment implements Equipment {
         for (Slot slot : getSlots(item.getType())) {
             if (slot.isOpen()) {
                 slot.setItemId(item.getId());
-                Player player = getPlayer();
+                Player player = getHolder();
                 if (item.onEquip(player)) {
                     updateItem(player, item, itemStack);
                 }
@@ -132,7 +132,7 @@ public class PlayerEquipment implements Equipment {
         checkSlot(slot);
         if (slot.isOpen()) {
             slot.setItemId(item.getId());
-            Player player = getPlayer();
+            Player player = getHolder();
             if (item.onEquip(player)) {
                 updateItem(player, item, itemStack);
             }
@@ -147,7 +147,7 @@ public class PlayerEquipment implements Equipment {
         if (!equip(item, itemStack)) {
             ItemManager itemManager = plugin.getItemManager();
             for (Slot slot : getSlots(item.getType())) {
-                Player player = getPlayer();
+                Player player = getHolder();
                 Optional<ItemStack> equippedStack = itemManager.findItemStack(player, slot.getItemId());
                 slot.setItemId(null);
                 if (equippedStack.isPresent()) {
@@ -172,7 +172,7 @@ public class PlayerEquipment implements Equipment {
         for (Slot slot : getSlots()) {
             if (slot.hasItem() && slot.getItemId().equals(item.getId())) {
                 slot.setItemId(null);
-                Player player = getPlayer();
+                Player player = getHolder();
                 if (item.onUnEquip(player)) {
                     updateItem(player, item, itemStack);
                 }
@@ -185,7 +185,7 @@ public class PlayerEquipment implements Equipment {
     @Override
     public void unEquipAll() {
         ItemManager itemManager = plugin.getItemManager();
-        Player player = getPlayer();
+        Player player = getHolder();
         for (Slot slot : getSlots()) {
             if (slot.hasItem()) {
                 Optional<ItemStack> itemStack = itemManager.findItemStack(player, slot.getItemId());
@@ -212,14 +212,14 @@ public class PlayerEquipment implements Equipment {
     }
 
     private void checkSlot(Slot slot) {
-        if (slot.hasItem() && plugin.getItemManager().findItem(getPlayer(), slot.getItemId()).isPresent()) {
+        if (slot.hasItem() && plugin.getItemManager().findItem(getHolder(), slot.getItemId()).isPresent()) {
             slot.setItemId(null);
         }
     }
 
     private void checkSlots() {
         ItemManager itemManager = plugin.getItemManager();
-        Player player = getPlayer();
+        Player player = getHolder();
         for (Slot slot : getSlots()) {
             if (slot.hasItem()) {
                 if (itemManager.findItem(player, slot.getItemId()) == null) {
@@ -254,7 +254,7 @@ public class PlayerEquipment implements Equipment {
 
     @Override
     public void load() {
-        Player player = getPlayer();
+        Player player = getHolder();
 
         // Get player config or default equipment
         ConfigManager configManager = plugin.getConfigManager();
@@ -292,7 +292,7 @@ public class PlayerEquipment implements Equipment {
     @Override
     public void save() {
         // Get player config
-        ConfigAccessor playerConfig = plugin.getConfigManager().getPlayerConfigAccessor(getPlayer());
+        ConfigAccessor playerConfig = plugin.getConfigManager().getPlayerConfigAccessor(getHolder());
         FileConfiguration config = playerConfig.getConfig();
 
         // Save slots
