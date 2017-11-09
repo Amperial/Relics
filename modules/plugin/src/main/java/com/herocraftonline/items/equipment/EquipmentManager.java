@@ -22,6 +22,7 @@ import com.herocraftonline.items.api.message.RelMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
@@ -52,11 +53,13 @@ public class EquipmentManager implements com.herocraftonline.items.api.equipment
 
     @Override
     public void loadEquipment(Player player) {
-        // Load player equipment
-        equipment.put(player.getUniqueId(), new PlayerEquipment(plugin, player));
+        if (!equipment.containsKey(player.getUniqueId())) {
+            // Load player equipment
+            equipment.put(player.getUniqueId(), new PlayerEquipment(plugin, player));
+        }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void unloadEquipment(PlayerQuitEvent event) {
         // Remove and save player equipment
         equipment.remove(event.getPlayer().getUniqueId()).save();
@@ -64,6 +67,9 @@ public class EquipmentManager implements com.herocraftonline.items.api.equipment
 
     @Override
     public Equipment getEquipment(Player player) {
+        if (!equipment.containsKey(player.getUniqueId())) {
+            loadEquipment(player);
+        }
         return equipment.get(player.getUniqueId());
     }
 
