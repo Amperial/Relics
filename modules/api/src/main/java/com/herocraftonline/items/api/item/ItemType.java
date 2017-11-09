@@ -18,132 +18,42 @@ import java.util.Optional;
  *
  * @author Austin Payne
  */
-public class ItemType {
+public interface ItemType {
 
     /**
-     * Default item types that may be needed.
-     */
-
-    public static final ItemType UNKNOWN = new ItemType("unknown", "UNKNOWN");
-    public static final ItemType MAIN_HAND = new ItemType("main-hand");
-        public static final ItemType TOOL = new ItemType("tool", MAIN_HAND);
-            public static final ItemType TOOL_AXE = new ItemType("tool-axe", TOOL);
-            public static final ItemType TOOL_HOE = new ItemType("tool-hoe", TOOL);
-            public static final ItemType TOOL_PICKAXE = new ItemType("tool-pickaxe", TOOL);
-            public static final ItemType TOOL_SHEARS = new ItemType("tool-shears", TOOL);
-            public static final ItemType TOOL_SHOVEL = new ItemType("tool-shovel", TOOL);
-        public static final ItemType WEAPON = new ItemType("weapon", MAIN_HAND);
-            public static final ItemType WEAPON_AXE = new ItemType("weapon-axe", WEAPON);
-            public static final ItemType WEAPON_BOW = new ItemType("weapon-bow", WEAPON);
-            public static final ItemType WEAPON_HOE = new ItemType("weapon-hoe", WEAPON);
-            public static final ItemType WEAPON_PICKAXE = new ItemType("weapon-pickaxe", WEAPON);
-            public static final ItemType WEAPON_SHEARS = new ItemType("weapon-shears", WEAPON);
-            public static final ItemType WEAPON_SHOVEL = new ItemType("weapon-shovel", WEAPON);
-            public static final ItemType WEAPON_SWORD = new ItemType("weapon-sword", WEAPON);
-    public static final ItemType OFF_HAND = new ItemType("off-hand");
-        public static final ItemType SHIELD = new ItemType("shield", OFF_HAND);
-        public static final ItemType ARROW = new ItemType("arrow", OFF_HAND);
-    public static final ItemType ARMOR = new ItemType("armor");
-        public static final ItemType HELMET = new ItemType("helmet", ARMOR);
-        public static final ItemType CHESTPLATE = new ItemType("chestplate", ARMOR);
-        public static final ItemType LEGGINGS = new ItemType("leggings", ARMOR);
-        public static final ItemType BOOTS = new ItemType("boots", ARMOR);
-
-    private final String name;
-    public final String displayName;
-    public final ItemType parent;
-
-    public ItemType(String name, String displayName, ItemType parent) {
-        this.name = name;
-        this.displayName = displayName;
-        this.parent = parent;
-    }
-
-    public ItemType(String name, ItemType parent) {
-        this(name, name, parent);
-    }
-
-    public ItemType(String name, String displayName) {
-        this(name, displayName, null);
-    }
-
-    public ItemType(String name) {
-        this(name, name, null);
-    }
-
-    /**
-     * Gets the name of the item type.
+     * Gets the name of this item type
      *
-     * @return the item type's name
+     * @return the name
      */
-    public String getName() {
-        return name;
-    }
+    String getName();
 
     /**
-     * Gets the display name of the item type.
+     * Checks if this item has a parent item type
      *
-     * @return the item type's display name
+     * @return {@code true} if a parent exists, {@code false} otherwise
      */
-    public String getDisplayName() {
-        return displayName;
-    }
+    boolean hasParent();
 
     /**
-     * Checks if the this item type has a parent
+     * Gets the parent of this item type
      *
-     * @return {@code true} if a perent exists, {@code false} otherwise
+     * @return the parent
      */
-    public boolean hasParent() {
-        return parent != null;
-    }
+    ItemType getParent();
 
     /**
-     * Gets the parent item type of this item type.
+     * Checks if this item type is a child of the given item type
      *
-     * @return the parent item type
+     * @param itemType the item type to test for
+     * @return {@code true} if this item type is a child of the given item type, {@code false} otherwise
      */
-    public ItemType getParent() {
-        return parent;
-    }
+    boolean isType(ItemType itemType);
 
     /**
-     * Checks if this item type is, or is a child of the given item type
+     * Checks if this item type is abstract. An abstract item type exists
+     * for utility purposes and can not be applied to an item.
      *
-     * @param other the item type to check against
-     * @return {@code true} this item type is or is a child of the given item type, {@code false} otherwise
+     * @return {@code true} if item type is abstract, {@code false} otherwise
      */
-    public boolean isType(ItemType other) {
-        if (other == null) return false;
-        ItemType current = this;
-        do {
-            if (current.equals(other)) {
-                return true;
-            }
-        }
-        while ((current = parent) != null);
-
-        return false;
-    }
-
-    public boolean isParentOf(ItemType other) {
-        return other != null && other.isType(this);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ItemType)) return false;
-        return equals((ItemType) o);
-    }
-
-    public boolean equals(ItemType other) {
-        return name.equalsIgnoreCase(other.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name.toLowerCase());
-    }
-
+    boolean isAbstract();
 }

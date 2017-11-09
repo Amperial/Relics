@@ -30,4 +30,13 @@ public interface EquipmentManager {
 
     void unEquipAll(Player player);
 
+    boolean hasSlotType(String name);
+
+    boolean hasSlotType(int index);
+
+    SlotType getSlotType(String name);
+
+    SlotType getSlotType(int index);
+
+    void registerSlotType(SlotType slotType);
 }

@@ -162,15 +162,6 @@ public interface ItemManager {
      */
     ItemType getItemType(String name);
 
-    void registerItemTypes(Collection<? extends ItemType> itemTypes);
-
-    /**
-     * Registers the given item type.
-     *
-     * @param itemType the item type to register
-     */
-    void registerItemType(ItemType itemType);
-
     /**
      * Checks if an item config of a certain name is registered.
      *

@@ -13,12 +13,14 @@ public abstract class BaseEquipment implements com.herocraftonline.items.api.equ
     protected final ItemPlugin plugin;
     private final UUID holderId;
     private final Map<String, Slot> slotsByName;
+    private final Map<Integer, Slot> slotsByIndex;
     private final Map<ItemType, Collection<Slot>> slotsByType;
 
     public BaseEquipment(ItemPlugin plugin, LivingEntity holder) {
         this.plugin = plugin;
         this.holderId = holder.getUniqueId();
         this.slotsByName = new HashMap<>();
+        this.slotsByIndex = new HashMap<>();
         this.slotsByType = new HashMap<>();
     }
 

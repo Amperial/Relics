@@ -27,9 +27,13 @@ public interface Equipment {
 
     boolean hasSlot(String name);
 
+    boolean hasSlot(int index);
+
     boolean hasSlot(ItemType type);
 
     Slot getSlot(String name);
+
+    Slot getSlot(int index);
 
     Collection<Slot> getSlots(ItemType type);
 
@@ -57,20 +61,14 @@ public interface Equipment {
 
     class Slot {
 
-        private final String name;
-        private final ItemType type;
+        private SlotType type;
         private UUID itemId;
 
-        public Slot(String name, ItemType type) {
-            this.name = name;
+        public Slot(SlotType type) {
             this.type = type;
         }
 
-        public String getName() {
-            return name;
-        }
-
-        public ItemType getType() {
+        public SlotType getType() {
             return type;
         }
 

@@ -13,6 +13,7 @@ package com.herocraftonline.items.equipment;
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.equipment.Equipment;
 import com.herocraftonline.items.api.equipment.EquipmentChangedEvent;
+import com.herocraftonline.items.api.equipment.SlotType;
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.ItemType;
 import com.herocraftonline.items.api.item.attribute.attributes.Durability;
@@ -35,11 +36,15 @@ public class EquipmentManager implements com.herocraftonline.items.api.equipment
     private final ItemPlugin plugin;
     private final Map<UUID, Equipment> equipment;
     private final Map<UUID, Long> equipReplace;
+    private final Map<String, SlotType> slotTypesByName;
+    private final Map<Integer, SlotType> slotTypesByIndex;
 
     public EquipmentManager(ItemPlugin plugin) {
         this.plugin = plugin;
         this.equipment = new HashMap<>();
         this.equipReplace = new HashMap<>();
+        this.slotTypesByName = new HashMap<>();
+        this.slotTypesByIndex = new HashMap<>();
 
         // Register listener
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -146,8 +151,46 @@ public class EquipmentManager implements com.herocraftonline.items.api.equipment
         equipmentChanged(player);
     }
 
+    @Override
+    public boolean hasSlotType(String name) {
+        return slotTypesByName.containsKey(name.toLowerCase());
+    }
+
+    @Override
+    public boolean hasSlotType(int index) {
+        return slotTypesByIndex.containsKey(index);
+    }
+
+    @Override
+    public SlotType getSlotType(String name) {
+        return slotTypesByName.get(name.toLowerCase());
+    }
+
+    @Override
+    public SlotType getSlotType(int index) {
+        return slotTypesByIndex.get(index);
+    }
+
+    @Override
+    public void registerSlotType(SlotType slotType) {
+
+    }
+
     private void equipmentChanged(Player player) {
         Bukkit.getServer().getPluginManager().callEvent(new EquipmentChangedEvent(player));
+    }
+
+    private boolean validateSlotType(SlotType slotType) {
+        return false;
+    }
+
+    private void registerDefaultSlotTypes() {
+        registerSlotType(SlotType.MAIN_HAND);
+        registerSlotType(SlotType.OFF_HAND);
+        registerSlotType(SlotType.HELMET);
+        registerSlotType(SlotType.CHESTPLATE);
+        registerSlotType(SlotType.LEGGINGS);
+        registerSlotType(SlotType.BOOTS);
     }
 
 }

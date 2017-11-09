@@ -354,7 +354,7 @@ public class CustomItem implements Item {
         ItemMeta meta = item.getItemMeta();
 
         // Set item name
-        meta.setDisplayName(getName() + " " + ChatColor.DARK_GRAY + ChatColor.ITALIC + type.getDisplayName());
+        meta.setDisplayName(getName() + " " + ChatColor.DARK_GRAY + ChatColor.ITALIC + type.getName());
 
         // Set item lore
         meta.setLore(createLore());
