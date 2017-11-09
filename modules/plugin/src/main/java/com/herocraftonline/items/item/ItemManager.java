@@ -204,6 +204,11 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
     }
 
     @Override
+    public Collection<? extends ItemType> getItemTypes() {
+        return Collections.unmodifiableCollection(itemTypes.values());
+    }
+
+    @Override
     public boolean hasItemConfig(String item) {
         // Look for registered item config
         // TODO: Add a way to not require the full item config path?

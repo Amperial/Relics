@@ -163,6 +163,13 @@ public interface ItemManager {
     ItemType getItemType(String name);
 
     /**
+     * Gets all item types
+     *
+     * @return all item types
+     */
+    Collection<? extends ItemType> getItemTypes();
+
+    /**
      * Checks if an item config of a certain name is registered.
      *
      * @param item the item name
