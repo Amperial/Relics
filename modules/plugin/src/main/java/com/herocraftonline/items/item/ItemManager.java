@@ -44,6 +44,7 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
         this.attributeTypes = new HashMap<>();
         this.items = new HashMap<>();
 
+        loadItemTypes();
         registerAttributeTypes(DefaultAttribute.getTypes(), plugin);
 
         // Load attribute type lore order
@@ -289,13 +290,43 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
     }
 
     private void loadItemType(Map<?, ?> typeMap, Stack<ItemType> parentStack) {
+        Object nameObj = typeMap.get("name");
+        if (nameObj instanceof String) {
 
-        ItemType newItemType = null;
+            String name = (String) nameObj;
+            if (hasItemType(name)) {
+                plugin.getLogger().warning("Duplicate item type name `" + name + "`");
+                return;
+            }
 
-        Object childrenObj = typeMap.get("children");
-        if (childrenObj instanceof List) {
-            parentStack.push(newItemType);
-            loadItemTypes((List<Map<?, ?>>) childrenObj, parentStack);
+            ItemType parent = null;
+            if (!parentStack.empty()) {
+                parent = parentStack.peek();
+            }
+
+            Object isAbstractObj = typeMap.get("isAbstract");
+            boolean isAbstract = isAbstractObj instanceof Boolean ? (Boolean) isAbstractObj : false;
+
+            ItemType itemType = new ItemType(name, parent, isAbstract);
+            itemTypes.put(name.toLowerCase(), itemType);
+
+            Object childrenObj = typeMap.get("children");
+            if (childrenObj instanceof List) {
+                List<?> list = (List<?>) childrenObj;
+                List<Map<?, ?>> typeList = new ArrayList<>();
+
+                for (Object o : list) {
+                    if (o instanceof Map) {
+                        typeList.add((Map<?, ?>) o);
+                    }
+                }
+
+                if (!typeList.isEmpty()) {
+                    parentStack.push(itemType);
+                    loadItemTypes(typeList, parentStack);
+                    parentStack.pop();
+                }
+            }
         }
     }
 }
