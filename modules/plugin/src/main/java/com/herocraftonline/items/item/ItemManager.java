@@ -33,7 +33,7 @@ import java.util.logging.Level;
 public class ItemManager implements com.herocraftonline.items.api.item.ItemManager {
 
     private final ItemPlugin plugin;
-    private final Map<String, ItemType> itemTypes;
+    private final Map<String, CustomItemType> itemTypes;
     private final Map<String, AttributeType> attributeTypes;
     private final Map<String, ItemConfig> items;
     private ItemFactory factory;
@@ -199,12 +199,24 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
     }
 
     @Override
-    public ItemType getItemType(String name) {
-        return itemTypes.get(name.toLowerCase());
+    public CustomItemType getItemType(String name) {
+        return getItemType(name, false);
     }
 
     @Override
-    public Collection<? extends ItemType> getItemTypes() {
+    public CustomItemType getItemType(String name, boolean createAsTransientIfNotFound) {
+        CustomItemType itemType = itemTypes.get(name.toLowerCase());
+
+        if (createAsTransientIfNotFound && itemType == null) {
+            itemType = new CustomItemType(name, null, false, true);
+            itemTypes.put(name, itemType);
+        }
+
+        return itemType;
+    }
+
+    @Override
+    public Collection<? extends CustomItemType> getItemTypes() {
         return Collections.unmodifiableCollection(itemTypes.values());
     }
 
@@ -288,13 +300,13 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
         loadItemTypes(plugin.getConfigManager().getConfig(DefaultConfig.ITEMS).getMapList("types"), new Stack<>());
     }
 
-    private void loadItemTypes(List<Map<?, ?>> typeMaps, Stack<ItemType> parentStack) {
+    private void loadItemTypes(List<Map<?, ?>> typeMaps, Stack<CustomItemType> parentStack) {
         for (Map<?,?> typeMap : typeMaps) {
             loadItemType(typeMap, parentStack);
         }
     }
 
-    private void loadItemType(Map<?, ?> typeMap, Stack<ItemType> parentStack) {
+    private void loadItemType(Map<?, ?> typeMap, Stack<CustomItemType> parentStack) {
         Object nameObj = typeMap.get("name");
         if (nameObj instanceof String) {
 
@@ -304,7 +316,7 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
                 return;
             }
 
-            ItemType parent = null;
+            CustomItemType parent = null;
             if (!parentStack.empty()) {
                 parent = parentStack.peek();
             }
@@ -312,7 +324,7 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
             Object isAbstractObj = typeMap.get("isAbstract");
             boolean isAbstract = isAbstractObj instanceof Boolean ? (Boolean) isAbstractObj : false;
 
-            ItemType itemType = new ItemType(name, parent, isAbstract);
+            CustomItemType itemType = new CustomItemType(name, parent, isAbstract, false);
             itemTypes.put(name.toLowerCase(), itemType);
 
             Object childrenObj = typeMap.get("children");

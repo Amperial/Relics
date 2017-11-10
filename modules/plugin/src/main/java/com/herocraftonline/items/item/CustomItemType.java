@@ -2,24 +2,18 @@ package com.herocraftonline.items.item;
 
 import java.util.Objects;
 
-public final class ItemType implements com.herocraftonline.items.api.item.ItemType {
+public final class CustomItemType implements com.herocraftonline.items.api.item.ItemType {
 
     private final String name;
-    private final ItemType parent;
+    private final CustomItemType parent;
     private final boolean isAbstract;
+    private final boolean isTransient;
 
-    public ItemType(String name, ItemType parent, boolean isAbstract) {
+    public CustomItemType(String name, CustomItemType parent, boolean isAbstract, boolean isTransient) {
         this.name = name;
         this.parent = parent;
         this.isAbstract = isAbstract;
-    }
-
-    public ItemType(String name, ItemType parent) {
-        this(name, parent, false);
-    }
-
-    public ItemType(String name) {
-        this(name, null, false);
+        this.isTransient = isTransient;
     }
 
     @Override
@@ -39,8 +33,8 @@ public final class ItemType implements com.herocraftonline.items.api.item.ItemTy
 
     @Override
     public boolean isType(com.herocraftonline.items.api.item.ItemType other) {
-        if (other instanceof ItemType) {
-            ItemType current = (ItemType) other;
+        if (other instanceof CustomItemType) {
+            CustomItemType current = (CustomItemType) other;
             do {
                 if (current.equals(other)) {
                     return true;
@@ -58,6 +52,11 @@ public final class ItemType implements com.herocraftonline.items.api.item.ItemTy
     }
 
     @Override
+    public boolean isTransient() {
+        return isTransient;
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(name.toLowerCase());
     }
@@ -65,7 +64,7 @@ public final class ItemType implements com.herocraftonline.items.api.item.ItemTy
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ItemType)) return false;
-        return name.equalsIgnoreCase(((ItemType) o).name);
+        if (!(o instanceof CustomItemType)) return false;
+        return name.equalsIgnoreCase(((CustomItemType) o).name);
     }
 }

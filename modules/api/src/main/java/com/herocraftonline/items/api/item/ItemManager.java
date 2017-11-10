@@ -158,9 +158,19 @@ public interface ItemManager {
      * Gets the item type with the given name.
      *
      * @param name the name of the item type
-     * @return the item type
+     * @return the item type, or {@code null} if not found
      */
     ItemType getItemType(String name);
+
+    /**
+     * Gets the item type with the given name. If one is not found, and {@code createAsTransientIfNotFound}
+     * is {@code true}, then a new one flagged as transient will be created and returned.
+     *
+     * @param name the name of the item type
+     * @param createAsTransientIfNotFound weather to create one if not found or not
+     * @return the item type, or {@code null} if {@code createAsTransientIfNotFound} is {@code false} and not found
+     */
+    ItemType getItemType(String name, boolean createAsTransientIfNotFound);
 
     /**
      * Gets all item types
