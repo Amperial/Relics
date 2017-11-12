@@ -1,13 +1,19 @@
 slots:
-  main-hand:
-    item-type: "main-hand"
-  off-hand:
-    item-type: "off-hand"
-  helmet:
-    item-type: "helmet"
-  chestplate:
-    item-type: "chestplate"
-  leggings:
-    item-type: "leggings"
-  boots:
-    item-type: "boots"
+- name: "Main Hand"
+  item-type: "Main Hand"
+  inventory-slot: 0
+- name: "Off Hand"
+  item-type: "Off Hand"
+  inventory-slot: 40
+- name: "Helmet"
+  item-type: "Helmet"
+  inventory-slot: 39
+- name: "Chestplate"
+  item-type: "Chestplate"
+  inventory-slot: 38
+- name: "Leggings"
+  item-type: "Leggings"
+  inventory-slot: 37
+- name: "Boots"
+  item-type: "Boots"
+  inventory-slot: 36

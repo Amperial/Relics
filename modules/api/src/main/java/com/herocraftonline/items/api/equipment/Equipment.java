@@ -16,78 +16,56 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-public interface Equipment {
+public interface Equipment<T> {
 
-    LivingEntity getHolder();
+    boolean hasSlot(T equipmentHolder, String name);
 
-    UUID getHolderId();
-
-    boolean hasSlot(String name);
-
-    boolean hasSlot(int index);
-
-    boolean hasSlot(ItemType type);
-
-    Slot getSlot(String name);
-
-    Slot getSlot(int index);
-
-    Collection<Slot> getSlots(ItemType type);
-
-    Collection<Slot> getSlots();
-
-    boolean isSlotOpen(String name);
-
-    boolean isSlotOpen(ItemType type);
-
-    boolean isEquipped(Item item);
-
-    boolean equip(Item item, ItemStack itemStack);
-
-    boolean equip(Item item, ItemStack itemStack, Slot slot);
-
-    boolean replaceEquip(Item item, ItemStack itemStack);
-
-    boolean unEquip(Item item, ItemStack itemStack);
-
-    void unEquipAll();
-
-    void load();
-
-    void save();
-
-    class Slot {
-
-        private SlotType type;
-        private UUID itemId;
-
-        public Slot(SlotType type) {
-            this.type = type;
-        }
-
-        public SlotType getType() {
-            return type;
-        }
-
-        public boolean isOpen() {
-            return itemId == null;
-        }
-
-        public boolean hasItem() {
-            return !isOpen();
-        }
-
-        public UUID getItemId() {
-            return itemId;
-        }
-
-        public void setItemId(UUID itemId) {
-            this.itemId = itemId;
-        }
-
+    default boolean hasSlot(T equipmentHolder, ItemType itemType) {
+        return getSlots(equipmentHolder)
+                .stream()
+                .anyMatch(slot -> slot.canHoldItem(itemType));
     }
 
+    default boolean hasSlot(T equipmentHolder, Item item) {
+        return item != null && hasSlot(equipmentHolder, item.getType());
+    }
+
+    Slot<? extends T> getSlot(T equipmentHolder, String name);
+
+    Collection<? extends Slot<T>> getSlots(T equipmentHolder);
+
+    default Collection<? extends Slot<T>> getSlots(T equipmentHolder, ItemType itemType) {
+        return getSlots(equipmentHolder)
+                .stream()
+                .filter(slot -> slot.canHoldItem(itemType))
+                .collect(Collectors.toList());
+    }
+
+    default Collection<? extends Slot<T>> getSlots(T equipmentHolder, Item item) {
+        if (item == null) return Collections.emptyList();
+        return getSlots(equipmentHolder, item.getType());
+    }
+
+    interface Slot<T> {
+
+        String getName();
+
+        boolean canHoldItem(ItemType itemType);
+
+        default boolean canHoldItem(Item item) {
+            return item != null && canHoldItem(item.getType());
+        }
+
+        boolean hasItem(T equipmentHolder);
+
+        Item getItem(T equipmentHolder);
+
+        boolean setItem(Item item, T equipmentHolder);
+    }
 }

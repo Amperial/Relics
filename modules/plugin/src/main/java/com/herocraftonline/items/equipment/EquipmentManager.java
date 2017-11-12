@@ -12,8 +12,7 @@ package com.herocraftonline.items.equipment;
 
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.equipment.Equipment;
-import com.herocraftonline.items.api.equipment.EquipmentChangedEvent;
-import com.herocraftonline.items.api.equipment.SlotType;
+import com.herocraftonline.items.api.events.equipment.EquipmentChangedEvent;
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.ItemType;
 import com.herocraftonline.items.api.item.attribute.attributes.Durability;
@@ -27,10 +26,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class EquipmentManager implements com.herocraftonline.items.api.equipment.EquipmentManager, Listener {
 
@@ -38,14 +34,14 @@ public class EquipmentManager implements com.herocraftonline.items.api.equipment
     private final Map<UUID, Equipment> equipment;
     private final Map<UUID, Long> equipReplace;
     private final Map<String, SlotType> slotTypesByName;
-    private final Map<Integer, SlotType> slotTypesByIndex;
+    private final Map<Integer, SlotType> slotTypesByInventorySlot;
 
     public EquipmentManager(ItemPlugin plugin) {
         this.plugin = plugin;
         this.equipment = new HashMap<>();
         this.equipReplace = new HashMap<>();
         this.slotTypesByName = new HashMap<>();
-        this.slotTypesByIndex = new HashMap<>();
+        this.slotTypesByInventorySlot = new HashMap<>();
 
         // Register listener
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -164,7 +160,7 @@ public class EquipmentManager implements com.herocraftonline.items.api.equipment
 
     @Override
     public boolean hasSlotType(int index) {
-        return slotTypesByIndex.containsKey(index);
+        return slotTypesByInventorySlot.containsKey(index);
     }
 
     @Override
@@ -174,7 +170,7 @@ public class EquipmentManager implements com.herocraftonline.items.api.equipment
 
     @Override
     public SlotType getSlotType(int index) {
-        return slotTypesByIndex.get(index);
+        return slotTypesByInventorySlot.get(index);
     }
 
     @Override
@@ -189,14 +185,4 @@ public class EquipmentManager implements com.herocraftonline.items.api.equipment
     private boolean validateSlotType(SlotType slotType) {
         return false;
     }
-
-    private void registerDefaultSlotTypes() {
-        registerSlotType(SlotType.MAIN_HAND);
-        registerSlotType(SlotType.OFF_HAND);
-        registerSlotType(SlotType.HELMET);
-        registerSlotType(SlotType.CHESTPLATE);
-        registerSlotType(SlotType.LEGGINGS);
-        registerSlotType(SlotType.BOOTS);
-    }
-
 }

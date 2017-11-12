@@ -11,32 +11,12 @@
 package com.herocraftonline.items.api.equipment;
 
 import com.herocraftonline.items.api.item.Item;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public interface EquipmentManager {
 
-    void loadEquipment(Player player);
-
-    Equipment getEquipment(Player player);
-
-    boolean isEquipped(Player player, Item item);
-
-    void equip(Player player, Item item, ItemStack itemStack);
-
-    void replaceEquip(Player player, Item item, ItemStack itemStack);
-
-    void unEquip(Player player, Item item, ItemStack itemStack);
-
-    void unEquipAll(Player player);
-
-    boolean hasSlotType(String name);
-
-    boolean hasSlotType(int index);
-
-    SlotType getSlotType(String name);
-
-    SlotType getSlotType(int index);
-
-    void registerSlotType(SlotType slotType);
+    Equipment<HumanEntity> getPlayerEquipment();
 }

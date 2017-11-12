@@ -8,7 +8,7 @@
  * Unauthorized copying and/or distribution of Relics API,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.equipment;
+package com.herocraftonline.items.api.events.equipment;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
