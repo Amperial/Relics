@@ -1,20 +1,15 @@
 types:
 - name: "Main Hand"
-  abstract: true
   children:
   - name: "Weapon"
-    abstract: true
     children:
     - name: "Melee"
-      abstract: true
       children:
       - name: "Sword"
     - name: "Ranged"
-      abstract: true
       children:
       - name: "Bow"
   - name: "Tool"
-    abstract: true
     children:
     - name: "Pickaxe"
     - name: "Axe"
@@ -22,12 +17,10 @@ types:
     - name: "Hoe"
     - name: "Shears"
 - name: "Off Hand"
-  abstract: true
   children:
   - name: "Arrow"
   - name: "Shield"
 - name: "Armor"
-  abstract: true
   children:
   - name: "Helmet"
   - name: "Chestplate"

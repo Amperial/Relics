@@ -50,19 +50,10 @@ public interface ItemType {
     boolean isType(ItemType itemType);
 
     /**
-     * Checks if this item type is abstract. An abstract item type exists
-     * for utility purposes and can not be applied to an item.
-     *
-     * @return {@code true} if item type is abstract, {@code false} otherwise
-     */
-    boolean isAbstract();
-
-    /**
      * Checks if this item type is transient. A transient item type is created
      * when an item type is defined in an item or item config that isn't defined in
      * the items.yml. This is to prevent such items from causing problems with the
-     * rest of the plugin. As such a transient item type always has no parent or children
-     * and is never abstract.
+     * rest of the plugin. As such a transient item type always have no parent or children.
      *
      * @return {@code true} if this item type is transient, {@code false} otherwise
      */

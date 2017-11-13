@@ -6,13 +6,11 @@ public final class ItemType implements com.herocraftonline.items.api.item.ItemTy
 
     private final String name;
     private final ItemType parent;
-    private final boolean isAbstract;
     private final boolean isTransient;
 
-    public ItemType(String name, ItemType parent, boolean isAbstract, boolean isTransient) {
+    public ItemType(String name, ItemType parent, boolean isTransient) {
         this.name = name;
         this.parent = parent;
-        this.isAbstract = isAbstract;
         this.isTransient = isTransient;
     }
 
@@ -44,11 +42,6 @@ public final class ItemType implements com.herocraftonline.items.api.item.ItemTy
         }
 
         return false;
-    }
-
-    @Override
-    public boolean isAbstract() {
-        return isAbstract;
     }
 
     @Override

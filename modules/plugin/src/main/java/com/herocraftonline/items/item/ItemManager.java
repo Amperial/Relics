@@ -203,7 +203,7 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
         ItemType itemType = itemTypes.get(name.toLowerCase());
 
         if (itemType == null) {
-            itemType = new ItemType(name, null, false, true);
+            itemType = new ItemType(name, null, true);
             itemTypes.put(name, itemType);
         }
 
@@ -316,10 +316,7 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
                 parent = parentStack.peek();
             }
 
-            Object isAbstractObj = typeMap.get("isAbstract");
-            boolean isAbstract = isAbstractObj instanceof Boolean ? (Boolean) isAbstractObj : false;
-
-            ItemType itemType = new ItemType(name, parent, isAbstract, false);
+            ItemType itemType = new ItemType(name, parent, false);
             itemTypes.put(name.toLowerCase(), itemType);
 
             Object childrenObj = typeMap.get("children");
