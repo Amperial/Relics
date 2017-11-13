@@ -11,148 +11,194 @@
 package com.herocraftonline.items.equipment;
 
 import com.herocraftonline.items.api.ItemPlugin;
-import com.herocraftonline.items.api.equipment.Equipment;
 import com.herocraftonline.items.api.item.Item;
-import com.herocraftonline.items.api.item.ItemManager;
 import com.herocraftonline.items.api.item.ItemType;
-import com.herocraftonline.items.api.storage.config.ConfigAccessor;
-import com.herocraftonline.items.api.storage.config.ConfigManager;
-import com.herocraftonline.items.api.storage.config.DefaultConfig;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.EquipmentSlot;
 
 import java.util.*;
 
-public final class PlayerEquipment {
+public final class PlayerEquipment implements com.herocraftonline.items.api.equipment.PlayerEquipment {
 
-//    private final ItemPlugin plugin;
-//    private final Map<String, Slot> slotsByName;
-//    private final Map<Integer, Slot> slotsByInventoryIndex;
-//
-//    public PlayerEquipment(ItemPlugin plugin) {
-//        this.plugin = plugin;
-//        this.slotsByName = new HashMap<>();
-//        this.slotsByInventoryIndex = new HashMap<>();
-//        loadSlots();
-//    }
-//
-//    @Override
-//    public boolean hasSlot(Player player, String name) {
-//        return slotsByName.containsKey(name.toLowerCase());
-//    }
-//
-//    @Override
-//    public boolean hasSlot(Player player, int inventoryIndex) {
-//        return slotsByInventoryIndex.containsKey(inventoryIndex);
-//    }
-//
-//    @Override
-//    public Slot getSlot(Player player, String name) {
-//        return slotsByName.get(name.toLowerCase());
-//    }
-//
-//    @Override
-//    public Slot getSlot(Player player, int inventoryIndex) {
-//        return slotsByInventoryIndex.get(inventoryIndex);
-//    }
-//
-//    @Override
-//    public Collection<Slot> getSlots(Player player) {
-//        return Collections.unmodifiableCollection(slotsByName.values());
-//    }
-//
-//    private void loadSlots() {
-//        FileConfiguration config = plugin.getConfigManager().getConfig(DefaultConfig.EQUIPMENT);
-//        List<Map<?, ?>> slotMaps = config.getMapList("slots");
-//        for (Map<?, ?> slotMap : slotMaps) {
-//
-//            String name = null;
-//            int inventoryIndex = -1;
-//            ItemType itemType = null;
-//
-//            Object nameObj = slotMap.get("name");
-//            if (nameObj instanceof String) {
-//                name = (String) nameObj;
-//            }
-//            else {
-//                continue;
-//            }
-//
-//            Object inventoryIndexObj = slotMap.get("inventory-index");
-//            if (inventoryIndexObj instanceof Integer) {
-//                inventoryIndex = (Integer) inventoryIndexObj;
-//                if (inventoryIndex < 0 || inventoryIndex > 40) {
-//                    continue;
-//                }
-//            }
-//            else {
-//                continue;
-//            }
-//
-//            Object itemTypeObj = slotMap.get("item-type");
-//            if (itemTypeObj instanceof String) {
-//                String itemTypeName = (String) itemTypeObj;
-//                if (plugin.getItemManager().hasItemType(itemTypeName)) {
-//                    itemType = plugin.getItemManager().getItemType(itemTypeName);
-//                }
-//                else {
-//                    continue;
-//                }
-//            } else {
-//                continue;
-//            }
-//
-//            if (slotsByName.containsKey(name.toLowerCase()) || slotsByInventoryIndex.containsKey(inventoryIndex)) {
-//                continue;
-//            }
-//
-//            Slot slot = new Slot(name, inventoryIndex, itemType);
-//            slotsByName.put(name.toLowerCase(), slot);
-//            slotsByInventoryIndex.put(inventoryIndex, slot);
-//        }
-//    }
-//
-//    public class Slot implements com.herocraftonline.items.api.equipment.PlayerEquipment.Slot {
-//
-//        private final String name;
-//        private final int inventoryIndex;
-//        private final ItemType itemType;
-//
-//        public Slot(String name, int inventoryIndex, ItemType itemType) {
-//            this.name = name;
-//            this.inventoryIndex = inventoryIndex;
-//            this.itemType = itemType;
-//        }
-//
-//        @Override
-//        public String getName() {
-//            return name;
-//        }
-//
-//        @Override
-//        public int getInventoryIndex() {
-//            return inventoryIndex;
-//        }
-//
-//        @Override
-//        public boolean canHoldItem(ItemType itemType) {
-//            return itemType != null && itemType.isType(this.itemType);
-//        }
-//
-//        @Override
-//        public boolean hasItem(Player player) {
-//            return PlayerEquipment.this.plugin.getItemManager().isItem(player.getInventory().getItem(inventoryIndex));
-//        }
-//
-//        @Override
-//        public Item getItem(Player player) {
-//            return PlayerEquipment.this.plugin.getItemManager().getItem(player.getInventory().getItem(inventoryIndex)).orElse(null);
-//        }
-//    }
+    private static final int MAIN_HAND_INVENTORY_SLOT = 0;
+    private static final int OFF_HAND_INVENTORY_SLOT = 40;
+    private static final int HEAD_INVENTORY_SLOT = 39;
+    private static final int CHEST_INVENTORY_SLOT = 38;
+    private static final int LEGS_INVENTORY_SLOT = 37;
+    private static final int FEET_INVENTORY_SLOT = 36;
+
+    private ItemPlugin plugin;
+    private final Map<String, Slot> slotsByName;
+    private final Map<Integer, Slot> slotsByInventorySlot;
+
+    public PlayerEquipment(ItemPlugin plugin) {
+        this.plugin = plugin;
+        this.slotsByName = new HashMap<>();
+        this.slotsByInventorySlot = new HashMap<>();
+    }
+
+    @Override
+    public boolean hasSlot(int inventorySlot) {
+        return slotsByInventorySlot.containsKey(inventorySlot);
+    }
+
+    @Override
+    public boolean hasMainHandSlot() {
+        return hasSlot(MAIN_HAND_INVENTORY_SLOT);
+    }
+
+    @Override
+    public boolean hasOffHandSlot() {
+        return hasSlot(OFF_HAND_INVENTORY_SLOT);
+    }
+
+    @Override
+    public boolean hasHeadSlot() {
+        return hasSlot(HEAD_INVENTORY_SLOT);
+    }
+
+    @Override
+    public boolean hasChestSlot() {
+        return hasSlot(CHEST_INVENTORY_SLOT);
+    }
+
+    @Override
+    public boolean hasLegsSlot() {
+        return hasSlot(LEGS_INVENTORY_SLOT);
+    }
+
+    @Override
+    public boolean hasFeetSlot() {
+        return hasSlot(FEET_INVENTORY_SLOT);
+    }
+
+    @Override
+    public boolean hasSlot(String name) {
+        return slotsByName.containsKey(name.toLowerCase());
+    }
+
+    @Override
+    public Slot getSlot(String name) {
+        return slotsByName.get(name.toLowerCase());
+    }
+
+    @Override
+    public Slot getMainHandSlot() {
+        return getSlot(MAIN_HAND_INVENTORY_SLOT);
+    }
+
+    @Override
+    public Slot getOffHandSlot() {
+        return getSlot(OFF_HAND_INVENTORY_SLOT);
+    }
+
+    @Override
+    public Slot getHeadSlot() {
+        return getSlot(HEAD_INVENTORY_SLOT);
+    }
+
+    @Override
+    public Slot getChestSlot() {
+        return getSlot(CHEST_INVENTORY_SLOT);
+    }
+
+    @Override
+    public Slot getLegsSlot() {
+        return getSlot(LEGS_INVENTORY_SLOT);
+    }
+
+    @Override
+    public Slot getFeetSlot() {
+        return getSlot(FEET_INVENTORY_SLOT);
+    }
+
+    @Override
+    public Slot getSlot(int inventorySlot) {
+        return slotsByInventorySlot.get(inventorySlot);
+    }
+
+    @Override
+    public Collection<? extends Slot> getSlots() {
+        return Collections.unmodifiableCollection(slotsByName.values());
+    }
+
+    public class Slot implements com.herocraftonline.items.api.equipment.PlayerEquipment.Slot {
+
+        private final String name;
+        private final int inventorySlot;
+        private final ItemType itemType;
+
+        public Slot(String name, int inventorySlot, ItemType itemType) {
+            this.name = name;
+            this.inventorySlot = inventorySlot;
+            this.itemType = itemType;
+        }
+
+        @Override
+        public boolean isInventorySlot() {
+            return true;
+        }
+
+        @Override
+        public int getInventorySlot() {
+            return inventorySlot;
+        }
+
+        @Override
+        public boolean isEquipmentSlot() {
+            return true;
+        }
+
+        @Override
+        public EquipmentSlot getEquipmentSlot() {
+            switch (inventorySlot) {
+                case MAIN_HAND_INVENTORY_SLOT:
+                    return EquipmentSlot.HAND;
+                case OFF_HAND_INVENTORY_SLOT:
+                    return EquipmentSlot.OFF_HAND;
+                case HEAD_INVENTORY_SLOT:
+                    return EquipmentSlot.HEAD;
+                case CHEST_INVENTORY_SLOT:
+                    return EquipmentSlot.CHEST;
+                case LEGS_INVENTORY_SLOT:
+                    return EquipmentSlot.LEGS;
+                case FEET_INVENTORY_SLOT:
+                    return EquipmentSlot.FEET;
+                default:
+                    return null;
+            }
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public boolean canHoldItem(ItemType itemType) {
+            return itemType != null && itemType.isType(this.itemType);
+        }
+
+        @Override
+        public boolean hasItem(Player equipmentHolder) {
+            return PlayerEquipment.this.plugin.getItemManager().isItem(equipmentHolder.getInventory().getItem(inventorySlot));
+        }
+
+        @Override
+        public Item getItem(Player equipmentHolder) {
+            return PlayerEquipment.this.plugin.getItemManager().getItem(equipmentHolder.getInventory().getItem(inventorySlot)).orElse(null);
+        }
+
+        @Override
+        public boolean setItem(Player equipmentHolder, Item item) {
+            return false;
+        }
+
+        @Override
+        public void removeItem(Player equipmentHolder) {
+
+        }
+    }
 
 //    private final ItemPlugin plugin;
 //    private final UUID playerId;
