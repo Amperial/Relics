@@ -75,12 +75,7 @@ public class ItemListener implements Listener {
 
     private boolean handleItemUse(Player player, Item item, ItemStack itemStack) {
         EquipmentManager equipManager = plugin.getEquipmentManager();
-        if (equipManager.isEquipped(player, item)) {
-            return true;
-        } else {
-            equipManager.equip(player, item, itemStack);
-            return false;
-        }
+        return equipManager.getPlayerEquipment().isEquipped(player, item);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -288,7 +283,7 @@ public class ItemListener implements Listener {
             case CREATIVE:
             case ENDER_CHEST:
                 // UnEquip item if equipped
-                if (equipManager.isEquipped(player, item)) {
+                if (equipManager.getPlayerEquipment().isEquipped(player, item)) {
                     equipManager.unEquip(player, item, itemStack);
                 }
             case PLAYER:

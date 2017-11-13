@@ -18,5 +18,5 @@ import org.bukkit.inventory.ItemStack;
 
 public interface EquipmentManager {
 
-    Equipment<HumanEntity> getPlayerEquipment();
+    PlayerEquipment getPlayerEquipment();
 }

@@ -1,19 +1,19 @@
 slots:
 - name: "Main Hand"
+  inventory-index: 0
   item-type: "Main Hand"
-  inventory-slot: 0
 - name: "Off Hand"
+  inventory-index: 40
   item-type: "Off Hand"
-  inventory-slot: 40
 - name: "Helmet"
+  inventory-index: 39
   item-type: "Helmet"
-  inventory-slot: 39
 - name: "Chestplate"
+  inventory-index: 38
   item-type: "Chestplate"
-  inventory-slot: 38
 - name: "Leggings"
+  inventory-index: 37
   item-type: "Leggings"
-  inventory-slot: 37
 - name: "Boots"
+  inventory-index: 36
   item-type: "Boots"
-  inventory-slot: 36
