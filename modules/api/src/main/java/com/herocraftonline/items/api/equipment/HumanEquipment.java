@@ -2,73 +2,73 @@ package com.herocraftonline.items.api.equipment;
 
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.ItemType;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.EquipmentSlot;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-public interface PlayerEquipment extends HumanEquipment<Player> {
+public interface HumanEquipment<T extends HumanEntity> extends LivingEntityEquipment<T>, InventoryEquipment<T> {
 
     @Override
-    Slot getSlot(String name);
+    Slot<T> getSlot(String name);
 
     @Override
-    default Slot getSlot(Player equipmentHolder, String name) {
+    default Slot<T> getSlot(T equipmentHolder, String name) {
         return getSlot(name);
     }
 
     @Override
-    Slot getMainHandSlot();
+    Slot<T> getMainHandSlot();
 
     @Override
-    default Slot getMainHandSlot(Player equipmentHolder) {
+    default Slot<T> getMainHandSlot(T equipmentHolder) {
         return getMainHandSlot();
     }
 
     @Override
-    Slot getOffHandSlot();
+    Slot<T> getOffHandSlot();
 
     @Override
-    default Slot getOffHandSlot(Player equipmentHolder) {
+    default Slot<T> getOffHandSlot(T equipmentHolder) {
         return getOffHandSlot();
     }
 
     @Override
-    Slot getHeadSlot();
+    Slot<T> getHeadSlot();
 
     @Override
-    default Slot getHeadSlot(Player equipmentHolder) {
+    default Slot<T> getHeadSlot(T equipmentHolder) {
         return getHeadSlot();
     }
 
     @Override
-    Slot getChestSlot();
+    Slot<T> getChestSlot();
 
     @Override
-    default Slot getChestSlot(Player equipmentHolder) {
+    default Slot<T> getChestSlot(T equipmentHolder) {
         return getChestSlot();
     }
 
     @Override
-    Slot getLegsSlot();
+    Slot<T> getLegsSlot();
 
     @Override
-    default Slot getLegsSlot(Player equipmentHolder) {
+    default Slot<T> getLegsSlot(T equipmentHolder) {
         return getLegsSlot();
     }
 
     @Override
-    Slot getFeetSlot();
+    Slot<T> getFeetSlot();
 
     @Override
-    default Slot getFeetSlot(Player equipmentHolder) {
+    default Slot<T> getFeetSlot(T equipmentHolder) {
         return getFeetSlot();
     }
 
     @Override
-    default Slot getSlot(EquipmentSlot equipmentSlot) {
+    default Slot<T> getSlot(EquipmentSlot equipmentSlot) {
         switch (equipmentSlot) {
             case HAND:
                 return getMainHandSlot();
@@ -88,7 +88,7 @@ public interface PlayerEquipment extends HumanEquipment<Player> {
     }
 
     @Override
-    default Slot getSlot(Player equipmentHolder, EquipmentSlot equipmentSlot) {
+    default Slot<T> getSlot(T equipmentHolder, EquipmentSlot equipmentSlot) {
         switch (equipmentSlot) {
             case HAND:
                 return getMainHandSlot(equipmentHolder);
@@ -108,23 +108,23 @@ public interface PlayerEquipment extends HumanEquipment<Player> {
     }
 
     @Override
-    Slot getSlot(int inventorySlot);
+    Slot<T> getSlot(int inventorySlot);
 
     @Override
-    default Slot getSlot(Player equipmentHolder, int inventorySlot) {
+    default Slot<T> getSlot(T equipmentHolder, int inventorySlot) {
         return getSlot(inventorySlot);
     }
 
     @Override
-    Collection<? extends Slot> getSlots();
+    Collection<? extends Slot<T>> getSlots();
 
     @Override
-    default Collection<? extends Slot> getSlots(Player equipmentHolder) {
+    default Collection<? extends Slot<T>> getSlots(T equipmentHolder) {
         return getSlots();
     }
 
     @Override
-    default Collection<? extends Slot> getSlotsForItem(ItemType itemType) {
+    default Collection<? extends Slot<T>> getSlotsForItem(ItemType itemType) {
         if (itemType == null) return Collections.emptyList();
         return getSlots().stream()
                 .filter(slot -> slot.canHoldItem(itemType))
@@ -132,7 +132,7 @@ public interface PlayerEquipment extends HumanEquipment<Player> {
     }
 
     @Override
-    default Collection<? extends Slot> getSlotsForItem(Player equipmentHolder, ItemType itemType) {
+    default Collection<? extends Slot<T>> getSlotsForItem(T equipmentHolder, ItemType itemType) {
         if (itemType == null) return Collections.emptyList();
         return getSlots(equipmentHolder).stream()
                 .filter(slot -> slot.canHoldItem(itemType))
@@ -140,7 +140,7 @@ public interface PlayerEquipment extends HumanEquipment<Player> {
     }
 
     @Override
-    default Collection<? extends Slot> getSlotsForItem(Item item) {
+    default Collection<? extends Slot<T>> getSlotsForItem(Item item) {
         if (item == null) return Collections.emptyList();
         return getSlots().stream()
                 .filter(slot -> slot.canHoldItem(item))
@@ -148,7 +148,7 @@ public interface PlayerEquipment extends HumanEquipment<Player> {
     }
 
     @Override
-    default Collection<? extends Slot> getSlotsForItem(Player equipmentHolder, Item item) {
+    default Collection<? extends Slot<T>> getSlotsForItem(T equipmentHolder, Item item) {
         if (item == null) return Collections.emptyList();
         return getSlots(equipmentHolder).stream()
                 .filter(slot -> slot.canHoldItem(item))
@@ -156,32 +156,32 @@ public interface PlayerEquipment extends HumanEquipment<Player> {
     }
 
     @Override
-    default Collection<? extends Slot> getEquipmentSlots() {
+    default Collection<? extends Slot<T>> getEquipmentSlots() {
         return getSlots().stream()
                 .filter(Slot::isEquipmentSlot)
                 .collect(Collectors.toList());
     }
 
     @Override
-    default Collection<? extends Slot> getEquipmentSlots(Player equipmentHolder) {
-        return getSlots(equipmentHolder).stream()
+    default Collection<? extends Slot<T>> getEquipmentSlots(T equipementHolder) {
+        return getSlots(equipementHolder).stream()
                 .filter(Slot::isEquipmentSlot)
                 .collect(Collectors.toList());
     }
 
     @Override
-    default Collection<? extends Slot> getInventorySlots() {
+    default Collection<? extends Slot<T>> getInventorySlots() {
         return getSlots().stream()
                 .filter(Slot::isInventorySlot)
                 .collect(Collectors.toList());
     }
 
     @Override
-    default Collection<? extends Slot> getInventorySlots(Player equipmentHolder) {
+    default Collection<? extends Slot<T>> getInventorySlots(T equipmentHolder) {
         return getSlots(equipmentHolder).stream()
                 .filter(Slot::isInventorySlot)
                 .collect(Collectors.toList());
     }
 
-    interface Slot extends HumanEquipment.Slot<Player> { }
+    interface Slot<T extends HumanEntity> extends LivingEntityEquipment.Slot<T>, InventoryEquipment.Slot<T> { }
 }

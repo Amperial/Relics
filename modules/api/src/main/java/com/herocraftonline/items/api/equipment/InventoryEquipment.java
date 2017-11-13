@@ -2,51 +2,43 @@ package com.herocraftonline.items.api.equipment;
 
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.ItemType;
+import org.bukkit.inventory.InventoryHolder;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-public interface Equipment<T> {
+public interface InventoryEquipment<T extends InventoryHolder> extends Equipment<T> {
 
-    boolean hasSlot(String name);
+    boolean hasSlot(int inventorySlot);
 
-    default boolean hasSlot(T equipmentHolder, String name) {
-        return hasSlot(name);
+    default boolean hasSlot(T equipmentHolder, int inventorySlot) {
+        return hasSlot(inventorySlot);
     }
 
-    default boolean hasSlotForItem(ItemType itemType) {
-        return itemType != null && getSlots().stream()
-                .anyMatch(slot -> slot.canHoldItem(itemType));
-    }
-
-    default boolean hasSlotForItem(T equipmentHolder, ItemType itemType) {
-        return itemType != null && getSlots(equipmentHolder).stream()
-                .anyMatch(slot -> slot.canHoldItem(itemType));
-    }
-
-    default boolean hasSlotForItem(Item item) {
-        return item != null && getSlots().stream()
-                .anyMatch(slot -> slot.canHoldItem(item));
-    }
-
-    default boolean hasSlotForItem(T equipmentHolder, Item item) {
-        return item != null && getSlots(equipmentHolder).stream()
-                .anyMatch(slot -> slot.canHoldItem(item));
-    }
-
+    @Override
     Slot<T> getSlot(String name);
 
+    @Override
     default Slot<T> getSlot(T equipmentHolder, String name) {
         return getSlot(name);
     }
 
+    Slot<T> getSlot(int inventorySlot);
+
+    default Slot<T> getSlot(T equipmentHolder, int inventorySlot) {
+        return getSlot(inventorySlot);
+    }
+
+    @Override
     Collection<? extends Slot<T>> getSlots();
 
+    @Override
     default Collection<? extends Slot<T>> getSlots(T equipmentHolder) {
         return getSlots();
     }
 
+    @Override
     default Collection<? extends Slot<T>> getSlotsForItem(ItemType itemType) {
         if (itemType == null) return Collections.emptyList();
         return getSlots().stream()
@@ -54,6 +46,7 @@ public interface Equipment<T> {
                 .collect(Collectors.toList());
     }
 
+    @Override
     default Collection<? extends Slot<T>> getSlotsForItem(T equipmentHolder, ItemType itemType) {
         if (itemType == null) return Collections.emptyList();
         return getSlots(equipmentHolder).stream()
@@ -61,6 +54,7 @@ public interface Equipment<T> {
                 .collect(Collectors.toList());
     }
 
+    @Override
     default Collection<? extends Slot<T>> getSlotsForItem(Item item) {
         if (item == null) return Collections.emptyList();
         return getSlots().stream()
@@ -68,6 +62,7 @@ public interface Equipment<T> {
                 .collect(Collectors.toList());
     }
 
+    @Override
     default Collection<? extends Slot<T>> getSlotsForItem(T equipmentHolder, Item item) {
         if (item == null) return Collections.emptyList();
         return getSlots(equipmentHolder).stream()
@@ -75,35 +70,22 @@ public interface Equipment<T> {
                 .collect(Collectors.toList());
     }
 
-    default boolean isEquipped(T equipmentHolder, Item item) {
-        for (Slot<T> slot : getSlotsForItem(equipmentHolder, item)) {
-            if (slot.containsItem(equipmentHolder, item)) {
-                return true;
-            }
-        }
-        return false;
+    default Collection<? extends Slot<T>> getInventorySlots() {
+        return getSlots().stream()
+                .filter(Slot::isInventorySlot)
+                .collect(Collectors.toList());
     }
 
-    interface Slot<T> {
+    default Collection<? extends Slot<T>> getInventorySlots(T equipmentHolder) {
+        return getSlots(equipmentHolder).stream()
+                .filter(Slot::isInventorySlot)
+                .collect(Collectors.toList());
+    }
 
-        String getName();
+    interface Slot<T extends InventoryHolder> extends Equipment.Slot<T> {
 
-        boolean canHoldItem(ItemType itemType);
+        boolean isInventorySlot();
 
-        default boolean canHoldItem(Item item) {
-            return item != null && canHoldItem(item.getType());
-        }
-
-        boolean hasItem(T equipmentHolder);
-
-        Item getItem(T equipmentHolder);
-
-        boolean setItem(T equipmentHolder, Item item);
-
-        default boolean containsItem(T equipmentHolder, Item item) {
-            return item != null && item.equals(getItem(equipmentHolder));
-        }
-
-        void removeItem(T equipmentHolder);
+        int getInventorySlot();
     }
 }
