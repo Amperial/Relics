@@ -78,6 +78,7 @@ public class ItemListener implements Listener {
         return equipManager.getPlayerEquipment().isEquipped(player, item);
     }
 
+    /*
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
         ItemStack itemStack = event.getItem();
@@ -92,7 +93,9 @@ public class ItemListener implements Listener {
             }
         }
     }
+    */
 
+    /*
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
@@ -102,6 +105,7 @@ public class ItemListener implements Listener {
             event.setCancelled(true);
         }
     }
+    */
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityShootBow(EntityShootBowEvent event) {
