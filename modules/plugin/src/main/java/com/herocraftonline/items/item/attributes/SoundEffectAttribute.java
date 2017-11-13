@@ -11,16 +11,19 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
-import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.effects.SoundEffect;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.TriggerResult;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.TriggerableAttribute;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.DefaultAttribute;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-public class SoundEffectAttribute extends BaseAttribute<SoundEffect> implements SoundEffect {
+public class SoundEffectAttribute extends TriggerableAttribute<SoundEffect> implements SoundEffect {
 
     private Sound sound;
     private float volume;
@@ -52,12 +55,28 @@ public class SoundEffectAttribute extends BaseAttribute<SoundEffect> implements 
     }
 
     @Override
-    public void play(Player player) {
+    public TriggerResult execute(Location location) {
+        location.getWorld().playSound(location, getSound(), getVolume(), getPitch());
+        return TriggerResult.NONE;
+    }
+
+    @Override
+    public TriggerResult execute(Entity entity) {
         if (global) {
-            player.getWorld().playSound(player.getLocation(), getSound(), getVolume(), getPitch());
-        } else {
-            player.playSound(player.getLocation(), getSound(), getVolume(), getPitch());
+            entity.getWorld().playSound(entity.getLocation(), getSound(), getVolume(), getPitch());
+        } else if (entity instanceof Player) {
+            ((Player) entity).playSound(entity.getLocation(), getSound(), getVolume(), getPitch());
         }
+        return TriggerResult.NONE;
+    }
+
+    @Override
+    public TriggerResult execute(Entity entity, Entity target) {
+        execute(target);
+        if (!global && entity instanceof Player) {
+            ((Player) entity).playSound(target.getLocation(), getSound(), getVolume(), getPitch());
+        }
+        return TriggerResult.NONE;
     }
 
     @Override
@@ -72,6 +91,7 @@ public class SoundEffectAttribute extends BaseAttribute<SoundEffect> implements 
         compound.setFloat("volume", getVolume());
         compound.setFloat("pitch", getPitch());
         compound.setBoolean("global", global);
+
     }
 
     public static class Factory extends BaseAttributeFactory<SoundEffect> {

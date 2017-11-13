@@ -8,14 +8,10 @@
  * Unauthorized copying and/or distribution of Relics API,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.item.attribute.attributes.effects;
+package com.herocraftonline.items.api.item.attribute.attributes;
 
 import com.herocraftonline.items.api.item.attribute.Attribute;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.Triggerable;
-import org.bukkit.entity.Player;
 
-public interface Effect<T extends Effect<T>> extends Attribute<T>, Triggerable {
-
-    void stop(Player player);
+public interface Command extends Attribute<Command> {
 
 }

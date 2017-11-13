@@ -25,9 +25,19 @@ import com.herocraftonline.items.api.item.attribute.attributes.effects.PotionEff
 import com.herocraftonline.items.api.item.attribute.attributes.effects.SoundEffect;
 import com.herocraftonline.items.api.item.attribute.attributes.gems.Gem;
 import com.herocraftonline.items.api.item.attribute.attributes.gems.Socket;
+import com.herocraftonline.items.api.item.attribute.attributes.projectiles.LaunchEntity;
 import com.herocraftonline.items.api.item.attribute.attributes.projectiles.Velocity;
 import com.herocraftonline.items.api.item.attribute.attributes.requirements.LevelRequirement;
 import com.herocraftonline.items.item.attributes.*;
+import com.herocraftonline.items.item.attributes.PotionEffectAttribute;
+import com.herocraftonline.items.item.attributes.SoundEffectAttribute;
+import com.herocraftonline.items.item.attributes.GemAttribute;
+import com.herocraftonline.items.item.attributes.SocketAttribute;
+import com.herocraftonline.items.item.attributes.LaunchEntityAttribute;
+import com.herocraftonline.items.item.attributes.VelocityAttribute;
+import com.herocraftonline.items.item.attributes.LevelRequirementAttribute;
+import com.herocraftonline.items.item.attributes.DamageAttribute;
+import com.herocraftonline.items.item.attributes.MinecraftAttribute;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +48,7 @@ public final class DefaultAttribute {
     public static final AttributeType<Durability> DURABILITY = new BaseAttributeType<>("durability", 6, DurabilityAttribute.Factory::new);
     public static final AttributeType<Gem> GEM = new BaseAttributeType<>("gem", 5, GemAttribute.Factory::new);
     public static final AttributeType<Group> GROUP = new BaseAttributeType<>("group", 0, GroupAttribute.Factory::new);
-    public static final AttributeType<LaunchEntityAttribute> LAUNCH_ENTITY = new BaseAttributeType<>("launch-entity", Integer.MAX_VALUE, LaunchEntityAttribute.Factory::new);
+    public static final AttributeType<LaunchEntity> LAUNCH_ENTITY = new BaseAttributeType<>("launch-entity", Integer.MAX_VALUE, LaunchEntityAttribute.Factory::new);
     public static final AttributeType<Level> LEVEL = new BaseAttributeType<>("level", 2, LevelAttribute.Factory::new);
     public static final AttributeType<LevelRequirement> LEVEL_REQUIREMENT = new BaseAttributeType<>("level-requirement", Integer.MIN_VALUE, LevelRequirementAttribute.Factory::new);
     public static final AttributeType<Minecraft> MINECRAFT = new BaseAttributeType<>("minecraft", Integer.MAX_VALUE, MinecraftAttribute.Factory::new);
