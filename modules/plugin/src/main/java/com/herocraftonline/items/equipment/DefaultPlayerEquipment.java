@@ -85,6 +85,9 @@ final class DefaultPlayerEquipment implements PlayerEquipment {
             obj = slotMap.get("inventory-index");
             if (obj instanceof Integer) {
                 inventoryIndex = (Integer) obj;
+                if (inventoryIndex < 0 || inventoryIndex > 40) {
+                    continue;
+                }
             } else {
                 continue;
             }

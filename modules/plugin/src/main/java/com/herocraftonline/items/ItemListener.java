@@ -75,7 +75,7 @@ public class ItemListener implements Listener {
 
     private boolean handleItemUse(Player player, Item item, ItemStack itemStack) {
         EquipmentManager equipManager = plugin.getEquipmentManager();
-        return equipManager.getPlayerEquipment().isEquipped(player, item);
+        return equipManager.getPlayerEquipment(player).isEquipped(player, item);
     }
 
     /*
