@@ -1,19 +1,20 @@
 default-player-equipment:
 - name: "Main Hand"
-  inventory-index: 0
   item-type: "Main Hand"
+  inventory-index: 0
 - name: "Off Hand"
-  inventory-index: 40
   item-type: "Off Hand"
-- name: "Helmet"
-  inventory-index: 39
+  inventory-index: 40
+- name: "Head"
   item-type: "Helmet"
-- name: "Chestplate"
-  inventory-index: 38
+  inventory-index: 39
+- name: "Chest"
   item-type: "Chestplate"
-- name: "Leggings"
-  inventory-index: 37
+  inventory-index: 38
+- name: "Legs"
   item-type: "Leggings"
-- name: "Boots"
-  inventory-index: 36
+  inventory-index: 37
+- name: "Feet"
   item-type: "Boots"
+  inventory-index: 36
+  
