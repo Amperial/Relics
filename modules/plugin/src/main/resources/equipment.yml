@@ -1,4 +1,4 @@
-slots:
+default-player-equipment:
 - name: "Main Hand"
   inventory-index: 0
   item-type: "Main Hand"

@@ -18,5 +18,11 @@ import org.bukkit.inventory.ItemStack;
 
 public interface EquipmentManager {
 
-    PlayerEquipment getPlayerEquipment();
+    PlayerEquipment getPlayerEquipment(Player player);
+
+    boolean hasCustomPlayerEquipment(Player player);
+
+    void setCustomPlayerEquipment(Player player, PlayerEquipment playerEquipment);
+
+    void setDefaultPlayerEquipment(Player player);
 }

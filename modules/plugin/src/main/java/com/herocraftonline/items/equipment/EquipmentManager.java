@@ -12,19 +12,45 @@ package com.herocraftonline.items.equipment;
 
 import com.herocraftonline.items.api.ItemPlugin;
 
+import com.herocraftonline.items.api.equipment.PlayerEquipment;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class EquipmentManager implements com.herocraftonline.items.api.equipment.EquipmentManager, Listener {
 
-    private final PlayerEquipment playerEquipment;
+    private final PlayerEquipment defaultPlayerEquipment;
+    private final Map<UUID, PlayerEquipment> customPlayerEquipments;
 
     public EquipmentManager(ItemPlugin plugin) {
-        this.playerEquipment = new PlayerEquipment(plugin);
+        this.defaultPlayerEquipment = new DefaultPlayerEquipment(plugin);
+        customPlayerEquipments = new HashMap<>();
     }
 
     @Override
-    public PlayerEquipment getPlayerEquipment() {
-        return playerEquipment;
+    public PlayerEquipment getPlayerEquipment(Player player) {
+        if (player == null) return null;
+        return customPlayerEquipments.getOrDefault(player.getUniqueId(), defaultPlayerEquipment);
+    }
+
+    @Override
+    public boolean hasCustomPlayerEquipment(Player player) {
+        return player != null && customPlayerEquipments.containsKey(player.getUniqueId());
+    }
+
+    @Override
+    public void setCustomPlayerEquipment(Player player, PlayerEquipment playerEquipment) {
+        if (player == null || playerEquipment == null) return;
+        customPlayerEquipments.put(player.getUniqueId(), playerEquipment);
+    }
+
+    @Override
+    public void setDefaultPlayerEquipment(Player player) {
+        if (player == null) return;
+        customPlayerEquipments.remove(player.getUniqueId());
     }
 
 //    private final ItemPlugin plugin;
