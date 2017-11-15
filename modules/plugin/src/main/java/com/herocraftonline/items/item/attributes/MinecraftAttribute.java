@@ -199,16 +199,6 @@ public class MinecraftAttribute extends BaseStatAttribute<Minecraft> implements 
     }
 
     @Override
-    public boolean onEquip(Player player) {
-        return false;
-    }
-
-    @Override
-    public boolean onUnEquip(Player player) {
-        return false;
-    }
-
-    @Override
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
         compound.setString("minecraft-type", getMinecraftType().name());
