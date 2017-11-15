@@ -11,20 +11,15 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.projectiles.LaunchEntity;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.TriggerResult;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.TriggerableAttribute;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.DefaultAttribute;
-import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.util.Vector;
 
-public class LaunchEntityAttribute extends TriggerableAttribute<LaunchEntity> implements LaunchEntity {
+public class LaunchEntityAttribute extends BaseAttribute<LaunchEntity> implements LaunchEntity {
 
     private final EntityType entity;
     private final double velocity;
@@ -44,6 +39,7 @@ public class LaunchEntityAttribute extends TriggerableAttribute<LaunchEntity> im
         return velocity;
     }
 
+    /*
     @Override
     public TriggerResult execute(Entity entity) {
         Location loc = entity instanceof LivingEntity ? ((LivingEntity) entity).getEyeLocation() : entity.getLocation();
@@ -56,6 +52,7 @@ public class LaunchEntityAttribute extends TriggerableAttribute<LaunchEntity> im
     public TriggerResult execute(Entity entity, Entity target) {
         return execute(entity);
     }
+    */
 
     @Override
     public void saveToNBT(NBTTagCompound compound) {
