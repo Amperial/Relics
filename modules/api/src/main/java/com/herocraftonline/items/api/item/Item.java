@@ -25,7 +25,7 @@ import java.util.UUID;
  *
  * @author Austin Payne
  */
-public interface Item extends AttributeContainer, Equippable {
+public interface Item extends AttributeContainer, Clickable, Equippable {
 
     /**
      * Gets the unique id of the item.
