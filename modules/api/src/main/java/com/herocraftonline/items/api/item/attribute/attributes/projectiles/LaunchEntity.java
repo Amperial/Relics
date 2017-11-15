@@ -11,10 +11,9 @@
 package com.herocraftonline.items.api.item.attribute.attributes.projectiles;
 
 import com.herocraftonline.items.api.item.attribute.Attribute;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.Triggerable;
 import org.bukkit.entity.EntityType;
 
-public interface LaunchEntity extends Attribute<LaunchEntity>, Triggerable {
+public interface LaunchEntity extends Attribute<LaunchEntity> {
 
     EntityType getEntity();
 
