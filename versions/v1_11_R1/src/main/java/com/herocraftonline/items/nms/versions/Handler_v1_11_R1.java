@@ -24,6 +24,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Base64;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 public class Handler_v1_11_R1 extends NMSHandler {
 
@@ -53,24 +55,30 @@ public class Handler_v1_11_R1 extends NMSHandler {
         NBTBase.NBT_INSTANCES[12] = new NBTTagObject_v1_11_R1<>(null);
     }
 
-    private net.minecraft.server.v1_11_R1.ItemStack getNmsItem(ItemStack item) {
+    private CraftItemStack getCraftItem(ItemStack item) {
         if (item instanceof CraftItemStack) {
-            CraftItemStack itemStack = (CraftItemStack) item;
-            try {
-                return (net.minecraft.server.v1_11_R1.ItemStack) HANDLE_FIELD.get(itemStack);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
+            return (CraftItemStack) item;
+        } else {
+            return CraftItemStack.asCraftCopy(item);
         }
-        return CraftItemStack.asNMSCopy(item);
+    }
+
+    private net.minecraft.server.v1_11_R1.ItemStack getNMSItem(ItemStack item) {
+        CraftItemStack itemStack = getCraftItem(item);
+        try {
+            return (net.minecraft.server.v1_11_R1.ItemStack) HANDLE_FIELD.get(itemStack);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            return CraftItemStack.asNMSCopy(item);
+        }
     }
 
     @Override
-    public com.herocraftonline.items.api.storage.nbt.NBTTagCompound getTagCompound(ItemStack item) {
-        return getTagCompound(getNmsItem(item));
+    public com.herocraftonline.items.api.storage.nbt.NBTTagCompound getTag(ItemStack item) {
+        return getTag(getNMSItem(item));
     }
 
-    private com.herocraftonline.items.api.storage.nbt.NBTTagCompound getTagCompound(net.minecraft.server.v1_11_R1.ItemStack item) {
+    private com.herocraftonline.items.api.storage.nbt.NBTTagCompound getTag(net.minecraft.server.v1_11_R1.ItemStack item) {
         if (item.hasTag()) {
             NBTTagCompound tag = item.getTag();
             if (tag instanceof NBTTagCompound_v1_11_R1) {
@@ -85,37 +93,47 @@ public class Handler_v1_11_R1 extends NMSHandler {
         }
     }
 
-    @Override
-    public ItemStack setTagCompound(ItemStack item, com.herocraftonline.items.api.storage.nbt.NBTTagCompound compound) {
+    private Optional<ItemStack> modifyItem(ItemStack item, Consumer<net.minecraft.server.v1_11_R1.ItemStack> modify) {
         if (item instanceof CraftItemStack) {
             CraftItemStack itemStack = (CraftItemStack) item;
             try {
                 net.minecraft.server.v1_11_R1.ItemStack handle = (net.minecraft.server.v1_11_R1.ItemStack) HANDLE_FIELD.get(itemStack);
-                handle.setTag((NBTTagCompound_v1_11_R1) compound);
-                return item;
+                modify.accept(handle);
+                return Optional.empty();
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
-        net.minecraft.server.v1_11_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-        nmsItem.setTag((NBTTagCompound_v1_11_R1) compound);
-        return CraftItemStack.asBukkitCopy(nmsItem);
+        net.minecraft.server.v1_11_R1.ItemStack nmsCopy = CraftItemStack.asNMSCopy(item);
+        modify.accept(nmsCopy);
+        return Optional.of(CraftItemStack.asCraftCopy(CraftItemStack.asBukkitCopy(nmsCopy)));
     }
 
     @Override
-    public com.herocraftonline.items.api.storage.nbt.NBTTagCompound toTagCompound(ItemStack item) {
+    public Optional<ItemStack> setTag(ItemStack item, com.herocraftonline.items.api.storage.nbt.NBTTagCompound compound) {
+        return modifyItem(item, itemStack -> itemStack.setTag((NBTTagCompound) compound));
+    }
+
+    @Override
+    public com.herocraftonline.items.api.storage.nbt.NBTTagCompound toNBT(ItemStack item) {
         NBTTagCompound_v1_11_R1 tag = new NBTTagCompound_v1_11_R1();
-        getNmsItem(item).save(tag);
+        getNMSItem(item).save(tag);
         return tag;
     }
 
     @Override
-    public ItemStack fromTagCompound(com.herocraftonline.items.api.storage.nbt.NBTTagCompound compound) {
-        return CraftItemStack.asBukkitCopy(new net.minecraft.server.v1_11_R1.ItemStack((NBTTagCompound) compound));
+    public ItemStack fromNBT(com.herocraftonline.items.api.storage.nbt.NBTTagCompound compound) {
+        net.minecraft.server.v1_11_R1.ItemStack nmsItem = new net.minecraft.server.v1_11_R1.ItemStack((NBTTagCompound) compound);
+        return CraftItemStack.asCraftCopy(CraftItemStack.asBukkitCopy(nmsItem));
     }
 
     @Override
-    public String serializeTagCompound(com.herocraftonline.items.api.storage.nbt.NBTTagCompound compound) {
+    public Optional<ItemStack> replaceNBT(ItemStack item, com.herocraftonline.items.api.storage.nbt.NBTTagCompound compound) {
+        return modifyItem(item, itemStack -> itemStack.load((NBTTagCompound) compound));
+    }
+
+    @Override
+    public String serializeNBT(com.herocraftonline.items.api.storage.nbt.NBTTagCompound compound) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         try {
@@ -128,7 +146,7 @@ public class Handler_v1_11_R1 extends NMSHandler {
     }
 
     @Override
-    public com.herocraftonline.items.api.storage.nbt.NBTTagCompound deserializeTagCompound(String compoundString) {
+    public com.herocraftonline.items.api.storage.nbt.NBTTagCompound deserializeNBT(String compoundString) {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(compoundString));
 
         try {

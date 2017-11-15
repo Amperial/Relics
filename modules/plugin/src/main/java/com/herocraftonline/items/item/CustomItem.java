@@ -338,17 +338,9 @@ public class CustomItem implements Item {
 
     @Override
     public ItemStack getItem() {
+        // Create item
         ItemStack item = new ItemStack(getMaterial());
 
-        // Update ItemStack
-        item = updateItem(item);
-
-        return item;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public ItemStack updateItem(final ItemStack item) {
         // Get ItemMeta
         ItemMeta meta = item.getItemMeta();
 
@@ -384,7 +376,7 @@ public class CustomItem implements Item {
         attributes.getAttribute(Model.class).ifPresent(model -> model.apply(item));
 
         // Get NBTTagCompound
-        NBTTagCompound compound = NMSHandler.getInterface().getTagCompound(item);
+        NBTTagCompound compound = NMSHandler.getInterface().getTag(item);
 
         // Save item to compound
         NBTTagCompound itemTag = NBTTagCompound.create();
@@ -395,7 +387,16 @@ public class CustomItem implements Item {
         setModifiers(compound);
 
         // Set NBTTagCompound and return item
-        return NMSHandler.getInterface().setTagCompound(item, compound);
+        return NMSHandler.getInterface().setTag(item, compound).orElse(item);
+    }
+
+    @Override
+    public Optional<ItemStack> updateItem(ItemStack item) {
+        // Get updated item in NBT form
+        NBTTagCompound updated = NMSHandler.getInterface().toNBT(getItem());
+
+        // Update and return item
+        return NMSHandler.getInterface().replaceNBT(item, updated);
     }
 
     private List<String> createLore() {
@@ -548,7 +549,7 @@ public class CustomItem implements Item {
             }
 
             // Get ItemStack NBT
-            NBTTagCompound compound = NMSHandler.getInterface().getTagCompound(itemStack);
+            NBTTagCompound compound = NMSHandler.getInterface().getTag(itemStack);
 
             // TODO: Phase out old item tag
             if (compound.hasKey(ITEM_TAG_OLD)) {
@@ -568,7 +569,7 @@ public class CustomItem implements Item {
             Item item = loadFromNBT(itemTag);
 
             // Set ItemStack NBT
-            NMSHandler.getInterface().setTagCompound(itemStack, compound);
+            NMSHandler.getInterface().setTag(itemStack, compound);
 
             return item;
         }
@@ -580,7 +581,7 @@ public class CustomItem implements Item {
                 return false;
             }
 
-            NBTTagCompound compound = NMSHandler.getInterface().getTagCompound(itemStack);
+            NBTTagCompound compound = NMSHandler.getInterface().getTag(itemStack);
             // TODO: Phase out old item tag
             return compound.hasKey(ITEM_TAG_OLD) || compound.hasKey(ITEM_TAG);
         }
