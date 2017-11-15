@@ -13,12 +13,17 @@ package com.herocraftonline.items.nms.versions;
 import com.herocraftonline.items.api.storage.nbt.NBTBase;
 import com.herocraftonline.items.nms.NMSHandler;
 import com.herocraftonline.items.nms.versions.nbt.*;
+import net.minecraft.server.v1_12_R1.NBTCompressedStreamTools;
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
 import net.minecraft.server.v1_12_R1.NBTTagList;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Base64;
 
 public class Handler_v1_12_R1 extends NMSHandler {
 
@@ -48,16 +53,21 @@ public class Handler_v1_12_R1 extends NMSHandler {
         NBTBase.NBT_INSTANCES[12] = new NBTTagObject_v1_12_R1<>(null);
     }
 
-    @Override
-    public com.herocraftonline.items.api.storage.nbt.NBTTagCompound getTagCompound(ItemStack item) {
+    private net.minecraft.server.v1_12_R1.ItemStack getNmsItem(ItemStack item) {
         if (item instanceof CraftItemStack) {
+            CraftItemStack itemStack = (CraftItemStack) item;
             try {
-                return getTagCompound((net.minecraft.server.v1_12_R1.ItemStack) HANDLE_FIELD.get(item));
+                return (net.minecraft.server.v1_12_R1.ItemStack) HANDLE_FIELD.get(itemStack);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
-        return getTagCompound(CraftItemStack.asNMSCopy(item));
+        return CraftItemStack.asNMSCopy(item);
+    }
+
+    @Override
+    public com.herocraftonline.items.api.storage.nbt.NBTTagCompound getTagCompound(ItemStack item) {
+        return getTagCompound(getNmsItem(item));
     }
 
     private com.herocraftonline.items.api.storage.nbt.NBTTagCompound getTagCompound(net.minecraft.server.v1_12_R1.ItemStack item) {
@@ -82,14 +92,50 @@ public class Handler_v1_12_R1 extends NMSHandler {
             try {
                 net.minecraft.server.v1_12_R1.ItemStack handle = (net.minecraft.server.v1_12_R1.ItemStack) HANDLE_FIELD.get(itemStack);
                 handle.setTag((NBTTagCompound_v1_12_R1) compound);
+                return item;
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-            return item;
-        } else {
-            net.minecraft.server.v1_12_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-            nmsItem.setTag((NBTTagCompound_v1_12_R1) compound);
-            return CraftItemStack.asBukkitCopy(nmsItem);
+        }
+        net.minecraft.server.v1_12_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+        nmsItem.setTag((NBTTagCompound_v1_12_R1) compound);
+        return CraftItemStack.asBukkitCopy(nmsItem);
+    }
+
+    @Override
+    public com.herocraftonline.items.api.storage.nbt.NBTTagCompound toTagCompound(ItemStack item) {
+        NBTTagCompound_v1_12_R1 tag = new NBTTagCompound_v1_12_R1();
+        getNmsItem(item).save(tag);
+        return tag;
+    }
+
+    @Override
+    public ItemStack fromTagCompound(com.herocraftonline.items.api.storage.nbt.NBTTagCompound compound) {
+        return CraftItemStack.asBukkitCopy(new net.minecraft.server.v1_12_R1.ItemStack((NBTTagCompound) compound));
+    }
+
+    @Override
+    public String serializeTagCompound(com.herocraftonline.items.api.storage.nbt.NBTTagCompound compound) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        try {
+            NBTCompressedStreamTools.a((NBTTagCompound) compound, outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return Base64.getEncoder().encodeToString(outputStream.toByteArray());
+    }
+
+    @Override
+    public com.herocraftonline.items.api.storage.nbt.NBTTagCompound deserializeTagCompound(String compoundString) {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(compoundString));
+
+        try {
+            return new NBTTagCompound_v1_12_R1(NBTCompressedStreamTools.a(inputStream));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

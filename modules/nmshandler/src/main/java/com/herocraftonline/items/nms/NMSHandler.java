@@ -52,4 +52,20 @@ public abstract class NMSHandler {
 
     public abstract ItemStack setTagCompound(ItemStack item, NBTTagCompound compound);
 
+    public abstract NBTTagCompound toTagCompound(ItemStack item);
+
+    public abstract ItemStack fromTagCompound(NBTTagCompound compound);
+
+    public String serializeItem(ItemStack item) {
+        return serializeTagCompound(toTagCompound(item));
+    }
+
+    public ItemStack deserializeItem(String itemString) {
+        return fromTagCompound(deserializeTagCompound(itemString));
+    }
+
+    public abstract String serializeTagCompound(NBTTagCompound compound);
+
+    public abstract NBTTagCompound deserializeTagCompound(String compoundString);
+
 }
