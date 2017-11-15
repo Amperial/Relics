@@ -30,6 +30,7 @@ import com.herocraftonline.items.equipment.EquipmentManager;
 import com.herocraftonline.items.item.ItemManager;
 import com.herocraftonline.items.item.models.ModelManager;
 import com.herocraftonline.items.nms.NMSHandler;
+import com.herocraftonline.items.util.EncryptUtil;
 import de.slikey.effectlib.EffectLib;
 import de.slikey.effectlib.EffectManager;
 import org.bukkit.permissions.Permission;
@@ -69,7 +70,15 @@ public class Relics extends JavaPlugin implements ItemPlugin {
 
     @Override
     public void onEnable() {
-        // Attempt to load plugin integrations
+        loadIntegrations();
+        loadConfigurations();
+        loadManagers();
+        loadListeners();
+        loadCommands();
+    }
+
+    private void loadIntegrations() {
+        // Attempt to load effect lib
         Plugin effectLib = getServer().getPluginManager().getPlugin("EffectLib");
         if (effectLib instanceof EffectLib) {
             effectManager = Optional.of(new EffectManager(this));
@@ -79,21 +88,38 @@ public class Relics extends JavaPlugin implements ItemPlugin {
 
         // Attempt to load NMSHandler
         NMSHandler.getInterface();
+    }
 
-        // Create managers (order is important)
+    private void loadConfigurations() {
+        // Load config manager
         configManager = new ConfigManager(this);
+
+        // Load encrypt util key
+        String key = getConfig().getString("encrypt-key");
+        if (key == null) {
+            getConfig().set("encrypt-key", EncryptUtil.getKey());
+            saveConfig();
+        } else {
+            EncryptUtil.setKey(key);
+        }
+    }
+
+    private void loadManagers() {
         messenger = new Messenger(this);
         commandController = new CommandController(this);
         itemManager = new ItemManager(this);
         modelManager = new ModelManager(this);
         equipmentManager = new EquipmentManager(this);
+    }
 
-        // Create listeners
+    private void loadListeners() {
         playerListener = new PlayerListener(this);
         itemListener = new ItemListener(this);
         attributeListener = new AttributeListener(this);
         menuListener = new MenuListener(this);
+    }
 
+    private void loadCommands() {
         // Create relics command tree
 
         // Item commands. These are added to both /relic and /relic item
