@@ -11,14 +11,13 @@
 package com.herocraftonline.items.api.item.attribute.attributes;
 
 import com.herocraftonline.items.api.item.attribute.Attribute;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.Triggerable;
 
 /**
  * An attribute that holds an encrypted item that can be identified.
  *
  * @author Austin Payne
  */
-public interface Identifiable extends Attribute<Identifiable>, Triggerable {
+public interface Identifiable extends Attribute<Identifiable> {
 
     String getEncryptedItem();
 

@@ -13,18 +13,15 @@ package com.herocraftonline.items.item.attributes;
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.Identifiable;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.TriggerResult;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.TriggerableAttribute;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.DefaultAttribute;
 import com.herocraftonline.items.util.EncryptUtil;
 import com.herocraftonline.items.util.ItemUtil;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
 
-public class IdentifiableAttribute extends TriggerableAttribute<Identifiable> implements Identifiable {
+public class IdentifiableAttribute extends BaseAttribute<Identifiable> implements Identifiable {
 
     private final String encryptedItem;
 
@@ -39,6 +36,7 @@ public class IdentifiableAttribute extends TriggerableAttribute<Identifiable> im
         return encryptedItem;
     }
 
+    /*
     @Override
     public TriggerResult execute(Entity entity) {
         ItemStack item = ItemUtil.deserialize(EncryptUtil.decrypt(getEncryptedItem()));
@@ -52,6 +50,7 @@ public class IdentifiableAttribute extends TriggerableAttribute<Identifiable> im
     public TriggerResult execute(Entity entity, Entity target) {
         return execute(entity);
     }
+    */
 
     @Override
     public void saveToNBT(NBTTagCompound compound) {
