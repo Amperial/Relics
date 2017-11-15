@@ -24,6 +24,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
@@ -68,6 +69,7 @@ public class ItemListener implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
+    /*
     private boolean handleItemUse(Player player, ItemStack itemStack) {
         Optional<Item> item = plugin.getItemManager().getItem(itemStack);
         return !item.isPresent() || handleItemUse(player, item.get(), itemStack);
@@ -75,37 +77,45 @@ public class ItemListener implements Listener {
 
     private boolean handleItemUse(Player player, Item item, ItemStack itemStack) {
         EquipmentManager equipManager = plugin.getEquipmentManager();
-        return equipManager.getPlayerEquipment(player).isEquipped(player, item);
+        return equipManager.getPlayerEquipment().isEquipped(player, item);
     }
+    */
 
-    /*
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
+        if (event.getAction() == Action.PHYSICAL) return;
         ItemStack itemStack = event.getItem();
         Optional<Item> itemOptional = plugin.getItemManager().getItem(itemStack);
         if (itemOptional.isPresent()) {
             Item item = itemOptional.get();
-            if (handleItemUse(event.getPlayer(), item, itemStack)) {
-                item.onClick(event, item);
-            } else {
-                item.onClick(event, item);
-                event.setCancelled(true);
-            }
+            item.onClick(event, item);
         }
     }
-    */
 
     /*
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
-        if (!handleItemUse(player, player.getInventory().getItemInMainHand())) {
-            event.setCancelled(true);
-        } else if (!handleItemUse(player, player.getInventory().getItemInOffHand())) {
-            event.setCancelled(true);
+        ItemStack itemStack;
+        switch (event.getHand()) {
+            case HAND:
+                itemStack = player.getInventory().getItemInMainHand();
+                break;
+            case OFF_HAND:
+                itemStack = player.getInventory().getItemInOffHand();
+                break;
+            default:
+                return;
+        }
+        Optional<Item> itemOptional = plugin.getItemManager().getItem(itemStack);
+        if (itemOptional.isPresent()) {
+            Item item = itemOptional.get();
+            item.onClick(event, item);
         }
     }
     */
+
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityShootBow(EntityShootBowEvent event) {

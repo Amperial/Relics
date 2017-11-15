@@ -25,6 +25,23 @@ public interface Equippable {
      * @param player the player
      * @return {@code true} if the equippable can be equipped, else {@code false}
      */
-    boolean canEquip(Player player);
+    default boolean canEquip(Player player) { return true; }
+
+    /**
+     * Equips the equippable to a player and checks if the item should be updated.
+     *
+     * @param player the player
+     * @return {@code true} if the item should be updated, else {@code false}
+     */
+    default boolean onEquip(Player player) { return false; }
+
+    /**
+     * UnEquips the equippable from a player and checks if the item should be updated.
+     *
+     * @param player the player
+     * @return {@code true} if the item should be updated, else {@code false}
+     */
+    default boolean onUnEquip(Player player) { return false; }
+
 
 }

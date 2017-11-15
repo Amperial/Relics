@@ -11,10 +11,9 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.effects.SoundEffect;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.TriggerResult;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.TriggerableAttribute;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.DefaultAttribute;
 import org.bukkit.Location;
@@ -23,7 +22,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-public class SoundEffectAttribute extends TriggerableAttribute<SoundEffect> implements SoundEffect {
+public class SoundEffectAttribute extends BaseAttribute<SoundEffect> implements SoundEffect {
 
     private Sound sound;
     private float volume;
@@ -54,6 +53,7 @@ public class SoundEffectAttribute extends TriggerableAttribute<SoundEffect> impl
         return pitch;
     }
 
+    /*
     @Override
     public TriggerResult execute(Location location) {
         location.getWorld().playSound(location, getSound(), getVolume(), getPitch());
@@ -78,6 +78,7 @@ public class SoundEffectAttribute extends TriggerableAttribute<SoundEffect> impl
         }
         return TriggerResult.NONE;
     }
+    */
 
     @Override
     public void stop(Player player) {

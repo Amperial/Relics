@@ -10,6 +10,8 @@
  */
 package com.herocraftonline.items.item;
 
+import com.herocraftonline.items.api.item.Clickable;
+import com.herocraftonline.items.api.item.Equippable;
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.ItemFactory;
 import com.herocraftonline.items.api.item.ItemType;
@@ -29,6 +31,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -303,7 +306,6 @@ public class CustomItem implements Item {
         return getAttributesDeep(Requirement.class).stream().allMatch(a -> a.test(player, this));
     }
 
-    /*
     @Override
     public boolean onEquip(Player player) {
         equipped = true;
@@ -334,7 +336,6 @@ public class CustomItem implements Item {
     public void onClick(PlayerInteractEvent event, Item item) {
         forEachDeep(attribute -> attribute instanceof Clickable, attribute -> ((Clickable) attribute).onClick(event, item));
     }
-    */
 
     @Override
     public ItemStack getItem() {
