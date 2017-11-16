@@ -36,7 +36,7 @@ public class PotionEffectAttribute extends BaseAttribute<PotionEffect> implement
         return effect;
     }
 
-    @Override
+    //@Override
     public void play(Player player) {
         getEffect().apply(player);
     }
