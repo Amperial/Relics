@@ -38,7 +38,7 @@ public class PlayerListener implements Listener {
     }
 
     public void onPlayerJoin(Player player) {
-        plugin.getEquipmentManager().loadEquipment(player);
+        //plugin.getEquipmentManager().loadEquipment(player);
     }
 
 }
