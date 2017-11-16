@@ -41,9 +41,9 @@ public class ExtractGemCommand extends SocketCommand {
 
         // First make sure item is unequipped
         EquipmentManager equipManager = plugin.getEquipmentManager();
-        if (equipManager.isEquipped(player, item)) {
-            equipManager.unEquip(player, item, player.getInventory().getItemInMainHand());
-        }
+//        if (equipManager.isEquipped(player, item)) {
+//            equipManager.unEquip(player, item, player.getInventory().getItemInMainHand());
+//        }
 
         // Get gem item
         Gem gem = socket.getGem();
