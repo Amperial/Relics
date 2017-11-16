@@ -29,9 +29,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -69,6 +67,52 @@ public class ItemListener implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
+    @EventHandler
+    public void test(InventoryClickEvent event) {
+        event.getWhoClicked().sendMessage("-----INVENTORY CLICK-----");
+        event.getWhoClicked().sendMessage("ACTION: " + event.getAction());
+        event.getWhoClicked().sendMessage("CLICK: " + event.getClick());
+        event.getWhoClicked().sendMessage("ITEM: " + event.getCurrentItem());
+        event.getWhoClicked().sendMessage("SLOT TYPE: " + event.getSlotType());
+        event.getWhoClicked().sendMessage("SLOT INDEX: " + event.getSlot());
+        event.getWhoClicked().sendMessage("RAW SLOT INDEX: " + event.getRawSlot());
+    }
+
+    @EventHandler
+    public void test(InventoryDragEvent event) {
+        event.getWhoClicked().sendMessage("-----INVENTORY DRAG-----");
+        event.getWhoClicked().sendMessage("CURSOR: " + event.getCursor());
+        event.getWhoClicked().sendMessage("OLD CURSOR: " + event.getOldCursor());
+        event.getWhoClicked().sendMessage("SLOTS: " + event.getInventorySlots());
+        event.getWhoClicked().sendMessage("NEW ITEMS: " + event.getNewItems());
+        event.getWhoClicked().sendMessage("DRAG TYPE: " + event.getType());
+        event.getWhoClicked().sendMessage("RAW SLOTS: " + event.getRawSlots());
+    }
+
+    @EventHandler
+    public void test(InventoryCreativeEvent event) {
+        event.getWhoClicked().sendMessage("-----INVENTORY INTERACT-----");
+        event.getWhoClicked().sendMessage("ACTION: " + event.getAction());
+        event.getWhoClicked().sendMessage("CLICK: " + event.getClick());
+        event.getWhoClicked().sendMessage("ITEM: " + event.getCurrentItem());
+        event.getWhoClicked().sendMessage("SLOT TYPE: " + event.getSlotType());
+        event.getWhoClicked().sendMessage("SLOT INDEX: " + event.getSlot());
+        event.getWhoClicked().sendMessage("RAW SLOT INDEX: " + event.getRawSlot());
+        event.getWhoClicked().sendMessage("CURSOR: " + event.getCursor());
+    }
+
+    @EventHandler
+    public void test(CraftItemEvent event) {
+        event.getWhoClicked().sendMessage("-----INVENTORY INTERACT-----");
+        event.getWhoClicked().sendMessage("ACTION: " + event.getAction());
+        event.getWhoClicked().sendMessage("CLICK: " + event.getClick());
+        event.getWhoClicked().sendMessage("ITEM: " + event.getCurrentItem());
+        event.getWhoClicked().sendMessage("SLOT TYPE: " + event.getSlotType());
+        event.getWhoClicked().sendMessage("SLOT INDEX: " + event.getSlot());
+        event.getWhoClicked().sendMessage("RAW SLOT INDEX: " + event.getRawSlot());
+        event.getWhoClicked().sendMessage("CURSOR: " + event.getCursor());
+    }
+
     /*
     private boolean handleItemUse(Player player, ItemStack itemStack) {
         Optional<Item> item = plugin.getItemManager().getItem(itemStack);
@@ -82,6 +126,7 @@ public class ItemListener implements Listener {
     */
 
 
+    /*
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getAction() == Action.PHYSICAL) return;
@@ -92,6 +137,7 @@ public class ItemListener implements Listener {
             item.onClick(event, item);
         }
     }
+    */
 
     /*
     @EventHandler(priority = EventPriority.LOWEST)
@@ -117,6 +163,7 @@ public class ItemListener implements Listener {
     */
 
 
+    /*
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityShootBow(EntityShootBowEvent event) {
 
@@ -166,6 +213,7 @@ public class ItemListener implements Listener {
             }
         }
     }
+
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
@@ -432,5 +480,5 @@ public class ItemListener implements Listener {
             deathItems.remove(playerId);
         }
     }
-
+    */
 }
