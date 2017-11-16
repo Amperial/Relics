@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public interface PlayerEquipment {
@@ -62,10 +61,12 @@ public interface PlayerEquipment {
             return item != null && canHoldItem(item.getType());
         }
 
-        Optional<Item> getItem(Player player);
+        boolean hasItem(Player player);
+
+        Item getItem(Player player);
 
         default boolean containsItem(Player player, Item item) {
-            return item != null && getItem(player).filter(slotItem -> slotItem.equals(item)).isPresent();
+            return item != null && item.equals(getItem(player));
         }
     }
 }

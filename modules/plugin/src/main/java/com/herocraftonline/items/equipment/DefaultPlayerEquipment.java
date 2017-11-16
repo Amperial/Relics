@@ -124,14 +124,14 @@ final class DefaultPlayerEquipment implements PlayerEquipment {
             return itemType != null && itemType.isType(this.itemType);
         }
 
-//        @Override
-//        public boolean hasItem(Player player) {
-//            return DefaultPlayerEquipment.this.plugin.getItemManager().isItem(player.getInventory().getItem(inventoryIndex));
-//        }
+        @Override
+        public boolean hasItem(Player equipmentHolder) {
+            return DefaultPlayerEquipment.this.plugin.getItemManager().isItem(equipmentHolder.getInventory().getItem(inventoryIndex));
+        }
 
         @Override
-        public Optional<Item> getItem(Player player) {
-            return DefaultPlayerEquipment.this.plugin.getItemManager().getItem(player.getInventory().getItem(inventoryIndex)).filter(this::canHoldItem);
+        public Item getItem(Player equipmentHolder) {
+            return DefaultPlayerEquipment.this.plugin.getItemManager().getItem(equipmentHolder.getInventory().getItem(inventoryIndex)).orElse(null);
         }
     }
 
