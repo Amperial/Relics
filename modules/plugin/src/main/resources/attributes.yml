@@ -2,6 +2,7 @@ lore-order:
 - group
 - rarity
 - level
+- reagent
 - text
 - socket
 - gem
