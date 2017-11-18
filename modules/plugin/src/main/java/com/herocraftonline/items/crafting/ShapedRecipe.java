@@ -10,13 +10,25 @@
  */
 package com.herocraftonline.items.crafting;
 
+import com.herocraftonline.items.Relics;
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Ingredient;
+import com.herocraftonline.items.api.item.attribute.attributes.crafting.Reagent;
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Recipe;
+import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+import com.herocraftonline.items.api.storage.nbt.NBTTagList;
 import com.herocraftonline.items.api.util.InventoryUtil.Dimensions;
 import com.herocraftonline.items.api.util.InventoryUtil.Position;
+import com.herocraftonline.items.api.util.InventoryUtil.Slot;
+import com.herocraftonline.items.crafting.ingredients.BasicIngredient;
+import com.herocraftonline.items.crafting.ingredients.reagents.NormalReagent;
+import com.herocraftonline.items.crafting.ingredients.reagents.RelicReagent;
+import com.herocraftonline.items.util.ItemUtil;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ShapedRecipe implements Recipe {
@@ -43,6 +55,11 @@ public class ShapedRecipe implements Recipe {
     }
 
     @Override
+    public Dimensions getDimensions() {
+        return dimensions;
+    }
+
+    @Override
     public boolean matches(Map<Position, ItemStack> items) {
         // Only and all of the positions specified should exist
         if (!ingredients.keySet().equals(items.keySet())) {
@@ -65,6 +82,111 @@ public class ShapedRecipe implements Recipe {
         }
         ingredients.put(position, ingredient);
         return true;
+    }
+
+    @Override
+    public void saveToNBT(NBTTagCompound compound) {
+        // Set type
+        compound.setString("type", "shaped");
+
+        // Save result
+        compound.setString("result", ItemUtil.serialize(getResult()));
+
+        // Save dimensions
+        NBTTagCompound dimensions = NBTTagCompound.create();
+        dimensions.setInt("width", getDimensions().getWidth());
+        dimensions.setInt("height", getDimensions().getHeight());
+        compound.setBase("dimensions", dimensions);
+
+        // Save ingredients
+        NBTTagList ingredientList = NBTTagList.create();
+        for (Map.Entry<Position, Ingredient> ingredient : ingredients.entrySet()) {
+            NBTTagCompound ingredientCompound = NBTTagCompound.create();
+            ingredientCompound.setInt("slot", ingredient.getKey().getSlot(getDimensions()).getIndex());
+            Reagent.ReagentType reagentType = ingredient.getValue().getType();
+            if (reagentType instanceof RelicReagent) {
+                ingredientCompound.setString("reagent", ((RelicReagent) reagentType).getName());
+            } else {
+                ingredientCompound.setString("material", ((NormalReagent) reagentType).getMaterial().name());
+            }
+            ingredientCompound.setInt("amount", ingredient.getValue().getAmount());
+            ingredientList.addBase(ingredientCompound);
+        }
+        compound.setBase("ingredients", ingredientList);
+    }
+
+    public static class Factory implements RecipeFactory<ShapedRecipe> {
+
+        @Override
+        public ShapedRecipe loadFromNBT(NBTTagCompound compound) {
+            // Load result
+            ItemStack result = ItemUtil.deserialize(compound.getString("result"));
+
+            // Load dimensions
+            NBTTagCompound dimensionsCompound = compound.getCompound("dimensions");
+            Dimensions dimensions = new Dimensions(dimensionsCompound.getInt("width"), dimensionsCompound.getInt("height"));
+
+            // Create recipe
+            ShapedRecipe recipe = new ShapedRecipe(result, dimensions);
+
+            // Load ingredients
+            NBTTagList ingredientList = compound.getList("ingredients", 10);
+            for (int i = 0; i < ingredientList.size(); i++) {
+                NBTTagCompound ingredientCompound = ingredientList.getCompound(i);
+                int slot = ingredientCompound.getInt("slot");
+                Reagent.ReagentType reagentType;
+                if (ingredientCompound.hasKey("reagent")) {
+                    reagentType = new RelicReagent(ingredientCompound.getString("reagent"));
+                } else {
+                    reagentType = new NormalReagent(Material.valueOf(ingredientCompound.getString("material")));
+                }
+                Ingredient ingredient = new BasicIngredient(reagentType, ingredientCompound.getInt("amount"));
+                recipe.setIngredient(new Slot(slot).getPosition(dimensions), ingredient);
+            }
+
+            return recipe;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public ShapedRecipe loadFromConfig(ConfigurationSection config) {
+            // Load result
+            ItemStack result;
+            ConfigurationSection resultConfig = config.getConfigurationSection("result");
+            if (resultConfig.isString("item-type")) {
+                result = Relics.instance().getItemManager().getItem(resultConfig).getItem();
+            } else {
+                String material = resultConfig.getString("material");
+                int amount = resultConfig.getInt("amount", 1);
+                result = new ItemStack(Material.valueOf(material), amount);
+            }
+
+            // Create recipe
+            ShapedRecipe recipe;
+            if (config.isConfigurationSection("dimensions")) {
+                ConfigurationSection dimensions = config.getConfigurationSection("dimensions");
+                recipe = new ShapedRecipe(result, new Dimensions(dimensions.getInt("width"), dimensions.getInt("height")));
+            } else {
+                recipe = new ShapedRecipe(result);
+            }
+
+            // Load ingredients
+            List<Map<?, ?>> ingredients = config.getMapList("ingredients");
+            for (Map<?, ?> ingredientConfig : ingredients) {
+                int slot = (Integer) ingredientConfig.get("slot");
+                Reagent.ReagentType reagentType;
+                if (ingredientConfig.containsKey("reagent")) {
+                    reagentType = new RelicReagent((String) ingredientConfig.get("reagent"));
+                } else {
+                    reagentType = new NormalReagent(Material.valueOf((String) ingredientConfig.get("material")));
+                }
+                int amount = ingredientConfig.containsKey("amount") ? (Integer) ingredientConfig.get("amount") : 1;
+                Ingredient ingredient = new BasicIngredient(reagentType, amount);
+                recipe.setIngredient(new Slot(slot).getPosition(recipe.getDimensions()), ingredient);
+            }
+
+            return recipe;
+        }
     }
 
 }

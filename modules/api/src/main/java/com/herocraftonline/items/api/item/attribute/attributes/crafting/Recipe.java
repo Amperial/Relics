@@ -10,7 +10,10 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes.crafting;
 
+import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+import com.herocraftonline.items.api.util.InventoryUtil.Dimensions;
 import com.herocraftonline.items.api.util.InventoryUtil.Position;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
@@ -30,11 +33,28 @@ public interface Recipe {
     ItemStack getResult();
 
     /**
+     * Gets the required inventory dimensions to craft the recipe.
+     *
+     * @return the recipe's dimensions
+     */
+    Dimensions getDimensions();
+
+    /**
      * Checks if the given item configuration matches the crafting recipe.
      *
      * @param items the item ingredients
      * @return {@code true} if the items matches the recipe, else {@code false}
      */
     boolean matches(Map<Position, ItemStack> items);
+
+    void saveToNBT(NBTTagCompound compound);
+
+    interface RecipeFactory<T extends Recipe> {
+
+        T loadFromNBT(NBTTagCompound compound);
+
+        T loadFromConfig(ConfigurationSection config);
+
+    }
 
 }

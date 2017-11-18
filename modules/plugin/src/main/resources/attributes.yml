@@ -4,6 +4,7 @@ lore-order:
 - level
 - reagent
 - text
+- blueprint
 - socket
 - gem
 - durability

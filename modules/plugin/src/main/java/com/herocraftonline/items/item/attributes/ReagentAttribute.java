@@ -32,6 +32,8 @@ public class ReagentAttribute extends BaseAttribute<Reagent> implements Reagent 
         this.reagent = reagent;
         this.reagentName = reagentName;
         this.reagentMaterial = reagentMaterial;
+
+        setLore(((lore, prefix) -> lore.add(prefix + "Crafting Reagent: " + getDisplayName()))); // TODO configurable
     }
 
     @Override

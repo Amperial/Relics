@@ -10,10 +10,15 @@
  */
 package com.herocraftonline.items.crafting.ingredients.reagents;
 
+import com.herocraftonline.items.Relics;
+import com.herocraftonline.items.api.item.Item;
+import com.herocraftonline.items.api.item.attribute.Attribute;
+import com.herocraftonline.items.api.item.attribute.attributes.crafting.Reagent;
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Reagent.ReagentType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public class RelicReagent implements ReagentType {
 
@@ -28,9 +33,10 @@ public class RelicReagent implements ReagentType {
     }
 
     @Override
-    public boolean matches(ItemStack item) {
-        // TODO get Item instance, find any Reagent attribute with type equal to this type
-        return false;
+    public boolean matches(ItemStack itemStack) {
+        Optional<Item> item = Relics.instance().getItemManager().getItem(itemStack);
+        return item.isPresent() && item.get().hasAttributeDeep(Attribute.predicate(Reagent.class)
+                .and(attribute -> ((Reagent) attribute).getReagentType().equals(this)));
     }
 
     @Override

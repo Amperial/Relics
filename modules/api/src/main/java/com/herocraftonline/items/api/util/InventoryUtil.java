@@ -21,9 +21,6 @@ import java.util.Set;
  */
 public final class InventoryUtil {
 
-    public static final Dimensions SINGLE_CHEST = getChestDimensions(3);
-    public static final Dimensions DOUBLE_CHEST = getChestDimensions(6);
-
     private InventoryUtil() {
     }
 
@@ -41,6 +38,9 @@ public final class InventoryUtil {
      * Represents a rectangular inventory of specific width and height.
      */
     public static class Dimensions {
+        public static final Dimensions SINGLE_CHEST = getChestDimensions(3);
+        public static final Dimensions DOUBLE_CHEST = getChestDimensions(6);
+
         private int width;
         private int height;
 
@@ -81,11 +81,11 @@ public final class InventoryUtil {
          *
          * @return all of the dimension's positions
          */
-        public Set<Position> getAllPositions() {
+        public Set<Position> getAllPositions(Position offset) {
             Set<Position> positions = new HashSet<>();
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
-                    positions.add(new Position(x, y));
+                    positions.add(new Position(x, y).add(offset));
                 }
             }
             return positions;
@@ -112,23 +112,22 @@ public final class InventoryUtil {
         }
 
         /**
-         * Gets the position of a slot in an inventory of these dimensions.
+         * Checks if the given dimensions fit within these dimensions.
          *
-         * @param slot the slot
-         * @return the slot's equivalent position
+         * @param dimensions the dimensions
+         * @return {@code true} if these dimensions can contain the given dimensions, else {@code false}
          */
-        public Position getPosition(Slot slot) {
-            return new Position(slot.index % height, slot.index / height);
+        public boolean contains(Dimensions dimensions) {
+            return width >= dimensions.width && height >= dimensions.height;
         }
 
         /**
-         * Gets the slot of a position in an inventory of these dimensions.
-         *
-         * @param position the position
-         * @return the position's equivalent slot
+         * Expansion modes.
          */
-        public Slot getSlot(Position position) {
-            return new Slot(position.x * height + position.y);
+        public enum Expansion {
+            WIDE,
+            TALL,
+            SQUARE
         }
 
         /**
@@ -140,7 +139,14 @@ public final class InventoryUtil {
          * @return {@code true} if the dimensions were successfully expanded, else {@code false}
          */
         public boolean expand(Slot slot, Expansion mode, Dimensions max) {
-            return expand(getPosition(slot), mode, max);
+            if (slot.index == max.size()) {
+                return false;
+            }
+
+            while (!contains(slot)) {
+                expand(mode, max);
+            }
+            return true;
         }
 
         /**
@@ -157,25 +163,20 @@ public final class InventoryUtil {
             }
 
             while (!contains(position)) {
-                boolean expandWidth = width < max.width && (mode == Expansion.WIDE || mode == Expansion.SQUARE || height == max.height);
-                boolean expandHeight = height < max.height && (mode == Expansion.TALL || mode == Expansion.SQUARE || width == max.width);
-                if (expandHeight) {
-                    height++;
-                }
-                if (expandWidth) {
-                    width++;
-                }
+                expand(mode, max);
             }
             return true;
         }
 
-        /**
-         * Expansion modes.
-         */
-        public enum Expansion {
-            WIDE,
-            TALL,
-            SQUARE
+        private void expand(Expansion mode, Dimensions max) {
+            boolean expandWidth = width < max.width && (mode == Expansion.WIDE || mode == Expansion.SQUARE || height == max.height);
+            boolean expandHeight = height < max.height && (mode == Expansion.TALL || mode == Expansion.SQUARE || width == max.width);
+            if (expandHeight) {
+                height++;
+            }
+            if (expandWidth) {
+                width++;
+            }
         }
     }
 
@@ -183,12 +184,44 @@ public final class InventoryUtil {
      * Represents an inventory slot x and y position.
      */
     public static class Position {
+        public static final Position ZERO = new Position(0, 0);
+
         public int x;
         public int y;
 
         public Position(int x, int y) {
             this.x = x < 0 ? 0 : x;
             this.y = y < 0 ? 0 : y;
+        }
+
+        /**
+         * Gets the result of adding a position to this position.
+         *
+         * @param position the position to add
+         * @return the new position
+         */
+        public Position add(Position position) {
+            return new Position(x + position.x, y + position.y);
+        }
+
+        /**
+         * Gets the result of subtracting a position from this position.
+         *
+         * @param position the position to subtract
+         * @return the new position
+         */
+        public Position subtract(Position position) {
+            return new Position(x - position.x, y - position.y);
+        }
+
+        /**
+         * Gets the slot of the position in an inventory of the given dimensions.
+         *
+         * @param dimensions the dimensions
+         * @return the position's equivalent slot
+         */
+        public Slot getSlot(Dimensions dimensions) {
+            return new Slot(y * dimensions.width + x);
         }
 
         @Override
@@ -210,10 +243,29 @@ public final class InventoryUtil {
      * Represents an inventory slot index.
      */
     public static class Slot {
-        public int index;
+        private int index;
 
         public Slot(int index) {
             this.index = index < 0 ? 0 : index;
+        }
+
+        /**
+         * Gets the index of the slot.
+         *
+         * @return the slot's index
+         */
+        public int getIndex() {
+            return index;
+        }
+
+        /**
+         * Gets the position of the slot in an inventory of the given dimensions.
+         *
+         * @param dimensions the dimensions
+         * @return the slot's equivalent position
+         */
+        public Position getPosition(Dimensions dimensions) {
+            return new Position(index % dimensions.width, index / dimensions.width);
         }
 
         /**
@@ -225,10 +277,10 @@ public final class InventoryUtil {
          * @return the equivalent slot index in the new inventory
          */
         public Slot transform(Dimensions from, Dimensions to, Position fromToOffset) {
-            Position position = from.getPosition(this);
+            Position position = getPosition(from);
             position.x += fromToOffset.x;
             position.y += fromToOffset.y;
-            return to.getSlot(position);
+            return position.getSlot(to);
         }
     }
 

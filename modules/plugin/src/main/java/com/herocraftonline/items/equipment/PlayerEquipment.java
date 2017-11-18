@@ -245,7 +245,7 @@ public class PlayerEquipment implements Equipment {
         }
 
         // Update item stack
-        itemStack = item.updateItem(itemStack);
+        itemStack = item.updateItem(itemStack).orElse(itemStack);
         if (slot >= 0) {
             // Entirely replace item stack in inventory if possible
             inventory.setItem(slot, itemStack);

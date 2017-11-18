@@ -26,6 +26,7 @@ import com.herocraftonline.items.commands.items.ItemInfoCommand;
 import com.herocraftonline.items.commands.misc.TokenCommand;
 import com.herocraftonline.items.commands.sockets.ExtractGemCommand;
 import com.herocraftonline.items.commands.sockets.InfuseGemCommand;
+import com.herocraftonline.items.crafting.CraftingListener;
 import com.herocraftonline.items.equipment.EquipmentManager;
 import com.herocraftonline.items.item.ItemManager;
 import com.herocraftonline.items.item.models.ModelManager;
@@ -45,6 +46,12 @@ import java.util.Optional;
  * @author Austin Payne
  */
 public class Relics extends JavaPlugin implements ItemPlugin {
+
+    private static ItemPlugin instance;
+
+    public static ItemPlugin instance() {
+        return instance;
+    }
 
     /**
      * Managers of the Relics plugin.
@@ -66,9 +73,12 @@ public class Relics extends JavaPlugin implements ItemPlugin {
     private ItemListener itemListener;
     private AttributeListener attributeListener;
     private MenuListener menuListener;
+    private CraftingListener craftingListener;
 
     @Override
     public void onEnable() {
+        instance = this;
+
         // Attempt to load plugin integrations
         Plugin effectLib = getServer().getPluginManager().getPlugin("EffectLib");
         if (effectLib instanceof EffectLib) {
@@ -78,7 +88,7 @@ public class Relics extends JavaPlugin implements ItemPlugin {
         }
 
         // Attempt to load NMSHandler
-        NMSHandler.getInterface();
+        NMSHandler.instance();
 
         // Create managers (order is important)
         configManager = new ConfigManager(this);
@@ -93,6 +103,7 @@ public class Relics extends JavaPlugin implements ItemPlugin {
         itemListener = new ItemListener(this);
         attributeListener = new AttributeListener(this);
         menuListener = new MenuListener(this);
+        craftingListener = new CraftingListener(this);
 
         // Create relics command tree
 
@@ -137,6 +148,8 @@ public class Relics extends JavaPlugin implements ItemPlugin {
     @Override
     public void onDisable() {
         // The order managers are destroyed in is not important
+        craftingListener.closeOpenMenus();
+        craftingListener = null;
         menuListener.closeOpenMenus();
         menuListener = null;
         attributeListener = null;

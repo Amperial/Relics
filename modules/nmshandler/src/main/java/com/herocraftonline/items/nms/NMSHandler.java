@@ -14,6 +14,8 @@ import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Optional;
+
 public abstract class NMSHandler {
 
     private static String activeVersion;
@@ -29,7 +31,7 @@ public abstract class NMSHandler {
         return activeVersion;
     }
 
-    public static NMSHandler getInterface() {
+    public static NMSHandler instance() {
         if (activeInterface == null) {
             String version = getVersion();
 
@@ -48,8 +50,26 @@ public abstract class NMSHandler {
         return activeInterface;
     }
 
-    public abstract NBTTagCompound getTagCompound(ItemStack item);
+    public abstract NBTTagCompound getTag(ItemStack item);
 
-    public abstract ItemStack setTagCompound(ItemStack item, NBTTagCompound compound);
+    public abstract Optional<ItemStack> setTag(ItemStack item, NBTTagCompound compound);
+
+    public abstract NBTTagCompound toNBT(ItemStack item);
+
+    public abstract ItemStack fromNBT(NBTTagCompound compound);
+
+    public abstract Optional<ItemStack> replaceNBT(ItemStack item, NBTTagCompound compound);
+
+    public String serializeItem(ItemStack item) {
+        return serializeNBT(toNBT(item));
+    }
+
+    public ItemStack deserializeItem(String itemString) {
+        return fromNBT(deserializeNBT(itemString));
+    }
+
+    public abstract String serializeNBT(NBTTagCompound compound);
+
+    public abstract NBTTagCompound deserializeNBT(String compoundString);
 
 }

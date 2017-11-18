@@ -1,0 +1,21 @@
+name: "&cShaped Transmution"
+material: "PAPER"
+item-type: "blueprint"
+attributes:
+  blueprint:
+    type: "blueprint"
+    recipe:
+      type: "shaped"
+      dimensions:
+        width: 2
+        height: 1
+      ingredients:
+      - slot: 0
+        reagent: "transmuter"
+        amount: 1
+      - slot: 1
+        material: "IRON_INGOT"
+        amount: 2
+      result:
+        material: "GOLD_INGOT"
+        amount: 1

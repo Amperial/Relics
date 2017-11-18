@@ -131,7 +131,7 @@ public class ItemListener implements Listener {
                     event.setDamage(event.getDamage() + attribute.getVariation() * ((random.nextDouble() * 2) - 1));
                 });
                 if (durability.isPresent() && durability.get().damage(1)) {
-                    damager.getEquipment().setItemInMainHand(item.updateItem(itemStack));
+                    item.updateItem(itemStack).ifPresent(updatedItem -> damager.getEquipment().setItemInMainHand(updatedItem));
                 }
             }
         }

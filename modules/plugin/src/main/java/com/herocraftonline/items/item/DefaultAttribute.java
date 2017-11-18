@@ -11,7 +11,6 @@
 package com.herocraftonline.items.item;
 
 import com.herocraftonline.items.api.ItemPlugin;
-import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.AttributeType;
 import com.herocraftonline.items.api.item.attribute.attributes.Durability;
 import com.herocraftonline.items.api.item.attribute.attributes.Group;
@@ -22,6 +21,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.Rarity;
 import com.herocraftonline.items.api.item.attribute.attributes.Soulbound;
 import com.herocraftonline.items.api.item.attribute.attributes.Text;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeType;
+import com.herocraftonline.items.api.item.attribute.attributes.crafting.Blueprint;
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Reagent;
 import com.herocraftonline.items.api.item.attribute.attributes.effects.PotionEffect;
 import com.herocraftonline.items.api.item.attribute.attributes.effects.SoundEffect;
@@ -36,9 +36,10 @@ import java.util.Collection;
 
 public final class DefaultAttribute {
 
+    public static final AttributeType<Blueprint> BLUEPRINT = new BaseAttributeType<>("blueprint", 5, BlueprintAttribute.Factory::new);
     public static final AttributeType<Minecraft> DAMAGE = new BaseAttributeType<>("damage", Integer.MAX_VALUE, DamageAttribute.Factory::new);
-    public static final AttributeType<Durability> DURABILITY = new BaseAttributeType<>("durability", 7, DurabilityAttribute.Factory::new);
-    public static final AttributeType<Gem> GEM = new BaseAttributeType<>("gem", 6, GemAttribute.Factory::new);
+    public static final AttributeType<Durability> DURABILITY = new BaseAttributeType<>("durability", 8, DurabilityAttribute.Factory::new);
+    public static final AttributeType<Gem> GEM = new BaseAttributeType<>("gem", 7, GemAttribute.Factory::new);
     public static final AttributeType<Group> GROUP = new BaseAttributeType<>("group", 0, GroupAttribute.Factory::new);
     public static final AttributeType<LaunchEntityAttribute> LAUNCH_ENTITY = new BaseAttributeType<>("launch-entity", Integer.MAX_VALUE, LaunchEntityAttribute.Factory::new);
     public static final AttributeType<Level> LEVEL = new BaseAttributeType<>("level", 2, LevelAttribute.Factory::new);
@@ -49,8 +50,8 @@ public final class DefaultAttribute {
     public static final AttributeType<Rarity> RARITY = new BaseAttributeType<>("rarity", 1, RarityAttribute.Factory::new);
     public static final AttributeType<Reagent> REAGENT = new BaseAttributeType<>("reagent", 3, ReagentAttribute.Factory::new);
     public static final AttributeType<SmiteAttribute> SMITE = new BaseAttributeType<>("smite", Integer.MAX_VALUE, SmiteAttribute.Factory::new);
-    public static final AttributeType<Socket> SOCKET = new BaseAttributeType<>("socket", 5, SocketAttribute.Factory::new);
-    public static final AttributeType<Soulbound> SOULBOUND = new BaseAttributeType<>("soulbound", 8, SoulboundAttribute.Factory::new);
+    public static final AttributeType<Socket> SOCKET = new BaseAttributeType<>("socket", 6, SocketAttribute.Factory::new);
+    public static final AttributeType<Soulbound> SOULBOUND = new BaseAttributeType<>("soulbound", 9, SoulboundAttribute.Factory::new);
     public static final AttributeType<SoundEffect> SOUND_EFFECT = new BaseAttributeType<>("sound-effect", Integer.MAX_VALUE, SoundEffectAttribute.Factory::new);
     public static final AttributeType<Text> TEXT = new BaseAttributeType<>("text", 4, TextAttribute.Factory::new);
     public static final AttributeType<Velocity> VELOCITY = new BaseAttributeType<>("velocity", Integer.MAX_VALUE, VelocityAttribute.Factory::new);
@@ -58,6 +59,7 @@ public final class DefaultAttribute {
     private static final Collection<AttributeType> types = new ArrayList<>();
 
     static {
+        types.add(BLUEPRINT);
         types.add(DAMAGE);
         types.add(DURABILITY);
         types.add(GEM);
@@ -69,6 +71,7 @@ public final class DefaultAttribute {
         types.add(MODEL);
         types.add(POTION_EFFECT);
         types.add(RARITY);
+        types.add(REAGENT);
         types.add(SMITE);
         types.add(SOCKET);
         types.add(SOULBOUND);

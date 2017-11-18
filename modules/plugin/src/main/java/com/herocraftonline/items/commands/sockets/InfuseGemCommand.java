@@ -97,7 +97,7 @@ public class InfuseGemCommand extends DualItemCommand {
         socket.setGem(gem);
 
         // Update item in inventory
-        player.getInventory().setItemInMainHand(mainHand.updateItem(player.getInventory().getItemInMainHand()));
+        mainHand.updateItem(player.getInventory().getItemInMainHand()).ifPresent(updatedItem -> player.getInventory().setItemInMainHand(updatedItem));
 
         // Remove gem from inventory
         player.getInventory().setItemInOffHand(null);

@@ -1,0 +1,17 @@
+name: "&cShapeless Transmution"
+material: "PAPER"
+item-type: "blueprint"
+attributes:
+  blueprint:
+    type: "blueprint"
+    recipe:
+      type: "shapeless"
+      ingredients:
+      - reagent: "transmuter"
+        amount: 1
+      - material: "IRON_INGOT"
+        amount: 2
+      result:
+        name: "Transmuted Gold Ingot"
+        material: "GOLD_INGOT"
+        item-type: "resource"

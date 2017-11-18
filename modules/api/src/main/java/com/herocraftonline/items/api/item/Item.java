@@ -18,6 +18,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -84,12 +85,12 @@ public interface Item extends AttributeContainer, Clickable, Equippable {
     ItemStack getItem();
 
     /**
-     * Updates the name, lore, and nbt of an item stack representing the item.
+     * Attempts to update the given item stack to represent the item.
      *
      * @param item the item stack
-     * @return the updated item stack
+     * @return empty optional if successfully updated, else optional containing updated item copy
      */
-    ItemStack updateItem(ItemStack item);
+    Optional<ItemStack> updateItem(ItemStack item);
 
     /**
      * Adds attributes to the custom item.

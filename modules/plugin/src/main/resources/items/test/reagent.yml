@@ -1,0 +1,9 @@
+name: "&cReagent"
+material: "REDSTONE"
+item-type: "reagent"
+attributes:
+  reagent:
+    type: "reagent"
+    reagent-type: "transmuter"
+    reagent-name: "Transmuter"
+    reagent-material: "BONE"
