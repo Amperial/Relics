@@ -25,11 +25,16 @@ import com.herocraftonline.items.crafting.ingredients.reagents.RelicReagent;
 import com.herocraftonline.items.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.map.MapCanvas;
+import org.bukkit.map.MapRenderer;
+import org.bukkit.map.MapView;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class ShapedRecipe implements Recipe {
 
@@ -68,6 +73,11 @@ public class ShapedRecipe implements Recipe {
 
         // All of the ingredients should match
         return items.entrySet().stream().allMatch(item -> ingredients.get(item.getKey()).matches(item.getValue()));
+    }
+
+    @Override
+    public Optional<MapRenderer> getMapRenderer() {
+        return Optional.empty();
     }
 
     public Ingredient getIngredient(Position position) {
@@ -186,6 +196,14 @@ public class ShapedRecipe implements Recipe {
             }
 
             return recipe;
+        }
+    }
+
+    public static class ShapedRecipeRenderer extends MapRenderer {
+
+        @Override
+        public void render(MapView mapView, MapCanvas mapCanvas, Player player) {
+
         }
     }
 

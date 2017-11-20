@@ -31,4 +31,9 @@ public class NormalReagent implements ReagentType {
         return item != null && item.getType() == getMaterial();
     }
 
+    @Override
+    public String getDisplayIcon() {
+        return getMaterial().name();
+    }
+
 }

@@ -40,6 +40,11 @@ public class RelicReagent implements ReagentType {
     }
 
     @Override
+    public String getDisplayIcon() {
+        return name.toUpperCase().replace(' ', '_');
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof RelicReagent)) return false;

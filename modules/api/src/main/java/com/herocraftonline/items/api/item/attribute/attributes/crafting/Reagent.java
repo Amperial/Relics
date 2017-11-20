@@ -34,6 +34,13 @@ public interface Reagent extends Attribute<Reagent> {
          */
         boolean matches(ItemStack item);
 
+        /**
+         * Gets the reagent type's display icon.
+         *
+         * @return the display icon name
+         */
+        String getDisplayIcon();
+
     }
 
     /**
@@ -49,12 +56,5 @@ public interface Reagent extends Attribute<Reagent> {
      * @return the display name
      */
     String getDisplayName();
-
-    /**
-     * Gets the reagent's display material.
-     *
-     * @return the display material
-     */
-    Material getDisplayMaterial();
 
 }

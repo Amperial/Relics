@@ -15,8 +15,10 @@ import com.herocraftonline.items.api.util.InventoryUtil.Dimensions;
 import com.herocraftonline.items.api.util.InventoryUtil.Position;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.map.MapRenderer;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Defines a crafting recipe.
@@ -46,6 +48,12 @@ public interface Recipe {
      * @return {@code true} if the items matches the recipe, else {@code false}
      */
     boolean matches(Map<Position, ItemStack> items);
+
+    /**
+     *
+     * @return
+     */
+    Optional<MapRenderer> getMapRenderer();
 
     void saveToNBT(NBTTagCompound compound);
 

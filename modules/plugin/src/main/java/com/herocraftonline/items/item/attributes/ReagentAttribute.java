@@ -17,21 +17,18 @@ import com.herocraftonline.items.api.item.attribute.attributes.crafting.Reagent;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.crafting.ingredients.reagents.RelicReagent;
 import com.herocraftonline.items.item.DefaultAttribute;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class ReagentAttribute extends BaseAttribute<Reagent> implements Reagent {
 
     private final RelicReagent reagent;
     private final String reagentName;
-    private final Material reagentMaterial;
 
-    public ReagentAttribute(String name, RelicReagent reagent, String reagentName, Material reagentMaterial) {
+    public ReagentAttribute(String name, RelicReagent reagent, String reagentName) {
         super(name, DefaultAttribute.REAGENT);
 
         this.reagent = reagent;
         this.reagentName = reagentName;
-        this.reagentMaterial = reagentMaterial;
 
         setLore(((lore, prefix) -> lore.add(prefix + "Crafting Reagent: " + getDisplayName()))); // TODO configurable
     }
@@ -47,16 +44,10 @@ public class ReagentAttribute extends BaseAttribute<Reagent> implements Reagent 
     }
 
     @Override
-    public Material getDisplayMaterial() {
-        return reagentMaterial;
-    }
-
-    @Override
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
         compound.setString("reagent-type", getReagentType().getName());
         compound.setString("reagent-name", getDisplayName());
-        compound.setString("reagent-material", getDisplayMaterial().name());
     }
 
     public static class Factory extends BaseAttributeFactory<Reagent> {
@@ -68,18 +59,16 @@ public class ReagentAttribute extends BaseAttribute<Reagent> implements Reagent 
         public Reagent loadFromConfig(String name, ConfigurationSection config) {
             String reagent = config.getString("reagent-type");
             String reagentName = config.getString("reagent-name");
-            String reagentMaterial = config.getString("reagent-material");
 
-            return new ReagentAttribute(name, new RelicReagent(reagent), reagentName, Material.valueOf(reagentMaterial));
+            return new ReagentAttribute(name, new RelicReagent(reagent), reagentName);
         }
 
         @Override
         public Reagent loadFromNBT(String name, NBTTagCompound compound) {
             String reagent = compound.getString("reagent-type");
             String reagentName = compound.getString("reagent-name");
-            String reagentMaterial = compound.getString("reagent-material");
 
-            return new ReagentAttribute(name, new RelicReagent(reagent), reagentName, Material.valueOf(reagentMaterial));
+            return new ReagentAttribute(name, new RelicReagent(reagent), reagentName);
         }
     }
 

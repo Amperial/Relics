@@ -19,6 +19,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 
 public class CraftingListener implements Listener {
@@ -33,6 +34,14 @@ public class CraftingListener implements Listener {
         if (event.getInventory() != null && event.getInventory().getHolder() instanceof CraftingHolder &&
                 event.getWhoClicked() instanceof Player) {
             ((CraftingHolder) event.getInventory().getHolder()).getMenu().onClick(event);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onInventoryDrag(InventoryDragEvent event) {
+        if (event.getInventory() != null && event.getInventory().getHolder() instanceof CraftingHolder &&
+                event.getWhoClicked() instanceof Player) {
+            event.setCancelled(true);
         }
     }
 

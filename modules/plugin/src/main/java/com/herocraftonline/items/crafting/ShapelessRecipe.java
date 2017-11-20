@@ -26,6 +26,7 @@ import com.herocraftonline.items.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.map.MapRenderer;
 
 import java.util.HashSet;
 import java.util.List;
@@ -77,6 +78,11 @@ public class ShapelessRecipe implements Recipe {
 
         // All ingredients should be matched at this point
         return ingredients.isEmpty();
+    }
+
+    @Override
+    public Optional<MapRenderer> getMapRenderer() {
+        return Optional.empty();
     }
 
     public Set<Ingredient> getIngredients() {
