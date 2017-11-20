@@ -50,8 +50,9 @@ public interface Recipe {
     boolean matches(Map<Position, ItemStack> items);
 
     /**
+     * Gets the recipe's optional map renderer to render the recipe on a map.
      *
-     * @return
+     * @return the recipe's map renderer
      */
     Optional<MapRenderer> getMapRenderer();
 

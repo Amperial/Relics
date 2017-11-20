@@ -11,7 +11,6 @@
 package com.herocraftonline.items.api.item.attribute.attributes.crafting;
 
 import com.herocraftonline.items.api.item.attribute.Attribute;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 /**

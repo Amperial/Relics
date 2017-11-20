@@ -29,7 +29,7 @@ public class CraftingListener implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getInventory() != null && event.getInventory().getHolder() instanceof CraftingHolder &&
                 event.getWhoClicked() instanceof Player) {
@@ -37,7 +37,7 @@ public class CraftingListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryDrag(InventoryDragEvent event) {
         if (event.getInventory() != null && event.getInventory().getHolder() instanceof CraftingHolder &&
                 event.getWhoClicked() instanceof Player) {

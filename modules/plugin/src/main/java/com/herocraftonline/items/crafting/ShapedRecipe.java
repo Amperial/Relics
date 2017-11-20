@@ -44,10 +44,12 @@ public class ShapedRecipe implements Recipe {
     private final ItemStack result;
     private final Dimensions dimensions;
     private final Map<Position, Ingredient> ingredients = new HashMap<>();
+    private final RecipeRenderer<ShapedRecipe> renderer;
 
     public ShapedRecipe(ItemStack result, Dimensions dimensions) {
         this.result = result;
         this.dimensions = dimensions;
+        this.renderer = new ShapedRecipeRenderer(this);
     }
 
     public ShapedRecipe(ItemStack result) {
@@ -77,7 +79,7 @@ public class ShapedRecipe implements Recipe {
 
     @Override
     public Optional<MapRenderer> getMapRenderer() {
-        return Optional.empty();
+        return Optional.of(renderer);
     }
 
     public Ingredient getIngredient(Position position) {
@@ -199,11 +201,27 @@ public class ShapedRecipe implements Recipe {
         }
     }
 
-    public static class ShapedRecipeRenderer extends MapRenderer {
+    public static class ShapedRecipeRenderer extends RecipeRenderer<ShapedRecipe> {
+        public ShapedRecipeRenderer(ShapedRecipe recipe) {
+            super(recipe);
+        }
 
         @Override
-        public void render(MapView mapView, MapCanvas mapCanvas, Player player) {
-
+        public void render(MapView view, MapCanvas canvas, Player player) {
+            ShapedRecipe recipe = getRecipe();
+            Dimensions dimensions = recipe.getDimensions();
+            int width = dimensions.getWidth() * 18 + 2;
+            int height = dimensions.getHeight() * 18 + 2;
+            if (width > 128 || height > 128) {
+                return;
+            }
+            int x = (128 - width) / 2;
+            int y = (128 - height) / 2;
+            for (int x2 = 0; x2 < dimensions.getWidth(); x2++) {
+                for (int y2 = 0; y2 < dimensions.getHeight(); y2++) {
+                    drawIngredient(canvas, x + (x2 * 18), y + (y2 * 18), recipe.getIngredient(new Position(x2, y2)));
+                }
+            }
         }
     }
 

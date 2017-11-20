@@ -19,11 +19,19 @@ import com.herocraftonline.items.api.item.attribute.attributes.crafting.Blueprin
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Recipe;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.crafting.CraftingMenu;
+import com.herocraftonline.items.crafting.RecipeRenderer;
 import com.herocraftonline.items.crafting.ShapedRecipe;
 import com.herocraftonline.items.crafting.ShapelessRecipe;
 import com.herocraftonline.items.item.DefaultAttribute;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.map.MapRenderer;
+import org.bukkit.map.MapView;
+
+import java.util.Optional;
 
 public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blueprint, Clickable {
 
@@ -49,7 +57,22 @@ public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blue
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onClick(PlayerInteractEvent event, Item item) {
+        if (item.getMaterial() == Material.MAP) {
+            ItemStack itemStack = event.getItem();
+            short id = itemStack.getDurability();
+            MapView view = Bukkit.getMap(id);
+            if (view == null || view.getRenderers().stream().noneMatch(renderer -> renderer instanceof RecipeRenderer)) {
+                Optional<MapRenderer> renderer = getRecipe().getMapRenderer();
+                if (renderer.isPresent()) {
+                    view = Bukkit.createMap(event.getPlayer().getWorld());
+                    view.getRenderers().forEach(view::removeRenderer);
+                    view.addRenderer(renderer.get());
+                    itemStack.setDurability(view.getId());
+                }
+            }
+        }
         CraftingMenu.open(event.getPlayer(), getRecipe());
     }
 
