@@ -5,106 +5,105 @@ import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.ItemType;
 import org.bukkit.entity.LivingEntity;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public abstract class BaseEquipment<T extends LivingEntity> implements Equipment<T> {
+public abstract class BaseEquipment {
 
-    private final ItemPlugin plugin;
     private final Map<String, Slot> slots;
 
-    public BaseEquipment(ItemPlugin plugin) {
-        this.plugin = plugin;
+    public BaseEquipment() {
         this.slots = new HashMap<>();
     }
 
-    @Override
     public boolean hasSlot(String name) {
         return slots.containsKey(name.toLowerCase());
     }
 
-    @Override
     public Slot getSlot(String name) {
         return slots.get(name.toLowerCase());
     }
 
-    @Override
-    public boolean hasSlotForItem(ItemType itemType) {
-        return false;
-    }
-
-    @Override
-    public boolean hasSlotForItem(Item item) {
-        return false;
-    }
-
-    @Override
     public Collection<? extends Slot> getSlots() {
         return Collections.unmodifiableCollection(slots.values());
     }
 
-    @Override
-    public Collection<? extends Slot> getSlotsForItem(ItemType itemType) {
-        return null;
+    public Collection<? extends Slot> getSlotsWithItems() {
+        return getSlots().stream()
+                .filter(Slot::hasItem)
+                .collect(Collectors.toList());
     }
 
-    @Override
+    public Collection<? extends Slot> getSlotsWithoutItems() {
+        return getSlots().stream()
+                .filter(slot -> !slot.hasItem())
+                .collect(Collectors.toList());
+    }
+
+    public Collection<? extends Slot> getSlotsForType(ItemType itemType) {
+        if (itemType == null) return Collections.emptyList();
+        return getSlots().stream()
+                .filter(slot -> slot.canContainType(itemType))
+                .collect(Collectors.toList());
+    }
+
     public Collection<? extends Slot> getSlotsForItem(Item item) {
-        return null;
+        return getSlots().stream()
+                .filter(slot -> slot.canContainItem(item))
+                .collect(Collectors.toList());
     }
 
-    @Override
     public boolean isEquipped(Item item) {
-        return false;
+        if (item == null) return false;
+        return getSlotsForItem(item).stream()
+                .anyMatch(slot -> slot.containsItem(item));
     }
 
-    @Override
-    public void unEquipAll() {
-
-    }
-
-    public abstract class Slot implements Equipment.Slot {
+    public abstract class Slot {
 
         private final String name;
+        private final ItemType type;
+        private Item item;
 
-        public Slot(String name) {
+        public Slot(String name, ItemType type) {
             this.name = name;
+            this.type = type;
         }
 
-        @Override
         public String getName() {
             return name;
         }
 
-        @Override
-        public abstract boolean canContainItem(ItemType itemType);
+        public ItemType getType() {
+            return type;
+        }
 
-        @Override
+        public boolean canContainType(ItemType itemType) {
+            return itemType != null && itemType.isType(getType());
+        }
+
         public boolean canContainItem(Item item) {
-            if (item == null) return false;
-            if (!canContainItem(item.getType())) return false;
+            return item == null || canContainType(item.getType());
         }
 
-        @Override
         public boolean hasItem() {
-            return false;
+            return item != null;
         }
 
-        @Override
+        public boolean containsItem(Item item) {
+            return hasItem() && getItem().equals(item);
+        }
+
         public Item getItem() {
-            return null;
+            return item;
         }
 
-        @Override
         public boolean setItem(Item item) {
+            if (canContainItem(item)) {
+                this.item = item;
+                return true;
+            }
             return false;
-        }
-
-        @Override
-        public void removeItem() {
-
         }
     }
 }

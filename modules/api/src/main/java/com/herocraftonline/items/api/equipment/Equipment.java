@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-public interface Equipment<T extends LivingEntity> {
+public interface Equipment {
 
     boolean hasSlot(String name);
 

@@ -10,22 +10,21 @@
  */
 package com.herocraftonline.items.api.events.equipment;
 
+import com.herocraftonline.items.api.equipment.Equipment;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class EquipmentChangedEvent extends Event {
+import java.util.List;
+import java.util.Set;
+
+public class EquipmentChangedEvent extends EquipmentEvent {
 
     private static final HandlerList handlers = new HandlerList();
 
-    private Player player;
-
-    public EquipmentChangedEvent(Player player) {
-        this.player = player;
-    }
-
-    public Player getPlayer() {
-        return player;
+    public EquipmentChangedEvent(LivingEntity equipmentHolder, Equipment equipment) {
+        super(equipmentHolder, equipment);
     }
 
     @Override
