@@ -38,7 +38,7 @@ import java.util.Optional;
 
 public class ShapedRecipe implements Recipe {
 
-    private static final Dimensions.Expansion MODE = Dimensions.Expansion.SQUARE;
+    private static final Dimensions.ExpandMode MODE = Dimensions.ExpandMode.SQUARE;
     private static final Dimensions MAX_DIMENSIONS = new Dimensions(5, 5);
 
     private final ItemStack result;
@@ -67,14 +67,14 @@ public class ShapedRecipe implements Recipe {
     }
 
     @Override
-    public boolean matches(Map<Position, ItemStack> items) {
+    public boolean test(Map<Position, ItemStack> items) {
         // Only and all of the positions specified should exist
         if (!ingredients.keySet().equals(items.keySet())) {
             return false;
         }
 
         // All of the ingredients should match
-        return items.entrySet().stream().allMatch(item -> ingredients.get(item.getKey()).matches(item.getValue()));
+        return items.entrySet().stream().allMatch(item -> ingredients.get(item.getKey()).test(item.getValue()));
     }
 
     @Override

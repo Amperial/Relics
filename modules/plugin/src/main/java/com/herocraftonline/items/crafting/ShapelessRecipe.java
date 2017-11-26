@@ -36,7 +36,7 @@ import java.util.Set;
 
 public class ShapelessRecipe implements Recipe {
 
-    private static final Dimensions.Expansion MODE = Dimensions.Expansion.WIDE;
+    private static final Dimensions.ExpandMode MODE = Dimensions.ExpandMode.WIDE;
     private static final Dimensions MAX_DIMENSIONS = new Dimensions(5, 5);
 
     private final ItemStack result;
@@ -63,12 +63,12 @@ public class ShapelessRecipe implements Recipe {
     }
 
     @Override
-    public boolean matches(Map<Position, ItemStack> items) {
+    public boolean test(Map<Position, ItemStack> items) {
         Set<Ingredient> ingredients = new HashSet<>(getIngredients());
 
         // Every item should match a specified ingredient
         for (ItemStack item : items.values()) {
-            Optional<Ingredient> ingredient = ingredients.stream().filter(ing -> ing.matches(item)).findAny();
+            Optional<Ingredient> ingredient = ingredients.stream().filter(ing -> ing.test(item)).findAny();
             if (ingredient.isPresent()) {
                 ingredients.remove(ingredient.get());
             } else {

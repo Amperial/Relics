@@ -11,8 +11,10 @@
 package com.herocraftonline.items.api.util;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.BinaryOperator;
 
 /**
  * Utilities to define and use inventory dimensions, slots, and positions.
@@ -25,21 +27,11 @@ public final class InventoryUtil {
     }
 
     /**
-     * Gets the dimensions of a chest with a certain amount of rows.
-     *
-     * @param rows the amount of rows
-     * @return the chest dimensions
-     */
-    public static Dimensions getChestDimensions(int rows) {
-        return new Dimensions(9, rows);
-    }
-
-    /**
      * Represents a rectangular inventory of specific width and height.
      */
-    public static class Dimensions {
-        public static final Dimensions SINGLE_CHEST = getChestDimensions(3);
-        public static final Dimensions DOUBLE_CHEST = getChestDimensions(6);
+    public static class Dimensions implements Iterable<Position> {
+        public static final Dimensions SINGLE_CHEST = ofChest(3);
+        public static final Dimensions DOUBLE_CHEST = ofChest(6);
 
         private int width;
         private int height;
@@ -47,15 +39,6 @@ public final class InventoryUtil {
         public Dimensions(int width, int height) {
             this.width = width < 1 ? 1 : width;
             this.height = height < 1 ? 1 : height;
-        }
-
-        /**
-         * Gets the dimension's amount of rows.
-         *
-         * @return the dimension's height
-         */
-        public int getHeight() {
-            return height;
         }
 
         /**
@@ -68,12 +51,21 @@ public final class InventoryUtil {
         }
 
         /**
+         * Gets the dimension's amount of rows.
+         *
+         * @return the dimension's height
+         */
+        public int getHeight() {
+            return height;
+        }
+
+        /**
          * Gets the dimension's maximum amount of positions.
          *
          * @return the dimension's size
          */
         public int size() {
-            return height * width;
+            return getWidth() * getHeight();
         }
 
         /**
@@ -81,14 +73,19 @@ public final class InventoryUtil {
          *
          * @return all of the dimension's positions
          */
-        public Set<Position> getAllPositions(Position offset) {
+        public Set<Position> getPositions(Position offset) {
             Set<Position> positions = new HashSet<>();
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
+            for (int x = 0; x < getWidth(); x++) {
+                for (int y = 0; y < getHeight(); y++) {
                     positions.add(new Position(x, y).add(offset));
                 }
             }
             return positions;
+        }
+
+        @Override
+        public Iterator<Position> iterator() {
+            return getPositions(Position.ZERO).iterator();
         }
 
         /**
@@ -98,7 +95,7 @@ public final class InventoryUtil {
          * @return {@code true} if the slot is within the dimensions, else {@code false}
          */
         public boolean contains(Slot slot) {
-            return slot.index < width * height;
+            return slot.getIndex() < size();
         }
 
         /**
@@ -108,7 +105,7 @@ public final class InventoryUtil {
          * @return {@code true} if the position is within the dimensions, else {@code false}
          */
         public boolean contains(Position position) {
-            return position.x < width && position.y < height;
+            return position.getX() < getWidth() && position.getY() < getHeight();
         }
 
         /**
@@ -118,13 +115,13 @@ public final class InventoryUtil {
          * @return {@code true} if these dimensions can contain the given dimensions, else {@code false}
          */
         public boolean contains(Dimensions dimensions) {
-            return width >= dimensions.width && height >= dimensions.height;
+            return getWidth() >= dimensions.getWidth() && getHeight() >= dimensions.getHeight();
         }
 
         /**
          * Expansion modes.
          */
-        public enum Expansion {
+        public enum ExpandMode {
             WIDE,
             TALL,
             SQUARE
@@ -138,8 +135,8 @@ public final class InventoryUtil {
          * @param max  the maximum dimensions
          * @return {@code true} if the dimensions were successfully expanded, else {@code false}
          */
-        public boolean expand(Slot slot, Expansion mode, Dimensions max) {
-            if (slot.index == max.size()) {
+        public boolean expand(Slot slot, ExpandMode mode, Dimensions max) {
+            if (slot.getIndex() == max.size()) {
                 return false;
             }
 
@@ -157,7 +154,7 @@ public final class InventoryUtil {
          * @param max      the maximum dimensions
          * @return {@code true} if the dimensions were successfully expanded, else {@code false}
          */
-        public boolean expand(Position position, Expansion mode, Dimensions max) {
+        public boolean expand(Position position, ExpandMode mode, Dimensions max) {
             if (!max.contains(position)) {
                 return false;
             }
@@ -168,15 +165,25 @@ public final class InventoryUtil {
             return true;
         }
 
-        private void expand(Expansion mode, Dimensions max) {
-            boolean expandWidth = width < max.width && (mode == Expansion.WIDE || mode == Expansion.SQUARE || height == max.height);
-            boolean expandHeight = height < max.height && (mode == Expansion.TALL || mode == Expansion.SQUARE || width == max.width);
+        private void expand(ExpandMode mode, Dimensions max) {
+            boolean expandWidth = getWidth() < max.getWidth() && (mode == ExpandMode.WIDE || mode == ExpandMode.SQUARE || getHeight() == max.getHeight());
+            boolean expandHeight = getHeight() < max.getHeight() && (mode == ExpandMode.TALL || mode == ExpandMode.SQUARE || getWidth() == max.getWidth());
             if (expandHeight) {
                 height++;
             }
             if (expandWidth) {
                 width++;
             }
+        }
+
+        /**
+         * Gets the dimensions of a chest with a certain amount of rows.
+         *
+         * @param rows the amount of rows
+         * @return the chest dimensions
+         */
+        public static Dimensions ofChest(int rows) {
+            return new Dimensions(9, rows);
         }
     }
 
@@ -185,13 +192,33 @@ public final class InventoryUtil {
      */
     public static class Position {
         public static final Position ZERO = new Position(0, 0);
+        public static final BinaryOperator<Position> MIN = (p1, p2) ->
+                new Position(Integer.min(p1.getX(), p2.getX()), Integer.min(p1.getY(), p2.getY()));
 
-        public int x;
-        public int y;
+        private int x;
+        private int y;
 
         public Position(int x, int y) {
             this.x = x < 0 ? 0 : x;
             this.y = y < 0 ? 0 : y;
+        }
+
+        /**
+         * Gets the x value of the position.
+         *
+         * @return the position's x value
+         */
+        public int getX() {
+            return x;
+        }
+
+        /**
+         * Gets the y value of the position.
+         *
+         * @return the position's y value
+         */
+        public int getY() {
+            return y;
         }
 
         /**
@@ -201,7 +228,7 @@ public final class InventoryUtil {
          * @return the new position
          */
         public Position add(Position position) {
-            return new Position(x + position.x, y + position.y);
+            return new Position(getX() + position.getX(), getY() + position.getY());
         }
 
         /**
@@ -211,7 +238,7 @@ public final class InventoryUtil {
          * @return the new position
          */
         public Position subtract(Position position) {
-            return new Position(x - position.x, y - position.y);
+            return new Position(getX() - position.getX(), getY() - position.getY());
         }
 
         /**
@@ -221,7 +248,7 @@ public final class InventoryUtil {
          * @return the position's equivalent slot
          */
         public Slot getSlot(Dimensions dimensions) {
-            return new Slot(y * dimensions.width + x);
+            return new Slot(getY() * dimensions.getWidth() + getX());
         }
 
         @Override
@@ -229,13 +256,13 @@ public final class InventoryUtil {
             if (this == o) return true;
             if (!(o instanceof Position)) return false;
             Position position = (Position) o;
-            return x == position.x &&
-                    y == position.y;
+            return getX() == position.getX() &&
+                    getY() == position.getY();
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(x, y);
+            return Objects.hash(getX(), getY());
         }
     }
 
@@ -265,7 +292,7 @@ public final class InventoryUtil {
          * @return the slot's equivalent position
          */
         public Position getPosition(Dimensions dimensions) {
-            return new Position(index % dimensions.width, index / dimensions.width);
+            return new Position(getIndex() % dimensions.getWidth(), getIndex() / dimensions.getWidth());
         }
 
         /**
@@ -277,10 +304,7 @@ public final class InventoryUtil {
          * @return the equivalent slot index in the new inventory
          */
         public Slot transform(Dimensions from, Dimensions to, Position fromToOffset) {
-            Position position = getPosition(from);
-            position.x += fromToOffset.x;
-            position.y += fromToOffset.y;
-            return position.getSlot(to);
+            return getPosition(from).add(fromToOffset).getSlot(to);
         }
     }
 

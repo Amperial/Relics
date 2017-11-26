@@ -11,6 +11,7 @@
 package com.herocraftonline.items.api.item.attribute.attributes.crafting;
 
 import com.herocraftonline.items.api.item.attribute.Attribute;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * An attribute that holds a crafting recipe.
@@ -25,5 +26,12 @@ public interface Blueprint extends Attribute<Blueprint> {
      * @return the blueprint's recipe
      */
     Recipe getRecipe();
+
+    /**
+     * Applies the recipe's map renderer to the given item if it is a map.
+     *
+     * @param item the item stack
+     */
+    void apply(ItemStack item);
 
 }

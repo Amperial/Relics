@@ -19,13 +19,14 @@ import org.bukkit.map.MapRenderer;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * Defines a crafting recipe.
  *
  * @author Austin Payne
  */
-public interface Recipe {
+public interface Recipe extends Predicate<Map<Position, ItemStack>> {
 
     /**
      * Gets the resulting item of crafting the recipe.
@@ -40,14 +41,6 @@ public interface Recipe {
      * @return the recipe's dimensions
      */
     Dimensions getDimensions();
-
-    /**
-     * Checks if the given item configuration matches the crafting recipe.
-     *
-     * @param items the item ingredients
-     * @return {@code true} if the items matches the recipe, else {@code false}
-     */
-    boolean matches(Map<Position, ItemStack> items);
 
     /**
      * Gets the recipe's optional map renderer to render the recipe on a map.

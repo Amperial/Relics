@@ -35,8 +35,8 @@ public class BasicIngredient implements Ingredient {
     }
 
     @Override
-    public boolean matches(ItemStack item) {
-        return item != null && getType().matches(item) && item.getAmount() == getAmount();
+    public boolean test(ItemStack itemStack) {
+        return itemStack != null && getType().test(itemStack) && itemStack.getAmount() == getAmount();
     }
 
 }

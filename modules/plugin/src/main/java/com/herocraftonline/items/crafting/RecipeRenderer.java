@@ -81,7 +81,6 @@ public abstract class RecipeRenderer<T extends Recipe> extends MapRenderer {
         }
     }
 
-    @SuppressWarnings("deprecation")
     private void drawImage(MapCanvas canvas, int x, int y, Image image) {
         if (image == null) {
             return;

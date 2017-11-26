@@ -33,7 +33,7 @@ public class RelicReagent implements ReagentType {
     }
 
     @Override
-    public boolean matches(ItemStack itemStack) {
+    public boolean test(ItemStack itemStack) {
         Optional<Item> item = Relics.instance().getItemManager().getItem(itemStack);
         return item.isPresent() && item.get().hasAttributeDeep(Attribute.predicate(Reagent.class)
                 .and(attribute -> ((Reagent) attribute).getReagentType().equals(this)));

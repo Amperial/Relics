@@ -13,6 +13,8 @@ package com.herocraftonline.items.api.item.attribute.attributes.crafting;
 import com.herocraftonline.items.api.item.attribute.Attribute;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.function.Predicate;
+
 /**
  * An attribute that enables an item to be used as a relics crafting reagent.
  *
@@ -23,15 +25,7 @@ public interface Reagent extends Attribute<Reagent> {
     /**
      * Represents a type of reagant for use in crafting recipes.
      */
-    interface ReagentType {
-
-        /**
-         * Checks if a given item can be accepted as this reagent type.
-         *
-         * @param item the item
-         * @return {@code true} if the item is a reagent of this type, else {@code false}
-         */
-        boolean matches(ItemStack item);
+    interface ReagentType extends Predicate<ItemStack> {
 
         /**
          * Gets the reagent type's display icon.

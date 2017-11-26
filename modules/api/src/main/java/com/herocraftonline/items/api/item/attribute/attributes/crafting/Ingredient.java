@@ -13,12 +13,14 @@ package com.herocraftonline.items.api.item.attribute.attributes.crafting;
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Reagent.ReagentType;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.function.Predicate;
+
 /**
  * Defines a crafting ingredient.
  *
  * @author Austin Payne
  */
-public interface Ingredient {
+public interface Ingredient extends Predicate<ItemStack> {
 
     /**
      * The required reagent type of the crafting ingredient.
@@ -33,13 +35,5 @@ public interface Ingredient {
      * @return the ingredient's amount
      */
     int getAmount();
-
-    /**
-     * Checks if a given item matches the crafting ingredient.
-     *
-     * @param item the item
-     * @return {@code true} if the item matches the ingredient, else {@code false}
-     */
-    boolean matches(ItemStack item);
 
 }

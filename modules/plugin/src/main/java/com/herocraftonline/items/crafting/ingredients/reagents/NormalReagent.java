@@ -10,6 +10,7 @@
  */
 package com.herocraftonline.items.crafting.ingredients.reagents;
 
+import com.herocraftonline.items.Relics;
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Reagent.ReagentType;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -27,8 +28,8 @@ public class NormalReagent implements ReagentType {
     }
 
     @Override
-    public boolean matches(ItemStack item) {
-        return item != null && item.getType() == getMaterial();
+    public boolean test(ItemStack itemStack) {
+        return itemStack != null && itemStack.getType() == getMaterial() && !Relics.instance().getItemManager().isItem(itemStack);
     }
 
     @Override

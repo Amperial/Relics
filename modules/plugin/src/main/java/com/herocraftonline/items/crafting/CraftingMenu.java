@@ -29,7 +29,6 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -62,6 +61,7 @@ public class CraftingMenu {
         this.recipe = recipe;
         this.inventory = inventory;
 
+        // Get required crafting dimensions and offset
         Dimensions required = recipe.getDimensions();
         if (SMALL.contains(required)) {
             craftingDimensions = SMALL;
@@ -71,17 +71,19 @@ public class CraftingMenu {
             craftingOffset = LARGE_OFFSET;
         }
 
-        craftingArea = craftingDimensions.getAllPositions(craftingOffset);
+        // Get positions in crafting area
+        craftingArea = craftingDimensions.getPositions(craftingOffset);
 
-        for (Position position : OUTER.getAllPositions(Position.ZERO)) {
-            if (position.equals(BLUEPRINT) || craftingArea.contains(position) || position.equals(OUTPUT)) {
-                // Recipe blueprint, crafting area, or output
-                continue;
+        // TODO: Show the recipe here? Alternatively, show placeholder ingredients in crafting area
+        // setItem(BLUEPRINT, new ItemStack(Material.PAPER));
+        setItem(BLUEPRINT, FILL);
+
+        // Fill remaining positions
+        OUTER.forEach(position -> {
+            if (!(position.equals(BLUEPRINT) || craftingArea.contains(position) || position.equals(OUTPUT))) {
+                setItem(position, FILL);
             }
-
-            setItem(position, FILL);
-        }
-        setItem(BLUEPRINT, new ItemStack(Material.PAPER));
+        });
     }
 
     public void onClick(InventoryClickEvent event) {
@@ -160,21 +162,18 @@ public class CraftingMenu {
     }
 
     private void updateOutput(Player player) {
-        Set<Position> filled = craftingArea.stream().filter(position -> getItem(position).isPresent()).collect(Collectors.toSet());
+        // Get current crafting inputs
+        Set<Position> filled = craftingArea.stream().filter(this::hasItem).collect(Collectors.toSet());
+        Position offset = filled.stream().reduce(Position.MIN).orElse(Position.ZERO);
+        Map<Position, ItemStack> input = filled.stream().collect(Collectors.toMap(position -> position.subtract(offset), position -> getItem(position).orElse(null)));
 
-        int xMin = filled.stream().mapToInt(position -> position.x).min().orElse(0);
-        int yMin = filled.stream().mapToInt(position -> position.y).min().orElse(0);
-        Position min = new Position(xMin, yMin);
-
-        Map<Position, ItemStack> input = new HashMap<>();
-        filled.forEach(position -> getItem(position).ifPresent(item -> input.put(position.subtract(min), item)));
-
-        if (recipe.matches(input)) {
-            setItem(OUTPUT, recipe.getResult());
-        } else {
-            setItem(OUTPUT, null);
-        }
+        // Update crafting output
+        setItem(OUTPUT, recipe.test(input) ? recipe.getResult() : null);
         player.updateInventory();
+    }
+
+    private boolean hasItem(Position position) {
+        return getItem(position).isPresent();
     }
 
     private Optional<ItemStack> getItem(Position position) {

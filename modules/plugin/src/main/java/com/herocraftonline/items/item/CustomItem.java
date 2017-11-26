@@ -19,6 +19,7 @@ import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.attributes.Group;
 import com.herocraftonline.items.api.item.attribute.attributes.Minecraft;
 import com.herocraftonline.items.api.item.attribute.attributes.Model;
+import com.herocraftonline.items.api.item.attribute.attributes.crafting.Blueprint;
 import com.herocraftonline.items.api.item.attribute.attributes.requirements.Requirement;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatGroup;
@@ -365,8 +366,9 @@ public class CustomItem implements Item {
         // Set ItemMeta
         item.setItemMeta(meta);
 
-        // Check for model attribute
+        // Check for model or blueprint attributes
         attributes.getAttribute(Model.class).ifPresent(model -> model.apply(item));
+        attributes.getAttribute(Blueprint.class).ifPresent(blueprint -> blueprint.apply(item));
 
         // Get NBTTagCompound
         NBTTagCompound compound = NMSHandler.instance().getTag(item);

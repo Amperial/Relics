@@ -36,11 +36,13 @@ import java.util.Optional;
 public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blueprint, Clickable {
 
     private final Recipe recipe;
+    private short mapId;
 
-    public BlueprintAttribute(String name, Recipe recipe) {
+    public BlueprintAttribute(String name, Recipe recipe, short mapId) {
         super(name, DefaultAttribute.BLUEPRINT);
 
         this.recipe = recipe;
+        this.mapId = mapId;
 
         setLore(((lore, prefix) -> {
             String displayName = recipe.getResult().getItemMeta().getDisplayName();
@@ -57,22 +59,30 @@ public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blue
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public void onClick(PlayerInteractEvent event, Item item) {
-        if (item.getMaterial() == Material.MAP) {
-            ItemStack itemStack = event.getItem();
-            short id = itemStack.getDurability();
-            MapView view = Bukkit.getMap(id);
-            if (view == null || view.getRenderers().stream().noneMatch(renderer -> renderer instanceof RecipeRenderer)) {
-                Optional<MapRenderer> renderer = getRecipe().getMapRenderer();
-                if (renderer.isPresent()) {
-                    view = Bukkit.createMap(event.getPlayer().getWorld());
-                    view.getRenderers().forEach(view::removeRenderer);
-                    view.addRenderer(renderer.get());
-                    itemStack.setDurability(view.getId());
-                }
+    public void apply(ItemStack item) {
+        // Only apply custom renderers if item is a map
+        if (item != null && item.getType() == Material.MAP) {
+            // Get map view
+            MapView view = Bukkit.getMap(mapId);
+            // Create map view if it doesn't already exist and update map id
+            if (view == null) {
+                view = Bukkit.createMap(Bukkit.getWorlds().get(0));
+                mapId = view.getId();
+            }
+            // Set map renderers if not already set
+            if (view.getRenderers().stream().noneMatch(r -> r instanceof RecipeRenderer)) {
+                view.getRenderers().forEach(view::removeRenderer);
+                getRecipe().getMapRenderer().ifPresent(view::addRenderer);
+            }
+            // Set item durability to map id
+            if (item.getDurability() != mapId) {
+                item.setDurability(mapId);
             }
         }
+    }
+
+    @Override
+    public void onClick(PlayerInteractEvent event, Item item) {
         CraftingMenu.open(event.getPlayer(), getRecipe());
     }
 
@@ -82,6 +92,7 @@ public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blue
         NBTTagCompound recipe = NBTTagCompound.create();
         getRecipe().saveToNBT(recipe);
         compound.setBase("recipe", recipe);
+        compound.setInt("mapId", mapId);
     }
 
     public static class Factory extends BaseAttributeFactory<Blueprint> {
@@ -102,7 +113,7 @@ public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blue
                 recipe = shapelessRecipeFactory.loadFromConfig(recipeConfig);
             }
 
-            return new BlueprintAttribute(name, recipe);
+            return new BlueprintAttribute(name, recipe, (short) -1);
         }
 
         @Override
@@ -114,8 +125,9 @@ public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blue
             } else {
                 recipe = shapelessRecipeFactory.loadFromNBT(recipeCompound);
             }
+            short mapId = (short) compound.getInt("mapId");
 
-            return new BlueprintAttribute(name, recipe);
+            return new BlueprintAttribute(name, recipe, mapId);
         }
     }
 
