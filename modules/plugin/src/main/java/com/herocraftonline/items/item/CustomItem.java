@@ -30,6 +30,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
@@ -302,17 +303,17 @@ public class CustomItem implements Item {
     }
 
     @Override
-    public boolean canEquip(Player player) {
-        return getAttributesDeep(Requirement.class).stream().allMatch(a -> a.test(player, this));
+    public boolean canUse(LivingEntity livingEntity) {
+        return getAttributesDeep(Requirement.class).stream().allMatch(a -> a.test(livingEntity, this));
     }
 
     @Override
-    public boolean onEquip(Player player) {
+    public boolean onEquip(LivingEntity livingEntity) {
         equipped = true;
         Collection<Attribute> attributes = getAttributesDeep(attribute -> attribute instanceof Equippable);
         boolean update = false;
         for (Attribute attribute : attributes) {
-            if (((Equippable) attribute).onEquip(player)) {
+            if (((Equippable) attribute).onEquip(livingEntity)) {
                 update = true;
             }
         }
@@ -320,12 +321,12 @@ public class CustomItem implements Item {
     }
 
     @Override
-    public boolean onUnEquip(Player player) {
+    public boolean onUnEquip(LivingEntity livingEntity) {
         equipped = false;
         Collection<Attribute> attributes = getAttributesDeep(attribute -> attribute instanceof Equippable);
         boolean update = false;
         for (Attribute attribute : attributes) {
-            if (((Equippable) attribute).onUnEquip(player)) {
+            if (((Equippable) attribute).onUnEquip(livingEntity)) {
                 update = true;
             }
         }
@@ -587,5 +588,4 @@ public class CustomItem implements Item {
             return compound.hasKey(ITEM_TAG_OLD) || compound.hasKey(ITEM_TAG);
         }
     }
-
 }

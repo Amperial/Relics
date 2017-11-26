@@ -12,16 +12,16 @@ package com.herocraftonline.items.api.item.attribute.attributes.requirements;
 
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.Attribute;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 /**
- * An attribute that defines a requirement for a player
+ * An attribute that defines a requirement for a living entity to use the item.
  *
  * @param <T> the type of attribute
  * @author Austin Payne
  */
 public interface Requirement<T extends Attribute<T>> extends Attribute<T> {
 
-    boolean test(Player player, Item item);
-
+    default boolean test(LivingEntity livingEntity) { return true; }
 }

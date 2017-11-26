@@ -19,6 +19,6 @@ import com.herocraftonline.items.api.item.attribute.Attribute;
  * @param <T> the type of attribute
  * @author Austin Payne
  */
-public interface EquipRequirement<T extends Attribute<T>> extends Requirement<T>, Equippable {
+public interface EquipRequirement<T extends Attribute<T>> extends Requirement<T> {
 
 }

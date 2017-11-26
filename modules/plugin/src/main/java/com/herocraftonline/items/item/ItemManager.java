@@ -22,7 +22,9 @@ import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -93,6 +95,11 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
     }
 
     @Override
+    public Optional<Item> findItem(LivingEntity livingEntity, UUID itemId) {
+        return livingEntity instanceof Player ? findItem((Player) livingEntity, itemId) : findItem(livingEntity.getEquipment(), itemId);
+    }
+
+    @Override
     public Optional<Item> findItem(Inventory inventory, UUID itemId) {
         return findItem(inventory.getContents(), itemId);
     }
@@ -111,8 +118,30 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
     }
 
     @Override
+    public Optional<Item> findItem(EntityEquipment entityEquipment, UUID itemId) {
+        Optional<Item> item = findItem(entityEquipment.getArmorContents(), itemId);
+        if (item.isPresent() && item.get().getId().equals(itemId)) {
+            return item;
+        }
+        item = getItem(entityEquipment.getItemInMainHand());
+        if (item.isPresent() && item.get().getId().equals(itemId)) {
+            return item;
+        }
+        item = getItem(entityEquipment.getItemInOffHand());
+        if (item.isPresent() && item.get().getId().equals(itemId)) {
+            return item;
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<ItemStack> findItemStack(Player player, UUID itemId) {
         return findItemStack(player.getInventory(), itemId);
+    }
+
+    @Override
+    public Optional<ItemStack> findItemStack(LivingEntity livingEntity, UUID itemId) {
+        return livingEntity instanceof Player ? findItemStack((Player) livingEntity, itemId) : findItemStack(livingEntity.getEquipment(), itemId);
     }
 
     @Override
@@ -129,6 +158,25 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
                     return Optional.of(itemStack);
                 }
             }
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<ItemStack> findItemStack(EntityEquipment entityEquipment, UUID itemId) {
+        Optional<ItemStack> armorItemStack = findItemStack(entityEquipment.getArmorContents(), itemId);
+        if (armorItemStack.isPresent()) {
+            return armorItemStack;
+        }
+        ItemStack itemStack = entityEquipment.getItemInMainHand();
+        Optional<Item> item = getItem(itemStack);
+        if (item.isPresent() && item.get().getId().equals(itemId)) {
+            return Optional.of(itemStack);
+        }
+        itemStack = entityEquipment.getItemInOffHand();
+        item = getItem(itemStack);
+        if (item.isPresent() && item.get().getId().equals(itemId)) {
+            return Optional.of(itemStack);
         }
         return Optional.empty();
     }

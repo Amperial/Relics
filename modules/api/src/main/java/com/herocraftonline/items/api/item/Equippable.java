@@ -10,6 +10,7 @@
  */
 package com.herocraftonline.items.api.item;
 
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 /**
@@ -20,28 +21,20 @@ import org.bukkit.entity.Player;
 public interface Equippable {
 
     /**
-     * Checks if the equippable can be equipped to a player.
+     * Equips the equippable to a living entity and checks if the item should be updated.
      *
-     * @param player the player
-     * @return {@code true} if the equippable can be equipped, else {@code false}
-     */
-    default boolean canEquip(Player player) { return true; }
-
-    /**
-     * Equips the equippable to a player and checks if the item should be updated.
-     *
-     * @param player the player
+     * @param livingEntity the living entity
      * @return {@code true} if the item should be updated, else {@code false}
      */
-    default boolean onEquip(Player player) { return false; }
+    default boolean onEquip(LivingEntity livingEntity) { return false; }
 
     /**
-     * UnEquips the equippable from a player and checks if the item should be updated.
+     * UnEquips the equippable from a living entity and checks if the item should be updated.
      *
-     * @param player the player
+     * @param livingEntity the living entity
      * @return {@code true} if the item should be updated, else {@code false}
      */
-    default boolean onUnEquip(Player player) { return false; }
+    default boolean onUnEquip(LivingEntity livingEntity) { return false; }
 
 
 }

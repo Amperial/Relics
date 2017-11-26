@@ -21,6 +21,7 @@ import com.herocraftonline.items.item.DefaultAttribute;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 public class LevelRequirementAttribute extends BaseStatAttribute<LevelRequirement> implements LevelRequirement {
@@ -44,21 +45,6 @@ public class LevelRequirementAttribute extends BaseStatAttribute<LevelRequiremen
     }
 
     @Override
-    public boolean canEquip(Player player) {
-        return true;
-    }
-
-    @Override
-    public boolean onEquip(Player player) {
-        return false;
-    }
-
-    @Override
-    public boolean onUnEquip(Player player) {
-        return false;
-    }
-
-    @Override
     public StatSpecifier<LevelRequirement> getStatSpecifier() {
         return new StatSpecifier.All<>();
     }
@@ -70,8 +56,12 @@ public class LevelRequirementAttribute extends BaseStatAttribute<LevelRequiremen
     }
 
     @Override
-    public boolean test(Player player, Item item) {
-        return player.getLevel() >= item.getAttributesDeep(LevelRequirement.class).stream().mapToInt(LevelRequirement::getLevel).sum();
+    public boolean test(LivingEntity livingEntity, Item item) {
+        if (livingEntity instanceof Player) {
+            Player player = (Player) livingEntity;
+            return player.getLevel() >= item.getAttributesDeep(LevelRequirement.class).stream().mapToInt(LevelRequirement::getLevel).sum();
+        }
+        return true;
     }
 
     public static class Factory extends BaseAttributeFactory<LevelRequirement> {

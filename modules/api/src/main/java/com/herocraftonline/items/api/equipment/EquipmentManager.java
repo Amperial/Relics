@@ -18,11 +18,11 @@ import org.bukkit.inventory.ItemStack;
 
 public interface EquipmentManager {
 
-    PlayerEquipment getPlayerEquipment(Player player);
+    boolean hasEquipment(LivingEntity holder);
 
-    boolean hasCustomPlayerEquipment(Player player);
+    <T extends LivingEntity> Equipment<T> getEquipment(T holder);
 
-    void setCustomPlayerEquipment(Player player, PlayerEquipment playerEquipment);
+    <T extends LivingEntity> void setEquipment(T holder, Equipment<T> equipment);
 
-    void setDefaultPlayerEquipment(Player player);
+    void removeEquipment(LivingEntity holder);
 }

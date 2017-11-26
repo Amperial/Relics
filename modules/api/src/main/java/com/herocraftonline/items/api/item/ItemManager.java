@@ -15,7 +15,9 @@ import com.herocraftonline.items.api.item.attribute.AttributeType;
 import com.herocraftonline.items.api.storage.config.ItemConfig;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -42,6 +44,16 @@ public interface ItemManager {
     Optional<Item> findItem(Player player, UUID itemId);
 
     /**
+     * Finds the item with a certain id on the given living entity.
+     *
+     * @param livingEntity the living entity
+     * @param itemId the item's id
+     * @return the item
+     */
+    Optional<Item> findItem(LivingEntity livingEntity, UUID itemId);
+
+
+    /**
      * Finds the item with a certain id in the given inventory.
      *
      * @param inventory the inventory
@@ -60,6 +72,15 @@ public interface ItemManager {
     Optional<Item> findItem(ItemStack[] contents, UUID itemId);
 
     /**
+     * Finds the item with a certain id in the given entity equipment
+     *
+     * @param entityEquipment the entity equipment
+     * @param itemId the item's id
+     * @return the item
+     */
+    Optional<Item> findItem(EntityEquipment entityEquipment, UUID itemId);
+
+    /**
      * Finds the item stack of an item with a certain id in the given player's inventory.
      *
      * @param player the player
@@ -67,6 +88,15 @@ public interface ItemManager {
      * @return the item's item stack
      */
     Optional<ItemStack> findItemStack(Player player, UUID itemId);
+
+    /**
+     * Finds the items tack of an item with a certain id on the given living entity
+     *
+     * @param livingEntity the living entity
+     * @param itemId the item's id
+     * @return the item's item stack
+     */
+    Optional<ItemStack> findItemStack(LivingEntity livingEntity, UUID itemId);
 
     /**
      * Finds the item stack of an item with a certain id in the given inventory.
@@ -85,6 +115,15 @@ public interface ItemManager {
      * @return the item's item stack
      */
     Optional<ItemStack> findItemStack(ItemStack[] contents, UUID itemId);
+
+    /**
+     * Find the item stack of an item with a certain id in the given entity equipment
+     *
+     * @param entityEquipment the entity equipment
+     * @param itemId the item's id
+     * @return the item's item stack
+     */
+    Optional<ItemStack> findItemStack(EntityEquipment entityEquipment, UUID itemId);
 
     /**
      * Checks if a certain item stack is also an item.

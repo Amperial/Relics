@@ -26,7 +26,7 @@ public class EquipmentManager implements com.herocraftonline.items.api.equipment
     private final Map<UUID, PlayerEquipment> customPlayerEquipments;
 
     public EquipmentManager(ItemPlugin plugin) {
-        this.defaultPlayerEquipment = new DefaultPlayerEquipment(plugin);
+        this.defaultPlayerEquipment = new DefaultEquipment(plugin);
         customPlayerEquipments = new HashMap<>();
     }
 

@@ -15,6 +15,7 @@ import com.herocraftonline.items.api.item.attribute.AttributeContainer;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
@@ -77,6 +78,14 @@ public interface Item extends AttributeContainer, Clickable, Equippable {
      * @return {@code true} this item's type is or is a child of the given item type, {@code false} otherwise
      */
     boolean isType(ItemType itemType);
+
+    /**
+     * Checks if a living entity can use or equip the given item.
+     *
+     * @param livingEntity the living entity
+     * @return {@code true} if the living entity can use the item, {@code false} otherwise
+     */
+    boolean canUse(LivingEntity livingEntity);
 
     /**
      * Checks if the item is currently equipped.

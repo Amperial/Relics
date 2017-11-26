@@ -11,7 +11,7 @@
 package com.herocraftonline.items.equipment;
 
 import com.herocraftonline.items.api.ItemPlugin;
-import com.herocraftonline.items.api.equipment.PlayerEquipment;
+import com.herocraftonline.items.api.equipment.BaseEquipment;
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.ItemType;
 import com.herocraftonline.items.api.storage.config.DefaultConfig;
@@ -20,120 +20,9 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
-final class DefaultPlayerEquipment implements PlayerEquipment {
+public final class DefaultEquipment extends BaseEquipment {
 
-    private final ItemPlugin plugin;
-    private final Map<String, Slot> slotsByName;
-    private final Map<Integer, Slot> slotsByInventoryIndex;
-
-    DefaultPlayerEquipment(ItemPlugin plugin) {
-        this.plugin = plugin;
-        this.slotsByName = new HashMap<>();
-        this.slotsByInventoryIndex = new HashMap<>();
-        loadConfig();
-    }
-
-    @Override
-    public boolean hasSlot(String name) {
-        return slotsByName.containsKey(name.toLowerCase());
-    }
-
-    @Override
-    public boolean isSlot(int inventoryIndex) {
-        return slotsByInventoryIndex.containsKey(inventoryIndex);
-    }
-
-    @Override
-    public Slot getSlot(String name) {
-        return slotsByName.get(name.toLowerCase());
-    }
-
-    @Override
-    public Collection<? extends Slot> getSlots() {
-        return Collections.unmodifiableCollection(slotsByName.values());
-    }
-
-    private void loadConfig() {
-        FileConfiguration config = plugin.getConfigManager().getConfig(DefaultConfig.EQUIPMENT);
-        List<Map<?, ?>> slotMaps = config.getMapList("default-player-equipment");
-        for (Map<?, ?> slotMap : slotMaps) {
-
-            Object obj = null;
-            String name = null;
-            ItemType itemType = null;
-            int inventoryIndex = -1;
-
-            obj = slotMap.get("name");
-            if (obj instanceof String) {
-                name = (String) obj;
-            } else {
-                continue;
-            }
-
-            obj = slotMap.get("item-type");
-            if (obj instanceof String) {
-                String itemTypeName = (String) obj;
-                if (plugin.getItemManager().hasItemType(itemTypeName)) {
-                    itemType = plugin.getItemManager().getItemType(itemTypeName);
-                } else {
-                    continue;
-                }
-            } else {
-                continue;
-            }
-
-            obj = slotMap.get("inventory-index");
-            if (obj instanceof Integer) {
-                inventoryIndex = (Integer) obj;
-                if (inventoryIndex < 0 || inventoryIndex > 40) {
-                    continue;
-                }
-            } else {
-                continue;
-            }
-
-            if (slotsByName.containsKey(name.toLowerCase()) || slotsByInventoryIndex.containsKey(inventoryIndex)) {
-                continue;
-            }
-
-            Slot slot = new Slot(name, itemType, inventoryIndex);
-            slotsByName.put(name.toLowerCase(), slot);
-            slotsByInventoryIndex.put(inventoryIndex, slot);
-        }
-    }
-
-    public class Slot implements PlayerEquipment.Slot {
-
-        private final String name;
-        private final ItemType itemType;
-        private final int inventoryIndex;
-
-        public Slot(String name, ItemType itemType, int inventoryIndex) {
-            this.name = name;
-            this.itemType = itemType;
-            this.inventoryIndex = inventoryIndex;
-        }
-
-        @Override
-        public String getName() {
-            return name;
-        }
-
-        @Override
-        public boolean canHoldItem(ItemType itemType) {
-            return itemType != null && itemType.isType(this.itemType);
-        }
-
-        @Override
-        public boolean hasItem(Player equipmentHolder) {
-            return DefaultPlayerEquipment.this.plugin.getItemManager().isItem(equipmentHolder.getInventory().getItem(inventoryIndex));
-        }
-
-        @Override
-        public Item getItem(Player equipmentHolder) {
-            return DefaultPlayerEquipment.this.plugin.getItemManager().getItem(equipmentHolder.getInventory().getItem(inventoryIndex)).orElse(null);
-        }
-    }
+}
 
 //    private final ItemPlugin plugin;
 //    private final UUID playerId;
@@ -413,5 +302,4 @@ final class DefaultPlayerEquipment implements PlayerEquipment {
 //        // Save player config
 //        playerConfig.saveConfig();
 //    }
-
-}
+//}
