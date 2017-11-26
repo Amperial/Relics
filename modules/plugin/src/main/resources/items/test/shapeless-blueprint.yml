@@ -1,4 +1,4 @@
-name: "&cShapeless Transmution"
+name: "&6Gold Transmutation"
 material: "MAP"
 item-type: "blueprint"
 attributes:
@@ -7,11 +7,10 @@ attributes:
     recipe:
       type: "shapeless"
       ingredients:
-      - reagent: "transmuter"
+      - reagent: "Transmutation Catalyst"
         amount: 1
       - material: "IRON_INGOT"
         amount: 2
       result:
-        name: "Transmuted Gold Ingot"
         material: "GOLD_INGOT"
-        item-type: "resource"
+        amount: 1

@@ -17,39 +17,38 @@ import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribut
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Blueprint;
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Recipe;
+import com.herocraftonline.items.api.item.attribute.attributes.crafting.Recipe.RecipeFactory;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.crafting.CraftingMenu;
-import com.herocraftonline.items.crafting.RecipeRenderer;
-import com.herocraftonline.items.crafting.ShapedRecipe;
-import com.herocraftonline.items.crafting.ShapelessRecipe;
+import com.herocraftonline.items.crafting.recipe.RecipeRenderer;
+import com.herocraftonline.items.crafting.recipe.ShapedRecipe;
+import com.herocraftonline.items.crafting.recipe.ShapelessRecipe;
 import com.herocraftonline.items.item.DefaultAttribute;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
-
-import java.util.Optional;
 
 public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blueprint, Clickable {
 
     private final Recipe recipe;
     private short mapId;
 
-    public BlueprintAttribute(String name, Recipe recipe, short mapId) {
+    public BlueprintAttribute(String name, String ingredientsText, String resultText, Recipe recipe, short mapId) {
         super(name, DefaultAttribute.BLUEPRINT);
 
         this.recipe = recipe;
         this.mapId = mapId;
 
         setLore(((lore, prefix) -> {
-            String displayName = recipe.getResult().getItemMeta().getDisplayName();
-            if (displayName == null) {
-                displayName = recipe.getResult().getType().toString();
-            }
-            lore.add(prefix + "Blueprint: " + displayName);
+            lore.add(prefix + ingredientsText);
+            recipe.getIngredientList().forEach(ingredient -> lore.add(prefix + ingredient));
+            lore.add(prefix + resultText);
+            lore.add(prefix + recipe.getResult());
         }));
     }
 
@@ -83,7 +82,7 @@ public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blue
 
     @Override
     public void onClick(PlayerInteractEvent event, Item item) {
-        CraftingMenu.open(event.getPlayer(), getRecipe());
+        CraftingMenu.open(event.getPlayer(), getRecipe(), event.getItem());
     }
 
     @Override
@@ -96,11 +95,20 @@ public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blue
     }
 
     public static class Factory extends BaseAttributeFactory<Blueprint> {
-        Recipe.RecipeFactory<ShapedRecipe> shapedRecipeFactory = new ShapedRecipe.Factory();
-        Recipe.RecipeFactory<ShapelessRecipe> shapelessRecipeFactory = new ShapelessRecipe.Factory();
+        private final RecipeFactory<ShapedRecipe> shapedRecipeFactory;
+        private final RecipeFactory<ShapelessRecipe> shapelessRecipeFactory;
+        private final String ingredientsText;
+        private final String resultText;
 
         public Factory(ItemPlugin plugin) {
             super(plugin);
+
+            shapedRecipeFactory = new ShapedRecipe.Factory(plugin);
+            shapelessRecipeFactory = new ShapelessRecipe.Factory(plugin);
+
+            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttribute.BLUEPRINT);
+            ingredientsText = ChatColor.translateAlternateColorCodes('&', config.getString("ingredients", "&aCrafting Recipe:"));
+            resultText = ChatColor.translateAlternateColorCodes('&', config.getString("result", "&aCrafting Result:"));
         }
 
         @Override
@@ -113,7 +121,7 @@ public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blue
                 recipe = shapelessRecipeFactory.loadFromConfig(recipeConfig);
             }
 
-            return new BlueprintAttribute(name, recipe, (short) -1);
+            return new BlueprintAttribute(name, ingredientsText, resultText, recipe, (short) -1);
         }
 
         @Override
@@ -127,7 +135,7 @@ public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blue
             }
             short mapId = (short) compound.getInt("mapId");
 
-            return new BlueprintAttribute(name, recipe, mapId);
+            return new BlueprintAttribute(name, ingredientsText, resultText, recipe, mapId);
         }
     }
 

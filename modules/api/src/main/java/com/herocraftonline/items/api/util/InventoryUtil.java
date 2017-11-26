@@ -264,6 +264,11 @@ public final class InventoryUtil {
         public int hashCode() {
             return Objects.hash(getX(), getY());
         }
+
+        @Override
+        public String toString() {
+            return "(" + getX() + "," + getY() + ")";
+        }
     }
 
     /**

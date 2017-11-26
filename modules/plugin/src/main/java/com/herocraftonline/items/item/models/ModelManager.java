@@ -97,9 +97,9 @@ public class ModelManager implements com.herocraftonline.items.api.item.model.Mo
 
                 try {
                     // Attempt to save model assets located in the plugin
-                    plugin.saveResource("pack/models/" + path + ".json", false);
+                    plugin.saveResource("pack/models/" + path + ".json");
                     for (String asset : assets) {
-                        plugin.saveResource("pack/" + asset, false);
+                        plugin.saveResource("pack/" + asset);
                     }
                 } catch (Exception e) {
                     // Model assets not found in plugin
@@ -136,10 +136,10 @@ public class ModelManager implements com.herocraftonline.items.api.item.model.Mo
 
     private void generatePack(Map<Material, List<Model>> materialModels, Map<Material, String> itemModels, Map<Material, String> blockModels) {
         // Save base pack files and example input pack
-        plugin.saveResource("pack/models/base/v1_10_R1.zip", false);
-        plugin.saveResource("pack/models/base/v1_11_R1.zip", false);
-        plugin.saveResource("pack/models/base/v1_12_R1.zip", false);
-        plugin.saveResource("pack/input.zip", false);
+        plugin.saveResource("pack/models/base/v1_10_R1.zip");
+        plugin.saveResource("pack/models/base/v1_11_R1.zip");
+        plugin.saveResource("pack/models/base/v1_12_R1.zip");
+        plugin.saveResource("pack/input.zip");
 
         try {
             // Check base, input, and output resource pack files

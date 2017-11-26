@@ -61,7 +61,7 @@ public class ConfigManager {
         NESTING_DEPTH = plugin.getConfig().getInt("config.nesting-depth", 0);
 
         // Register custom configs
-        registerCustomConfigs(EnumSet.allOf(DefaultConfig.class), plugin);
+        registerCustomConfigs(EnumSet.allOf(DefaultConfig.class), plugin, true);
 
         // Create config transforms
         replacerTransform = new ReplacerTransform(plugin);
@@ -75,19 +75,21 @@ public class ConfigManager {
      *
      * @param customConfigs the custom configs to register
      * @param plugin        the plugin containing the default resources for the configs
+     * @param createEmpty   whether an empty config file should be generated if not found in plugin resources
      */
-    public void registerCustomConfigs(EnumSet<? extends Config> customConfigs, Plugin plugin) {
-        customConfigs.forEach(config -> registerCustomConfig(config, plugin));
+    public void registerCustomConfigs(EnumSet<? extends Config> customConfigs, Plugin plugin, boolean createEmpty) {
+        customConfigs.forEach(config -> registerCustomConfig(config, plugin, createEmpty));
     }
 
     /**
      * Adds a config accessor for a custom config.
      *
-     * @param config the custom config to register
-     * @param plugin the plugin containing the default resources for the config
+     * @param config      the custom config to register
+     * @param plugin      the plugin containing the default resources for the config
+     * @param createEmpty whether an empty config file should be generated if not found in plugin resources
      */
-    public void registerCustomConfig(Config config, Plugin plugin) {
-        addConfigAccessor(new ConfigAccessor(plugin, config, this.plugin.getDataFolder()).saveDefaultConfig());
+    public void registerCustomConfig(Config config, Plugin plugin, boolean createEmpty) {
+        addConfigAccessor(new ConfigAccessor(plugin, config, this.plugin.getDataFolder()).saveDefaultConfig(createEmpty));
     }
 
     /**

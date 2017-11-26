@@ -8,7 +8,7 @@
  * Unauthorized copying and/or distribution of Relics,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.crafting.ingredients.reagents;
+package com.herocraftonline.items.crafting.recipe.ingredient;
 
 import com.herocraftonline.items.Relics;
 import com.herocraftonline.items.api.item.Item;
@@ -41,7 +41,7 @@ public class RelicReagent implements ReagentType {
 
     @Override
     public String getDisplayIcon() {
-        return name.toUpperCase().replace(' ', '_');
+        return getName().toUpperCase().replace(' ', '_');
     }
 
     @Override
@@ -55,6 +55,11 @@ public class RelicReagent implements ReagentType {
     @Override
     public int hashCode() {
         return Objects.hash(getName());
+    }
+
+    @Override
+    public String toString() {
+        return getName();
     }
 
 }

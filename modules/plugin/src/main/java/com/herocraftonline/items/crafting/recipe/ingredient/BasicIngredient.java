@@ -8,7 +8,7 @@
  * Unauthorized copying and/or distribution of Relics,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.crafting.ingredients;
+package com.herocraftonline.items.crafting.recipe.ingredient;
 
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Ingredient;
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Reagent.ReagentType;
@@ -37,6 +37,11 @@ public class BasicIngredient implements Ingredient {
     @Override
     public boolean test(ItemStack itemStack) {
         return itemStack != null && getType().test(itemStack) && itemStack.getAmount() == getAmount();
+    }
+
+    @Override
+    public String toString() {
+        return getType() + " x" + getAmount();
     }
 
 }

@@ -57,7 +57,7 @@ public class CraftingMenu {
     private final Position craftingOffset;
     private final Set<Position> craftingArea;
 
-    public CraftingMenu(Recipe recipe, Inventory inventory) {
+    public CraftingMenu(Recipe recipe, Inventory inventory, ItemStack blueprint) {
         this.recipe = recipe;
         this.inventory = inventory;
 
@@ -74,9 +74,8 @@ public class CraftingMenu {
         // Get positions in crafting area
         craftingArea = craftingDimensions.getPositions(craftingOffset);
 
-        // TODO: Show the recipe here? Alternatively, show placeholder ingredients in crafting area
-        // setItem(BLUEPRINT, new ItemStack(Material.PAPER));
-        setItem(BLUEPRINT, FILL);
+        // Set blueprint item for player to reference when crafting
+        setItem(BLUEPRINT, blueprint == null ? FILL : blueprint);
 
         // Fill remaining positions
         OUTER.forEach(position -> {
@@ -168,7 +167,7 @@ public class CraftingMenu {
         Map<Position, ItemStack> input = filled.stream().collect(Collectors.toMap(position -> position.subtract(offset), position -> getItem(position).orElse(null)));
 
         // Update crafting output
-        setItem(OUTPUT, recipe.test(input) ? recipe.getResult() : null);
+        setItem(OUTPUT, recipe.test(input) ? recipe.getResult().getItem() : null);
         player.updateInventory();
     }
 
@@ -201,10 +200,10 @@ public class CraftingMenu {
 
     }
 
-    public static void open(Player player, Recipe recipe) {
+    public static void open(Player player, Recipe recipe, ItemStack blueprint) {
         CraftingHolder holder = new CraftingHolder(player);
         Inventory inventory = Bukkit.createInventory(holder, OUTER.size(), "Blueprint Assembly");
-        holder.menu = new CraftingMenu(recipe, inventory);
+        holder.menu = new CraftingMenu(recipe, inventory, blueprint);
 
         player.openInventory(inventory);
     }

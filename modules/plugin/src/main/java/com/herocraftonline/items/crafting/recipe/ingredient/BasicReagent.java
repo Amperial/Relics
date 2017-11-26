@@ -8,19 +8,22 @@
  * Unauthorized copying and/or distribution of Relics,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.crafting.ingredients.reagents;
+package com.herocraftonline.items.crafting.recipe.ingredient;
 
 import com.herocraftonline.items.Relics;
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Reagent.ReagentType;
+import com.herocraftonline.items.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-public class NormalReagent implements ReagentType {
+public class BasicReagent implements ReagentType {
 
     private final Material material;
+    private final String name;
 
-    public NormalReagent(Material material) {
+    public BasicReagent(Material material) {
         this.material = material;
+        this.name = ItemUtil.getName(material);
     }
 
     public Material getMaterial() {
@@ -35,6 +38,11 @@ public class NormalReagent implements ReagentType {
     @Override
     public String getDisplayIcon() {
         return getMaterial().name();
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 
 }

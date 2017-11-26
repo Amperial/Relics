@@ -43,11 +43,4 @@ public interface Reagent extends Attribute<Reagent> {
      */
     ReagentType getReagentType();
 
-    /**
-     * Gets the reagent's display name.
-     *
-     * @return the display name
-     */
-    String getDisplayName();
-
 }

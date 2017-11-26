@@ -8,15 +8,16 @@
  * Unauthorized copying and/or distribution of Relics,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.crafting;
+package com.herocraftonline.items.crafting.recipe;
 
 import com.herocraftonline.items.Relics;
+import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Ingredient;
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Recipe;
+import com.herocraftonline.items.api.item.attribute.attributes.crafting.Result;
 import org.bukkit.map.MapCanvas;
 import org.bukkit.map.MapPalette;
 import org.bukkit.map.MapRenderer;
-import org.bukkit.plugin.Plugin;
 
 import javax.imageio.ImageIO;
 import java.awt.Image;
@@ -25,12 +26,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public abstract class RecipeRenderer<T extends Recipe> extends MapRenderer {
 
-    private static final BufferedImage EMPTY = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-    private static final BufferedImage[] NUMBER = new BufferedImage[10];
-    private static final Map<String, BufferedImage> ICONS = new HashMap<>();
+    private static Map<String, BufferedImage> icons = new HashMap<>();
+    private static BufferedImage[] numbers = new BufferedImage[10];
+    private static BufferedImage unknown = null;
 
     private T recipe;
 
@@ -43,40 +45,54 @@ public abstract class RecipeRenderer<T extends Recipe> extends MapRenderer {
     }
 
     protected void drawIngredient(MapCanvas canvas, int x, int y, Ingredient ingredient) {
-        if (ingredient == null) {
-            return;
+        // Load required icons
+        if (unknown == null) {
+            unknown = loadIcon("UNKNOWN").orElse(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
+            BufferedImage number = loadIcon("NUMBERS").orElse(new BufferedImage(50, 7, BufferedImage.TYPE_INT_ARGB));
+            for (int i = 0; i < 10; i++) {
+                numbers[i] = number.getSubimage(i * 5, 0, 5, 7);
+            }
         }
 
         // Draw slot background image
-        drawImage(canvas, x, y, getIcon("SLOT", true));
+        drawImage(canvas, x, y, getIcon("SLOT"));
 
-        // Draw reagent icon
-        drawImage(canvas, x + 2, y + 2, getIcon(ingredient.getType().getDisplayIcon(), false));
+        if (ingredient != null) {
+            // Draw reagent icon
+            drawImage(canvas, x + 2, y + 2, getIcon(ingredient.getType().getDisplayIcon()));
 
-        // Draw ingredient amount
-        drawNumber(canvas, x + 13, y + 11, ingredient.getAmount());
+            // Draw ingredient amount
+            drawNumber(canvas, x + 13, y + 11, ingredient.getAmount());
+        }
+    }
+
+    protected void drawResult(MapCanvas canvas, int x, int y, Result result, boolean arrow) {
+        // Draw arrow image
+        if (arrow) {
+            drawImage(canvas, x, y + 2, getIcon("RESULT"));
+            x += 18;
+        }
+
+        // Draw slot background image
+        drawImage(canvas, x, y, getIcon("SLOT"));
+
+        // Draw result material icon
+        drawImage(canvas, x + 2, y + 2, getIcon(result.getDisplayIcon()));
+
+        // Draw result amount
+        drawNumber(canvas, x + 13, y + 11, result.getItem().getAmount());
     }
 
     private void drawNumber(MapCanvas canvas, int x, int y, int number) {
-        if (number < 2 || number > 128) {
+        if (number < 1 || number > 128) {
             return;
         }
 
-        // Make sure number images are loaded
-        if (!ICONS.containsKey("NUMBERS")) {
-            BufferedImage numbers = getIcon("NUMBERS", true);
-            if (numbers == EMPTY) {
-                return;
-            }
-            for (int i = 0; i < 10; i++) {
-                NUMBER[i] = numbers.getSubimage(i * 5, 0, 5, 7);
-            }
-        }
         // Draw each digit of the number
         while (number > 0) {
             int digit = number % 10;
             number = number / 10;
-            drawImage(canvas, x, y, NUMBER[digit]);
+            drawImage(canvas, x, y, numbers[digit]);
             x -= 6;
         }
     }
@@ -96,33 +112,29 @@ public abstract class RecipeRenderer<T extends Recipe> extends MapRenderer {
         }
     }
 
-    private BufferedImage getIcon(String name, boolean replace) {
-        return ICONS.computeIfAbsent(name, icon -> loadIcon(icon, replace));
+    private BufferedImage getIcon(String name) {
+        return icons.computeIfAbsent(name, icon -> loadIcon(icon).orElse(unknown));
     }
 
-    private BufferedImage loadIcon(String icon, boolean replace) {
+    private Optional<BufferedImage> loadIcon(String icon) {
         String fileName = "pack/icons/" + icon + ".png";
 
         // Save icon from plugin files
-        Plugin plugin = Relics.instance();
-        try {
-            plugin.saveResource(fileName, replace);
-        } catch (IllegalArgumentException e) {
-            // File doesn't exist in plugin
-        }
+        ItemPlugin plugin = Relics.instance();
+        plugin.saveResource(fileName);
 
         // Make sure image exists. If not, use default icon
         File image = new File(plugin.getDataFolder(), fileName);
         if (!image.exists()) {
-            return EMPTY;
+            return Optional.empty();
         }
 
         // Load image from file
         try {
-            return ImageIO.read(image);
+            return Optional.of(ImageIO.read(image));
         } catch (IOException e) {
             e.printStackTrace();
-            return EMPTY;
+            return Optional.empty();
         }
     }
 

@@ -38,6 +38,7 @@ import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.Optional;
 
 /**
@@ -200,6 +201,17 @@ public class Relics extends JavaPlugin implements ItemPlugin {
     @Override
     public Optional<EffectManager> getEffectManager() {
         return effectManager;
+    }
+
+    @Override
+    public void saveResource(String resourcePath) {
+        if (!(new File(getDataFolder(), resourcePath).exists())) {
+            try {
+                saveResource(resourcePath, false);
+            } catch (IllegalArgumentException e) {
+                // Ignore missing resources
+            }
+        }
     }
 
     /**

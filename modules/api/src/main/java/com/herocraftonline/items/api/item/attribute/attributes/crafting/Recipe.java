@@ -17,6 +17,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapRenderer;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -29,11 +30,11 @@ import java.util.function.Predicate;
 public interface Recipe extends Predicate<Map<Position, ItemStack>> {
 
     /**
-     * Gets the resulting item of crafting the recipe.
+     * Gets the result of crafting the recipe.
      *
      * @return the recipe's result
      */
-    ItemStack getResult();
+    Result getResult();
 
     /**
      * Gets the required inventory dimensions to craft the recipe.
@@ -48,6 +49,13 @@ public interface Recipe extends Predicate<Map<Position, ItemStack>> {
      * @return the recipe's map renderer
      */
     Optional<MapRenderer> getMapRenderer();
+
+    /**
+     * Gets a string list representing the recipe's ingredients.
+     *
+     * @return the recipe's ingredient list
+     */
+    List<String> getIngredientList();
 
     void saveToNBT(NBTTagCompound compound);
 

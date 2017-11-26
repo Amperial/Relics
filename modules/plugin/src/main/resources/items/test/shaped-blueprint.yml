@@ -1,4 +1,4 @@
-name: "&cShaped Transmution"
+name: "&6Gold Transmutation"
 material: "MAP"
 item-type: "blueprint"
 attributes:
@@ -11,7 +11,7 @@ attributes:
         height: 1
       ingredients:
       - slot: 0
-        reagent: "transmuter"
+        reagent: "Transmutation Catalyst"
         amount: 1
       - slot: 1
         material: "IRON_INGOT"

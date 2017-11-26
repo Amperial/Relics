@@ -403,7 +403,7 @@ public class CustomItem implements Item {
             addStatGroup(lore, StatType.Position.TOP);
         }
         // Add lore of all attributes
-        attributes.getLore().addTo(lore, "");
+        attributes.getLore().addTo(lore, ChatColor.GRAY.toString());
         // Add stats to bottom of lore
         if (attributes.hasAttributeDeep(StatAttribute.class)) {
             lore.add("");

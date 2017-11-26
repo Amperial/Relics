@@ -15,22 +15,26 @@ import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribut
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Reagent;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
-import com.herocraftonline.items.crafting.ingredients.reagents.RelicReagent;
+import com.herocraftonline.items.crafting.recipe.ingredient.RelicReagent;
 import com.herocraftonline.items.item.DefaultAttribute;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 
 public class ReagentAttribute extends BaseAttribute<Reagent> implements Reagent {
 
     private final RelicReagent reagent;
-    private final String reagentName;
+    private final boolean showLore;
 
-    public ReagentAttribute(String name, RelicReagent reagent, String reagentName) {
+    public ReagentAttribute(String name, String text, boolean showLore, RelicReagent reagent) {
         super(name, DefaultAttribute.REAGENT);
 
         this.reagent = reagent;
-        this.reagentName = reagentName;
+        this.showLore = showLore;
 
-        setLore(((lore, prefix) -> lore.add(prefix + "Crafting Reagent: " + getDisplayName()))); // TODO configurable
+        if (showLore) {
+            setLore((lore, prefix) -> lore.add(prefix + text));
+        }
     }
 
     @Override
@@ -39,36 +43,40 @@ public class ReagentAttribute extends BaseAttribute<Reagent> implements Reagent 
     }
 
     @Override
-    public String getDisplayName() {
-        return reagentName;
-    }
-
-    @Override
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
         compound.setString("reagent-type", getReagentType().getName());
-        compound.setString("reagent-name", getDisplayName());
+        compound.setBoolean("lore", showLore);
     }
 
     public static class Factory extends BaseAttributeFactory<Reagent> {
+        private final String text;
+
         public Factory(ItemPlugin plugin) {
             super(plugin);
+
+            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttribute.REAGENT);
+            text = ChatColor.translateAlternateColorCodes('&', config.getString("text", "&aCrafting Ingredient"));
         }
 
         @Override
         public Reagent loadFromConfig(String name, ConfigurationSection config) {
+            // Load reagent type, name, and whether to show lore
             String reagent = config.getString("reagent-type");
-            String reagentName = config.getString("reagent-name");
+            boolean lore = config.getBoolean("lore", true);
 
-            return new ReagentAttribute(name, new RelicReagent(reagent), reagentName);
+            // Create reagent attribute
+            return new ReagentAttribute(name, text, lore, new RelicReagent(reagent));
         }
 
         @Override
         public Reagent loadFromNBT(String name, NBTTagCompound compound) {
+            // Load reagent type, name, and whether to show lore
             String reagent = compound.getString("reagent-type");
-            String reagentName = compound.getString("reagent-name");
+            boolean lore = compound.getBoolean("lore");
 
-            return new ReagentAttribute(name, new RelicReagent(reagent), reagentName);
+            // Create reagent attribute
+            return new ReagentAttribute(name, text, lore, new RelicReagent(reagent));
         }
     }
 

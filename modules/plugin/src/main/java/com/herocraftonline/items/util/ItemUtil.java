@@ -12,7 +12,13 @@ package com.herocraftonline.items.util;
 
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.nms.NMSHandler;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Utility methods for items.
@@ -25,9 +31,34 @@ public final class ItemUtil {
     }
 
     /**
+     * Gets the display name of a given item stack.
+     *
+     * @param item the item stack
+     * @return the item stack's display name
+     */
+    public static String getName(ItemStack item) {
+        ItemMeta itemMeta = item.getItemMeta();
+        return itemMeta.hasDisplayName() ? itemMeta.getDisplayName() : getName(item.getType());
+    }
+
+    /**
+     * Gets the display name of a given material.
+     *
+     * @param material the material
+     * @return the material's display name
+     */
+    public static String getName(Material material) {
+        List<String> parts = new ArrayList<>();
+        for (String s : material.name().split("_")) {
+            parts.add(s.length() > 1 ? s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase() : s.toUpperCase());
+        }
+        return StringUtils.join(parts, ' ');
+    }
+
+    /**
      * Serializes the given item into a string.
      *
-     * @param item the item object
+     * @param item the item
      * @return the serialized item string
      */
     public static String serialize(Item item) {
@@ -37,7 +68,7 @@ public final class ItemUtil {
     /**
      * Serializes the given item stack into a string.
      *
-     * @param itemStack the item stack object
+     * @param itemStack the item stack
      * @return the serialized item string
      */
     public static String serialize(ItemStack itemStack) {
