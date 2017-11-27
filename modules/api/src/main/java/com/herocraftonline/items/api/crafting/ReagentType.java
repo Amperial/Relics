@@ -8,26 +8,21 @@
  * Unauthorized copying and/or distribution of Relics API,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.item.attribute.attributes.crafting;
+package com.herocraftonline.items.api.crafting;
 
 import org.bukkit.inventory.ItemStack;
 
+import java.util.function.Predicate;
+
 /**
- * Defines a crafting result.
+ * Represents a type of reagant for use in crafting recipes.
  *
  * @author Austin Payne
  */
-public interface Result {
+public interface ReagentType extends Predicate<ItemStack> {
 
     /**
-     * Gets the resulting item stack.
-     *
-     * @return the result item
-     */
-    ItemStack getItem();
-
-    /**
-     * Gets the result's display icon.
+     * Gets the reagent type's display icon.
      *
      * @return the display icon name
      */

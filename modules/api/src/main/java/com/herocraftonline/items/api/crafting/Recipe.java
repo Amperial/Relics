@@ -8,7 +8,7 @@
  * Unauthorized copying and/or distribution of Relics API,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.item.attribute.attributes.crafting;
+package com.herocraftonline.items.api.crafting;
 
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.api.util.InventoryUtil.Dimensions;

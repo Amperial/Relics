@@ -10,8 +10,8 @@
  */
 package com.herocraftonline.items.crafting.recipe.ingredient;
 
-import com.herocraftonline.items.api.item.attribute.attributes.crafting.Ingredient;
-import com.herocraftonline.items.api.item.attribute.attributes.crafting.Reagent.ReagentType;
+import com.herocraftonline.items.api.crafting.Ingredient;
+import com.herocraftonline.items.api.crafting.ReagentType;
 import org.bukkit.inventory.ItemStack;
 
 public class BasicIngredient implements Ingredient {

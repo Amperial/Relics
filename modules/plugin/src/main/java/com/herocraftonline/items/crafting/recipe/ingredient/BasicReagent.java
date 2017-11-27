@@ -11,7 +11,7 @@
 package com.herocraftonline.items.crafting.recipe.ingredient;
 
 import com.herocraftonline.items.Relics;
-import com.herocraftonline.items.api.item.attribute.attributes.crafting.Reagent.ReagentType;
+import com.herocraftonline.items.api.crafting.ReagentType;
 import com.herocraftonline.items.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

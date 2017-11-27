@@ -8,9 +8,8 @@
  * Unauthorized copying and/or distribution of Relics API,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.item.attribute.attributes.crafting;
+package com.herocraftonline.items.api.crafting;
 
-import com.herocraftonline.items.api.item.attribute.attributes.crafting.Reagent.ReagentType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.function.Predicate;

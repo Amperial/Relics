@@ -12,10 +12,10 @@ package com.herocraftonline.items.crafting.recipe;
 
 import com.herocraftonline.items.Relics;
 import com.herocraftonline.items.api.ItemPlugin;
-import com.herocraftonline.items.api.item.attribute.attributes.crafting.Ingredient;
-import com.herocraftonline.items.api.item.attribute.attributes.crafting.Reagent;
-import com.herocraftonline.items.api.item.attribute.attributes.crafting.Recipe;
-import com.herocraftonline.items.api.item.attribute.attributes.crafting.Result;
+import com.herocraftonline.items.api.crafting.Ingredient;
+import com.herocraftonline.items.api.crafting.ReagentType;
+import com.herocraftonline.items.api.crafting.Recipe;
+import com.herocraftonline.items.api.crafting.Result;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.api.storage.nbt.NBTTagList;
 import com.herocraftonline.items.api.util.InventoryUtil.Dimensions;
@@ -137,7 +137,7 @@ public class ShapedRecipe implements Recipe {
         for (Map.Entry<Position, Ingredient> ingredient : ingredients.entrySet()) {
             NBTTagCompound ingredientCompound = NBTTagCompound.create();
             ingredientCompound.setInt("slot", ingredient.getKey().getSlot(getDimensions()).getIndex());
-            Reagent.ReagentType reagentType = ingredient.getValue().getType();
+            ReagentType reagentType = ingredient.getValue().getType();
             if (reagentType instanceof RelicReagent) {
                 ingredientCompound.setString("reagent", ((RelicReagent) reagentType).getName());
             } else {
@@ -175,7 +175,7 @@ public class ShapedRecipe implements Recipe {
             for (int i = 0; i < ingredientList.size(); i++) {
                 NBTTagCompound ingredientCompound = ingredientList.getCompound(i);
                 int slot = ingredientCompound.getInt("slot");
-                Reagent.ReagentType reagentType;
+                ReagentType reagentType;
                 if (ingredientCompound.hasKey("reagent")) {
                     reagentType = new RelicReagent(ingredientCompound.getString("reagent"));
                 } else {
@@ -215,7 +215,7 @@ public class ShapedRecipe implements Recipe {
             List<Map<?, ?>> ingredients = config.getMapList("ingredients");
             for (Map<?, ?> ingredientConfig : ingredients) {
                 int slot = (Integer) ingredientConfig.get("slot");
-                Reagent.ReagentType reagentType;
+                ReagentType reagentType;
                 if (ingredientConfig.containsKey("reagent")) {
                     reagentType = new RelicReagent((String) ingredientConfig.get("reagent"));
                 } else {

@@ -12,9 +12,9 @@ package com.herocraftonline.items.crafting.recipe;
 
 import com.herocraftonline.items.Relics;
 import com.herocraftonline.items.api.ItemPlugin;
-import com.herocraftonline.items.api.item.attribute.attributes.crafting.Ingredient;
-import com.herocraftonline.items.api.item.attribute.attributes.crafting.Recipe;
-import com.herocraftonline.items.api.item.attribute.attributes.crafting.Result;
+import com.herocraftonline.items.api.crafting.Ingredient;
+import com.herocraftonline.items.api.crafting.Recipe;
+import com.herocraftonline.items.api.crafting.Result;
 import org.bukkit.map.MapCanvas;
 import org.bukkit.map.MapPalette;
 import org.bukkit.map.MapRenderer;

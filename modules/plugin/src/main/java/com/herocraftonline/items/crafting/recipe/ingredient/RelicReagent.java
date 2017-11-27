@@ -11,10 +11,10 @@
 package com.herocraftonline.items.crafting.recipe.ingredient;
 
 import com.herocraftonline.items.Relics;
+import com.herocraftonline.items.api.crafting.ReagentType;
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Reagent;
-import com.herocraftonline.items.api.item.attribute.attributes.crafting.Reagent.ReagentType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;

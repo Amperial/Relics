@@ -171,32 +171,6 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
             return null;
         }
 
-        // Copy the args in case api is being used in a weird way
-        Object[] old = args;
-        if (args == null) {
-            args = new Object[0];
-        } else {
-            args = new Object[args.length];
-            System.arraycopy(old, 0, args, 0, args.length);
-        }
-
-        // Replace string arguments with numbers where possible
-        for (int i = 0; i < args.length; i++) {
-            if (args[i] instanceof String) {
-                try {
-                    String itemArg = (String) args[i];
-                    double value = Double.valueOf(itemArg);
-                    if (itemArg.contains(".")) {
-                        args[i] = value;
-                    } else {
-                        args[i] = (int) value;
-                    }
-                } catch (NumberFormatException e) {
-                    // Arg isn't a number
-                }
-            }
-        }
-
         // Load item from config
         Item item = factory.loadFromConfig(plugin.getConfigManager().transformConfig(config, args));
 

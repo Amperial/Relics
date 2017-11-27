@@ -11,7 +11,7 @@
 package com.herocraftonline.items.crafting;
 
 import com.herocraftonline.items.Relics;
-import com.herocraftonline.items.api.item.attribute.attributes.crafting.Recipe;
+import com.herocraftonline.items.api.crafting.Recipe;
 import com.herocraftonline.items.api.util.InventoryUtil.Dimensions;
 import com.herocraftonline.items.api.util.InventoryUtil.Position;
 import com.herocraftonline.items.api.util.InventoryUtil.Slot;

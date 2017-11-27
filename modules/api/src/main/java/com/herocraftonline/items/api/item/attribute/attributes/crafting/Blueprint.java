@@ -10,6 +10,7 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes.crafting;
 
+import com.herocraftonline.items.api.crafting.Recipe;
 import com.herocraftonline.items.api.item.attribute.Attribute;
 import org.bukkit.inventory.ItemStack;
 
