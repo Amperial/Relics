@@ -43,24 +43,24 @@ public class SoulboundAttribute extends BaseAttribute<Soulbound> implements Soul
         this.bound = bound;
     }
 
-    @Override
-    public boolean canEquip(Player player) {
-        return true;
-    }
-
-    @Override
-    public boolean onEquip(Player player) {
-        if (!isBound()) {
-            setBound(true);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean onUnEquip(Player player) {
-        return false;
-    }
+//    @Override
+//    public boolean canEquip(Player player) {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onEquip(Player player) {
+//        if (!isBound()) {
+//            setBound(true);
+//            return true;
+//        }
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean onUnEquip(Player player) {
+//        return false;
+//    }
 
     @Override
     public void saveToNBT(NBTTagCompound compound) {
