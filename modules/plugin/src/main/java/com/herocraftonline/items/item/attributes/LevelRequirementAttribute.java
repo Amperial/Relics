@@ -56,11 +56,11 @@ public class LevelRequirementAttribute extends BaseStatAttribute<LevelRequiremen
     }
 
     @Override
-    public boolean test(LivingEntity livingEntity, Item item) {
-        if (livingEntity instanceof Player) {
-            Player player = (Player) livingEntity;
-            return player.getLevel() >= item.getAttributesDeep(LevelRequirement.class).stream().mapToInt(LevelRequirement::getLevel).sum();
-        }
+    public boolean test(LivingEntity livingEntity) {
+//        if (livingEntity instanceof Player) {
+//            Player player = (Player) livingEntity;
+//            return player.getLevel() >= item.getAttributesDeep(LevelRequirement.class).stream().mapToInt(LevelRequirement::getLevel).sum();
+//        }
         return true;
     }
 
