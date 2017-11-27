@@ -120,7 +120,7 @@ public class Relics extends JavaPlugin implements ItemPlugin {
         commandController = new CommandController(this);
         itemManager = new ItemManager(this);
         modelManager = new ModelManager(this);
-        equipmentManager = new EquipmentManager(this);
+        equipmentManager = new EquipmentManager();
     }
 
     private void loadListeners() {
