@@ -1,4 +1,5 @@
 items:
+- "test/identifiable"
 - "test/shaped-blueprint"
 - "test/shapeless-blueprint"
 - "test/reagent"
