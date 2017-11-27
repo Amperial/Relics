@@ -23,8 +23,8 @@ public class EquipmentChangedEvent extends EquipmentEvent {
 
     private static final HandlerList handlers = new HandlerList();
 
-    public EquipmentChangedEvent(LivingEntity equipmentHolder, Equipment equipment) {
-        super(equipmentHolder, equipment);
+    public EquipmentChangedEvent(Equipment equipment) {
+        super(equipment);
     }
 
     @Override

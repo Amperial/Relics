@@ -10,10 +10,8 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes.requirements;
 
-import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 
 /**
  * An attribute that defines a requirement for a living entity to use the item.
@@ -23,5 +21,11 @@ import org.bukkit.entity.Player;
  */
 public interface Requirement<T extends Attribute<T>> extends Attribute<T> {
 
+    /**
+     * Tests if the living entity meets the requirement of the attribute
+     *
+     * @param livingEntity the living entity
+     * @return {@code true} if the test passes, {@code false} otherwise
+     */
     default boolean test(LivingEntity livingEntity) { return true; }
 }

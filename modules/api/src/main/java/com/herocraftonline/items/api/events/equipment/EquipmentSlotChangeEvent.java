@@ -2,44 +2,66 @@ package com.herocraftonline.items.api.events.equipment;
 
 import com.herocraftonline.items.api.equipment.Equipment;
 import com.herocraftonline.items.api.item.Item;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
-public class EquipmentSlotChangeEvent extends EquipmentEvent implements Cancellable {
+public class EquipmentSlotChangeEvent extends EquipmentSlotEvent implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
-    private final String slotName;
-    private final Item currentItem;
     private Item newItem;
+    private Action action;
     private boolean cancelled;
 
-    public EquipmentSlotChangeEvent(LivingEntity equipmentHolder, Equipment equipment, String slotName, Item currentItem, Item newItem) {
-        super(equipmentHolder, equipment);
-        this.slotName = slotName;
-        this.currentItem = currentItem;
+    public EquipmentSlotChangeEvent(Equipment equipment, Equipment.Slot slot, Item newItem) {
+        super(equipment, slot);
         this.newItem = newItem;
+        if (getSlot().hasItem()) {
+            if (newItem == null) {
+                action = Action.EMPTY;
+            } else {
+                action = Action.REPLACE;
+            }
+        } else {
+            if (newItem != null) {
+                action = Action.FILL;
+            } else {
+                throw new IllegalStateException("Event call for empty slot being given a `null` item");
+            }
+        }
     }
 
-    public String getSlotName() {
-        return slotName;
+    public Action getAction() {
+        return action;
+    }
+
+    public boolean isFillingSlot() {
+        return action == Action.FILL;
+    }
+
+    public boolean isEmptyingSlot() {
+        return action == Action.EMPTY;
+    }
+
+    public boolean isReplacingItem() {
+        return action == Action.REPLACE;
     }
 
     public boolean hasCurrentItem() {
-        return currentItem != null;
-    }
-
-    public Item getCurrentItem() {
-        return currentItem;
+        return getSlot().hasItem();
     }
 
     public Item getNewItem() {
         return newItem;
     }
 
-    public void setNewItem(Item newItem) {
-        this.newItem = newItem;
+    public Item getCurrentItem() {
+        return getSlot().getItem();
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
     }
 
     @Override
@@ -56,8 +78,9 @@ public class EquipmentSlotChangeEvent extends EquipmentEvent implements Cancella
         return handlers;
     }
 
-    @Override
-    public boolean isCancelled() {
-        return cancelled;
+    public enum Action {
+        FILL,
+        EMPTY,
+        REPLACE,
     }
 }

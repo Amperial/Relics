@@ -6,16 +6,10 @@ import org.bukkit.event.Event;
 
 public abstract class EquipmentEvent extends Event {
 
-    private LivingEntity equipmentHolder;
     private Equipment equipment;
 
-    public EquipmentEvent(LivingEntity equipmentHolder, Equipment equipment) {
-        this.equipmentHolder = equipmentHolder;
+    public EquipmentEvent(Equipment equipment) {
         this.equipment = equipment;
-    }
-
-    public LivingEntity getEquipmentHolder() {
-        return equipmentHolder;
     }
 
     public Equipment getEquipment() {

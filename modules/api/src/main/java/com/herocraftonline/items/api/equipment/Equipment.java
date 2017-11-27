@@ -1,30 +1,30 @@
 package com.herocraftonline.items.api.equipment;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.events.equipment.EquipmentChangedEvent;
+import com.herocraftonline.items.api.events.equipment.EquipmentSlotChangeEvent;
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.ItemType;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-public abstract class Equipment<T extends LivingEntity> {
+public abstract class Equipment {
 
     private final ItemPlugin plugin;
-    private final T holder;
+    private final LivingEntity holder;
     private final Map<String, Slot> slots;
 
-    public Equipment(ItemPlugin plugin, T holder) {
+    public Equipment(ItemPlugin plugin, LivingEntity holder) {
         this.plugin = plugin;
         this.holder = holder;
         this.slots = new HashMap<>();
     }
 
-    public T getHolder() {
+    public LivingEntity getHolder() {
         return holder;
     }
 
@@ -41,72 +41,52 @@ public abstract class Equipment<T extends LivingEntity> {
         return Collections.unmodifiableCollection(slots.values());
     }
 
-    protected Stream<Slot> getSlotStream() {
+    public void forEachSlot(Consumer<Slot> consumer) {
+        slots.values().forEach(consumer);
+    }
+
+    public Stream<Slot> getSlotStream() {
         return slots.values().stream();
     }
 
-    public Collection<Slot> getSlotsForType(ItemType itemType) {
-        if (itemType == null) return Collections.emptyList();
+    public Optional<Slot> findSlotWithItem(Item item) {
+        if (item == null) return Optional.empty();
         return getSlotStream()
-                .filter(slot -> slot.canContainType(itemType))
-                .collect(Collectors.toList());
-    }
-
-    public Collection<Slot> getSlotsForItem(Item item) {
-        if (item == null) return Collections.emptyList();
-        return getSlotStream()
-                .filter(slot -> slot.canContainItem(item))
-                .collect(Collectors.toList());
-    }
-
-    public Collection<Slot> getFilledSlots() {
-        return getSlotStream()
-                .filter(Slot::hasItem)
-                .collect(Collectors.toList());
-    }
-
-    public Collection<Slot> getFilledSlotsForType(ItemType itemType) {
-        return getSlotStream()
-                .filter(slot -> slot.hasItem() && slot.canContainType(itemType))
-                .collect(Collectors.toList());
-    }
-
-    public Collection<? extends Slot> getFilledSlotsForItem(Item item) {
-        return getSlotStream()
-                .filter(slot -> slot.hasItem() && slot.canContainItem(item))
-                .collect(Collectors.toList());
-    }
-
-    public Collection<? extends Slot> getEmptySlots() {
-        return getSlotStream()
-                .filter(slot -> !slot.hasItem())
-                .collect(Collectors.toList());
-    }
-
-    public Collection<? extends Slot> getEmptySlotsForType(ItemType itemType) {
-        return getSlotStream()
-                .filter(slot -> !slot.hasItem() && slot.canContainType(itemType))
-                .collect(Collectors.toList());
-    }
-
-    public Collection<? extends Slot> getEmptySlotsForItem(Item item) {
-        return getSlotStream()
-                .filter(slot -> !slot.hasItem() && slot.canContainItem(item))
-                .collect(Collectors.toList());
+                .filter(slot -> slot.containsItem(item))
+                .findFirst();
     }
 
     public boolean isEquipped(Item item) {
-        return getSlotStream()
-                .anyMatch(slot -> slot.containsItem(item));
+        return item != null && getSlotStream().anyMatch(slot -> slot.containsItem(item));
     }
 
-    default boolean equip(Item item) {
-
+    public boolean equip(Item item) {
+        if (isEquipped(item)) return false;
+        Optional<Slot> slotOptional = getSlotStream()
+                .filter(slot -> !slot.hasItem() && slot.canContainItem(item))
+                .findFirst();
+        return slotOptional.isPresent() && slotOptional.get().setItem(item);
     }
 
-    boolean unEquip(Item item);
+    public boolean unEquip(Item item) {
+        Optional<Slot> slotOptional = findSlotWithItem(item);
+        return slotOptional.isPresent() && slotOptional.get().removeItem();
+    }
 
-    void unEquipAll();
+    public boolean unEquipAll() {
+        boolean changed = false;
+        for (Slot slot : slots.values()) {
+            if (slot.removeItemInternal()) {
+                changed = true;
+            }
+        }
+        if (changed) {
+            EquipmentChangedEvent event = new EquipmentChangedEvent(Equipment.this);
+            Bukkit.getPluginManager().callEvent(event);
+            return true;
+        }
+        return false;
+    }
 
     public final class Slot {
 
@@ -114,9 +94,14 @@ public abstract class Equipment<T extends LivingEntity> {
         private final ItemType type;
         private Item item;
 
-        public Slot(String name, ItemType type) {
+        private Slot(String name, ItemType type) {
             this.name = name;
             this.type = type;
+        }
+
+        private Slot(String name, ItemType type, Item item) {
+            this(name, type);
+            this.item = item;
         }
 
         public String getName() {
@@ -148,25 +133,44 @@ public abstract class Equipment<T extends LivingEntity> {
         }
 
         public boolean setItem(Item item) {
-            if (canContainItem(item)) {
-                this.item = item;
+            if (setItemInternal(item)) {
+                EquipmentChangedEvent event = new EquipmentChangedEvent(Equipment.this);
+                Bukkit.getPluginManager().callEvent(event);
                 return true;
+            }
+            return false;
+        }
+
+        private boolean setItemInternal(Item item) {
+            if (this.item.getId().equals(item.getId())) return false;
+            if (canContainItem(item)) {
+                EquipmentSlotChangeEvent event = new EquipmentSlotChangeEvent(Equipment.this, this, item);
+                Bukkit.getPluginManager().callEvent(event);
+                if (!event.isCancelled()) {
+                    this.item = item;
+                    return true;
+                }
             }
             return false;
         }
 
         public boolean removeItem() {
-            if (hasItem()) {
-                this.item = null;
+            if (removeItemInternal()) {
+                EquipmentChangedEvent event = new EquipmentChangedEvent(Equipment.this);
+                Bukkit.getPluginManager().callEvent(event);
                 return true;
             }
             return false;
         }
 
-        public boolean checkItem() {
-            if (hasItem() && !canContainItem(item)) {
-                removeItem();
-                return true;
+        private boolean removeItemInternal() {
+            if (hasItem()) {
+                EquipmentSlotChangeEvent event = new EquipmentSlotChangeEvent(Equipment.this, this, null);
+                Bukkit.getPluginManager().callEvent(event);
+                if (!event.isCancelled()) {
+                    item = null;
+                    return true;
+                }
             }
             return false;
         }

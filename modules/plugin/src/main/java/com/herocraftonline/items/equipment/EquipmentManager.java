@@ -12,8 +12,8 @@ package com.herocraftonline.items.equipment;
 
 import com.herocraftonline.items.api.ItemPlugin;
 
-import com.herocraftonline.items.api.equipment.PlayerEquipment;
-import org.bukkit.entity.Player;
+import com.herocraftonline.items.api.equipment.Equipment;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Listener;
 
 import java.util.HashMap;
@@ -22,36 +22,26 @@ import java.util.UUID;
 
 public class EquipmentManager implements com.herocraftonline.items.api.equipment.EquipmentManager, Listener {
 
-    private final PlayerEquipment defaultPlayerEquipment;
-    private final Map<UUID, PlayerEquipment> customPlayerEquipments;
-
-    public EquipmentManager(ItemPlugin plugin) {
-        this.defaultPlayerEquipment = new DefaultEquipment(plugin);
-        customPlayerEquipments = new HashMap<>();
+    @Override
+    public boolean hasEquipment(LivingEntity holder) {
+        return false;
     }
 
     @Override
-    public PlayerEquipment getPlayerEquipment(Player player) {
-        if (player == null) return null;
-        return customPlayerEquipments.getOrDefault(player.getUniqueId(), defaultPlayerEquipment);
+    public Equipment getEquipment(LivingEntity holder) {
+        return null;
     }
 
     @Override
-    public boolean hasCustomPlayerEquipment(Player player) {
-        return player != null && customPlayerEquipments.containsKey(player.getUniqueId());
+    public void setEquipment(LivingEntity holder, Equipment equipment) {
+
     }
 
     @Override
-    public void setCustomPlayerEquipment(Player player, PlayerEquipment playerEquipment) {
-        if (player == null || playerEquipment == null) return;
-        customPlayerEquipments.put(player.getUniqueId(), playerEquipment);
+    public void removeEquipment(LivingEntity holder) {
+
     }
 
-    @Override
-    public void setDefaultPlayerEquipment(Player player) {
-        if (player == null) return;
-        customPlayerEquipments.remove(player.getUniqueId());
-    }
 
 //    private final ItemPlugin plugin;
 //    private final Map<UUID, Equipment> equipment;

@@ -305,7 +305,7 @@ public class CustomItem implements Item {
 
     @Override
     public boolean canUse(LivingEntity livingEntity) {
-        return getAttributesDeep(Requirement.class).stream().allMatch(a -> a.test(livingEntity, this));
+        return getAttributesDeep(Requirement.class).stream().allMatch(a -> a.test(livingEntity));
     }
 
     @Override

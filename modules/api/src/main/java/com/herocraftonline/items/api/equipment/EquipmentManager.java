@@ -20,9 +20,9 @@ public interface EquipmentManager {
 
     boolean hasEquipment(LivingEntity holder);
 
-    <T extends LivingEntity> Equipment<T> getEquipment(T holder);
+    Equipment getEquipment(LivingEntity holder);
 
-    <T extends LivingEntity> void setEquipment(T holder, Equipment<T> equipment);
+    void setEquipment(LivingEntity holder, Equipment equipment);
 
     void removeEquipment(LivingEntity holder);
 }

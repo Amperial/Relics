@@ -25,6 +25,6 @@ public interface Clickable {
      * @param event the player interact event
      * @param item  the held item
      */
-    void onClick(PlayerInteractEvent event, Item item);
+    default void onClick(PlayerInteractEvent event, Item item) { }
 
 }
