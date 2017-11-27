@@ -26,12 +26,15 @@ public final class EncryptUtil {
     private static final String ALGORITHM = "AES";
     private static Key KEY;
 
-    private EncryptUtil() {
+    static {
         try {
             KEY = KeyGenerator.getInstance(ALGORITHM).generateKey();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private EncryptUtil() {
     }
 
     public static String getKey() {
@@ -47,7 +50,7 @@ public final class EncryptUtil {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, KEY);
-            return new String(cipher.doFinal(string.getBytes()));
+            return Base64.getEncoder().encodeToString(cipher.doFinal(string.getBytes()));
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -58,7 +61,7 @@ public final class EncryptUtil {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, KEY);
-            return new String(cipher.doFinal(string.getBytes()));
+            return new String(cipher.doFinal(Base64.getDecoder().decode(string)));
         } catch (Exception e) {
             e.printStackTrace();
             return null;
