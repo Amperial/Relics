@@ -20,7 +20,7 @@ import com.herocraftonline.items.item.DefaultAttribute;
 import com.herocraftonline.items.util.EncryptUtil;
 import com.herocraftonline.items.util.ItemUtil;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class IdentifiableAttribute extends BaseAttribute<Identifiable> implements Identifiable {
 
@@ -33,19 +33,14 @@ public class IdentifiableAttribute extends BaseAttribute<Identifiable> implement
     }
 
     @Override
-    public String getEncryptedItem() {
-        return encryptedItem;
-    }
-
-    @Override
-    public void onClick(PlayerInteractEvent event, Item item) {
-        // TODO: ItemStack item = ItemUtil.deserialize(EncryptUtil.decrypt(getEncryptedItem()));
+    public ItemStack identifyItem() {
+        return ItemUtil.deserialize(EncryptUtil.decrypt(encryptedItem));
     }
 
     @Override
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
-        compound.setString("item", getEncryptedItem());
+        compound.setString("item", encryptedItem);
     }
 
     public static class Factory extends BaseAttributeFactory<Identifiable> {

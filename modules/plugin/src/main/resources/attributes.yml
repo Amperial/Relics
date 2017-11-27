@@ -2,7 +2,9 @@ lore-order:
 - group
 - rarity
 - level
+- reagent
 - text
+- blueprint
 - socket
 - gem
 - durability

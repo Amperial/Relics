@@ -77,4 +77,12 @@ public interface ItemPlugin extends Plugin {
      */
     Optional<EffectManager> getEffectManager();
 
+    /**
+     * Saves a plugin resource if it exists and isn't already saved,<br>
+     * avoiding related exceptions and console output.
+     *
+     * @param resourcePath the path to the plugin resource
+     */
+    void saveResource(String resourcePath);
+
 }

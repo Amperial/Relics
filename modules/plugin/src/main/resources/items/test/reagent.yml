@@ -1,0 +1,7 @@
+name: "&4Transmutation Catalyst"
+material: "REDSTONE"
+item-type: "reagent"
+attributes:
+  reagent:
+    type: "reagent"
+    reagent-type: "Transmutation Catalyst"

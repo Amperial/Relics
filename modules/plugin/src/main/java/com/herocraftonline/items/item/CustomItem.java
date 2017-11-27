@@ -19,6 +19,7 @@ import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.attributes.Group;
 import com.herocraftonline.items.api.item.attribute.attributes.Minecraft;
 import com.herocraftonline.items.api.item.attribute.attributes.Model;
+import com.herocraftonline.items.api.item.attribute.attributes.crafting.Blueprint;
 import com.herocraftonline.items.api.item.attribute.attributes.requirements.Requirement;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatGroup;
@@ -374,11 +375,12 @@ public class CustomItem implements Item {
         // Set ItemMeta
         item.setItemMeta(meta);
 
-        // Check for model attribute
+        // Check for model or blueprint attributes
         attributes.getAttribute(Model.class).ifPresent(model -> model.apply(item));
+        attributes.getAttribute(Blueprint.class).ifPresent(blueprint -> blueprint.apply(item));
 
         // Get NBTTagCompound
-        NBTTagCompound compound = NMSHandler.getInterface().getTag(item);
+        NBTTagCompound compound = NMSHandler.instance().getTag(item);
 
         // Save item to compound
         NBTTagCompound itemTag = NBTTagCompound.create();
@@ -389,16 +391,16 @@ public class CustomItem implements Item {
         setModifiers(compound);
 
         // Set NBTTagCompound and return item
-        return NMSHandler.getInterface().setTag(item, compound).orElse(item);
+        return NMSHandler.instance().setTag(item, compound).orElse(item);
     }
 
     @Override
-    public Optional<ItemStack> updateItem(ItemStack item) {
+    public Optional<ItemStack> updateItem(final ItemStack item) {
         // Get updated item in NBT form
-        NBTTagCompound updated = NMSHandler.getInterface().toNBT(getItem());
+        NBTTagCompound updated = NMSHandler.instance().toNBT(getItem());
 
         // Update and return item
-        return NMSHandler.getInterface().replaceNBT(item, updated);
+        return NMSHandler.instance().replaceNBT(item, updated);
     }
 
     private List<String> createLore() {
@@ -410,7 +412,7 @@ public class CustomItem implements Item {
             addStatGroup(lore, StatType.Position.TOP);
         }
         // Add lore of all attributes
-        attributes.getLore().addTo(lore, "");
+        attributes.getLore().addTo(lore, ChatColor.GRAY.toString());
         // Add stats to bottom of lore
         if (attributes.hasAttributeDeep(StatAttribute.class)) {
             lore.add("");
@@ -551,7 +553,7 @@ public class CustomItem implements Item {
             }
 
             // Get ItemStack NBT
-            NBTTagCompound compound = NMSHandler.getInterface().getTag(itemStack);
+            NBTTagCompound compound = NMSHandler.instance().getTag(itemStack);
 
             // TODO: Phase out old item tag
             if (compound.hasKey(ITEM_TAG_OLD)) {
@@ -571,7 +573,7 @@ public class CustomItem implements Item {
             Item item = loadFromNBT(itemTag);
 
             // Set ItemStack NBT
-            NMSHandler.getInterface().setTag(itemStack, compound);
+            NMSHandler.instance().setTag(itemStack, compound);
 
             return item;
         }
@@ -583,7 +585,7 @@ public class CustomItem implements Item {
                 return false;
             }
 
-            NBTTagCompound compound = NMSHandler.getInterface().getTag(itemStack);
+            NBTTagCompound compound = NMSHandler.instance().getTag(itemStack);
             // TODO: Phase out old item tag
             return compound.hasKey(ITEM_TAG_OLD) || compound.hasKey(ITEM_TAG);
         }

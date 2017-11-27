@@ -27,6 +27,9 @@ types:
   - name: "Leggings"
   - name: "Boots"
 items:
+- "test/shaped-blueprint"
+- "test/shapeless-blueprint"
+- "test/reagent"
 - "test/model"
 - "test/swordofkainzo"
 - "token"

@@ -293,7 +293,7 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
     @Override
     public void registerItemConfig(ItemConfig config, Plugin plugin) {
         items.put(config.getItem().toLowerCase(), config);
-        this.plugin.getConfigManager().registerCustomConfig(config, plugin);
+        this.plugin.getConfigManager().registerCustomConfig(config, plugin, false);
     }
 
     @Override
@@ -319,7 +319,7 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
     @Override
     public void registerAttributeType(AttributeType type, Plugin plugin) {
         attributeTypes.put(type.getName().toLowerCase(), type);
-        this.plugin.getConfigManager().registerCustomConfig(type, plugin);
+        this.plugin.getConfigManager().registerCustomConfig(type, plugin, false);
     }
 
     @Override

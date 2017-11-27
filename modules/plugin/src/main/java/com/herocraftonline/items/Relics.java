@@ -26,6 +26,7 @@ import com.herocraftonline.items.commands.items.ItemInfoCommand;
 import com.herocraftonline.items.commands.misc.TokenCommand;
 import com.herocraftonline.items.commands.sockets.ExtractGemCommand;
 import com.herocraftonline.items.commands.sockets.InfuseGemCommand;
+import com.herocraftonline.items.crafting.CraftingListener;
 import com.herocraftonline.items.equipment.EquipmentManager;
 import com.herocraftonline.items.item.ItemManager;
 import com.herocraftonline.items.item.models.ModelManager;
@@ -38,6 +39,7 @@ import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.Optional;
 
 /**
@@ -46,6 +48,12 @@ import java.util.Optional;
  * @author Austin Payne
  */
 public class Relics extends JavaPlugin implements ItemPlugin {
+
+    private static ItemPlugin instance;
+
+    public static ItemPlugin instance() {
+        return instance;
+    }
 
     /**
      * Managers of the Relics plugin.
@@ -67,9 +75,12 @@ public class Relics extends JavaPlugin implements ItemPlugin {
     private ItemListener itemListener;
     private AttributeListener attributeListener;
     private MenuListener menuListener;
+    private CraftingListener craftingListener;
 
     @Override
     public void onEnable() {
+        instance = this;
+
         loadIntegrations();
         loadConfigurations();
         loadManagers();
@@ -87,7 +98,7 @@ public class Relics extends JavaPlugin implements ItemPlugin {
         }
 
         // Attempt to load NMSHandler
-        NMSHandler.getInterface();
+        NMSHandler.instance();
     }
 
     private void loadConfigurations() {
@@ -117,6 +128,7 @@ public class Relics extends JavaPlugin implements ItemPlugin {
         itemListener = new ItemListener(this);
         attributeListener = new AttributeListener(this);
         menuListener = new MenuListener(this);
+        craftingListener = new CraftingListener(this);
     }
 
     private void loadCommands() {
@@ -163,6 +175,8 @@ public class Relics extends JavaPlugin implements ItemPlugin {
     @Override
     public void onDisable() {
         // The order managers are destroyed in is not important
+        craftingListener.closeOpenMenus();
+        craftingListener = null;
         menuListener.closeOpenMenus();
         menuListener = null;
         attributeListener = null;
@@ -213,6 +227,17 @@ public class Relics extends JavaPlugin implements ItemPlugin {
     @Override
     public Optional<EffectManager> getEffectManager() {
         return effectManager;
+    }
+
+    @Override
+    public void saveResource(String resourcePath) {
+        if (!(new File(getDataFolder(), resourcePath).exists())) {
+            try {
+                saveResource(resourcePath, false);
+            } catch (IllegalArgumentException e) {
+                // Ignore missing resources
+            }
+        }
     }
 
     /**

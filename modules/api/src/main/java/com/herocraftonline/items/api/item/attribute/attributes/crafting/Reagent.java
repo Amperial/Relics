@@ -8,23 +8,23 @@
  * Unauthorized copying and/or distribution of Relics API,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.item.attribute.attributes;
+package com.herocraftonline.items.api.item.attribute.attributes.crafting;
 
+import com.herocraftonline.items.api.crafting.ReagentType;
 import com.herocraftonline.items.api.item.attribute.Attribute;
-import org.bukkit.inventory.ItemStack;
 
 /**
- * An attribute that holds an encrypted item that can be identified.
+ * An attribute that enables an item to be used as a relics crafting reagent.
  *
  * @author Austin Payne
  */
-public interface Identifiable extends Attribute<Identifiable> {
+public interface Reagent extends Attribute<Reagent> {
 
     /**
-     * Decrypts and deserializes the item stack held in the identifiable attribute.
+     * Gets the reagent's type.
      *
-     * @return the identified item stack
+     * @return the type of reagent
      */
-    ItemStack identifyItem();
+    ReagentType getReagentType();
 
 }

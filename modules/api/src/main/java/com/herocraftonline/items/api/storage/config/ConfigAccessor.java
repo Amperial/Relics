@@ -101,21 +101,23 @@ public class ConfigAccessor {
     /**
      * Generates the default config if it hasn't already been generated.
      *
+     * @param createEmpty whether an empty config file should be generated if not found in plugin resources
      * @return the config accessor
      */
-    public ConfigAccessor saveDefaultConfig() {
+    public ConfigAccessor saveDefaultConfig(boolean createEmpty) {
         if (!configFile.exists()) {
             try {
                 plugin.saveResource(configType.getFileName(), false);
             } catch (Exception resource) {
-                plugin.getLogger().log(Level.INFO, "Default config for " + configFile + " not found");
-                try {
-                    configFile.getParentFile().mkdirs();
-                    if (configFile.createNewFile()) {
-                        plugin.getLogger().log(Level.INFO, "Generated empty config for " + configFile);
+                if (createEmpty) {
+                    try {
+                        if (configFile.getParentFile().mkdirs() && configFile.createNewFile()) {
+                            plugin.getLogger().log(Level.INFO, "Generated empty config file at " + configFile);
+                        }
+                    } catch (IOException e) {
+                        plugin.getLogger().log(Level.SEVERE, "Error generating empty config file at " + configFile);
+                        e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         }

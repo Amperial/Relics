@@ -31,7 +31,7 @@ public abstract class NMSHandler {
         return activeVersion;
     }
 
-    public static NMSHandler getInterface() {
+    public static NMSHandler instance() {
         if (activeInterface == null) {
             String version = getVersion();
 
