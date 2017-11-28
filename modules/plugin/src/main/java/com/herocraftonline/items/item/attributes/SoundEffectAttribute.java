@@ -14,11 +14,16 @@ import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.effects.SoundEffect;
+import com.herocraftonline.items.api.item.trigger.TriggerResult;
+import com.herocraftonline.items.api.item.trigger.TriggerSource;
+import com.herocraftonline.items.api.item.trigger.sources.PlayerSource;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+
+import java.util.Optional;
 
 public class SoundEffectAttribute extends BaseAttribute<SoundEffect> implements SoundEffect {
 
@@ -52,17 +57,23 @@ public class SoundEffectAttribute extends BaseAttribute<SoundEffect> implements 
     }
 
     @Override
-    public void play(Player player) {
-        if (global) {
-            player.getWorld().playSound(player.getLocation(), getSound(), getVolume(), getPitch());
-        } else {
-            player.playSound(player.getLocation(), getSound(), getVolume(), getPitch());
-        }
+    public boolean canTrigger(TriggerSource source) {
+        return source.ofType(PlayerSource.class).isPresent();
     }
 
     @Override
-    public void stop(Player player) {
-        player.stopSound(getSound());
+    public TriggerResult onTrigger(TriggerSource source) {
+        Optional<PlayerSource> playerSource = source.ofType(PlayerSource.class);
+        if (playerSource.isPresent()) {
+            Player player = playerSource.get().getSource();
+            if (global) {
+                player.getWorld().playSound(player.getLocation(), getSound(), getVolume(), getPitch());
+            } else {
+                player.playSound(player.getLocation(), getSound(), getVolume(), getPitch());
+            }
+            return TriggerResult.SUCCESS;
+        }
+        return TriggerResult.NOT_TRIGGERED;
     }
 
     @Override

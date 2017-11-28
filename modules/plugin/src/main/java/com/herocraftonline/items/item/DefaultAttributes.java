@@ -20,6 +20,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.effects.*;
 import com.herocraftonline.items.api.item.attribute.attributes.gems.*;
 import com.herocraftonline.items.api.item.attribute.attributes.projectiles.*;
 import com.herocraftonline.items.api.item.attribute.attributes.requirements.*;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.PlayerInteract;
 import com.herocraftonline.items.item.attributes.*;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public final class DefaultAttributes {
     public static final AttributeType<LevelRequirement> LEVEL_REQUIREMENT = new BaseAttributeType<>("level-requirement", Integer.MIN_VALUE, LevelRequirementAttribute.Factory::new);
     public static final AttributeType<Minecraft> MINECRAFT = new BaseAttributeType<>("minecraft", Integer.MAX_VALUE, MinecraftAttribute.Factory::new);
     public static final AttributeType<Model> MODEL = new BaseAttributeType<>("model", Integer.MAX_VALUE, ModelAttribute.Factory::new);
+    public static final AttributeType<PlayerInteract> PLAYER_INTERACT = new BaseAttributeType<>("player-interact", Integer.MAX_VALUE, PlayerInteractTrigger.Factory::new);
     public static final AttributeType<PotionEffect> POTION_EFFECT = new BaseAttributeType<>("potion-effect", Integer.MAX_VALUE, PotionEffectAttribute.Factory::new);
     public static final AttributeType<Rarity> RARITY = new BaseAttributeType<>("rarity", 1, RarityAttribute.Factory::new);
     public static final AttributeType<Reagent> REAGENT = new BaseAttributeType<>("reagent", 3, ReagentAttribute.Factory::new);
@@ -64,6 +66,7 @@ public final class DefaultAttributes {
         types.add(LEVEL_REQUIREMENT);
         types.add(MINECRAFT);
         types.add(MODEL);
+        types.add(PLAYER_INTERACT);
         types.add(POTION_EFFECT);
         types.add(RARITY);
         types.add(REAGENT);

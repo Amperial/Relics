@@ -14,9 +14,15 @@ import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.attribute.attributes.Command;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
+import com.herocraftonline.items.api.item.trigger.TriggerResult;
+import com.herocraftonline.items.api.item.trigger.TriggerSource;
+import com.herocraftonline.items.api.item.trigger.sources.CommandSenderSource;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.DefaultAttributes;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+
+import java.util.Optional;
 
 public class CommandAttribute extends BaseAttribute<Command> implements Command {
 
@@ -48,6 +54,22 @@ public class CommandAttribute extends BaseAttribute<Command> implements Command 
     @Override
     public void setSendAs(Sender sender) {
         this.sender = sender;
+    }
+
+    @Override
+    public boolean canTrigger(TriggerSource source) {
+        return source.ofType(CommandSenderSource.class).isPresent();
+    }
+
+    @Override
+    public TriggerResult onTrigger(TriggerSource source) {
+        Optional<CommandSenderSource> senderSource = source.ofType(CommandSenderSource.class);
+        if (senderSource.isPresent()) {
+            CommandSender commandSender = senderSource.get().getSource();
+            execute(commandSender);
+            return TriggerResult.SUCCESS;
+        }
+        return TriggerResult.NOT_TRIGGERED;
     }
 
     @Override

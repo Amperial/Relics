@@ -11,20 +11,14 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
-import com.herocraftonline.items.api.item.Clickable;
-import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.DefaultAttributes;
-import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.util.Vector;
 
-public class LaunchEntityAttribute extends BaseAttribute<LaunchEntityAttribute> implements Clickable {
+public class LaunchEntityAttribute extends BaseAttribute<LaunchEntityAttribute> {
 
     private final EntityType entity;
     private final double velocity;
@@ -44,6 +38,7 @@ public class LaunchEntityAttribute extends BaseAttribute<LaunchEntityAttribute> 
         return velocity;
     }
 
+    /* TODO
     @Override
     public void onClick(PlayerInteractEvent event, Item item) {
         if (item.isEquipped() && event.getAction() == Action.LEFT_CLICK_AIR) {
@@ -52,6 +47,7 @@ public class LaunchEntityAttribute extends BaseAttribute<LaunchEntityAttribute> 
             loc.getWorld().spawnEntity(loc.add(direction), getEntity()).setVelocity(direction.multiply(getVelocity()));
         }
     }
+    */
 
     @Override
     public void saveToNBT(NBTTagCompound compound) {

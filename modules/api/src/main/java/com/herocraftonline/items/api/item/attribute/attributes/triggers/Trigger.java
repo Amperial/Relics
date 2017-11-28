@@ -8,24 +8,25 @@
  * Unauthorized copying and/or distribution of Relics API,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.item.attribute.attributes;
+package com.herocraftonline.items.api.item.attribute.attributes.triggers;
 
 import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.trigger.Triggerable;
-import org.bukkit.inventory.ItemStack;
+
+import java.util.Set;
 
 /**
- * An attribute that holds an encrypted item that can be identified.
+ * An triggerable attribute that is able to trigger other triggerable attributes.
  *
  * @author Austin Payne
  */
-public interface Identifiable extends Attribute<Identifiable>, Triggerable {
+public interface Trigger<T extends Attribute<T>> extends Attribute<T>, Triggerable {
 
     /**
-     * Decrypts and deserializes the item stack held in the identifiable attribute.
+     * Get the targets of the trigger, defined by their attribute names.
      *
-     * @return the identified item stack
+     * @return the trigger's target triggerable attribute names
      */
-    ItemStack identifyItem();
+    Set<String> getTargets();
 
 }

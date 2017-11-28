@@ -14,12 +14,16 @@ import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.effects.PotionEffect;
+import com.herocraftonline.items.api.item.trigger.TriggerResult;
+import com.herocraftonline.items.api.item.trigger.TriggerSource;
+import com.herocraftonline.items.api.item.trigger.sources.LivingEntitySource;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.Color;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.Optional;
 
 public class PotionEffectAttribute extends BaseAttribute<PotionEffect> implements PotionEffect {
 
@@ -37,13 +41,18 @@ public class PotionEffectAttribute extends BaseAttribute<PotionEffect> implement
     }
 
     @Override
-    public void play(Player player) {
-        getEffect().apply(player);
+    public boolean canTrigger(TriggerSource source) {
+        return source.ofType(LivingEntitySource.class).isPresent();
     }
 
     @Override
-    public void stop(Player player) {
-        player.removePotionEffect(getEffect().getType());
+    public TriggerResult onTrigger(TriggerSource source) {
+        Optional<LivingEntitySource> livingEntitySource = source.ofType(LivingEntitySource.class);
+        if (livingEntitySource.isPresent()) {
+            getEffect().apply(livingEntitySource.get().getSource());
+            return TriggerResult.SUCCESS;
+        }
+        return TriggerResult.NOT_TRIGGERED;
     }
 
     @Override

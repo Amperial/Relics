@@ -11,8 +11,6 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
-import com.herocraftonline.items.api.item.Clickable;
-import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
@@ -21,8 +19,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
@@ -31,7 +27,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class SmiteAttribute extends BaseAttribute<SmiteAttribute> implements Clickable {
+public class SmiteAttribute extends BaseAttribute<SmiteAttribute> {
 
     private static final Set<Material> AIR;
 
@@ -60,6 +56,7 @@ public class SmiteAttribute extends BaseAttribute<SmiteAttribute> implements Cli
         return gods.contains(player.getUniqueId()) || player.hasPermission(permission);
     }
 
+    /* TODO
     @Override
     public void onClick(PlayerInteractEvent event, Item item) {
         if (item.isEquipped() && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
@@ -69,6 +66,7 @@ public class SmiteAttribute extends BaseAttribute<SmiteAttribute> implements Cli
             }
         }
     }
+    */
 
     @Override
     public void saveToNBT(NBTTagCompound compound) {

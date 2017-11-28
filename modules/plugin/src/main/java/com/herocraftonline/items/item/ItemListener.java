@@ -17,6 +17,10 @@ import com.herocraftonline.items.api.item.ItemManager;
 import com.herocraftonline.items.api.item.attribute.attributes.Damage;
 import com.herocraftonline.items.api.item.attribute.attributes.Durability;
 import com.herocraftonline.items.api.item.attribute.attributes.Soulbound;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.PlayerInteract;
+import com.herocraftonline.items.api.item.trigger.TriggerResult;
+import com.herocraftonline.items.api.item.trigger.TriggerSource;
+import com.herocraftonline.items.api.item.trigger.sources.PlayerInteractSource;
 import com.herocraftonline.items.api.message.Messenger;
 import com.herocraftonline.items.api.message.RelMessage;
 import org.bukkit.entity.Entity;
@@ -87,12 +91,17 @@ public class ItemListener implements Listener {
         Optional<Item> itemOptional = plugin.getItemManager().getItem(itemStack);
         if (itemOptional.isPresent()) {
             Item item = itemOptional.get();
+            // TODO: Use refactored equipment system to handle this better...
             if (handleItemUse(event.getPlayer(), item, itemStack)) {
-                item.onClick(event, item);
+                // item.onClick(event, item);
             } else {
-                item.onClick(event, item);
+                // item.onClick(event, item);
                 event.setCancelled(true);
             }
+            TriggerSource source = new PlayerInteractSource(item, event);
+            TriggerResult result = item.getAttributes(attribute -> attribute instanceof PlayerInteract).stream()
+                    .map(attribute -> ((PlayerInteract) attribute).onTrigger(source)).reduce(TriggerResult.COMBINE).orElse(TriggerResult.NOT_TRIGGERED);
+            // TODO: Handle trigger results
         }
     }
 

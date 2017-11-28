@@ -11,25 +11,23 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
-import com.herocraftonline.items.api.item.Clickable;
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.Identifiable;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
+import com.herocraftonline.items.api.item.trigger.TriggerResult;
+import com.herocraftonline.items.api.item.trigger.TriggerSource;
+import com.herocraftonline.items.api.item.trigger.sources.HumanEntitySource;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.DefaultAttributes;
-import com.herocraftonline.items.nms.NMSHandler;
 import com.herocraftonline.items.util.EncryptUtil;
 import com.herocraftonline.items.util.ItemUtil;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Optional;
 
-public class IdentifiableAttribute extends BaseAttribute<Identifiable> implements Identifiable, Clickable {
+public class IdentifiableAttribute extends BaseAttribute<Identifiable> implements Identifiable {
 
     private final String encryptedItem;
 
@@ -50,6 +48,7 @@ public class IdentifiableAttribute extends BaseAttribute<Identifiable> implement
         compound.setString("item", encryptedItem);
     }
 
+    /* TODO
     @Override
     public void onClick(PlayerInteractEvent event, Item item) {
         if (event.getAction() == Action.LEFT_CLICK_AIR) {
@@ -63,6 +62,22 @@ public class IdentifiableAttribute extends BaseAttribute<Identifiable> implement
             updated.ifPresent(updatedItem -> player.getEquipment().setItemInMainHand(updatedItem));
             player.updateInventory();
         }
+    }
+    */
+
+    @Override
+    public boolean canTrigger(TriggerSource source) {
+        return source.ofType(HumanEntitySource.class).isPresent();
+    }
+
+    @Override
+    public TriggerResult onTrigger(TriggerSource source) {
+        Optional<HumanEntitySource> humanEntitySource = source.ofType(HumanEntitySource.class);
+        if (humanEntitySource.isPresent()) {
+            humanEntitySource.get().getSource().getInventory().addItem(identifyItem());
+            return TriggerResult.CONSUME_ITEM;
+        }
+        return TriggerResult.NOT_TRIGGERED;
     }
 
     public static class Factory extends BaseAttributeFactory<Identifiable> {
