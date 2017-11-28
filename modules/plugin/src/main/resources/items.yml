@@ -1,4 +1,9 @@
 items:
+- "firesword/blueprint"
+- "firesword/handle"
+- "firesword/crossguard"
+- "firesword/blade"
+- "firesword/sword"
 - "test/identifiable"
 - "test/shaped-blueprint"
 - "test/shapeless-blueprint"

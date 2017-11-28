@@ -1,0 +1,10 @@
+name: "&4Fire Sword Handle"
+material: "DIAMOND_SWORD"
+item-type: "reagent"
+attributes:
+  model:
+    type: model
+    model: "fire_sword_handle"
+  reagent:
+    type: "reagent"
+    reagent-type: "Fire Sword Handle"

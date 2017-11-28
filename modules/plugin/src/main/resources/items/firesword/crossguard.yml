@@ -1,0 +1,10 @@
+name: "&4Fire Sword Crossguard"
+material: "DIAMOND_SWORD"
+item-type: "reagent"
+attributes:
+  model:
+    type: model
+    model: "fire_sword_crossguard"
+  reagent:
+    type: "reagent"
+    reagent-type: "Fire Sword Crossguard"
