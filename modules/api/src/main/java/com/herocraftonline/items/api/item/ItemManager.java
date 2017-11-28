@@ -12,7 +12,6 @@ package com.herocraftonline.items.api.item;
 
 import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.AttributeType;
-import com.herocraftonline.items.api.storage.config.ItemConfig;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -129,15 +128,6 @@ public interface ItemManager {
     Item getItem(ConfigurationSection config, Object... args);
 
     /**
-     * Loads an item from an item config with the given args.
-     *
-     * @param config the item config
-     * @param args   the args
-     * @return the generated item
-     */
-    Item getItem(ItemConfig config, Object... args);
-
-    /**
      * Loads an item of a certain name with the given args.
      *
      * @param item the item name
@@ -145,45 +135,6 @@ public interface ItemManager {
      * @return the generated item
      */
     Optional<Item> getItem(String item, Object... args);
-
-    /**
-     * Checks if an item config of a certain name is registered.
-     *
-     * @param item the item name
-     * @return {@code true} if the item config is registered, else {@code false}
-     */
-    boolean hasItemConfig(String item);
-
-    /**
-     * Gets the item config of a certain name.
-     *
-     * @param item the item name
-     * @return the item config
-     */
-    ItemConfig getItemConfig(String item);
-
-    /**
-     * Get all registered item configs by name.
-     *
-     * @return the registered item configs
-     */
-    Map<String, ItemConfig> getItemConfigs();
-
-    /**
-     * Registers the given item configs.
-     *
-     * @param items  the item configs to register
-     * @param plugin the plugin with the item configs
-     */
-    void registerItemConfigs(Collection<? extends ItemConfig> items, Plugin plugin);
-
-    /**
-     * Registers the given item config.
-     *
-     * @param item   the item config to register
-     * @param plugin the plugin with the item config
-     */
-    void registerItemConfig(ItemConfig item, Plugin plugin);
 
     /**
      * Checks if the attribute type of a certain name is registered.

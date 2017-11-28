@@ -1,18 +1,18 @@
 /*
- * This file is part of Relics API.
+ * This file is part of Relics.
  *
  * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
  *
  * All Rights Reserved.
  *
- * Unauthorized copying and/or distribution of Relics API,
+ * Unauthorized copying and/or distribution of Relics,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.menu.items;
+package com.herocraftonline.items.menu.items;
 
-import com.herocraftonline.items.api.menu.ItemClickEvent;
-import com.herocraftonline.items.api.menu.ItemMenu;
-import com.herocraftonline.items.api.menu.Owner;
+import com.herocraftonline.items.menu.ItemClickEvent;
+import com.herocraftonline.items.menu.ItemMenu;
+import com.herocraftonline.items.menu.Owner;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

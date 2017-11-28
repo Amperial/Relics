@@ -17,7 +17,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.requirements.Leve
 import com.herocraftonline.items.api.item.attribute.attributes.stats.BaseStatAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatSpecifier;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
-import com.herocraftonline.items.item.DefaultAttribute;
+import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -28,7 +28,7 @@ public class LevelRequirementAttribute extends BaseStatAttribute<LevelRequiremen
     private int level;
 
     public LevelRequirementAttribute(String name, LevelRequirementStatType statType, int level) {
-        super(name, DefaultAttribute.LEVEL_REQUIREMENT, statType);
+        super(name, DefaultAttributes.LEVEL_REQUIREMENT, statType);
 
         this.level = level;
     }
@@ -80,7 +80,7 @@ public class LevelRequirementAttribute extends BaseStatAttribute<LevelRequiremen
         public Factory(ItemPlugin plugin) {
             super(plugin);
 
-            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttribute.LEVEL_REQUIREMENT);
+            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttributes.LEVEL_REQUIREMENT);
             String text = ChatColor.translateAlternateColorCodes('&', config.getString("text", "&eLevel Requirement:"));
             statType = new LevelRequirementStatType(text);
         }

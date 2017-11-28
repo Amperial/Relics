@@ -16,7 +16,7 @@ import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
-import com.herocraftonline.items.item.DefaultAttribute;
+import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -45,7 +45,7 @@ public class SmiteAttribute extends BaseAttribute<SmiteAttribute> implements Cli
     private final int range;
 
     public SmiteAttribute(String name, Permission permission, Set<UUID> gods, int range) {
-        super(name, DefaultAttribute.SMITE);
+        super(name, DefaultAttributes.SMITE);
 
         this.permission = permission;
         this.gods = gods;
@@ -83,7 +83,7 @@ public class SmiteAttribute extends BaseAttribute<SmiteAttribute> implements Cli
         public Factory(ItemPlugin plugin) {
             super(plugin);
 
-            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttribute.SMITE);
+            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttributes.SMITE);
             gods.addAll(config.getStringList("gods").stream().map(UUID::fromString).collect(Collectors.toList()));
         }
 

@@ -20,7 +20,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribut
 import com.herocraftonline.items.api.item.attribute.attributes.gems.Gem;
 import com.herocraftonline.items.api.item.attribute.attributes.gems.SocketColor;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
-import com.herocraftonline.items.item.DefaultAttribute;
+import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -37,7 +37,7 @@ public class GemAttribute extends BaseAttribute<Gem> implements Gem {
     private Item item;
 
     public GemAttribute(String name, String displayName, SocketColor color, Group attributes) {
-        super(name, DefaultAttribute.GEM);
+        super(name, DefaultAttributes.GEM);
         this.displayName = displayName;
         this.color = color;
         this.attributes = attributes;
@@ -262,7 +262,7 @@ public class GemAttribute extends BaseAttribute<Gem> implements Gem {
             // Load name, color, and attributes
             String displayName = ChatColor.translateAlternateColorCodes('&', config.getString("name", "?"));
             SocketColor color = SocketColor.fromName(config.getString("color", "yellow"));
-            Group attributes = DefaultAttribute.GROUP.getFactory().loadFromConfig("attributes", config);
+            Group attributes = DefaultAttributes.GROUP.getFactory().loadFromConfig("attributes", config);
 
             // Create gem
             Gem gem = new GemAttribute(name, displayName, color, attributes);

@@ -10,14 +10,18 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes.projectiles;
 
-import com.herocraftonline.items.api.item.attribute.ValueAttribute;
+import com.herocraftonline.items.api.item.attribute.Attribute;
 
 /**
  * An attribute that allows setting or multiplying the velocity of a projectile shot from a bow.
  *
  * @author Austin Payne
  */
-public interface Velocity extends ValueAttribute<Velocity, Double> {
+public interface Velocity extends Attribute<Velocity> {
+
+    double getValue();
+
+    void setValue(double value);
 
     /**
      * Checks if the projectile velocity should be multiplied or set.

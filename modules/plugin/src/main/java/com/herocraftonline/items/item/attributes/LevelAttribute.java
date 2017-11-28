@@ -15,7 +15,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.Level;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
-import com.herocraftonline.items.item.DefaultAttribute;
+import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -25,37 +25,27 @@ public class LevelAttribute extends BaseAttribute<Level> implements Level {
     private int level;
 
     public LevelAttribute(String name, String text, int level) {
-        super(name, DefaultAttribute.LEVEL);
+        super(name, DefaultAttributes.LEVEL);
 
         this.level = level;
 
-        setLore((lore, prefix) -> lore.add(prefix + text + " " + getValue()));
+        setLore((lore, prefix) -> lore.add(prefix + text + " " + getLevel()));
     }
 
     @Override
-    public Integer getValue() {
+    public int getLevel() {
         return level;
     }
 
     @Override
-    public void setValue(Integer value) {
-        level = value;
-    }
-
-    @Override
-    public int compareTo(Level o) {
-        return getValue() - o.getValue();
-    }
-
-    @Override
-    public Integer sum(Integer value) {
-        return getValue() + value;
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     @Override
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
-        compound.setInt("level", getValue());
+        compound.setInt("level", getLevel());
     }
 
     public static class Factory extends BaseAttributeFactory<Level> {
@@ -64,7 +54,7 @@ public class LevelAttribute extends BaseAttribute<Level> implements Level {
         public Factory(ItemPlugin plugin) {
             super(plugin);
 
-            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttribute.LEVEL);
+            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttributes.LEVEL);
             text = ChatColor.translateAlternateColorCodes('&', config.getString("text", "&eItem Level"));
         }
 

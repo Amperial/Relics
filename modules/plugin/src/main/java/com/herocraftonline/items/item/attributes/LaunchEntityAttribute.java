@@ -16,7 +16,7 @@ import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
-import com.herocraftonline.items.item.DefaultAttribute;
+import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
@@ -30,7 +30,7 @@ public class LaunchEntityAttribute extends BaseAttribute<LaunchEntityAttribute> 
     private final double velocity;
 
     public LaunchEntityAttribute(String name, EntityType entity, double velocity) {
-        super(name, DefaultAttribute.LAUNCH_ENTITY);
+        super(name, DefaultAttributes.LAUNCH_ENTITY);
 
         this.entity = entity;
         this.velocity = velocity;

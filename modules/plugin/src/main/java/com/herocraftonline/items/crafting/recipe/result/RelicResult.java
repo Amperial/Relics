@@ -10,9 +10,9 @@
  */
 package com.herocraftonline.items.crafting.recipe.result;
 
+import com.herocraftonline.items.api.crafting.Result;
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Reagent;
-import com.herocraftonline.items.api.crafting.Result;
 import org.bukkit.inventory.ItemStack;
 
 public class RelicResult implements Result {

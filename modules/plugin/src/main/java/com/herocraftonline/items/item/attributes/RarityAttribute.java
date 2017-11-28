@@ -15,7 +15,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.Rarity;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
-import com.herocraftonline.items.item.DefaultAttribute;
+import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -27,7 +27,7 @@ public class RarityAttribute extends BaseAttribute<Rarity> implements Rarity {
     private int rarity;
 
     public RarityAttribute(String name, int rarity, String text) {
-        super(name, DefaultAttribute.RARITY);
+        super(name, DefaultAttributes.RARITY);
 
         this.rarity = rarity;
 
@@ -35,24 +35,19 @@ public class RarityAttribute extends BaseAttribute<Rarity> implements Rarity {
     }
 
     @Override
-    public Integer getValue() {
+    public int getRarity() {
         return rarity;
     }
 
     @Override
-    public void setValue(Integer value) {
-        rarity = value;
-    }
-
-    @Override
-    public int compareTo(Rarity o) {
-        return getValue() - o.getValue();
+    public void setRarity(int rarity) {
+        this.rarity = rarity;
     }
 
     @Override
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
-        compound.setInt("tier", getValue());
+        compound.setInt("tier", getRarity());
     }
 
     public static class Factory extends BaseAttributeFactory<Rarity> {
@@ -62,7 +57,7 @@ public class RarityAttribute extends BaseAttribute<Rarity> implements Rarity {
         public Factory(ItemPlugin plugin) {
             super(plugin);
 
-            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttribute.RARITY);
+            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttributes.RARITY);
             tiers = config.getStringList("tiers");
             tiers.replaceAll(tier -> ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', tier));
             unknown = ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', config.getString("unknown", "&8Unknown"));

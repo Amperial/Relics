@@ -20,8 +20,7 @@ public enum DefaultConfig implements Config {
     EQUIPMENT("equipment.yml"),
     ITEMS("items.yml"),
     MESSAGE("lang.yml"),
-    MODELS("pack/models.yml"),
-    SOCKETS("sockets.yml");
+    MODELS("pack/models.yml");
 
     private final String fileName;
 

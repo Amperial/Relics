@@ -11,19 +11,19 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.crafting.Recipe;
+import com.herocraftonline.items.api.crafting.Recipe.RecipeFactory;
 import com.herocraftonline.items.api.item.Clickable;
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Blueprint;
-import com.herocraftonline.items.api.crafting.Recipe;
-import com.herocraftonline.items.api.crafting.Recipe.RecipeFactory;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.crafting.CraftingMenu;
 import com.herocraftonline.items.crafting.recipe.RecipeRenderer;
 import com.herocraftonline.items.crafting.recipe.ShapedRecipe;
 import com.herocraftonline.items.crafting.recipe.ShapelessRecipe;
-import com.herocraftonline.items.item.DefaultAttribute;
+import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -39,7 +39,7 @@ public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blue
     private short mapId;
 
     public BlueprintAttribute(String name, String ingredientsText, String resultText, Recipe recipe, short mapId) {
-        super(name, DefaultAttribute.BLUEPRINT);
+        super(name, DefaultAttributes.BLUEPRINT);
 
         this.recipe = recipe;
         this.mapId = mapId;
@@ -106,7 +106,7 @@ public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blue
             shapedRecipeFactory = new ShapedRecipe.Factory(plugin);
             shapelessRecipeFactory = new ShapelessRecipe.Factory(plugin);
 
-            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttribute.BLUEPRINT);
+            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttributes.BLUEPRINT);
             ingredientsText = ChatColor.translateAlternateColorCodes('&', config.getString("ingredients", "&aCrafting Recipe:"));
             resultText = ChatColor.translateAlternateColorCodes('&', config.getString("result", "&aCrafting Result:"));
         }

@@ -22,9 +22,10 @@ import com.herocraftonline.items.api.item.attribute.attributes.gems.SocketColor;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.api.storage.nbt.NBTTagList;
 import com.herocraftonline.items.api.storage.nbt.NBTTagString;
-import com.herocraftonline.items.item.DefaultAttribute;
+import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,26 +44,23 @@ public class SocketAttribute extends BaseAttributeContainer<Socket> implements S
     private Set<SocketColor> accepts;
     private Gem gem;
 
-    public SocketAttribute(String name, AttributeType<Socket> type, SocketColor color, Set<SocketColor> accepts) {
+    public SocketAttribute(String name, AttributeType<Socket> type, String textLeft, String textRight, String gemIndent, SocketColor color, Set<SocketColor> accepts) {
         super(name, type);
 
         this.color = color;
         this.accepts = accepts;
 
         setLore((lore, prefix) -> {
-            // TODO: Configurable
             ChatColor c = getColor().getChatColor();
+            lore.add(prefix + c + textLeft + (hasGem() ? gem.getDisplayName() : ChatColor.GRAY + "-") + c + textRight);
             if (hasGem()) {
-                lore.add(prefix + c + "[ " + gem.getDisplayName() + c + " ]");
-                getGem().getLore().addTo(lore, prefix + "  ");
-            } else {
-                lore.add(prefix + c + "[ " + ChatColor.GRAY + "-" + c + " ]");
+                getGem().getLore().addTo(lore, prefix + gemIndent);
             }
         });
     }
 
-    public SocketAttribute(String name, SocketColor color, Set<SocketColor> accepts) {
-        this(name, DefaultAttribute.SOCKET, color, accepts);
+    public SocketAttribute(String name, String textLeft, String textRight, String gemIndent, SocketColor color, Set<SocketColor> accepts) {
+        this(name, DefaultAttributes.SOCKET, textLeft, textRight, gemIndent, color, accepts);
     }
 
     @Override
@@ -188,7 +186,7 @@ public class SocketAttribute extends BaseAttributeContainer<Socket> implements S
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
         compound.setString("color", getColor().getName());
-        if (!getAccepts().equals(getColor().getAccepts())) {
+        if (!getAccepts().equals(getColor().getAcceptedColors())) {
             NBTTagList list = NBTTagList.create();
             for (SocketColor color : getAccepts()) {
                 list.addBase(NBTTagString.create(color.getName()));
@@ -203,8 +201,29 @@ public class SocketAttribute extends BaseAttributeContainer<Socket> implements S
     }
 
     public static class Factory extends BaseAttributeFactory<Socket> {
+        private final String textLeft;
+        private final String textRight;
+        private final String gemIndent;
+
         public Factory(ItemPlugin plugin) {
             super(plugin);
+
+            // Load default socket accepts
+            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttributes.SOCKET);
+            if (config.isConfigurationSection("colors")) {
+                ConfigurationSection colors = config.getConfigurationSection("colors");
+                for (SocketColor color : SocketColor.values()) {
+                    if (colors.isSet(color.getName() + ".accepts")) {
+                        color.setAcceptedColors(colors.getStringList(color.getName() + ".accepts").stream()
+                                .map(SocketColor::fromName).filter(acceptColor -> acceptColor != null).collect(Collectors.toSet()));
+                    }
+                }
+            }
+
+            // Load left/right lore text
+            textLeft = ChatColor.translateAlternateColorCodes('&', config.getString("text-left", "[ "));
+            textRight = ChatColor.translateAlternateColorCodes('&', config.getString("text-right", " ]"));
+            gemIndent = ChatColor.translateAlternateColorCodes('&', config.getString("gem-text-indent", "  "));
         }
 
         @Override
@@ -215,15 +234,14 @@ public class SocketAttribute extends BaseAttributeContainer<Socket> implements S
             SocketColor color = SocketColor.fromName(config.getString("color", "yellow"));
             Set<SocketColor> accepts;
             if (config.isList("accepts")) {
-                accepts = new HashSet<>();
-                List<String> colors = config.getStringList("accepts");
-                accepts.addAll(colors.stream().map(SocketColor::fromName).collect(Collectors.toList()));
+                accepts = config.getStringList("accepts").stream()
+                        .map(SocketColor::fromName).filter(acceptColor -> acceptColor != null).collect(Collectors.toSet());
             } else {
-                accepts = color.getAccepts();
+                accepts = color.getAcceptedColors();
             }
 
             // Create socket
-            Socket socket = new SocketAttribute(name, color, accepts);
+            Socket socket = new SocketAttribute(name, textLeft, textRight, gemIndent, color, accepts);
 
             // Load gem
             if (config.isConfigurationSection("gem")) {
@@ -251,11 +269,11 @@ public class SocketAttribute extends BaseAttributeContainer<Socket> implements S
                     accepts.add(SocketColor.fromName(list.getString(i)));
                 }
             } else {
-                accepts = color.getAccepts();
+                accepts = color.getAcceptedColors();
             }
 
             // Create socket
-            Socket socket = new SocketAttribute(name, color, accepts);
+            Socket socket = new SocketAttribute(name, textLeft, textRight, gemIndent, color, accepts);
 
             // Load gem
             if (compound.hasKey("gem")) {

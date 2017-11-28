@@ -19,7 +19,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribut
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatAttribute;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
-import com.herocraftonline.items.item.DefaultAttribute;
+import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Collection;
@@ -36,7 +36,7 @@ public class GroupAttribute extends BaseAttributeContainer<Group> implements Gro
     private final boolean spacing;
 
     public GroupAttribute(String name, Map<String, Attribute> attributes, boolean spacing) {
-        super(name, DefaultAttribute.GROUP);
+        super(name, DefaultAttributes.GROUP);
 
         this.attributes = attributes;
         this.spacing = spacing;

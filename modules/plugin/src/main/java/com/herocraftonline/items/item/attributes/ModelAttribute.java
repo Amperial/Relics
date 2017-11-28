@@ -16,7 +16,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribut
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.model.ModelManager;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
-import com.herocraftonline.items.item.DefaultAttribute;
+import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
@@ -25,7 +25,7 @@ public class ModelAttribute extends BaseAttribute<Model> implements Model {
     private com.herocraftonline.items.api.item.model.Model model;
 
     public ModelAttribute(String name, com.herocraftonline.items.api.item.model.Model model) {
-        super(name, DefaultAttribute.MODEL);
+        super(name, DefaultAttributes.MODEL);
 
         this.model = model;
     }

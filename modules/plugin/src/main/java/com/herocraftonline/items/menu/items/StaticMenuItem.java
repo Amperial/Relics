@@ -1,14 +1,14 @@
 /*
- * This file is part of Relics API.
+ * This file is part of Relics.
  *
  * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
  *
  * All Rights Reserved.
  *
- * Unauthorized copying and/or distribution of Relics API,
+ * Unauthorized copying and/or distribution of Relics,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.menu.items;
+package com.herocraftonline.items.menu.items;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

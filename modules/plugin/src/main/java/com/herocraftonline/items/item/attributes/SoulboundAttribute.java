@@ -15,7 +15,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.Soulbound;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
-import com.herocraftonline.items.item.DefaultAttribute;
+import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -26,7 +26,7 @@ public class SoulboundAttribute extends BaseAttribute<Soulbound> implements Soul
     private boolean bound;
 
     public SoulboundAttribute(String name, String equip, String bound, boolean isBound) {
-        super(name, DefaultAttribute.SOULBOUND);
+        super(name, DefaultAttributes.SOULBOUND);
 
         this.bound = isBound;
 
@@ -76,7 +76,7 @@ public class SoulboundAttribute extends BaseAttribute<Soulbound> implements Soul
             super(plugin);
 
             // Load soulbound text
-            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttribute.SOULBOUND);
+            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttributes.SOULBOUND);
             equip = ChatColor.translateAlternateColorCodes('&', config.getString("equip", "&4Becomes soulbound on equip!"));
             bound = ChatColor.translateAlternateColorCodes('&', config.getString("bound", "&dThis item is soulbound!"));
         }

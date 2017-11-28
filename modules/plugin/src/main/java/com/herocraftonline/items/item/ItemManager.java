@@ -15,10 +15,10 @@ import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.ItemFactory;
 import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.AttributeType;
-import com.herocraftonline.items.api.item.attribute.attributes.gems.SocketColor;
+import com.herocraftonline.items.api.storage.config.ConfigManager;
 import com.herocraftonline.items.api.storage.config.DefaultConfig;
-import com.herocraftonline.items.api.storage.config.ItemConfig;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+import com.herocraftonline.items.config.ItemConfig;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -30,7 +30,6 @@ import org.bukkit.plugin.Plugin;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,19 +38,23 @@ import java.util.logging.Level;
 public class ItemManager implements com.herocraftonline.items.api.item.ItemManager {
 
     private final ItemPlugin plugin;
+    private final ItemFactory factory;
     private final Map<String, AttributeType> attributeTypes;
     private final Map<String, ItemConfig> items;
-    private ItemFactory factory;
 
     public ItemManager(ItemPlugin plugin) {
         this.plugin = plugin;
+        this.factory = new CustomItem.DefaultItemFactory(this);
         this.attributeTypes = new HashMap<>();
         this.items = new HashMap<>();
 
-        registerAttributeTypes(DefaultAttribute.getTypes(), plugin);
+        // Register default attribute types
+        registerAttributeTypes(DefaultAttributes.getTypes(), plugin);
 
         // Load attribute type lore order
-        FileConfiguration attributes = plugin.getConfigManager().getConfig(DefaultConfig.ATTRIBUTES);
+        // TODO: this is somewhat bad
+        ConfigManager configManager = plugin.getConfigManager();
+        FileConfiguration attributes = configManager.getConfig(DefaultConfig.ATTRIBUTES);
         int position = 0;
         for (String type : attributes.getStringList("lore-order")) {
             if (hasAttributeType(type)) {
@@ -60,34 +63,12 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
             }
         }
 
-        // Load default socket accepts
-        FileConfiguration sockets = plugin.getConfigManager().getConfig(DefaultConfig.SOCKETS);
-        if (sockets.isConfigurationSection("colors")) {
-            ConfigurationSection colors = sockets.getConfigurationSection("colors");
-            for (SocketColor color : SocketColor.values()) {
-                if (colors.isSet(color.getName() + ".accepts")) {
-                    List<String> accepts = colors.getStringList(color.getName() + ".accepts");
-                    for (String accept : accepts) {
-                        SocketColor acceptColor = SocketColor.fromName(accept);
-                        if (acceptColor != null) {
-                            color.addAccepts(acceptColor);
-                        }
-                    }
-                }
-            }
-        }
+        // Load item configss
+        FileConfiguration itemConfig = configManager.getConfig(DefaultConfig.ITEMS);
+        itemConfig.getStringList("items").stream().map(ItemConfig::new).forEach(config -> items.put(config.getItem().toLowerCase(), config));
+        items.values().forEach(config -> configManager.registerCustomConfig(config, plugin, false));
 
-        // Load items
-        FileConfiguration itemConfig = plugin.getConfigManager().getConfig(DefaultConfig.ITEMS);
-        itemConfig.getStringList("items").forEach(item -> registerItemConfig(new ItemConfig(item), plugin));
-
-        setDefaultFactories();
-    }
-
-    public void setDefaultFactories() {
-        factory = new CustomItem.DefaultItemFactory(this);
-
-        DefaultAttribute.loadFactories(plugin);
+        DefaultAttributes.loadFactories(plugin);
     }
 
     @Override
@@ -181,52 +162,14 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
     }
 
     @Override
-    public Item getItem(ItemConfig config, Object... args) {
-        // Ensure config isnt null for some reason
-        if (config == null) {
+    public Optional<Item> getItem(String item, Object... args) {
+        ItemConfig itemConfig = items.get(item.toLowerCase());
+        if (itemConfig == null) {
             plugin.getMessenger().log(Level.WARNING, "Attempted to get item from null config");
             return null;
         }
 
-        return getItem(plugin.getConfigManager().getConfig(config), args);
-    }
-
-    @Override
-    public Optional<Item> getItem(String item, Object... args) {
-        return Optional.ofNullable(getItem(getItemConfig(item.toLowerCase()), args));
-    }
-
-    @Override
-    public boolean hasItemConfig(String item) {
-        // Look for registered item config
-        // TODO: Add a way to not require the full item config path?
-        boolean found = items.containsKey(item.toLowerCase());
-
-        // Item config debug
-        plugin.getMessenger().debug("Item config " + item + (found ? " found" : " not found"));
-
-        return found;
-    }
-
-    @Override
-    public ItemConfig getItemConfig(String item) {
-        return items.get(item.toLowerCase());
-    }
-
-    @Override
-    public Map<String, ItemConfig> getItemConfigs() {
-        return Collections.unmodifiableMap(items);
-    }
-
-    @Override
-    public void registerItemConfigs(Collection<? extends ItemConfig> items, Plugin plugin) {
-        items.forEach(item -> registerItemConfig(item, plugin));
-    }
-
-    @Override
-    public void registerItemConfig(ItemConfig config, Plugin plugin) {
-        items.put(config.getItem().toLowerCase(), config);
-        this.plugin.getConfigManager().registerCustomConfig(config, plugin, false);
+        return Optional.ofNullable(getItem(plugin.getConfigManager().getConfig(itemConfig), args));
     }
 
     @Override

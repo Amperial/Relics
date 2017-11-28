@@ -18,7 +18,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.stats.StatSpecifi
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatTotal;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatType;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
-import com.herocraftonline.items.item.DefaultAttribute;
+import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
@@ -70,7 +70,7 @@ public class DamageAttribute extends MinecraftAttribute implements Damage {
     private double variation;
 
     public DamageAttribute(String name, Slot slot, Operation operation, boolean stacking, double damage, double variation) {
-        super(name, DefaultAttribute.DAMAGE, STAT_TYPE, Type.ATTACK_DAMAGE, slot, operation, stacking, damage);
+        super(name, DefaultAttributes.DAMAGE, STAT_TYPE, Type.ATTACK_DAMAGE, slot, operation, stacking, damage);
 
         this.variation = variation;
     }

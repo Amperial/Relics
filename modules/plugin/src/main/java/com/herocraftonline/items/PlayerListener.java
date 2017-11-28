@@ -18,6 +18,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+// TODO: Rename and move listener for its specific purpose
 public class PlayerListener implements Listener {
 
     private final ItemPlugin plugin;

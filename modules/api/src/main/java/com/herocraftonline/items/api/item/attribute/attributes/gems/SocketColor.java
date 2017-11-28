@@ -12,6 +12,7 @@ package com.herocraftonline.items.api.item.attribute.attributes.gems;
 
 import org.bukkit.ChatColor;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -24,22 +25,22 @@ import java.util.Set;
  * @author Austin Payne
  */
 public enum SocketColor {
-    AQUA("aqua"),
-    BLACK("black"),
-    BLUE("blue"),
-    DARK_AQUA("dark-aqua"),
-    DARK_BLUE("dark-blue"),
-    DARK_GRAY("dark-gray"),
-    DARK_GREEN("dark-green"),
-    DARK_PURPLE("dark-purple"),
-    DARK_RED("dark-red"),
-    GOLD("gold"),
-    GRAY("gray"),
-    GREEN("green"),
-    LIGHT_PURPLE("light-purple"),
-    RED("red"),
-    WHITE("white"),
-    YELLOW("yellow");
+    AQUA,
+    BLACK,
+    BLUE,
+    DARK_AQUA,
+    DARK_BLUE,
+    DARK_GRAY,
+    DARK_GREEN,
+    DARK_PURPLE,
+    DARK_RED,
+    GOLD,
+    GRAY,
+    GREEN,
+    LIGHT_PURPLE,
+    RED,
+    WHITE,
+    YELLOW;
 
     private static final Map<String, SocketColor> colorByName;
 
@@ -54,20 +55,22 @@ public enum SocketColor {
     private final ChatColor color;
     private final Set<SocketColor> accepts;
 
-    SocketColor(String name) {
-        this.name = name;
+    SocketColor() {
+        this.name = name().toLowerCase().replace('_', '-');
         this.color = ChatColor.valueOf(name());
         this.accepts = new HashSet<>();
+        this.accepts.add(this);
     }
 
     /**
-     * Gets a socket color by its name.
+     * Gets a socket color by its name or enum value.
      *
      * @param name the name
      * @return the socket color
      */
     public static SocketColor fromName(String name) {
-        return colorByName.get(name);
+        SocketColor color = colorByName.get(name);
+        return color == null ? valueOf(name) : color;
     }
 
     /**
@@ -99,21 +102,25 @@ public enum SocketColor {
     }
 
     /**
-     * Gets the default colors of gem accepted by the socket color.
+     * Gets the default colors of gem accepted by the socket color.<br>
+     * A socket color will by default only accept itself.<br>
+     * Individual socket attributes can ignore this and define their own accepted colors or rules.
      *
-     * @return the socket color's default accepts
+     * @return the socket color's default accepted colors
      */
-    public Set<SocketColor> getAccepts() {
+    public Set<SocketColor> getAcceptedColors() {
         return accepts;
     }
 
     /**
-     * Adds colors to the default accepted gem colors.
+     * Sets the default colors of gem accepted by the socket color.<br>
+     * See {@link this#getAcceptedColors()}
      *
-     * @param color the colors to add
+     * @param accepts the accepted socket colors
      */
-    public void addAccepts(SocketColor color) {
-        this.accepts.add(color);
+    public void setAcceptedColors(Collection<SocketColor> accepts) {
+        this.accepts.clear();
+        this.accepts.addAll(accepts);
     }
 
 }

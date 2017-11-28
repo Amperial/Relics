@@ -17,7 +17,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribut
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.api.storage.nbt.NBTTagList;
 import com.herocraftonline.items.api.storage.nbt.NBTTagString;
-import com.herocraftonline.items.item.DefaultAttribute;
+import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -31,7 +31,7 @@ public class TextAttribute extends BaseAttribute<Text> implements Text {
     private final List<String> text;
 
     public TextAttribute(String name, List<String> text) {
-        super(name, DefaultAttribute.TEXT);
+        super(name, DefaultAttributes.TEXT);
 
         this.text = text;
 

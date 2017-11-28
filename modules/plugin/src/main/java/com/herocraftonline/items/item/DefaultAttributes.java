@@ -35,7 +35,7 @@ import com.herocraftonline.items.item.attributes.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public final class DefaultAttribute {
+public final class DefaultAttributes {
 
     public static final AttributeType<Blueprint> BLUEPRINT = new BaseAttributeType<>("blueprint", 5, BlueprintAttribute.Factory::new);
     public static final AttributeType<Minecraft> DAMAGE = new BaseAttributeType<>("damage", Integer.MAX_VALUE, DamageAttribute.Factory::new);
@@ -83,7 +83,7 @@ public final class DefaultAttribute {
         types.add(VELOCITY);
     }
 
-    private DefaultAttribute() {
+    private DefaultAttributes() {
     }
 
     public static Collection<AttributeType> getTypes() {

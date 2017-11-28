@@ -1,3 +1,6 @@
+text-left: "[ "
+text-right: " ]"
+gem-text-indent: "  "
 colors:
   aqua:
     accepts:

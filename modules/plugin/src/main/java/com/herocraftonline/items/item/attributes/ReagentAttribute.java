@@ -16,7 +16,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribut
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Reagent;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.crafting.recipe.ingredient.RelicReagent;
-import com.herocraftonline.items.item.DefaultAttribute;
+import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -27,7 +27,7 @@ public class ReagentAttribute extends BaseAttribute<Reagent> implements Reagent 
     private final boolean showLore;
 
     public ReagentAttribute(String name, String text, boolean showLore, RelicReagent reagent) {
-        super(name, DefaultAttribute.REAGENT);
+        super(name, DefaultAttributes.REAGENT);
 
         this.reagent = reagent;
         this.showLore = showLore;
@@ -55,7 +55,7 @@ public class ReagentAttribute extends BaseAttribute<Reagent> implements Reagent 
         public Factory(ItemPlugin plugin) {
             super(plugin);
 
-            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttribute.REAGENT);
+            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttributes.REAGENT);
             text = ChatColor.translateAlternateColorCodes('&', config.getString("text", "&aCrafting Ingredient"));
         }
 

@@ -15,7 +15,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribut
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.projectiles.Velocity;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
-import com.herocraftonline.items.item.DefaultAttribute;
+import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class VelocityAttribute extends BaseAttribute<Velocity> implements Velocity {
@@ -24,19 +24,19 @@ public class VelocityAttribute extends BaseAttribute<Velocity> implements Veloci
     private boolean multiply;
 
     public VelocityAttribute(String name, double value, boolean multiply) {
-        super(name, DefaultAttribute.VELOCITY);
+        super(name, DefaultAttributes.VELOCITY);
 
         this.value = value;
         this.multiply = multiply;
     }
 
     @Override
-    public Double getValue() {
+    public double getValue() {
         return value;
     }
 
     @Override
-    public void setValue(Double value) {
+    public void setValue(double value) {
         this.value = value;
     }
 

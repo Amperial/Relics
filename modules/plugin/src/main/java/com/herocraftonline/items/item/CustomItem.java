@@ -498,7 +498,7 @@ public class CustomItem implements Item {
             }
             boolean unbreakable = config.getBoolean(UNBREAKABLE_TAG, false);
             ItemType type = new ItemType(config.getString(TYPE_TAG, ItemType.OTHER.getName()));
-            Group attribute = DefaultAttribute.GROUP.getFactory().loadFromConfig(ATTRIBUTES_TAG, config);
+            Group attribute = DefaultAttributes.GROUP.getFactory().loadFromConfig(ATTRIBUTES_TAG, config);
 
             // Create Item
             return new CustomItem(id, name, material, enchantments, unbreakable, type, attribute);
@@ -525,7 +525,7 @@ public class CustomItem implements Item {
             }
             boolean unbreakable = compound.getBoolean(UNBREAKABLE_TAG);
             ItemType type = new ItemType(compound.getString(TYPE_TAG));
-            Group attribute = DefaultAttribute.GROUP.getFactory().loadFromNBT(ATTRIBUTES_TAG, compound);
+            Group attribute = DefaultAttributes.GROUP.getFactory().loadFromNBT(ATTRIBUTES_TAG, compound);
 
             // Create Item
             Item item = new CustomItem(id, name, material, enchantments, unbreakable, type, attribute);

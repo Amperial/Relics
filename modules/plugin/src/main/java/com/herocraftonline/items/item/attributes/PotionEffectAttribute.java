@@ -15,7 +15,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribut
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.effects.PotionEffect;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
-import com.herocraftonline.items.item.DefaultAttribute;
+import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.Color;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -26,7 +26,7 @@ public class PotionEffectAttribute extends BaseAttribute<PotionEffect> implement
     private org.bukkit.potion.PotionEffect effect;
 
     public PotionEffectAttribute(String name, org.bukkit.potion.PotionEffect effect) {
-        super(name, DefaultAttribute.POTION_EFFECT);
+        super(name, DefaultAttributes.POTION_EFFECT);
 
         this.effect = effect;
     }

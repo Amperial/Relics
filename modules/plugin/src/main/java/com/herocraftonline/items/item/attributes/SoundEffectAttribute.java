@@ -15,7 +15,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribut
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.effects.SoundEffect;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
-import com.herocraftonline.items.item.DefaultAttribute;
+import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -28,7 +28,7 @@ public class SoundEffectAttribute extends BaseAttribute<SoundEffect> implements 
     private boolean global;
 
     public SoundEffectAttribute(String name, Sound sound, float volume, float pitch, boolean global) {
-        super(name, DefaultAttribute.SOUND_EFFECT);
+        super(name, DefaultAttributes.SOUND_EFFECT);
 
         this.sound = sound;
         this.volume = volume;

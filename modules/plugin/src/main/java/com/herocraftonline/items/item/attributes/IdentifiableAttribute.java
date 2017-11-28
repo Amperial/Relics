@@ -17,7 +17,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.Identifiable;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
-import com.herocraftonline.items.item.DefaultAttribute;
+import com.herocraftonline.items.item.DefaultAttributes;
 import com.herocraftonline.items.nms.NMSHandler;
 import com.herocraftonline.items.util.EncryptUtil;
 import com.herocraftonline.items.util.ItemUtil;
@@ -34,7 +34,7 @@ public class IdentifiableAttribute extends BaseAttribute<Identifiable> implement
     private final String encryptedItem;
 
     public IdentifiableAttribute(String name, String encryptedItem) {
-        super(name, DefaultAttribute.IDENTIFIABLE);
+        super(name, DefaultAttributes.IDENTIFIABLE);
 
         this.encryptedItem = encryptedItem;
     }

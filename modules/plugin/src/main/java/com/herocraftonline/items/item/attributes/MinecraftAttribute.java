@@ -20,7 +20,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.stats.StatSpecifi
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatTotal;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatType;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
-import com.herocraftonline.items.item.DefaultAttribute;
+import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -134,7 +134,7 @@ public class MinecraftAttribute extends BaseStatAttribute<Minecraft> implements 
     }
 
     public MinecraftAttribute(String name, Type minecraftType, Slot slot, Operation operation, boolean stacking, double amount) {
-        this(name, DefaultAttribute.MINECRAFT, STAT_TYPE, minecraftType, slot, operation, stacking, amount);
+        this(name, DefaultAttributes.MINECRAFT, STAT_TYPE, minecraftType, slot, operation, stacking, amount);
     }
 
     @Override
@@ -223,7 +223,7 @@ public class MinecraftAttribute extends BaseStatAttribute<Minecraft> implements 
             super(plugin);
 
             // Load config strings for minecraft attribute types and slots
-            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttribute.MINECRAFT);
+            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttributes.MINECRAFT);
             for (Type type : Type.values()) {
                 if (config.isString("type." + type.name())) {
                     type.setDisplayName(config.getString("type." + type.name()));
