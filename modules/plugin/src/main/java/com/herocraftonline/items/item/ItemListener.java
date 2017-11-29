@@ -100,7 +100,10 @@ public class ItemListener implements Listener {
             }
             TriggerSource source = new PlayerInteractSource(item, event);
             TriggerResult result = item.getAttributes(attribute -> attribute instanceof PlayerInteract).stream()
-                    .map(attribute -> ((PlayerInteract) attribute).onTrigger(source)).reduce(TriggerResult.COMBINE).orElse(TriggerResult.NOT_TRIGGERED);
+                    .map(attribute -> (PlayerInteract) attribute)
+                    .filter(attribute -> attribute.canTrigger(source))
+                    .map(attribute -> attribute.onTrigger(source))
+                    .reduce(TriggerResult.COMBINE).orElse(TriggerResult.NOT_TRIGGERED);
             // TODO: Handle trigger results
         }
     }

@@ -2,7 +2,7 @@ name: "&aNoise Maker"
 material: "STICK"
 item-type: "other"
 attributes:
-  trigger:
+  click:
     type: "player-interact"
     targets: ["noise"]
     actions: ["LEFT_CLICK_AIR"]
