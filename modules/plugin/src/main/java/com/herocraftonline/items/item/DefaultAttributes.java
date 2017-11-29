@@ -36,6 +36,7 @@ public final class DefaultAttributes {
     public static final AttributeType<Durability> DURABILITY = new BaseAttributeType<>("durability", 8, DurabilityAttribute.Factory::new);
     public static final AttributeType<Gem> GEM = new BaseAttributeType<>("gem", 7, GemAttribute.Factory::new);
     public static final AttributeType<Group> GROUP = new BaseAttributeType<>("group", 0, GroupAttribute.Factory::new);
+    public static final AttributeType<HealEffect> HEAL_EFFECT = new BaseAttributeType<>("heal-effect", Integer.MAX_VALUE, HealEffectAttribute.Factory::new);
     public static final AttributeType<Identifiable> IDENTIFIABLE = new BaseAttributeType<>("identifiable", Integer.MAX_VALUE, IdentifiableAttribute.Factory::new);
     public static final AttributeType<LaunchEntityAttribute> LAUNCH_ENTITY = new BaseAttributeType<>("launch-entity", Integer.MAX_VALUE, LaunchEntityAttribute.Factory::new);
     public static final AttributeType<Level> LEVEL = new BaseAttributeType<>("level", 2, LevelAttribute.Factory::new);
@@ -63,6 +64,7 @@ public final class DefaultAttributes {
         types.add(DURABILITY);
         types.add(GEM);
         types.add(GROUP);
+        types.add(HEAL_EFFECT);
         types.add(IDENTIFIABLE);
         types.add(LAUNCH_ENTITY);
         types.add(LEVEL);
