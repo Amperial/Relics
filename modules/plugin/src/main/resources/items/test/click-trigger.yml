@@ -1,0 +1,11 @@
+name: "&aNoise Maker"
+material: "STICK"
+item-type: "other"
+attributes:
+  click:
+    type: "player-interact"
+    targets: ["noise"]
+    actions: ["LEFT_CLICK_AIR"]
+  noise:
+    type: "sound-effect"
+    sound: "BLOCK_ANVIL_USE"

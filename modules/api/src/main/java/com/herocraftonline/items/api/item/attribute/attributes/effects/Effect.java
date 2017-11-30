@@ -11,12 +11,7 @@
 package com.herocraftonline.items.api.item.attribute.attributes.effects;
 
 import com.herocraftonline.items.api.item.attribute.Attribute;
-import org.bukkit.entity.Player;
+import com.herocraftonline.items.api.item.trigger.Triggerable;
 
-public interface Effect<T extends Attribute<T>> extends Attribute<T> {
-
-    void play(Player player);
-
-    void stop(Player player);
-
+public interface Effect<T extends Attribute<T>> extends Attribute<T>, Triggerable {
 }

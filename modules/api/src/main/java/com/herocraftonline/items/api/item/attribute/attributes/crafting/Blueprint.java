@@ -12,6 +12,7 @@ package com.herocraftonline.items.api.item.attribute.attributes.crafting;
 
 import com.herocraftonline.items.api.crafting.Recipe;
 import com.herocraftonline.items.api.item.attribute.Attribute;
+import com.herocraftonline.items.api.item.trigger.Triggerable;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -19,7 +20,7 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author Austin Payne
  */
-public interface Blueprint extends Attribute<Blueprint> {
+public interface Blueprint extends Attribute<Blueprint>, Triggerable {
 
     /**
      * Gets the recipe held by the blueprint.

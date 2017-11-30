@@ -75,7 +75,7 @@ public interface ItemPlugin extends Plugin {
      *
      * @return the item plugin's effect manager
      */
-    Optional<EffectManager> getEffectManager();
+    Optional<EffectManager> getEffectLib();
 
     /**
      * Saves a plugin resource if it exists and isn't already saved,<br>

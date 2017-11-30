@@ -13,11 +13,12 @@ package com.herocraftonline.items.item.attributes;
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.crafting.Recipe;
 import com.herocraftonline.items.api.crafting.Recipe.RecipeFactory;
-import com.herocraftonline.items.api.item.Clickable;
-import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Blueprint;
+import com.herocraftonline.items.api.item.trigger.TriggerResult;
+import com.herocraftonline.items.api.item.trigger.source.TriggerSource;
+import com.herocraftonline.items.api.item.trigger.source.entity.PlayerSource;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.crafting.CraftingMenu;
 import com.herocraftonline.items.crafting.recipe.RecipeRenderer;
@@ -29,11 +30,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapView;
 
-public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blueprint, Clickable {
+import java.util.Optional;
+
+public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blueprint {
 
     private final Recipe recipe;
     private short mapId;
@@ -81,8 +84,20 @@ public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blue
     }
 
     @Override
-    public void onClick(PlayerInteractEvent event, Item item) {
-        CraftingMenu.open(event.getPlayer(), getRecipe(), event.getItem());
+    public boolean canTrigger(TriggerSource source) {
+        return source instanceof PlayerSource;
+    }
+
+    @Override
+    public TriggerResult onTrigger(TriggerSource source) {
+        Optional<PlayerSource> playerSource = source.ofType(PlayerSource.class);
+        if (playerSource.isPresent()) {
+            Player player = playerSource.get().getPlayer();
+            ItemStack blueprint = source.getItem().getItem();
+            CraftingMenu.open(player, getRecipe(), blueprint);
+            return TriggerResult.SUCCESS;
+        }
+        return TriggerResult.NOT_TRIGGERED;
     }
 
     @Override

@@ -4,6 +4,7 @@ items:
 - "firesword/crossguard"
 - "firesword/blade"
 - "firesword/sword"
+- "test/click-trigger"
 - "test/identifiable"
 - "test/shaped-blueprint"
 - "test/shapeless-blueprint"

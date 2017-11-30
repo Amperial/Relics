@@ -20,7 +20,10 @@ import com.herocraftonline.items.api.item.attribute.attributes.effects.*;
 import com.herocraftonline.items.api.item.attribute.attributes.gems.*;
 import com.herocraftonline.items.api.item.attribute.attributes.projectiles.*;
 import com.herocraftonline.items.api.item.attribute.attributes.requirements.*;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.Cooldown;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.PlayerInteract;
 import com.herocraftonline.items.item.attributes.*;
+import com.herocraftonline.items.item.triggers.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,16 +32,19 @@ public final class DefaultAttributes {
 
     public static final AttributeType<Blueprint> BLUEPRINT = new BaseAttributeType<>("blueprint", 5, BlueprintAttribute.Factory::new);
     public static final AttributeType<Command> COMMAND = new BaseAttributeType<>("command", Integer.MAX_VALUE, CommandAttribute.Factory::new);
+    public static final AttributeType<Cooldown> COOLDOWN = new BaseAttributeType<>("cooldown", Integer.MAX_VALUE, CooldownTrigger.Factory::new);
     public static final AttributeType<Minecraft> DAMAGE = new BaseAttributeType<>("damage", Integer.MAX_VALUE, DamageAttribute.Factory::new);
     public static final AttributeType<Durability> DURABILITY = new BaseAttributeType<>("durability", 8, DurabilityAttribute.Factory::new);
     public static final AttributeType<Gem> GEM = new BaseAttributeType<>("gem", 7, GemAttribute.Factory::new);
     public static final AttributeType<Group> GROUP = new BaseAttributeType<>("group", 0, GroupAttribute.Factory::new);
+    public static final AttributeType<HealEffect> HEAL_EFFECT = new BaseAttributeType<>("heal-effect", Integer.MAX_VALUE, HealEffectAttribute.Factory::new);
     public static final AttributeType<Identifiable> IDENTIFIABLE = new BaseAttributeType<>("identifiable", Integer.MAX_VALUE, IdentifiableAttribute.Factory::new);
     public static final AttributeType<LaunchEntityAttribute> LAUNCH_ENTITY = new BaseAttributeType<>("launch-entity", Integer.MAX_VALUE, LaunchEntityAttribute.Factory::new);
     public static final AttributeType<Level> LEVEL = new BaseAttributeType<>("level", 2, LevelAttribute.Factory::new);
     public static final AttributeType<LevelRequirement> LEVEL_REQUIREMENT = new BaseAttributeType<>("level-requirement", Integer.MIN_VALUE, LevelRequirementAttribute.Factory::new);
     public static final AttributeType<Minecraft> MINECRAFT = new BaseAttributeType<>("minecraft", Integer.MAX_VALUE, MinecraftAttribute.Factory::new);
     public static final AttributeType<Model> MODEL = new BaseAttributeType<>("model", Integer.MAX_VALUE, ModelAttribute.Factory::new);
+    public static final AttributeType<PlayerInteract> PLAYER_INTERACT = new BaseAttributeType<>("player-interact", Integer.MAX_VALUE, PlayerInteractTrigger.Factory::new);
     public static final AttributeType<PotionEffect> POTION_EFFECT = new BaseAttributeType<>("potion-effect", Integer.MAX_VALUE, PotionEffectAttribute.Factory::new);
     public static final AttributeType<Rarity> RARITY = new BaseAttributeType<>("rarity", 1, RarityAttribute.Factory::new);
     public static final AttributeType<Reagent> REAGENT = new BaseAttributeType<>("reagent", 3, ReagentAttribute.Factory::new);
@@ -54,16 +60,19 @@ public final class DefaultAttributes {
     static {
         types.add(BLUEPRINT);
         types.add(COMMAND);
+        types.add(COOLDOWN);
         types.add(DAMAGE);
         types.add(DURABILITY);
         types.add(GEM);
         types.add(GROUP);
+        types.add(HEAL_EFFECT);
         types.add(IDENTIFIABLE);
         types.add(LAUNCH_ENTITY);
         types.add(LEVEL);
         types.add(LEVEL_REQUIREMENT);
         types.add(MINECRAFT);
         types.add(MODEL);
+        types.add(PLAYER_INTERACT);
         types.add(POTION_EFFECT);
         types.add(RARITY);
         types.add(REAGENT);
