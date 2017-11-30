@@ -15,8 +15,8 @@ import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribut
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.effects.HealEffect;
 import com.herocraftonline.items.api.item.trigger.TriggerResult;
-import com.herocraftonline.items.api.item.trigger.TriggerSource;
-import com.herocraftonline.items.api.item.trigger.sources.LivingEntitySource;
+import com.herocraftonline.items.api.item.trigger.source.TriggerSource;
+import com.herocraftonline.items.api.item.trigger.source.entity.LivingEntitySource;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.configuration.ConfigurationSection;
@@ -46,7 +46,7 @@ public class HealEffectAttribute extends BaseAttribute<HealEffect> implements He
 
     @Override
     public boolean canTrigger(TriggerSource source) {
-        return source.ofType(LivingEntitySource.class).map(LivingEntitySource::getSource)
+        return source.ofType(LivingEntitySource.class).map(LivingEntitySource::getEntity)
                 .map(entity -> getHeal() > 0 && entity.getMaxHealth() > entity.getHealth()).orElse(false);
     }
 
@@ -54,7 +54,7 @@ public class HealEffectAttribute extends BaseAttribute<HealEffect> implements He
     public TriggerResult onTrigger(TriggerSource source) {
         Optional<LivingEntitySource> livingEntitySource = source.ofType(LivingEntitySource.class);
         if (livingEntitySource.isPresent()) {
-            LivingEntity entity = livingEntitySource.get().getSource();
+            LivingEntity entity = livingEntitySource.get().getEntity();
             if (getHeal() > 0 && entity.getMaxHealth() > entity.getHealth()) {
                 entity.setHealth(Math.min(entity.getHealth() + getHeal(), entity.getMaxHealth()));
                 return TriggerResult.SUCCESS;

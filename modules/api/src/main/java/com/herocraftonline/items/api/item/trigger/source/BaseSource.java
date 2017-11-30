@@ -8,24 +8,21 @@
  * Unauthorized copying and/or distribution of Relics API,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.item.trigger.sources;
+package com.herocraftonline.items.api.item.trigger.source;
 
 import com.herocraftonline.items.api.item.Item;
-import org.bukkit.entity.Entity;
 
-public class EntitySource extends CommandSenderSource {
+public class BaseSource implements TriggerSource {
 
-    private final Entity source;
+    private final Item item;
 
-    public EntitySource(Item item, Entity source) {
-        super(item, source);
-
-        this.source = source;
+    public BaseSource(Item item) {
+        this.item = item;
     }
 
     @Override
-    public Entity getSource() {
-        return source;
+    public Item getItem() {
+        return item;
     }
 
 }

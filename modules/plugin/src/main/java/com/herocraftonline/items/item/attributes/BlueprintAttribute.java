@@ -17,8 +17,8 @@ import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribut
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Blueprint;
 import com.herocraftonline.items.api.item.trigger.TriggerResult;
-import com.herocraftonline.items.api.item.trigger.TriggerSource;
-import com.herocraftonline.items.api.item.trigger.sources.PlayerSource;
+import com.herocraftonline.items.api.item.trigger.source.TriggerSource;
+import com.herocraftonline.items.api.item.trigger.source.entity.PlayerSource;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.crafting.CraftingMenu;
 import com.herocraftonline.items.crafting.recipe.RecipeRenderer;
@@ -85,14 +85,14 @@ public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blue
 
     @Override
     public boolean canTrigger(TriggerSource source) {
-        return source.ofType(PlayerSource.class).isPresent();
+        return source instanceof PlayerSource;
     }
 
     @Override
     public TriggerResult onTrigger(TriggerSource source) {
         Optional<PlayerSource> playerSource = source.ofType(PlayerSource.class);
         if (playerSource.isPresent()) {
-            Player player = playerSource.get().getSource();
+            Player player = playerSource.get().getPlayer();
             ItemStack blueprint = source.getItem().getItem();
             CraftingMenu.open(player, getRecipe(), blueprint);
             return TriggerResult.SUCCESS;

@@ -15,6 +15,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.projectiles.Veloc
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.util.Vector;
 
@@ -43,6 +44,11 @@ public class AttributeListener implements Listener {
                 projectile.setVelocity(velocity);
             });
         });
+    }
+
+    @EventHandler
+    public void onEntityDamage(EntityDamageByEntityEvent event) {
+
     }
 
 }

@@ -8,14 +8,14 @@
  * Unauthorized copying and/or distribution of Relics,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.item.attributes;
+package com.herocraftonline.items.item.triggers;
 
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.attribute.attributes.triggers.BaseTrigger;
 import com.herocraftonline.items.api.item.attribute.attributes.triggers.PlayerInteract;
 import com.herocraftonline.items.api.item.trigger.TriggerResult;
-import com.herocraftonline.items.api.item.trigger.TriggerSource;
-import com.herocraftonline.items.api.item.trigger.sources.PlayerInteractSource;
+import com.herocraftonline.items.api.item.trigger.source.TriggerSource;
+import com.herocraftonline.items.api.item.trigger.source.event.PlayerInteractSource;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.api.storage.nbt.NBTTagList;
 import com.herocraftonline.items.api.storage.nbt.NBTTagString;

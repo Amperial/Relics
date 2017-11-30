@@ -15,10 +15,12 @@ import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribut
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.effects.SoundEffect;
 import com.herocraftonline.items.api.item.trigger.TriggerResult;
-import com.herocraftonline.items.api.item.trigger.TriggerSource;
-import com.herocraftonline.items.api.item.trigger.sources.PlayerSource;
+import com.herocraftonline.items.api.item.trigger.source.LocationSource;
+import com.herocraftonline.items.api.item.trigger.source.TriggerSource;
+import com.herocraftonline.items.api.item.trigger.source.entity.PlayerSource;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.DefaultAttributes;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -58,20 +60,27 @@ public class SoundEffectAttribute extends BaseAttribute<SoundEffect> implements 
 
     @Override
     public boolean canTrigger(TriggerSource source) {
-        return source.ofType(PlayerSource.class).isPresent();
+        return global ? source instanceof LocationSource : source instanceof PlayerSource;
     }
 
     @Override
     public TriggerResult onTrigger(TriggerSource source) {
-        Optional<PlayerSource> playerSource = source.ofType(PlayerSource.class);
-        if (playerSource.isPresent()) {
-            Player player = playerSource.get().getSource();
-            if (global) {
-                player.getWorld().playSound(player.getLocation(), getSound(), getVolume(), getPitch());
-            } else {
-                player.playSound(player.getLocation(), getSound(), getVolume(), getPitch());
+        if (global) {
+            // Play sound at location to everyone
+            Optional<LocationSource> locationSource = source.ofType(LocationSource.class);
+            if (locationSource.isPresent()) {
+                Location location = locationSource.get().getLocation();
+                location.getWorld().playSound(location, getSound(), getVolume(), getPitch());
+                return TriggerResult.SUCCESS;
             }
-            return TriggerResult.SUCCESS;
+        } else {
+            // Play sound at player's location to player
+            Optional<PlayerSource> playerSource = source.ofType(PlayerSource.class);
+            if (playerSource.isPresent()) {
+                Player player = playerSource.get().getPlayer();
+                player.playSound(player.getLocation(), getSound(), getVolume(), getPitch());
+                return TriggerResult.SUCCESS;
+            }
         }
         return TriggerResult.NOT_TRIGGERED;
     }

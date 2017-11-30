@@ -15,8 +15,8 @@ import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribut
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.effects.PotionEffect;
 import com.herocraftonline.items.api.item.trigger.TriggerResult;
-import com.herocraftonline.items.api.item.trigger.TriggerSource;
-import com.herocraftonline.items.api.item.trigger.sources.LivingEntitySource;
+import com.herocraftonline.items.api.item.trigger.source.TriggerSource;
+import com.herocraftonline.items.api.item.trigger.source.entity.LivingEntitySource;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.Color;
@@ -42,14 +42,14 @@ public class PotionEffectAttribute extends BaseAttribute<PotionEffect> implement
 
     @Override
     public boolean canTrigger(TriggerSource source) {
-        return source.ofType(LivingEntitySource.class).isPresent();
+        return source instanceof LivingEntitySource;
     }
 
     @Override
     public TriggerResult onTrigger(TriggerSource source) {
         Optional<LivingEntitySource> livingEntitySource = source.ofType(LivingEntitySource.class);
         if (livingEntitySource.isPresent()) {
-            getEffect().apply(livingEntitySource.get().getSource());
+            getEffect().apply(livingEntitySource.get().getEntity());
             return TriggerResult.SUCCESS;
         }
         return TriggerResult.NOT_TRIGGERED;

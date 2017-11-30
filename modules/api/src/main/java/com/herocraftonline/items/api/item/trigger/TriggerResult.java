@@ -10,6 +10,8 @@
  */
 package com.herocraftonline.items.api.item.trigger;
 
+import com.herocraftonline.items.api.item.trigger.source.TriggerSource;
+
 import java.util.function.BinaryOperator;
 
 /**

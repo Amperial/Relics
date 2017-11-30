@@ -16,8 +16,8 @@ import com.herocraftonline.items.api.item.attribute.attributes.Identifiable;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.trigger.TriggerResult;
-import com.herocraftonline.items.api.item.trigger.TriggerSource;
-import com.herocraftonline.items.api.item.trigger.sources.HumanEntitySource;
+import com.herocraftonline.items.api.item.trigger.source.TriggerSource;
+import com.herocraftonline.items.api.item.trigger.source.entity.HumanEntitySource;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.DefaultAttributes;
 import com.herocraftonline.items.util.EncryptUtil;
@@ -67,14 +67,14 @@ public class IdentifiableAttribute extends BaseAttribute<Identifiable> implement
 
     @Override
     public boolean canTrigger(TriggerSource source) {
-        return source.ofType(HumanEntitySource.class).isPresent();
+        return source instanceof HumanEntitySource;
     }
 
     @Override
     public TriggerResult onTrigger(TriggerSource source) {
         Optional<HumanEntitySource> humanEntitySource = source.ofType(HumanEntitySource.class);
         if (humanEntitySource.isPresent()) {
-            humanEntitySource.get().getSource().getInventory().addItem(identifyItem());
+            humanEntitySource.get().getEntity().getInventory().addItem(identifyItem());
             return TriggerResult.CONSUME_ITEM;
         }
         return TriggerResult.NOT_TRIGGERED;

@@ -67,7 +67,7 @@ public class Relics extends JavaPlugin implements ItemPlugin {
     private ItemManager itemManager;
     private ModelManager modelManager;
     private EquipmentManager equipmentManager;
-    private Optional<EffectManager> effectManager;
+    private Optional<EffectManager> effectLib;
 
     /**
      * Listeners of the Relics plugin.
@@ -94,9 +94,9 @@ public class Relics extends JavaPlugin implements ItemPlugin {
         // Attempt to load effect lib
         Plugin effectLib = getServer().getPluginManager().getPlugin("EffectLib");
         if (effectLib instanceof EffectLib) {
-            effectManager = Optional.of(new EffectManager(this));
+            this.effectLib = Optional.of(new EffectManager(this));
         } else {
-            effectManager = Optional.empty();
+            this.effectLib = Optional.empty();
         }
 
         // Attempt to load NMSHandler
@@ -190,10 +190,10 @@ public class Relics extends JavaPlugin implements ItemPlugin {
         commandController = null;
         messenger = null;
         configManager = null;
-        if (effectManager.isPresent()) {
-            effectManager.get().dispose();
+        if (effectLib.isPresent()) {
+            effectLib.get().dispose();
         }
-        effectManager = null;
+        effectLib = null;
     }
 
     @Override
@@ -227,8 +227,8 @@ public class Relics extends JavaPlugin implements ItemPlugin {
     }
 
     @Override
-    public Optional<EffectManager> getEffectManager() {
-        return effectManager;
+    public Optional<EffectManager> getEffectLib() {
+        return effectLib;
     }
 
     @Override

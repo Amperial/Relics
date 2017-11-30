@@ -8,7 +8,7 @@
  * Unauthorized copying and/or distribution of Relics API,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.item.trigger;
+package com.herocraftonline.items.api.item.trigger.source;
 
 import com.herocraftonline.items.api.item.Item;
 
@@ -16,22 +16,26 @@ import java.util.Optional;
 
 /**
  * Used to pass information through to trigger code.
+ *
+ * @author Austin Payne
  */
-public class TriggerSource {
-
-    private final Item item;
-
-    public TriggerSource(Item item) {
-        this.item = item;
-    }
+public interface TriggerSource {
 
     /**
      * Gets the item related to the trigger source.
      *
      * @return the source item
      */
-    public Item getItem() {
-        return item;
+    Item getItem();
+
+    /**
+     * Checks if the trigger source is of the given type.
+     *
+     * @param type the type
+     * @return {@code true} if the trigger source is the given type, else {@code false}
+     */
+    default boolean isType(Class type) {
+        return ofType(type).isPresent();
     }
 
     /**
@@ -43,7 +47,7 @@ public class TriggerSource {
      * @return the {@link Optional} instance
      */
     @SuppressWarnings("unchecked")
-    public <T> Optional<T> ofType(Class<T> type) {
+    default <T extends TriggerSource> Optional<T> ofType(Class<T> type) {
         return Optional.ofNullable(type.isAssignableFrom(getClass()) ? (T) this : null);
     }
 

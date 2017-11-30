@@ -15,8 +15,8 @@ import com.herocraftonline.items.api.item.attribute.attributes.Command;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.trigger.TriggerResult;
-import com.herocraftonline.items.api.item.trigger.TriggerSource;
-import com.herocraftonline.items.api.item.trigger.sources.CommandSenderSource;
+import com.herocraftonline.items.api.item.trigger.source.CommandSenderSource;
+import com.herocraftonline.items.api.item.trigger.source.TriggerSource;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.command.CommandSender;
@@ -58,14 +58,14 @@ public class CommandAttribute extends BaseAttribute<Command> implements Command 
 
     @Override
     public boolean canTrigger(TriggerSource source) {
-        return source.ofType(CommandSenderSource.class).isPresent();
+        return source instanceof CommandSenderSource;
     }
 
     @Override
     public TriggerResult onTrigger(TriggerSource source) {
         Optional<CommandSenderSource> senderSource = source.ofType(CommandSenderSource.class);
         if (senderSource.isPresent()) {
-            CommandSender commandSender = senderSource.get().getSource();
+            CommandSender commandSender = senderSource.get().getSender();
             execute(commandSender);
             return TriggerResult.SUCCESS;
         }

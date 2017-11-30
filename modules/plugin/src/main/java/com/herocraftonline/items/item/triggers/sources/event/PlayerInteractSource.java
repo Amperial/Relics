@@ -1,21 +1,22 @@
 /*
- * This file is part of Relics API.
+ * This file is part of Relics.
  *
  * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
  *
  * All Rights Reserved.
  *
- * Unauthorized copying and/or distribution of Relics API,
+ * Unauthorized copying and/or distribution of Relics,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.item.trigger.sources;
+package com.herocraftonline.items.item.triggers.sources.event;
 
 import com.herocraftonline.items.api.item.Item;
+import com.herocraftonline.items.item.triggers.sources.entity.PlayerSource;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public class PlayerInteractSource extends PlayerSource {
+public class PlayerInteractSource extends PlayerSource implements com.herocraftonline.items.api.item.trigger.source.event.PlayerInteractSource {
 
-    private final PlayerInteractEvent event;
+    private PlayerInteractEvent event;
 
     public PlayerInteractSource(Item item, PlayerInteractEvent event) {
         super(item, event.getPlayer());
@@ -23,6 +24,7 @@ public class PlayerInteractSource extends PlayerSource {
         this.event = event;
     }
 
+    @Override
     public PlayerInteractEvent getEvent() {
         return event;
     }

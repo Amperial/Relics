@@ -23,6 +23,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.requirements.*;
 import com.herocraftonline.items.api.item.attribute.attributes.triggers.Cooldown;
 import com.herocraftonline.items.api.item.attribute.attributes.triggers.PlayerInteract;
 import com.herocraftonline.items.item.attributes.*;
+import com.herocraftonline.items.item.triggers.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
