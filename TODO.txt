@@ -1,57 +1,32 @@
-Items:
-- Allow setting an item's id in config, instead of always randomly generating
-    - This can allow certain items to stack or be identified exactly even through name or config changes
-        - Code will need to support this, in the case of equipment system, gem infusion etc.
+Core Systems:
+- Equipment
+- Triggers
+- Item Variables
 
 Attributes:
-- Iron out system of certain attributes listening to events
-    - React to or modify clicks, attacks, all kinds of interaction
-    - Event result can cause item to be updated, consumed, unchanged, etc.
-- Remove deep attribute methods in favor of handling this on a per attribute basis
-    - Individual attributes can specify whether or not they are deeply visible
-        - All attribute container code will be greatly simplified
-        - All code using attributes will not have to worry about whether they should be working deeply
-- Add effect attributes (sounds, particles, effectlib, potions..)
-    - Play when attribute reacts to a click, attack, other kinds of events in system mentioned above
-    - Play when an item is initially equipped or even continuously while equipped
-        - This feature really belongs under equipment, because it is not limited to only visual/audio effects
-    - Abstract effect system so that heroes effect types can be registered, etc.
-- Add command attributes
-    - Include all features of craftbook command items
-- Add skill attributes
-    - Execute skills through api instead of being limited to commands
-- Add item set attributes
-    - When multiple items from a set are equipped, certain bonus attributes become visible
+- Item Set bonuses
+- Damage Mitigation
 
-Recipes:
-- Defined ingredients
-    - Ingredients consist of material, and list of predicates
-        - Material type is the only ingredient information handled by bukkit
-        - Predicates determine if an item is a valid ingredient for the recipe
-            - Predicate to accept items with exact or partial name
-            - Predicate to accept items with exact id
-            - Predicate to accept items with a certain attribute
-            - Predicate to accept items where an attribute meets certain criteria
-                - Impose exact, min, or max requirements on SummableAttribute values
-                    - Make sure the total attribute value of all ingredients meets criteria
-                    - Total attribute value must be within the specified range
-                - Impose exact, min, max, or equivalence requirements on ValueAttribute values
-                    - Make sure the attribute value of each individual attribute meets criteria
-                    - Each attribute value must be within the specified range, or equivalent to each other
-                - Unknown requirements on unknown attribute implementations in an abstract way
-- Recipe shape
-    - Configure as a shaped recipe, villager recipe, or even furnace recipe
-    - Again, handled in an abstract way
-- Defined result preview
-    - Item shown in result window before clicking
-    - Isn't necessarily the same exact item as the one that could be generated
-        - Allows preview items to not give away certain details, random generation, etc.
-- Defined final result
-    - Final item received by the player
-    - Fancy system to allow passing information from the ingredients to the result item args in a configurable way
-        - Result item inherits the rarity of the least rare ingredient?
-        - Result item attributes (such as level) have a value of the total, min, or max ingredient values?
-        - Pass through parts of item name, attribute values, or even entire attributes
+Triggers:
+- Periodic trigger
+- Take damage (or attacked by entity)
+- Attack entity
+- Kill entity
 
-Equipment:
-- Fancy stuff ;)
+Triggerables:
+- EffectLib effects
+- Bukkit effects
+- Skills
+
+Projectiles:
+- Put projectile item on projectile entity metadata when fired
+- Add trigger for triggerables that listen to projectile hit event
+
+Item Variables:
+- Global variables on the item, that can be used in attributes
+- Variables can be referenced with config transform system
+    - Attributes with values that support this will hold an object that must be evaluated
+        - If something uses a variable, the variable's current value will be used every time the setting is evaluated
+        - If something doesn't use a variable, the static value will just be wrapped for evaluation with the same code
+- Necessary for item upgrade system, allowing item values to change after generation
+- Used for item level, rarity, and other possibilities such as varying how good the item is, storing energy, etc

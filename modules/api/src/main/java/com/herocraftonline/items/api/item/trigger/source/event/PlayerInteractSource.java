@@ -11,10 +11,15 @@
 package com.herocraftonline.items.api.item.trigger.source.event;
 
 import com.herocraftonline.items.api.item.trigger.source.entity.PlayerSource;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public interface PlayerInteractSource extends PlayerSource {
 
     PlayerInteractEvent getEvent();
+
+    default Player getPlayer() {
+        return getEvent().getPlayer();
+    }
 
 }

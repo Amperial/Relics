@@ -13,21 +13,29 @@ package com.herocraftonline.items.item.attributes;
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
+import com.herocraftonline.items.api.item.trigger.TriggerResult;
+import com.herocraftonline.items.api.item.trigger.Triggerable;
+import com.herocraftonline.items.api.item.trigger.source.LocationSource;
+import com.herocraftonline.items.api.item.trigger.source.TriggerSource;
+import com.herocraftonline.items.api.item.trigger.source.entity.LivingEntitySource;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.DefaultAttributes;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class SmiteAttribute extends BaseAttribute<SmiteAttribute> {
+public class SmiteAttribute extends BaseAttribute<SmiteAttribute> implements Triggerable {
 
     private static final Set<Material> AIR;
 
@@ -56,17 +64,33 @@ public class SmiteAttribute extends BaseAttribute<SmiteAttribute> {
         return gods.contains(player.getUniqueId()) || player.hasPermission(permission);
     }
 
-    /* TODO
     @Override
-    public void onClick(PlayerInteractEvent event, Item item) {
-        if (item.isEquipped() && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
-            Player player = event.getPlayer();
-            if (canSmite(player)) {
-                player.getWorld().strikeLightning(player.getTargetBlock(AIR, getRange()).getLocation());
-            }
-        }
+    public boolean canTrigger(TriggerSource source) {
+        return source instanceof LocationSource;
     }
-    */
+
+    @Override
+    public TriggerResult onTrigger(TriggerSource source) {
+        // Get location source to be used for lightning strike location
+        Optional<LocationSource> locationSource = source.ofType(LocationSource.class);
+        if (locationSource.isPresent()) {
+            Location location = locationSource.get().getLocation();
+
+            // If source is a living entity, update location to where they're looking
+            // TODO: Move this code to a trigger that converts living entity source to location source of target block
+            Optional<LivingEntitySource> livingEntitySource = source.ofType(LivingEntitySource.class);
+            if (livingEntitySource.isPresent()) {
+                LivingEntity entity = livingEntitySource.get().getEntity();
+                if (entity instanceof Player && !canSmite((Player) entity)) {
+                    return TriggerResult.NOT_TRIGGERED;
+                }
+                location = entity.getTargetBlock(AIR, getRange()).getLocation();
+            }
+            location.getWorld().strikeLightning(location);
+            return TriggerResult.SUCCESS;
+        }
+        return TriggerResult.NOT_TRIGGERED;
+    }
 
     @Override
     public void saveToNBT(NBTTagCompound compound) {

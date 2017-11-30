@@ -48,23 +48,6 @@ public class IdentifiableAttribute extends BaseAttribute<Identifiable> implement
         compound.setString("item", encryptedItem);
     }
 
-    /* TODO
-    @Override
-    public void onClick(PlayerInteractEvent event, Item item) {
-        if (event.getAction() == Action.LEFT_CLICK_AIR) {
-            // Replace item with identified item
-            ItemStack identifiable = event.getItem();
-            NBTTagCompound identified = NMSHandler.instance().toNBT(identifyItem());
-            Optional<ItemStack> updated = NMSHandler.instance().replaceNBT(identifiable, identified);
-
-            // Update item in player inventory
-            Player player = event.getPlayer();
-            updated.ifPresent(updatedItem -> player.getEquipment().setItemInMainHand(updatedItem));
-            player.updateInventory();
-        }
-    }
-    */
-
     @Override
     public boolean canTrigger(TriggerSource source) {
         return source instanceof HumanEntitySource;
@@ -75,6 +58,8 @@ public class IdentifiableAttribute extends BaseAttribute<Identifiable> implement
         Optional<HumanEntitySource> humanEntitySource = source.ofType(HumanEntitySource.class);
         if (humanEntitySource.isPresent()) {
             humanEntitySource.get().getEntity().getInventory().addItem(identifyItem());
+            // TODO: We might want to have a way to replace item in inventory instead
+            // NMSHandler.instance().replaceNBT(identifiable, identified);
             return TriggerResult.CONSUME_ITEM;
         }
         return TriggerResult.NOT_TRIGGERED;
