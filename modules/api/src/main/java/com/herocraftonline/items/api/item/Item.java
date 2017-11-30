@@ -12,6 +12,7 @@ package com.herocraftonline.items.api.item;
 
 import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.AttributeContainer;
+import com.herocraftonline.items.api.item.variable.VariableContainer;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -26,7 +27,7 @@ import java.util.UUID;
  *
  * @author Austin Payne
  */
-public interface Item extends AttributeContainer, Equippable {
+public interface Item extends AttributeContainer, Equippable, VariableContainer {
 
     /**
      * Gets the unique id of the item.

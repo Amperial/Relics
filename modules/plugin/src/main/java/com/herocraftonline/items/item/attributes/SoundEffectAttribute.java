@@ -11,6 +11,7 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.effects.SoundEffect;
@@ -34,8 +35,8 @@ public class SoundEffectAttribute extends BaseAttribute<SoundEffect> implements 
     private float pitch;
     private boolean global;
 
-    public SoundEffectAttribute(String name, Sound sound, float volume, float pitch, boolean global) {
-        super(name, DefaultAttributes.SOUND_EFFECT);
+    public SoundEffectAttribute(Item item, String name, Sound sound, float volume, float pitch, boolean global) {
+        super(item, name, DefaultAttributes.SOUND_EFFECT);
 
         this.sound = sound;
         this.volume = volume;
@@ -100,7 +101,7 @@ public class SoundEffectAttribute extends BaseAttribute<SoundEffect> implements 
         }
 
         @Override
-        public SoundEffect loadFromConfig(String name, ConfigurationSection config) {
+        public SoundEffect loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load sound, volume, pitch, and global
             Sound sound = Sound.valueOf(config.getString("sound"));
             float volume = (float) config.getDouble("volume", 1);
@@ -108,11 +109,11 @@ public class SoundEffectAttribute extends BaseAttribute<SoundEffect> implements 
             boolean global = config.getBoolean("global", false);
 
             // Load sound effect attribute
-            return new SoundEffectAttribute(name, sound, volume, pitch, global);
+            return new SoundEffectAttribute(item, name, sound, volume, pitch, global);
         }
 
         @Override
-        public SoundEffect loadFromNBT(String name, NBTTagCompound compound) {
+        public SoundEffect loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load sound, volume, pitch, and global
             Sound sound = Sound.valueOf(compound.getString("sound"));
             float volume = compound.getFloat("volume");
@@ -120,7 +121,7 @@ public class SoundEffectAttribute extends BaseAttribute<SoundEffect> implements 
             boolean global = compound.getBoolean("global");
 
             // Load sound effect attribute
-            return new SoundEffectAttribute(name, sound, volume, pitch, global);
+            return new SoundEffectAttribute(item, name, sound, volume, pitch, global);
         }
     }
 

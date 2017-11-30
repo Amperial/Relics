@@ -11,6 +11,7 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.Model;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
@@ -24,8 +25,8 @@ public class ModelAttribute extends BaseAttribute<Model> implements Model {
 
     private com.herocraftonline.items.api.item.model.Model model;
 
-    public ModelAttribute(String name, com.herocraftonline.items.api.item.model.Model model) {
-        super(name, DefaultAttributes.MODEL);
+    public ModelAttribute(Item item, String name, com.herocraftonline.items.api.item.model.Model model) {
+        super(item, name, DefaultAttributes.MODEL);
 
         this.model = model;
     }
@@ -47,7 +48,7 @@ public class ModelAttribute extends BaseAttribute<Model> implements Model {
         }
 
         @Override
-        public Model loadFromConfig(String name, ConfigurationSection config) {
+        public Model loadFromConfig(Item item, String name, ConfigurationSection config) {
             ModelManager modelManager = getPlugin().getModelManager();
 
             // Load model
@@ -55,11 +56,11 @@ public class ModelAttribute extends BaseAttribute<Model> implements Model {
             com.herocraftonline.items.api.item.model.Model model = modelManager.getModel(modelName);
 
             // Create model attribute
-            return new ModelAttribute(name, model);
+            return new ModelAttribute(item, name, model);
         }
 
         @Override
-        public Model loadFromNBT(String name, NBTTagCompound compound) {
+        public Model loadFromNBT(Item item, String name, NBTTagCompound compound) {
             ModelManager modelManager = getPlugin().getModelManager();
 
             // Load model
@@ -67,7 +68,7 @@ public class ModelAttribute extends BaseAttribute<Model> implements Model {
             com.herocraftonline.items.api.item.model.Model model = modelManager.getModel(modelName);
 
             // Create model attribute
-            return new ModelAttribute(name, model);
+            return new ModelAttribute(item, name, model);
         }
     }
 

@@ -10,6 +10,7 @@
  */
 package com.herocraftonline.items.api.item.attribute;
 
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -28,7 +29,7 @@ public interface AttributeFactory<T extends Attribute<T>> {
      * @param config the configuration section
      * @return the item attribute
      */
-    T loadFromConfig(String name, ConfigurationSection config);
+    T loadFromConfig(Item item, String name, ConfigurationSection config);
 
     /**
      * Loads an item attribute with the given name from an nbt tag compound.
@@ -37,6 +38,6 @@ public interface AttributeFactory<T extends Attribute<T>> {
      * @param compound the tag compound
      * @return the item attribute
      */
-    T loadFromNBT(String name, NBTTagCompound compound);
+    T loadFromNBT(Item item, String name, NBTTagCompound compound);
 
 }

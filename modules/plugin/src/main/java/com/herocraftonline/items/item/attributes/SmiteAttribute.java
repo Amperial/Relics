@@ -11,6 +11,7 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.trigger.TriggerResult;
@@ -48,8 +49,8 @@ public class SmiteAttribute extends BaseAttribute<SmiteAttribute> implements Tri
     private final Set<UUID> gods;
     private final int range;
 
-    public SmiteAttribute(String name, Permission permission, Set<UUID> gods, int range) {
-        super(name, DefaultAttributes.SMITE);
+    public SmiteAttribute(Item item, String name, Permission permission, Set<UUID> gods, int range) {
+        super(item, name, DefaultAttributes.SMITE);
 
         this.permission = permission;
         this.gods = gods;
@@ -110,21 +111,21 @@ public class SmiteAttribute extends BaseAttribute<SmiteAttribute> implements Tri
         }
 
         @Override
-        public SmiteAttribute loadFromConfig(String name, ConfigurationSection config) {
+        public SmiteAttribute loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load range
             int range = Math.abs(config.getInt("range", 64));
 
             // Create smite attribute
-            return new SmiteAttribute(name, permission, gods, range);
+            return new SmiteAttribute(item, name, permission, gods, range);
         }
 
         @Override
-        public SmiteAttribute loadFromNBT(String name, NBTTagCompound compound) {
+        public SmiteAttribute loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load range
             int range = compound.getInt("range");
 
             // Create smite attribute
-            return new SmiteAttribute(name, permission, gods, range);
+            return new SmiteAttribute(item, name, permission, gods, range);
         }
     }
 

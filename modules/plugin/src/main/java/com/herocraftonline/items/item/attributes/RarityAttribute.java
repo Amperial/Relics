@@ -11,6 +11,7 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.Rarity;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
@@ -26,8 +27,8 @@ public class RarityAttribute extends BaseAttribute<Rarity> implements Rarity {
 
     private int rarity;
 
-    public RarityAttribute(String name, int rarity, String text) {
-        super(name, DefaultAttributes.RARITY);
+    public RarityAttribute(Item item, String name, int rarity, String text) {
+        super(item, name, DefaultAttributes.RARITY);
 
         this.rarity = rarity;
 
@@ -64,23 +65,23 @@ public class RarityAttribute extends BaseAttribute<Rarity> implements Rarity {
         }
 
         @Override
-        public Rarity loadFromConfig(String name, ConfigurationSection config) {
+        public Rarity loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load rarity
             int rarity = Math.max(config.getInt("tier", 0), 0);
             String text = rarity < tiers.size() ? tiers.get(rarity) : unknown;
 
             // Create rarity attribute
-            return new RarityAttribute(name, rarity, text);
+            return new RarityAttribute(item, name, rarity, text);
         }
 
         @Override
-        public Rarity loadFromNBT(String name, NBTTagCompound compound) {
+        public Rarity loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load rarity
             int rarity = compound.getInt("tier");
             String text = rarity < tiers.size() ? tiers.get(rarity) : unknown;
 
             // Create rarity attribute
-            return new RarityAttribute(name, rarity, text);
+            return new RarityAttribute(item, name, rarity, text);
         }
     }
 

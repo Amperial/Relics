@@ -36,8 +36,8 @@ public class GemAttribute extends BaseAttribute<Gem> implements Gem {
     private Group attributes;
     private Item item;
 
-    public GemAttribute(String name, String displayName, SocketColor color, Group attributes) {
-        super(name, DefaultAttributes.GEM);
+    public GemAttribute(Item item, String name, String displayName, SocketColor color, Group attributes) {
+        super(item, name, DefaultAttributes.GEM);
         this.displayName = displayName;
         this.color = color;
         this.attributes = attributes;
@@ -256,45 +256,45 @@ public class GemAttribute extends BaseAttribute<Gem> implements Gem {
         }
 
         @Override
-        public Gem loadFromConfig(String name, ConfigurationSection config) {
+        public Gem loadFromConfig(Item item, String name, ConfigurationSection config) {
             ItemManager itemManager = getPlugin().getItemManager();
 
             // Load name, color, and attributes
             String displayName = ChatColor.translateAlternateColorCodes('&', config.getString("name", "?"));
             SocketColor color = SocketColor.fromName(config.getString("color", "yellow"));
-            Group attributes = DefaultAttributes.GROUP.getFactory().loadFromConfig("attributes", config);
+            Group attributes = DefaultAttributes.GROUP.getFactory().loadFromConfig(item, "attributes", config);
 
             // Create gem
-            Gem gem = new GemAttribute(name, displayName, color, attributes);
+            Gem gem = new GemAttribute(item, name, displayName, color, attributes);
 
             // Load item
             if (config.isConfigurationSection("item")) {
                 ConfigurationSection itemConfig = config.getConfigurationSection("item");
-                Item item = itemManager.getItem(itemConfig);
-                gem.setItem(item);
+                Item gemItem = itemManager.getItem(itemConfig);
+                gem.setItem(gemItem);
             }
 
             return gem;
         }
 
         @Override
-        public Gem loadFromNBT(String name, NBTTagCompound compound) {
+        public Gem loadFromNBT(Item item, String name, NBTTagCompound compound) {
             ItemManager itemManager = getPlugin().getItemManager();
 
             // Load color and attribute
             String displayName = compound.getString("name");
             SocketColor color = SocketColor.fromName(compound.getString("color"));
             NBTTagCompound attributesCompound = compound.getCompound("attributes");
-            Group attributes = (Group) itemManager.loadAttribute("attributes", attributesCompound);
+            Group attributes = (Group) itemManager.loadAttribute(item, "attributes", attributesCompound);
 
             // Create gem
-            Gem gem = new GemAttribute(name, displayName, color, attributes);
+            Gem gem = new GemAttribute(item, name, displayName, color, attributes);
 
             // Load item
             if (compound.hasKey("item")) {
                 NBTTagCompound itemCompound = compound.getCompound("item");
-                Item item = itemManager.getItem(itemCompound);
-                gem.setItem(item);
+                Item gemItem = itemManager.getItem(itemCompound);
+                gem.setItem(gemItem);
             }
 
             return gem;

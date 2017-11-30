@@ -23,8 +23,11 @@ import com.herocraftonline.items.api.item.attribute.attributes.requirements.Requ
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatGroup;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatType;
+import com.herocraftonline.items.api.item.variable.StaticVariable;
+import com.herocraftonline.items.api.item.variable.Variable;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.api.storage.nbt.NBTTagList;
+import com.herocraftonline.items.item.attributes.GroupAttribute;
 import com.herocraftonline.items.nms.NMSHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -58,6 +61,7 @@ public class CustomItem implements Item {
     private static final String ENCHANTMENTS_TAG = "enchantments";
     private static final String UNBREAKABLE_TAG = "unbreakable";
     private static final String TYPE_TAG = "item-type";
+    private static final String VARIABLES_TAG = "variables";
     private static final String ATTRIBUTES_TAG = "attributes";
     private static final String INSTANCE_TAG = "item-instance";
 
@@ -77,16 +81,18 @@ public class CustomItem implements Item {
     private final Map<Enchantment, Integer> enchantments;
     private final boolean unbreakable;
     private final ItemType type;
+    private final Map<String, Variable> variables;
     private final Group attributes;
     private boolean equipped = false;
 
-    private CustomItem(UUID id, String name, Material material, Map<Enchantment, Integer> enchantments, boolean unbreakable, ItemType type, Group attributes) {
+    private CustomItem(UUID id, String name, Material material, Map<Enchantment, Integer> enchantments, boolean unbreakable, ItemType type, Map<String, Variable> variables, Group attributes) {
         this.id = id;
         this.name = name;
         this.material = material;
         this.enchantments = enchantments;
         this.unbreakable = unbreakable;
         this.type = type;
+        this.variables = variables;
         this.attributes = attributes;
     }
 
@@ -291,6 +297,40 @@ public class CustomItem implements Item {
     }
 
     @Override
+    public boolean hasVariable(String name) {
+        return variables.containsKey(name);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> Variable<T> getVariable(String name, Class<T> type) {
+        Variable variable = variables.get(name);
+        if (variable != null && type.isAssignableFrom(variable.getClass())) {
+            return (Variable<T>) variable;
+        }
+        return null;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getValue(String name, Class<T> type) {
+        Variable variable = variables.get(name);
+        if (variable != null && type.isAssignableFrom(variable.getValue().getClass())) {
+            return (T) variable.getValue();
+        }
+        return null;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> void setValue(String name, T value) {
+        Variable variable = variables.get(name);
+        if (variable != null && value.getClass().isAssignableFrom(variable.getValue().getClass())) {
+            variable.setValue(value);
+        }
+    }
+
+    @Override
     public boolean isEquipped() {
         return equipped;
     }
@@ -455,7 +495,6 @@ public class CustomItem implements Item {
 
     @Override
     public void saveToNBT(NBTTagCompound compound) {
-        attributes.saveToNBT(compound);
         compound.setString(ID_TAG, getId().toString());
         compound.setString(NAME_TAG, getName());
         compound.setString(MATERIAL_TAG, getMaterial().name());
@@ -466,6 +505,16 @@ public class CustomItem implements Item {
         compound.setBase(ENCHANTMENTS_TAG, enchants);
         compound.setBoolean(UNBREAKABLE_TAG, isUnbreakable());
         compound.setString(TYPE_TAG, getType().getName());
+        attributes.saveToNBT(compound);
+        NBTTagCompound variableCompound = NBTTagCompound.create();
+        for (Map.Entry<String, Variable> variable : variables.entrySet()) {
+            Object value = variable.getValue().getValue();
+            // TODO: Allow for more variable types in the future, handle loading better
+            if (value instanceof Integer || value instanceof Double) {
+                variableCompound.setDouble(variable.getKey(), (double) value);
+            }
+        }
+        compound.setBase(VARIABLES_TAG, variableCompound);
         compound.setObject(INSTANCE_TAG, this);
     }
 
@@ -478,7 +527,7 @@ public class CustomItem implements Item {
 
         @Override
         public Item loadFromConfig(ConfigurationSection config) {
-            // Load id, name, material, enchantments, unbreakable, type, and attributes
+            // Load id, name, material, enchantments, unbreakable, type, and variables
             UUID id = config.isString(ID_TAG) ? UUID.fromString(config.getString(ID_TAG)) : UUID.randomUUID();
             String name = ChatColor.translateAlternateColorCodes('&', config.getString(NAME_TAG));
             Material material = Material.getMaterial(config.getString(MATERIAL_TAG));
@@ -491,10 +540,26 @@ public class CustomItem implements Item {
             }
             boolean unbreakable = config.getBoolean(UNBREAKABLE_TAG, false);
             ItemType type = new ItemType(config.getString(TYPE_TAG, ItemType.OTHER.getName()));
-            Group attribute = DefaultAttributes.GROUP.getFactory().loadFromConfig(ATTRIBUTES_TAG, config);
+            Map<String, Variable> variables = new HashMap<>();
+            if (config.isConfigurationSection(VARIABLES_TAG)) {
+                ConfigurationSection variableConfig = config.getConfigurationSection(VARIABLES_TAG);
+                for (String variable : variableConfig.getKeys(false)) {
+                    // TODO: Allow for more variable types in the future, handle loading better
+                    if (variableConfig.isInt(variable) || variableConfig.isDouble(variable)) {
+                        variables.put(variable, new StaticVariable<>(variableConfig.getDouble(variable)));
+                    }
+                }
+            }
+            Group attributes = new GroupAttribute(null, ATTRIBUTES_TAG, new HashMap<>(), true);
 
-            // Create Item
-            return new CustomItem(id, name, material, enchantments, unbreakable, type, attribute);
+            // Create item
+            Item item = new CustomItem(id, name, material, enchantments, unbreakable, type, variables, attributes);
+
+            // Load attributes
+            Group loadedAttributes = DefaultAttributes.GROUP.getFactory().loadFromConfig(item, ATTRIBUTES_TAG, config);
+            attributes.addAttribute(loadedAttributes.getAttributes().toArray(new Attribute[0]));
+
+            return item;
         }
 
         @Override
@@ -518,10 +583,20 @@ public class CustomItem implements Item {
             }
             boolean unbreakable = compound.getBoolean(UNBREAKABLE_TAG);
             ItemType type = new ItemType(compound.getString(TYPE_TAG));
-            Group attribute = DefaultAttributes.GROUP.getFactory().loadFromNBT(ATTRIBUTES_TAG, compound);
+            Map<String, Variable> variables = new HashMap<>();
+            NBTTagCompound variableCompound = compound.getCompound(VARIABLES_TAG);
+            for (String variable : variableCompound.getKeySet()) {
+                // TODO: Allow for more variable types in the future, handle loading better
+                variables.put(variable, new StaticVariable<>(variableCompound.getDouble(variable)));
+            }
+            Group attributes = new GroupAttribute(null, ATTRIBUTES_TAG, new HashMap<>(), true);
 
-            // Create Item
-            Item item = new CustomItem(id, name, material, enchantments, unbreakable, type, attribute);
+            // Create item
+            Item item = new CustomItem(id, name, material, enchantments, unbreakable, type, variables, attributes);
+
+            // Load attributes
+            Group loadedAttributes = DefaultAttributes.GROUP.getFactory().loadFromNBT(item, ATTRIBUTES_TAG, compound);
+            attributes.addAttribute(loadedAttributes.getAttributes().toArray(new Attribute[0]));
 
             // Store a loaded item instance on the compound for performance
             compound.setObject(INSTANCE_TAG, item);

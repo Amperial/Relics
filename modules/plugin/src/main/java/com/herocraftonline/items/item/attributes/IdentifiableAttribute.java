@@ -31,8 +31,8 @@ public class IdentifiableAttribute extends BaseAttribute<Identifiable> implement
 
     private final String encryptedItem;
 
-    public IdentifiableAttribute(String name, String encryptedItem) {
-        super(name, DefaultAttributes.IDENTIFIABLE);
+    public IdentifiableAttribute(Item item, String name, String encryptedItem) {
+        super(item, name, DefaultAttributes.IDENTIFIABLE);
 
         this.encryptedItem = encryptedItem;
     }
@@ -71,25 +71,25 @@ public class IdentifiableAttribute extends BaseAttribute<Identifiable> implement
         }
 
         @Override
-        public Identifiable loadFromConfig(String name, ConfigurationSection config) {
+        public Identifiable loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load identifiable item
             String encryptedItem = null;
             if (config.isConfigurationSection("item")) {
-                Item item = getPlugin().getItemManager().getItem(config.getConfigurationSection("item"));
-                encryptedItem = EncryptUtil.encrypt(ItemUtil.serialize(item));
+                Item identifiable = getPlugin().getItemManager().getItem(config.getConfigurationSection("item"));
+                encryptedItem = EncryptUtil.encrypt(ItemUtil.serialize(identifiable));
             }
 
             // Create identifiable attribute
-            return new IdentifiableAttribute(name, encryptedItem);
+            return new IdentifiableAttribute(item, name, encryptedItem);
         }
 
         @Override
-        public Identifiable loadFromNBT(String name, NBTTagCompound compound) {
+        public Identifiable loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load identifiable item
             String encryptedItem = compound.getString("item");
 
             // Create identifiable attribute
-            return new IdentifiableAttribute(name, encryptedItem);
+            return new IdentifiableAttribute(item, name, encryptedItem);
         }
     }
 

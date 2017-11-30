@@ -11,6 +11,7 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.effects.HealEffect;
@@ -28,8 +29,8 @@ public class HealEffectAttribute extends BaseAttribute<HealEffect> implements He
 
     private double heal;
 
-    public HealEffectAttribute(String name, double heal) {
-        super(name, DefaultAttributes.HEAL_EFFECT);
+    public HealEffectAttribute(Item item, String name, double heal) {
+        super(item, name, DefaultAttributes.HEAL_EFFECT);
 
         setHeal(heal);
     }
@@ -75,21 +76,21 @@ public class HealEffectAttribute extends BaseAttribute<HealEffect> implements He
         }
 
         @Override
-        public HealEffect loadFromConfig(String name, ConfigurationSection config) {
+        public HealEffect loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load heal amount
             double heal = config.getDouble("heal", 0);
 
             // Load heal effect attribute
-            return new HealEffectAttribute(name, heal);
+            return new HealEffectAttribute(item, name, heal);
         }
 
         @Override
-        public HealEffect loadFromNBT(String name, NBTTagCompound compound) {
+        public HealEffect loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load heal amount
             double heal = compound.getDouble("heal");
 
             // Load heal effect attribute
-            return new HealEffectAttribute(name, heal);
+            return new HealEffectAttribute(item, name, heal);
         }
     }
 

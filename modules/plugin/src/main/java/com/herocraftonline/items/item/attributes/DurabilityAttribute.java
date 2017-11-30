@@ -11,6 +11,7 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.Durability;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
@@ -28,8 +29,8 @@ public class DurabilityAttribute extends BaseAttribute<Durability> implements Du
     private int max;
     private int current;
 
-    public DurabilityAttribute(String name, int max, int current, Map<Double, String> levels) {
-        super(name, DefaultAttributes.DURABILITY);
+    public DurabilityAttribute(Item item, String name, int max, int current, Map<Double, String> levels) {
+        super(item, name, DefaultAttributes.DURABILITY);
 
         this.max = max;
         this.current = current;
@@ -113,22 +114,22 @@ public class DurabilityAttribute extends BaseAttribute<Durability> implements Du
         }
 
         @Override
-        public DurabilityAttribute loadFromConfig(String name, ConfigurationSection config) {
+        public DurabilityAttribute loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load max durability
             int max = Math.max(config.getInt("max", 1), 1);
 
             // Create durability attribute
-            return new DurabilityAttribute(name, max, max, levels);
+            return new DurabilityAttribute(item, name, max, max, levels);
         }
 
         @Override
-        public DurabilityAttribute loadFromNBT(String name, NBTTagCompound compound) {
+        public DurabilityAttribute loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load max and current durability
             int max = compound.getInt("max");
             int current = compound.getInt("current");
 
             // Create durability attribute
-            return new DurabilityAttribute(name, max, current, levels);
+            return new DurabilityAttribute(item, name, max, current, levels);
         }
     }
 

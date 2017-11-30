@@ -11,6 +11,7 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.ItemManager;
 import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.AttributeType;
@@ -44,8 +45,8 @@ public class SocketAttribute extends BaseAttributeContainer<Socket> implements S
     private Set<SocketColor> accepts;
     private Gem gem;
 
-    public SocketAttribute(String name, AttributeType<Socket> type, String textLeft, String textRight, String gemIndent, SocketColor color, Set<SocketColor> accepts) {
-        super(name, type);
+    public SocketAttribute(Item item, String name, AttributeType<Socket> type, String textLeft, String textRight, String gemIndent, SocketColor color, Set<SocketColor> accepts) {
+        super(item, name, type);
 
         this.color = color;
         this.accepts = accepts;
@@ -59,8 +60,8 @@ public class SocketAttribute extends BaseAttributeContainer<Socket> implements S
         });
     }
 
-    public SocketAttribute(String name, String textLeft, String textRight, String gemIndent, SocketColor color, Set<SocketColor> accepts) {
-        this(name, DefaultAttributes.SOCKET, textLeft, textRight, gemIndent, color, accepts);
+    public SocketAttribute(Item item, String name, String textLeft, String textRight, String gemIndent, SocketColor color, Set<SocketColor> accepts) {
+        this(item, name, DefaultAttributes.SOCKET, textLeft, textRight, gemIndent, color, accepts);
     }
 
     @Override
@@ -227,7 +228,7 @@ public class SocketAttribute extends BaseAttributeContainer<Socket> implements S
         }
 
         @Override
-        public Socket loadFromConfig(String name, ConfigurationSection config) {
+        public Socket loadFromConfig(Item item, String name, ConfigurationSection config) {
             ItemManager itemManager = getPlugin().getItemManager();
 
             // Load color and accepts
@@ -241,12 +242,12 @@ public class SocketAttribute extends BaseAttributeContainer<Socket> implements S
             }
 
             // Create socket
-            Socket socket = new SocketAttribute(name, textLeft, textRight, gemIndent, color, accepts);
+            Socket socket = new SocketAttribute(item, name, textLeft, textRight, gemIndent, color, accepts);
 
             // Load gem
             if (config.isConfigurationSection("gem")) {
                 ConfigurationSection gemSection = config.getConfigurationSection("gem");
-                Attribute gem = itemManager.loadAttribute("gem", gemSection);
+                Attribute gem = itemManager.loadAttribute(item, "gem", gemSection);
                 if (gem != null && gem instanceof Gem) {
                     socket.setGem((Gem) gem);
                 }
@@ -256,7 +257,7 @@ public class SocketAttribute extends BaseAttributeContainer<Socket> implements S
         }
 
         @Override
-        public Socket loadFromNBT(String name, NBTTagCompound compound) {
+        public Socket loadFromNBT(Item item, String name, NBTTagCompound compound) {
             ItemManager itemManager = getPlugin().getItemManager();
 
             // Load color and accepts
@@ -273,12 +274,12 @@ public class SocketAttribute extends BaseAttributeContainer<Socket> implements S
             }
 
             // Create socket
-            Socket socket = new SocketAttribute(name, textLeft, textRight, gemIndent, color, accepts);
+            Socket socket = new SocketAttribute(item, name, textLeft, textRight, gemIndent, color, accepts);
 
             // Load gem
             if (compound.hasKey("gem")) {
                 NBTTagCompound gemCompound = compound.getCompound("gem");
-                Attribute gem = itemManager.loadAttribute("gem", gemCompound);
+                Attribute gem = itemManager.loadAttribute(item, "gem", gemCompound);
                 if (gem != null && gem instanceof Gem) {
                     socket.setGem((Gem) gem);
                 }

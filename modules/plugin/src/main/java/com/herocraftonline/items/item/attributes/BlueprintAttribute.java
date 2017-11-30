@@ -10,9 +10,11 @@
  */
 package com.herocraftonline.items.item.attributes;
 
+import com.herocraftonline.items.Relics;
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.crafting.Recipe;
 import com.herocraftonline.items.api.crafting.Recipe.RecipeFactory;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Blueprint;
@@ -41,8 +43,8 @@ public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blue
     private final Recipe recipe;
     private short mapId;
 
-    public BlueprintAttribute(String name, String ingredientsText, String resultText, Recipe recipe, short mapId) {
-        super(name, DefaultAttributes.BLUEPRINT);
+    public BlueprintAttribute(Item item, String name, String ingredientsText, String resultText, Recipe recipe, short mapId) {
+        super(item, name, DefaultAttributes.BLUEPRINT);
 
         this.recipe = recipe;
         this.mapId = mapId;
@@ -94,7 +96,7 @@ public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blue
         if (playerSource.isPresent()) {
             Player player = playerSource.get().getPlayer();
             ItemStack blueprint = source.getItem().getItem();
-            CraftingMenu.open(player, getRecipe(), blueprint);
+            CraftingMenu.open(Relics.instance(), player, getRecipe(), blueprint);
             return TriggerResult.SUCCESS;
         }
         return TriggerResult.NOT_TRIGGERED;
@@ -127,7 +129,7 @@ public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blue
         }
 
         @Override
-        public Blueprint loadFromConfig(String name, ConfigurationSection config) {
+        public Blueprint loadFromConfig(Item item, String name, ConfigurationSection config) {
             Recipe recipe;
             ConfigurationSection recipeConfig = config.getConfigurationSection("recipe");
             if (recipeConfig.getString("type").equals("shaped")) {
@@ -136,11 +138,11 @@ public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blue
                 recipe = shapelessRecipeFactory.loadFromConfig(recipeConfig);
             }
 
-            return new BlueprintAttribute(name, ingredientsText, resultText, recipe, (short) -1);
+            return new BlueprintAttribute(item, name, ingredientsText, resultText, recipe, (short) -1);
         }
 
         @Override
-        public Blueprint loadFromNBT(String name, NBTTagCompound compound) {
+        public Blueprint loadFromNBT(Item item, String name, NBTTagCompound compound) {
             Recipe recipe;
             NBTTagCompound recipeCompound = compound.getCompound("recipe");
             if (recipeCompound.getString("type").equals("shaped")) {
@@ -150,7 +152,7 @@ public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blue
             }
             short mapId = (short) compound.getInt("mapId");
 
-            return new BlueprintAttribute(name, ingredientsText, resultText, recipe, mapId);
+            return new BlueprintAttribute(item, name, ingredientsText, resultText, recipe, mapId);
         }
     }
 

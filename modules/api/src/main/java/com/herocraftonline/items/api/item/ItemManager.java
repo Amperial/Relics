@@ -182,7 +182,7 @@ public interface ItemManager {
      * @param config the configuration section
      * @return the item attribute
      */
-    Attribute loadAttribute(String name, ConfigurationSection config);
+    Attribute loadAttribute(Item item, String name, ConfigurationSection config);
 
     /**
      * Loads an item attribute with the given name from an nbt tag compound.
@@ -191,7 +191,7 @@ public interface ItemManager {
      * @param compound the tag compound
      * @return the item attribute
      */
-    Attribute loadAttribute(String name, NBTTagCompound compound);
+    Attribute loadAttribute(Item item, String name, NBTTagCompound compound);
 
     /**
      * Gets the item manager's item factory.

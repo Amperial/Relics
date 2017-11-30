@@ -199,15 +199,15 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
     }
 
     @Override
-    public Attribute loadAttribute(String name, ConfigurationSection config) {
+    public Attribute loadAttribute(Item item, String name, ConfigurationSection config) {
         String type = config.getString("type");
-        return hasAttributeType(type) ? getAttributeType(type).getFactory().loadFromConfig(name, config) : null;
+        return hasAttributeType(type) ? getAttributeType(type).getFactory().loadFromConfig(item, name, config) : null;
     }
 
     @Override
-    public Attribute loadAttribute(String name, NBTTagCompound compound) {
+    public Attribute loadAttribute(Item item, String name, NBTTagCompound compound) {
         String type = compound.getString("type");
-        return hasAttributeType(type) ? getAttributeType(type).getFactory().loadFromNBT(name, compound) : null;
+        return hasAttributeType(type) ? getAttributeType(type).getFactory().loadFromNBT(item, name, compound) : null;
     }
 
     @Override

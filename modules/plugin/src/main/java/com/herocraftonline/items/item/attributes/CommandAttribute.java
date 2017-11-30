@@ -11,6 +11,7 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.Command;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
@@ -29,8 +30,8 @@ public class CommandAttribute extends BaseAttribute<Command> implements Command 
     private String command;
     private Sender sender;
 
-    public CommandAttribute(String name, String command, Sender sender) {
-        super(name, DefaultAttributes.COMMAND);
+    public CommandAttribute(Item item, String name, String command, Sender sender) {
+        super(item, name, DefaultAttributes.COMMAND);
 
         this.command = command;
         this.sender = sender;
@@ -85,23 +86,23 @@ public class CommandAttribute extends BaseAttribute<Command> implements Command 
         }
 
         @Override
-        public Command loadFromConfig(String name, ConfigurationSection config) {
+        public Command loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load command and sender
             String command = config.getString("command");
             Sender sender = Sender.valueOf(config.getString("sender", "SOURCE"));
 
             // Load command attribute
-            return new CommandAttribute(name, command, sender);
+            return new CommandAttribute(item, name, command, sender);
         }
 
         @Override
-        public Command loadFromNBT(String name, NBTTagCompound compound) {
+        public Command loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load command and sender
             String command = compound.getString("command");
             Sender sender = Sender.valueOf(compound.getString("sender"));
 
             // Load command attribute
-            return new CommandAttribute(name, command, sender);
+            return new CommandAttribute(item, name, command, sender);
         }
     }
 

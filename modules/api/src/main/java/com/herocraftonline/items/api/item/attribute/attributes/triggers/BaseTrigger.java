@@ -11,6 +11,7 @@
 package com.herocraftonline.items.api.item.attribute.attributes.triggers;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.AttributeType;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
@@ -36,8 +37,8 @@ public abstract class BaseTrigger<T extends Trigger<T>> extends BaseAttribute<T>
 
     private final Set<String> targets;
 
-    public BaseTrigger(String name, AttributeType<T> type, Set<String> targets) {
-        super(name, type);
+    public BaseTrigger(Item item, String name, AttributeType<T> type, Set<String> targets) {
+        super(item, name, type);
 
         this.targets = targets;
     }

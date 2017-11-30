@@ -11,6 +11,7 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.effects.PotionEffect;
@@ -29,8 +30,8 @@ public class PotionEffectAttribute extends BaseAttribute<PotionEffect> implement
 
     private org.bukkit.potion.PotionEffect effect;
 
-    public PotionEffectAttribute(String name, org.bukkit.potion.PotionEffect effect) {
-        super(name, DefaultAttributes.POTION_EFFECT);
+    public PotionEffectAttribute(Item item, String name, org.bukkit.potion.PotionEffect effect) {
+        super(item, name, DefaultAttributes.POTION_EFFECT);
 
         this.effect = effect;
     }
@@ -75,7 +76,7 @@ public class PotionEffectAttribute extends BaseAttribute<PotionEffect> implement
         }
 
         @Override
-        public PotionEffect loadFromConfig(String name, ConfigurationSection config) {
+        public PotionEffect loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load potion effect
             PotionEffectType type = PotionEffectType.getByName(config.getString("potion-type"));
             int duration = config.getInt("duration", Integer.MAX_VALUE);
@@ -87,11 +88,11 @@ public class PotionEffectAttribute extends BaseAttribute<PotionEffect> implement
                     new org.bukkit.potion.PotionEffect(type, duration, amplifier, ambient, particles, color);
 
             // Load potion effect attribute
-            return new PotionEffectAttribute(name, effect);
+            return new PotionEffectAttribute(item, name, effect);
         }
 
         @Override
-        public PotionEffect loadFromNBT(String name, NBTTagCompound compound) {
+        public PotionEffect loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load potion effect
             PotionEffectType type = PotionEffectType.getByName(compound.getString("potion-type"));
             int duration = compound.getInt("duration");
@@ -103,7 +104,7 @@ public class PotionEffectAttribute extends BaseAttribute<PotionEffect> implement
                     new org.bukkit.potion.PotionEffect(type, duration, amplifier, ambient, particles, color);
 
             // Load potion effect attribute
-            return new PotionEffectAttribute(name, effect);
+            return new PotionEffectAttribute(item, name, effect);
         }
     }
 

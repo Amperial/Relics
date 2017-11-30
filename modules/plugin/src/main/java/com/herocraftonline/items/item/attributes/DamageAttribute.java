@@ -11,6 +11,7 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.Damage;
 import com.herocraftonline.items.api.item.attribute.attributes.Minecraft;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
@@ -69,8 +70,8 @@ public class DamageAttribute extends MinecraftAttribute implements Damage {
 
     private double variation;
 
-    public DamageAttribute(String name, Slot slot, Operation operation, boolean stacking, double damage, double variation) {
-        super(name, DefaultAttributes.DAMAGE, STAT_TYPE, Type.ATTACK_DAMAGE, slot, operation, stacking, damage);
+    public DamageAttribute(Item item, String name, Slot slot, Operation operation, boolean stacking, double damage, double variation) {
+        super(item, name, DefaultAttributes.DAMAGE, STAT_TYPE, Type.ATTACK_DAMAGE, slot, operation, stacking, damage);
 
         this.variation = variation;
     }
@@ -107,7 +108,7 @@ public class DamageAttribute extends MinecraftAttribute implements Damage {
         }
 
         @Override
-        public Damage loadFromConfig(String name, ConfigurationSection config) {
+        public Damage loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load slot, operation, stacking, damage, and variation
             Slot slot = Slot.valueOf(config.getString("slot", "ANY"));
             Operation operation = Operation.valueOf(config.getString("operation", "ADD_NUMBER"));
@@ -116,11 +117,11 @@ public class DamageAttribute extends MinecraftAttribute implements Damage {
             double variation = Math.abs(config.getDouble("variation", 0));
 
             // Create damage attribute
-            return new DamageAttribute(name, slot, operation, stacking, damage, variation);
+            return new DamageAttribute(item, name, slot, operation, stacking, damage, variation);
         }
 
         @Override
-        public Damage loadFromNBT(String name, NBTTagCompound compound) {
+        public Damage loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load slot, operation, stacking, damage, and variation
             Slot slot = Slot.valueOf(compound.getString("slot"));
             Operation operation = Operation.valueOf(compound.getString("operation"));
@@ -129,7 +130,7 @@ public class DamageAttribute extends MinecraftAttribute implements Damage {
             double variation = compound.getDouble("variation");
 
             // Create damage attribute
-            return new DamageAttribute(name, slot, operation, stacking, damage, variation);
+            return new DamageAttribute(item, name, slot, operation, stacking, damage, variation);
         }
     }
 

@@ -11,6 +11,7 @@
 package com.herocraftonline.items.item.triggers;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.triggers.BaseTrigger;
 import com.herocraftonline.items.api.item.attribute.attributes.triggers.Cooldown;
 import com.herocraftonline.items.api.item.trigger.TriggerResult;
@@ -26,8 +27,8 @@ public class CooldownTrigger extends BaseTrigger<Cooldown> implements Cooldown {
     private long duration;
     private long lastUsed;
 
-    public CooldownTrigger(String name, Set<String> targets, long duration, long lastUsed) {
-        super(name, DefaultAttributes.COOLDOWN, targets);
+    public CooldownTrigger(Item item, String name, Set<String> targets, long duration, long lastUsed) {
+        super(item, name, DefaultAttributes.COOLDOWN, targets);
 
         this.duration = duration;
         this.lastUsed = lastUsed;
@@ -93,25 +94,25 @@ public class CooldownTrigger extends BaseTrigger<Cooldown> implements Cooldown {
         }
 
         @Override
-        public Cooldown loadFromConfig(String name, ConfigurationSection config) {
+        public Cooldown loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load targets, duration, and lastUsed
             Set<String> targets = loadTargetsFromConfig(config);
             long duration = config.getLong("duration", 0);
             long lastUsed = System.currentTimeMillis();
 
             // Load cooldown trigger
-            return new CooldownTrigger(name, targets, duration, lastUsed);
+            return new CooldownTrigger(item, name, targets, duration, lastUsed);
         }
 
         @Override
-        public Cooldown loadFromNBT(String name, NBTTagCompound compound) {
+        public Cooldown loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load targets, duration, and lastUsed
             Set<String> targets = loadTargetsFromNBT(compound);
             long duration = compound.getLong("duration");
             long lastUsed = compound.getLong("lastUsed");
 
             // Load cooldown trigger
-            return new CooldownTrigger(name, targets, duration, lastUsed);
+            return new CooldownTrigger(item, name, targets, duration, lastUsed);
         }
     }
 

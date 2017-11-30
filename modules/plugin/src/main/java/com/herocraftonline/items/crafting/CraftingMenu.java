@@ -11,6 +11,7 @@
 package com.herocraftonline.items.crafting;
 
 import com.herocraftonline.items.Relics;
+import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.crafting.Recipe;
 import com.herocraftonline.items.api.util.InventoryUtil.Dimensions;
 import com.herocraftonline.items.api.util.InventoryUtil.Position;
@@ -51,13 +52,15 @@ public class CraftingMenu {
     private static final Position OUTPUT = new Position(7, 2);
     private static final ItemStack FILL = new ItemStack(Material.IRON_FENCE);
 
+    private final ItemPlugin plugin;
     private final Recipe recipe;
     private final Inventory inventory;
     private final Dimensions craftingDimensions;
     private final Position craftingOffset;
     private final Set<Position> craftingArea;
 
-    public CraftingMenu(Recipe recipe, Inventory inventory, ItemStack blueprint) {
+    public CraftingMenu(ItemPlugin plugin, Recipe recipe, Inventory inventory, ItemStack blueprint) {
+        this.plugin = plugin;
         this.recipe = recipe;
         this.inventory = inventory;
 
@@ -145,7 +148,7 @@ public class CraftingMenu {
         Position clicked = new Slot(event.getSlot()).getPosition(OUTER);
         ItemStack cursor = event.getCursor();
         if (craftingArea.contains(clicked)) {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(Relics.instance(), () -> updateOutput(player));
+            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> updateOutput(player));
         } else if (event.getClickedInventory().equals(inventory)) {
             if (clicked.equals(OUTPUT) && (cursor == null || cursor.getType() == Material.AIR)) {
                 Optional<ItemStack> output = getItem(OUTPUT);
@@ -200,10 +203,10 @@ public class CraftingMenu {
 
     }
 
-    public static void open(Player player, Recipe recipe, ItemStack blueprint) {
+    public static void open(ItemPlugin plugin, Player player, Recipe recipe, ItemStack blueprint) {
         CraftingHolder holder = new CraftingHolder(player);
         Inventory inventory = Bukkit.createInventory(holder, OUTER.size(), "Blueprint Assembly");
-        holder.menu = new CraftingMenu(recipe, inventory, blueprint);
+        holder.menu = new CraftingMenu(plugin, recipe, inventory, blueprint);
 
         player.openInventory(inventory);
     }

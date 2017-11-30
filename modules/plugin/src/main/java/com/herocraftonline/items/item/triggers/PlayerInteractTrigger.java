@@ -11,6 +11,7 @@
 package com.herocraftonline.items.item.triggers;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.triggers.BaseTrigger;
 import com.herocraftonline.items.api.item.attribute.attributes.triggers.PlayerInteract;
 import com.herocraftonline.items.api.item.trigger.TriggerResult;
@@ -32,8 +33,8 @@ public class PlayerInteractTrigger extends BaseTrigger<PlayerInteract> implement
 
     private final Set<Action> actions;
 
-    public PlayerInteractTrigger(String name, Set<String> targets, Set<Action> actions) {
-        super(name, DefaultAttributes.PLAYER_INTERACT, targets);
+    public PlayerInteractTrigger(Item item, String name, Set<String> targets, Set<Action> actions) {
+        super(item, name, DefaultAttributes.PLAYER_INTERACT, targets);
 
         this.actions = actions;
     }
@@ -72,7 +73,7 @@ public class PlayerInteractTrigger extends BaseTrigger<PlayerInteract> implement
         }
 
         @Override
-        public PlayerInteract loadFromConfig(String name, ConfigurationSection config) {
+        public PlayerInteract loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load targets and actions
             Set<String> targets = loadTargetsFromConfig(config);
             Set<Action> actions = EnumSet.noneOf(Action.class);
@@ -83,11 +84,11 @@ public class PlayerInteractTrigger extends BaseTrigger<PlayerInteract> implement
             }
 
             // Load player interact trigger
-            return new PlayerInteractTrigger(name, targets, actions);
+            return new PlayerInteractTrigger(item, name, targets, actions);
         }
 
         @Override
-        public PlayerInteract loadFromNBT(String name, NBTTagCompound compound) {
+        public PlayerInteract loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load targets and actions
             Set<String> targets = loadTargetsFromNBT(compound);
             Set<Action> actions = EnumSet.noneOf(Action.class);
@@ -97,7 +98,7 @@ public class PlayerInteractTrigger extends BaseTrigger<PlayerInteract> implement
             }
 
             // Load player interact trigger
-            return new PlayerInteractTrigger(name, targets, actions);
+            return new PlayerInteractTrigger(item, name, targets, actions);
         }
     }
 

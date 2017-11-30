@@ -11,6 +11,7 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.Level;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
@@ -24,8 +25,8 @@ public class LevelAttribute extends BaseAttribute<Level> implements Level {
 
     private int level;
 
-    public LevelAttribute(String name, String text, int level) {
-        super(name, DefaultAttributes.LEVEL);
+    public LevelAttribute(Item item, String name, String text, int level) {
+        super(item, name, DefaultAttributes.LEVEL);
 
         this.level = level;
 
@@ -59,21 +60,21 @@ public class LevelAttribute extends BaseAttribute<Level> implements Level {
         }
 
         @Override
-        public LevelAttribute loadFromConfig(String name, ConfigurationSection config) {
+        public LevelAttribute loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load level
             int level = Math.max(config.getInt("level", 1), 1);
 
             // Create level attribute
-            return new LevelAttribute(name, text, level);
+            return new LevelAttribute(item, name, text, level);
         }
 
         @Override
-        public LevelAttribute loadFromNBT(String name, NBTTagCompound compound) {
+        public LevelAttribute loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load level
             int level = compound.getInt("level");
 
             // Create level attribute
-            return new LevelAttribute(name, text, level);
+            return new LevelAttribute(item, name, text, level);
         }
     }
 
