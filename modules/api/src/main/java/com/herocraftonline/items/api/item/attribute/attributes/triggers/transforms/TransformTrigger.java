@@ -22,10 +22,10 @@ import java.util.Optional;
  */
 public interface TransformTrigger<T extends Trigger<T>> extends Trigger<T> {
 
-    TriggerSource transform(TriggerSource source);
+    Optional<TriggerSource> transform(TriggerSource source);
 
     default <S extends TriggerSource> Optional<S> transform(TriggerSource source, Class<S> type) {
-        return transform(source).ofType(type);
+        return transform(source).map(transformed -> transformed.ofType(type).orElse(null));
     }
 
 }

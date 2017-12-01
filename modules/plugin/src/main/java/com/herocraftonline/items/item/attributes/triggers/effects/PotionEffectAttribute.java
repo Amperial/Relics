@@ -8,7 +8,7 @@
  * Unauthorized copying and/or distribution of Relics,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.item.attributes;
+package com.herocraftonline.items.item.attributes.triggers.effects;
 
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.Item;

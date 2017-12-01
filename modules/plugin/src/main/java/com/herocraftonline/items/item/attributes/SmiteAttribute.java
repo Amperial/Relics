@@ -18,51 +18,17 @@ import com.herocraftonline.items.api.item.attribute.attributes.triggers.Triggera
 import com.herocraftonline.items.api.item.attribute.attributes.triggers.result.TriggerResult;
 import com.herocraftonline.items.api.item.attribute.attributes.triggers.source.LocationSource;
 import com.herocraftonline.items.api.item.attribute.attributes.triggers.source.TriggerSource;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.source.entity.LivingEntitySource;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
 
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class SmiteAttribute extends BaseAttribute<SmiteAttribute> implements Triggerable<SmiteAttribute> {
 
-    private static final Set<Material> AIR;
-
-    static {
-        AIR = new HashSet<>();
-        AIR.add(Material.AIR);
-    }
-
-    private final Permission permission;
-    private final Set<UUID> gods;
-    private final int range;
-
-    public SmiteAttribute(Item item, String name, Permission permission, Set<UUID> gods, int range) {
+    public SmiteAttribute(Item item, String name) {
         super(item, name, DefaultAttributes.SMITE);
-
-        this.permission = permission;
-        this.gods = gods;
-        this.range = range;
-    }
-
-    public int getRange() {
-        return range;
-    }
-
-    public boolean canSmite(Player player) {
-        return gods.contains(player.getUniqueId()) || player.hasPermission(permission);
     }
 
     @Override
@@ -76,56 +42,25 @@ public class SmiteAttribute extends BaseAttribute<SmiteAttribute> implements Tri
         Optional<LocationSource> locationSource = source.ofType(LocationSource.class);
         if (locationSource.isPresent()) {
             Location location = locationSource.get().getLocation();
-
-            // If source is a living entity, update location to where they're looking
-            // TODO: Move this code to a trigger that converts living entity source to location source of target block
-            Optional<LivingEntitySource> livingEntitySource = source.ofType(LivingEntitySource.class);
-            if (livingEntitySource.isPresent()) {
-                LivingEntity entity = livingEntitySource.get().getEntity();
-                if (entity instanceof Player && !canSmite((Player) entity)) {
-                    return TriggerResult.NOT_TRIGGERED;
-                }
-                location = entity.getTargetBlock(AIR, getRange()).getLocation();
-            }
             location.getWorld().strikeLightning(location);
             return TriggerResult.SUCCESS;
         }
         return TriggerResult.NOT_TRIGGERED;
     }
 
-    @Override
-    public void saveToNBT(NBTTagCompound compound) {
-        super.saveToNBT(compound);
-        compound.setInt("range", getRange());
-    }
-
     public static class Factory extends BaseAttributeFactory<SmiteAttribute> {
-        private final Permission permission = new Permission("relics.attribute.smite", PermissionDefault.FALSE);
-        private final Set<UUID> gods = new HashSet<>();
-
         public Factory(ItemPlugin plugin) {
             super(plugin);
-
-            FileConfiguration config = plugin.getConfigManager().getConfig(DefaultAttributes.SMITE);
-            gods.addAll(config.getStringList("gods").stream().map(UUID::fromString).collect(Collectors.toList()));
         }
 
         @Override
         public SmiteAttribute loadFromConfig(Item item, String name, ConfigurationSection config) {
-            // Load range
-            int range = Math.abs(config.getInt("range", 64));
-
-            // Create smite attribute
-            return new SmiteAttribute(item, name, permission, gods, range);
+            return new SmiteAttribute(item, name);
         }
 
         @Override
         public SmiteAttribute loadFromNBT(Item item, String name, NBTTagCompound compound) {
-            // Load range
-            int range = compound.getInt("range");
-
-            // Create smite attribute
-            return new SmiteAttribute(item, name, permission, gods, range);
+            return new SmiteAttribute(item, name);
         }
     }
 

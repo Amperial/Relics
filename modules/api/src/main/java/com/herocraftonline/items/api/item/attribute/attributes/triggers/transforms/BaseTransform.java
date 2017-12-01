@@ -32,12 +32,12 @@ public abstract class BaseTransform<T extends TransformTrigger<T>> extends BaseT
 
     @Override
     public boolean canTrigger(TriggerSource source) {
-        return super.canTrigger(transform(source));
+        return transform(source).map(super::canTrigger).orElse(false);
     }
 
     @Override
     public TriggerResult onTrigger(TriggerSource source) {
-        return super.onTrigger(transform(source));
+        return transform(source).map(super::onTrigger).orElse(TriggerResult.NOT_TRIGGERED);
     }
 
 }

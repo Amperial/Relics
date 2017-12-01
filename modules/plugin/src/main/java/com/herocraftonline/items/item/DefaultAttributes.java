@@ -26,8 +26,13 @@ import com.herocraftonline.items.api.item.attribute.attributes.requirements.Leve
 import com.herocraftonline.items.api.item.attribute.attributes.triggers.PlayerInteract;
 import com.herocraftonline.items.api.item.attribute.attributes.triggers.conditions.Cooldown;
 import com.herocraftonline.items.item.attributes.*;
-import com.herocraftonline.items.item.attributes.triggers.CooldownCondition;
+import com.herocraftonline.items.item.attributes.triggers.conditions.CooldownCondition;
 import com.herocraftonline.items.item.attributes.triggers.PlayerInteractTrigger;
+import com.herocraftonline.items.item.attributes.triggers.conditions.PermissionCondition;
+import com.herocraftonline.items.item.attributes.triggers.effects.HealEffectAttribute;
+import com.herocraftonline.items.item.attributes.triggers.effects.PotionEffectAttribute;
+import com.herocraftonline.items.item.attributes.triggers.effects.SoundEffectAttribute;
+import com.herocraftonline.items.item.attributes.triggers.transforms.TargetBlockTransform;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,7 +41,7 @@ public final class DefaultAttributes {
 
     public static final AttributeType<Blueprint> BLUEPRINT = new BaseAttributeType<>("blueprint", 5, BlueprintAttribute.Factory::new);
     public static final AttributeType<Command> COMMAND = new BaseAttributeType<>("command", Integer.MAX_VALUE, CommandAttribute.Factory::new);
-    public static final AttributeType<Cooldown> COOLDOWN = new BaseAttributeType<>("cooldown", Integer.MAX_VALUE, CooldownCondition.Factory::new);
+    public static final AttributeType<Cooldown> COOLDOWN = new BaseAttributeType<>("cooldown-condition", Integer.MAX_VALUE, CooldownCondition.Factory::new);
     public static final AttributeType<Minecraft> DAMAGE = new BaseAttributeType<>("damage", Integer.MAX_VALUE, DamageAttribute.Factory::new);
     public static final AttributeType<Durability> DURABILITY = new BaseAttributeType<>("durability", 8, DurabilityAttribute.Factory::new);
     public static final AttributeType<Gem> GEM = new BaseAttributeType<>("gem", 7, GemAttribute.Factory::new);
@@ -48,6 +53,7 @@ public final class DefaultAttributes {
     public static final AttributeType<LevelRequirement> LEVEL_REQUIREMENT = new BaseAttributeType<>("level-requirement", Integer.MIN_VALUE, LevelRequirementAttribute.Factory::new);
     public static final AttributeType<Minecraft> MINECRAFT = new BaseAttributeType<>("minecraft", Integer.MAX_VALUE, MinecraftAttribute.Factory::new);
     public static final AttributeType<Model> MODEL = new BaseAttributeType<>("model", Integer.MAX_VALUE, ModelAttribute.Factory::new);
+    public static final AttributeType<PermissionCondition> PERMISSION_CONDITION = new BaseAttributeType<>("permission-condition", Integer.MAX_VALUE, PermissionCondition.Factory::new);
     public static final AttributeType<PlayerInteract> PLAYER_INTERACT = new BaseAttributeType<>("player-interact", Integer.MAX_VALUE, PlayerInteractTrigger.Factory::new);
     public static final AttributeType<PotionEffect> POTION_EFFECT = new BaseAttributeType<>("potion-effect", Integer.MAX_VALUE, PotionEffectAttribute.Factory::new);
     public static final AttributeType<Rarity> RARITY = new BaseAttributeType<>("rarity", 1, RarityAttribute.Factory::new);
@@ -56,6 +62,7 @@ public final class DefaultAttributes {
     public static final AttributeType<Socket> SOCKET = new BaseAttributeType<>("socket", 6, SocketAttribute.Factory::new);
     public static final AttributeType<Soulbound> SOULBOUND = new BaseAttributeType<>("soulbound", 9, SoulboundAttribute.Factory::new);
     public static final AttributeType<SoundEffect> SOUND_EFFECT = new BaseAttributeType<>("sound-effect", Integer.MAX_VALUE, SoundEffectAttribute.Factory::new);
+    public static final AttributeType<TargetBlockTransform> TARGET_BLOCK_TRANSFORM = new BaseAttributeType<>("target-block-transform", Integer.MAX_VALUE, TargetBlockTransform.Factory::new);
     public static final AttributeType<Text> TEXT = new BaseAttributeType<>("text", 4, TextAttribute.Factory::new);
     public static final AttributeType<Velocity> VELOCITY = new BaseAttributeType<>("velocity", Integer.MAX_VALUE, VelocityAttribute.Factory::new);
 
@@ -76,6 +83,7 @@ public final class DefaultAttributes {
         types.add(LEVEL_REQUIREMENT);
         types.add(MINECRAFT);
         types.add(MODEL);
+        types.add(PERMISSION_CONDITION);
         types.add(PLAYER_INTERACT);
         types.add(POTION_EFFECT);
         types.add(RARITY);
@@ -84,6 +92,7 @@ public final class DefaultAttributes {
         types.add(SOCKET);
         types.add(SOULBOUND);
         types.add(SOUND_EFFECT);
+        types.add(TARGET_BLOCK_TRANSFORM);
         types.add(TEXT);
         types.add(VELOCITY);
     }
