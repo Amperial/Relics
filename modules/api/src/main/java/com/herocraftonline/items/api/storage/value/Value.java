@@ -8,12 +8,10 @@
  * Unauthorized copying and/or distribution of Relics API,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.item.variable;
+package com.herocraftonline.items.api.storage.value;
 
-import com.herocraftonline.items.api.storage.value.Value;
+public interface Value<T> {
 
-public interface Variable<T> extends Value<T> {
-
-    void setValue(T value);
+    T getValue();
 
 }

@@ -10,11 +10,15 @@
  */
 package com.herocraftonline.items.api.item.variable;
 
+import java.util.Collection;
+
 public interface VariableContainer {
 
     boolean hasVariable(String name);
 
     <T> Variable<T> getVariable(String name, Class<T> type);
+
+    Collection<String> getVariables();
 
     <T> T getValue(String name, Class<T> type);
 

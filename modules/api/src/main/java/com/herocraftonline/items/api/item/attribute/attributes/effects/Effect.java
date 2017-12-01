@@ -10,8 +10,8 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes.effects;
 
-import com.herocraftonline.items.api.item.attribute.Attribute;
-import com.herocraftonline.items.api.item.trigger.Triggerable;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.Triggerable;
 
-public interface Effect<T extends Attribute<T>> extends Attribute<T>, Triggerable {
+public interface Effect<T extends Triggerable<T>> extends Triggerable<T> {
+
 }

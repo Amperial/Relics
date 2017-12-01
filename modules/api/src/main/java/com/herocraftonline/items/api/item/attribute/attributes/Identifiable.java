@@ -10,8 +10,7 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes;
 
-import com.herocraftonline.items.api.item.attribute.Attribute;
-import com.herocraftonline.items.api.item.trigger.Triggerable;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.Triggerable;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -19,7 +18,7 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author Austin Payne
  */
-public interface Identifiable extends Attribute<Identifiable>, Triggerable {
+public interface Identifiable extends Triggerable<Identifiable> {
 
     /**
      * Decrypts and deserializes the item stack held in the identifiable attribute.

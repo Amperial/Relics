@@ -8,12 +8,12 @@
  * Unauthorized copying and/or distribution of Relics API,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.item.variable;
+package com.herocraftonline.items.api.item.attribute.attributes.triggers.source.entity;
 
-import com.herocraftonline.items.api.storage.value.Value;
+import org.bukkit.entity.HumanEntity;
 
-public interface Variable<T> extends Value<T> {
+public interface HumanEntitySource extends LivingEntitySource {
 
-    void setValue(T value);
+    HumanEntity getEntity();
 
 }

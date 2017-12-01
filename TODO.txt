@@ -17,6 +17,11 @@ Triggerables:
 - EffectLib effects
 - Bukkit effects
 - Skills
+- Send message to command sender
+- Fire players out of bows
+
+Trigger Results:
+- TriggerResult enum implements Result, Result has TriggerResult getResult, onTrigger returns Result
 
 Projectiles:
 - Put projectile item on projectile entity metadata when fired

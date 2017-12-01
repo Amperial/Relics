@@ -12,18 +12,22 @@ package com.herocraftonline.items.item;
 
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.attribute.AttributeType;
-import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeType;
-
 import com.herocraftonline.items.api.item.attribute.attributes.*;
-import com.herocraftonline.items.api.item.attribute.attributes.crafting.*;
-import com.herocraftonline.items.api.item.attribute.attributes.effects.*;
-import com.herocraftonline.items.api.item.attribute.attributes.gems.*;
-import com.herocraftonline.items.api.item.attribute.attributes.projectiles.*;
-import com.herocraftonline.items.api.item.attribute.attributes.requirements.*;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.Cooldown;
+import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeType;
+import com.herocraftonline.items.api.item.attribute.attributes.crafting.Blueprint;
+import com.herocraftonline.items.api.item.attribute.attributes.crafting.Reagent;
+import com.herocraftonline.items.api.item.attribute.attributes.effects.HealEffect;
+import com.herocraftonline.items.api.item.attribute.attributes.effects.PotionEffect;
+import com.herocraftonline.items.api.item.attribute.attributes.effects.SoundEffect;
+import com.herocraftonline.items.api.item.attribute.attributes.gems.Gem;
+import com.herocraftonline.items.api.item.attribute.attributes.gems.Socket;
+import com.herocraftonline.items.api.item.attribute.attributes.projectiles.Velocity;
+import com.herocraftonline.items.api.item.attribute.attributes.requirements.LevelRequirement;
 import com.herocraftonline.items.api.item.attribute.attributes.triggers.PlayerInteract;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.conditions.Cooldown;
 import com.herocraftonline.items.item.attributes.*;
-import com.herocraftonline.items.item.triggers.*;
+import com.herocraftonline.items.item.attributes.triggers.CooldownCondition;
+import com.herocraftonline.items.item.attributes.triggers.PlayerInteractTrigger;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,7 +36,7 @@ public final class DefaultAttributes {
 
     public static final AttributeType<Blueprint> BLUEPRINT = new BaseAttributeType<>("blueprint", 5, BlueprintAttribute.Factory::new);
     public static final AttributeType<Command> COMMAND = new BaseAttributeType<>("command", Integer.MAX_VALUE, CommandAttribute.Factory::new);
-    public static final AttributeType<Cooldown> COOLDOWN = new BaseAttributeType<>("cooldown", Integer.MAX_VALUE, CooldownTrigger.Factory::new);
+    public static final AttributeType<Cooldown> COOLDOWN = new BaseAttributeType<>("cooldown", Integer.MAX_VALUE, CooldownCondition.Factory::new);
     public static final AttributeType<Minecraft> DAMAGE = new BaseAttributeType<>("damage", Integer.MAX_VALUE, DamageAttribute.Factory::new);
     public static final AttributeType<Durability> DURABILITY = new BaseAttributeType<>("durability", 8, DurabilityAttribute.Factory::new);
     public static final AttributeType<Gem> GEM = new BaseAttributeType<>("gem", 7, GemAttribute.Factory::new);

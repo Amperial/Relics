@@ -14,11 +14,11 @@ import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
-import com.herocraftonline.items.api.item.trigger.TriggerResult;
-import com.herocraftonline.items.api.item.trigger.Triggerable;
-import com.herocraftonline.items.api.item.trigger.source.LocationSource;
-import com.herocraftonline.items.api.item.trigger.source.TriggerSource;
-import com.herocraftonline.items.api.item.trigger.source.entity.LivingEntitySource;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.Triggerable;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.result.TriggerResult;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.source.LocationSource;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.source.TriggerSource;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.source.entity.LivingEntitySource;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.Location;
@@ -36,7 +36,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class SmiteAttribute extends BaseAttribute<SmiteAttribute> implements Triggerable {
+public class SmiteAttribute extends BaseAttribute<SmiteAttribute> implements Triggerable<SmiteAttribute> {
 
     private static final Set<Material> AIR;
 

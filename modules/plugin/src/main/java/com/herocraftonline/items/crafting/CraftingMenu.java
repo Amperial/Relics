@@ -10,7 +10,6 @@
  */
 package com.herocraftonline.items.crafting;
 
-import com.herocraftonline.items.Relics;
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.crafting.Recipe;
 import com.herocraftonline.items.api.util.InventoryUtil.Dimensions;

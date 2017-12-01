@@ -10,8 +10,7 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes;
 
-import com.herocraftonline.items.api.item.attribute.Attribute;
-import com.herocraftonline.items.api.item.trigger.Triggerable;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.Triggerable;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
@@ -20,7 +19,7 @@ import org.bukkit.command.CommandSender;
  *
  * @author Austin Payne
  */
-public interface Command extends Attribute<Command>, Triggerable {
+public interface Command extends Triggerable<Command> {
 
     /**
      * Gets the command to be executed by the attribute.

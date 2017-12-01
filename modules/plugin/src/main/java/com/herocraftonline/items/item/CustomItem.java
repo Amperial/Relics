@@ -23,7 +23,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.requirements.Requ
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatGroup;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatType;
-import com.herocraftonline.items.api.item.variable.StaticVariable;
+import com.herocraftonline.items.api.item.variable.BasicVariable;
 import com.herocraftonline.items.api.item.variable.Variable;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.api.storage.nbt.NBTTagList;
@@ -312,6 +312,11 @@ public class CustomItem implements Item {
     }
 
     @Override
+    public Collection<String> getVariables() {
+        return variables.keySet();
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public <T> T getValue(String name, Class<T> type) {
         Variable variable = variables.get(name);
@@ -546,7 +551,7 @@ public class CustomItem implements Item {
                 for (String variable : variableConfig.getKeys(false)) {
                     // TODO: Allow for more variable types in the future, handle loading better
                     if (variableConfig.isInt(variable) || variableConfig.isDouble(variable)) {
-                        variables.put(variable, new StaticVariable<>(variableConfig.getDouble(variable)));
+                        variables.put(variable, new BasicVariable<>(variableConfig.getDouble(variable)));
                     }
                 }
             }
@@ -587,7 +592,7 @@ public class CustomItem implements Item {
             NBTTagCompound variableCompound = compound.getCompound(VARIABLES_TAG);
             for (String variable : variableCompound.getKeySet()) {
                 // TODO: Allow for more variable types in the future, handle loading better
-                variables.put(variable, new StaticVariable<>(variableCompound.getDouble(variable)));
+                variables.put(variable, new BasicVariable<>(variableCompound.getDouble(variable)));
             }
             Group attributes = new GroupAttribute(null, ATTRIBUTES_TAG, new HashMap<>(), true);
 

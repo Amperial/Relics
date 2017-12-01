@@ -10,23 +10,27 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes.triggers;
 
-import com.herocraftonline.items.api.item.attribute.Attribute;
-import com.herocraftonline.items.api.item.trigger.Triggerable;
-
-import java.util.Set;
+import java.util.List;
 
 /**
  * An triggerable attribute that is able to trigger other triggerable attributes.
  *
  * @author Austin Payne
  */
-public interface Trigger<T extends Attribute<T>> extends Attribute<T>, Triggerable {
+public interface Trigger<T extends Triggerable<T>> extends Triggerable<T> {
 
     /**
      * Get the targets of the trigger, defined by their attribute names.
      *
      * @return the trigger's target triggerable attribute names
      */
-    Set<String> getTargets();
+    List<String> getTargets();
+
+    /**
+     * Checks if the trigger's targets are considered separate or not when triggering.
+     *
+     * @return {@code true} if the trigger handles targets separately, else {@code false}
+     */
+    boolean handleSeparately();
 
 }

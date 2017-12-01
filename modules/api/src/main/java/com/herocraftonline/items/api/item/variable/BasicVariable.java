@@ -10,10 +10,22 @@
  */
 package com.herocraftonline.items.api.item.variable;
 
-import com.herocraftonline.items.api.storage.value.Value;
+public class BasicVariable<T> implements Variable<T> {
 
-public interface Variable<T> extends Value<T> {
+    private T value;
 
-    void setValue(T value);
+    public BasicVariable(T value) {
+        this.value = value;
+    }
+
+    @Override
+    public T getValue() {
+        return value;
+    }
+
+    @Override
+    public void setValue(T value) {
+        this.value = value;
+    }
 
 }

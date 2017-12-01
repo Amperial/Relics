@@ -18,11 +18,11 @@ import com.herocraftonline.items.api.item.attribute.attributes.Damage;
 import com.herocraftonline.items.api.item.attribute.attributes.Durability;
 import com.herocraftonline.items.api.item.attribute.attributes.Soulbound;
 import com.herocraftonline.items.api.item.attribute.attributes.triggers.PlayerInteract;
-import com.herocraftonline.items.api.item.trigger.TriggerResult;
-import com.herocraftonline.items.api.item.trigger.source.TriggerSource;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.result.TriggerResult;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.source.TriggerSource;
 import com.herocraftonline.items.api.message.Messenger;
 import com.herocraftonline.items.api.message.RelMessage;
-import com.herocraftonline.items.item.triggers.sources.event.PlayerInteractSource;
+import com.herocraftonline.items.item.attributes.triggers.sources.event.PlayerInteractSource;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -103,7 +103,7 @@ public class ItemListener implements Listener {
                     .map(attribute -> (PlayerInteract) attribute)
                     .filter(attribute -> attribute.canTrigger(source))
                     .map(attribute -> attribute.onTrigger(source))
-                    .reduce(TriggerResult.COMBINE).orElse(TriggerResult.NOT_TRIGGERED);
+                    .reduce(TriggerResult.COMBINED).orElse(TriggerResult.NOT_TRIGGERED);
             // TODO: Handle trigger results
         }
     }
