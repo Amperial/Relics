@@ -5,6 +5,7 @@ items:
 - "firesword/blade"
 - "firesword/sword"
 - "test/click-trigger"
+- "test/lightning-rod"
 - "test/identifiable"
 - "test/shaped-blueprint"
 - "test/shapeless-blueprint"

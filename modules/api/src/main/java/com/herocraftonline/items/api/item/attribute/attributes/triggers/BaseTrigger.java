@@ -82,7 +82,13 @@ public abstract class BaseTrigger<T extends Trigger<T>> extends BaseAttribute<T>
         }
 
         protected List<String> loadTargetsFromConfig(ConfigurationSection config) {
-            return config.getStringList("targets");
+            if (config.isString("target")) {
+                List<String> target = new ArrayList<>();
+                target.add(config.getString("target"));
+                return target;
+            } else {
+                return config.getStringList("targets");
+            }
         }
 
         protected List<String> loadTargetsFromNBT(NBTTagCompound compound) {
