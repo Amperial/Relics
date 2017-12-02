@@ -1,6 +1,7 @@
-name: "&4Fire Sword Handle"
-material: "SHEARS"
+name: "&6Fire Sword Handle"
+item: "fire-sword-handle"
 item-type: "reagent"
+material: "SHEARS"
 attributes:
   model:
     type: model

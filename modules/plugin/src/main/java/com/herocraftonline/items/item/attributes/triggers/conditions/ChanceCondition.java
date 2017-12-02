@@ -39,7 +39,7 @@ public class ChanceCondition extends BaseTrigger<Chance> implements Chance {
 
     @Override
     public TriggerResult onTrigger(TriggerSource source) {
-        return test(source) ? super.onTrigger(source) : TriggerResult.SUCCESS;
+        return test(source) ? super.onTrigger(source) : TriggerResult.TRIGGERED;
     }
 
     @Override

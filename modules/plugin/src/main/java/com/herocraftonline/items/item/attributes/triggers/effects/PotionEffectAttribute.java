@@ -51,7 +51,7 @@ public class PotionEffectAttribute extends BaseAttribute<PotionEffect> implement
         Optional<LivingEntitySource> livingEntitySource = source.ofType(LivingEntitySource.class);
         if (livingEntitySource.isPresent()) {
             getEffect().apply(livingEntitySource.get().getEntity());
-            return TriggerResult.SUCCESS;
+            return TriggerResult.TRIGGERED;
         }
         return TriggerResult.NOT_TRIGGERED;
     }

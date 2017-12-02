@@ -13,10 +13,16 @@ package com.herocraftonline.items.nms.versions;
 import com.herocraftonline.items.api.storage.nbt.NBTBase;
 import com.herocraftonline.items.nms.NMSHandler;
 import com.herocraftonline.items.nms.versions.nbt.*;
+import net.minecraft.server.v1_12_R1.EntityPlayer;
 import net.minecraft.server.v1_12_R1.NBTCompressedStreamTools;
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
 import net.minecraft.server.v1_12_R1.NBTTagList;
+import net.minecraft.server.v1_12_R1.Packet;
+import net.minecraft.server.v1_12_R1.PacketPlayOutAnimation;
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.ByteArrayInputStream;
@@ -29,12 +35,12 @@ import java.util.function.Consumer;
 
 public class Handler_v1_12_R1 extends NMSHandler {
 
-    private static final Field HANDLE_FIELD;
+    private static final Field ITEM_HANDLE;
 
     static {
         try {
-            HANDLE_FIELD = CraftItemStack.class.getDeclaredField("handle");
-            HANDLE_FIELD.setAccessible(true);
+            ITEM_HANDLE = CraftItemStack.class.getDeclaredField("handle");
+            ITEM_HANDLE.setAccessible(true);
         } catch (NoSuchFieldException e) {
             throw new ExceptionInInitializerError(e);
         }
@@ -66,7 +72,7 @@ public class Handler_v1_12_R1 extends NMSHandler {
     private net.minecraft.server.v1_12_R1.ItemStack getNMSItem(ItemStack item) {
         CraftItemStack itemStack = getCraftItem(item);
         try {
-            return (net.minecraft.server.v1_12_R1.ItemStack) HANDLE_FIELD.get(itemStack);
+            return (net.minecraft.server.v1_12_R1.ItemStack) ITEM_HANDLE.get(itemStack);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
             return CraftItemStack.asNMSCopy(item);
@@ -97,7 +103,7 @@ public class Handler_v1_12_R1 extends NMSHandler {
         if (item instanceof CraftItemStack) {
             CraftItemStack itemStack = (CraftItemStack) item;
             try {
-                net.minecraft.server.v1_12_R1.ItemStack handle = (net.minecraft.server.v1_12_R1.ItemStack) HANDLE_FIELD.get(itemStack);
+                net.minecraft.server.v1_12_R1.ItemStack handle = (net.minecraft.server.v1_12_R1.ItemStack) ITEM_HANDLE.get(itemStack);
                 modify.accept(handle);
                 return Optional.empty();
             } catch (IllegalAccessException e) {
@@ -155,6 +161,23 @@ public class Handler_v1_12_R1 extends NMSHandler {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public void playArmSwing(Player player, boolean mainArm) {
+        sendPacket(new PacketPlayOutAnimation(getPlayerHandle(player), mainArm ? 0 : 3));
+    }
+
+    private EntityPlayer getPlayerHandle(Player player) {
+        return ((CraftPlayer) player).getHandle();
+    }
+
+    private void sendPacket(Packet packet) {
+        Bukkit.getOnlinePlayers().forEach(player -> sendPacket(player, packet));
+    }
+
+    private void sendPacket(Player player, Packet packet) {
+        getPlayerHandle(player).playerConnection.sendPacket(packet);
     }
 
 }

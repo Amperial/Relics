@@ -43,7 +43,7 @@ public class SmiteAttribute extends BaseAttribute<SmiteAttribute> implements Tri
         if (locationSource.isPresent()) {
             Location location = locationSource.get().getLocation();
             location.getWorld().strikeLightning(location);
-            return TriggerResult.SUCCESS;
+            return TriggerResult.TRIGGERED;
         }
         return TriggerResult.NOT_TRIGGERED;
     }

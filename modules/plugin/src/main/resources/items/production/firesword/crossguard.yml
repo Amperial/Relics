@@ -1,6 +1,7 @@
-name: "&4Fire Sword Crossguard"
-material: "SHEARS"
+name: "&6Fire Sword Crossguard"
+item: "fire-sword-crossguard"
 item-type: "reagent"
+material: "SHEARS"
 attributes:
   model:
     type: model

@@ -8,22 +8,17 @@ models:
     - "textures/items/chromatics.png"
     materials:
     - "SHEARS"
-  scimitar:
-    model: "item/scimitar"
-    assets:
-    - "textures/items/scimitar.png"
-    materials:
-    - "DIAMOND_SWORD"
-  great_axe:
-    model: "item/great_axe"
-    assets:
-    - "textures/items/great_axe.png"
-    materials:
-    - "DIAMOND_AXE"
   fire_sword:
     model: "item/fire_sword"
     assets:
     - "textures/items/fire_sword.png"
+    materials:
+    - "DIAMOND_SWORD"
+  fire_sword_socketed:
+    model: "item/fire_sword_socketed"
+    assets:
+    - "textures/items/fire_sword_socketed.png"
+    - "textures/items/fire_sword_socketed.png.mcmeta"
     materials:
     - "DIAMOND_SWORD"
   fire_sword_blade:

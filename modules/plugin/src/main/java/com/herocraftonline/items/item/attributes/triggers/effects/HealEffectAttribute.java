@@ -58,7 +58,7 @@ public class HealEffectAttribute extends BaseAttribute<HealEffect> implements He
             LivingEntity entity = livingEntitySource.get().getEntity();
             if (getHeal() > 0 && entity.getMaxHealth() > entity.getHealth()) {
                 entity.setHealth(Math.min(entity.getHealth() + getHeal(), entity.getMaxHealth()));
-                return TriggerResult.SUCCESS;
+                return TriggerResult.TRIGGERED;
             }
         }
         return TriggerResult.NOT_TRIGGERED;

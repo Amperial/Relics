@@ -23,12 +23,14 @@ import org.bukkit.inventory.ItemStack;
 
 public class ModelAttribute extends BaseAttribute<Model> implements Model {
 
-    private com.herocraftonline.items.api.item.model.Model model;
+    private final com.herocraftonline.items.api.item.model.Model model;
+    private final int priority;
 
-    public ModelAttribute(Item item, String name, com.herocraftonline.items.api.item.model.Model model) {
+    public ModelAttribute(Item item, String name, com.herocraftonline.items.api.item.model.Model model, int priority) {
         super(item, name, DefaultAttributes.MODEL);
 
         this.model = model;
+        this.priority = priority;
     }
 
     @Override
@@ -37,9 +39,15 @@ public class ModelAttribute extends BaseAttribute<Model> implements Model {
     }
 
     @Override
+    public int getPriority() {
+        return priority;
+    }
+
+    @Override
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
         compound.setString("model", model.getName());
+        compound.setInt("priority", getPriority());
     }
 
     public static class Factory extends BaseAttributeFactory<Model> {
@@ -54,9 +62,10 @@ public class ModelAttribute extends BaseAttribute<Model> implements Model {
             // Load model
             String modelName = config.getString("model");
             com.herocraftonline.items.api.item.model.Model model = modelManager.getModel(modelName);
+            int priority = config.getInt("priority", 0);
 
             // Create model attribute
-            return new ModelAttribute(item, name, model);
+            return new ModelAttribute(item, name, model, priority);
         }
 
         @Override
@@ -66,9 +75,10 @@ public class ModelAttribute extends BaseAttribute<Model> implements Model {
             // Load model
             String modelName = compound.getString("model");
             com.herocraftonline.items.api.item.model.Model model = modelManager.getModel(modelName);
+            int priority = compound.getInt("priority");
 
             // Create model attribute
-            return new ModelAttribute(item, name, model);
+            return new ModelAttribute(item, name, model, priority);
         }
     }
 

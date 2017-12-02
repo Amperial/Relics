@@ -72,7 +72,7 @@ public class SoundEffectAttribute extends BaseAttribute<SoundEffect> implements 
             if (locationSource.isPresent()) {
                 Location location = locationSource.get().getLocation();
                 location.getWorld().playSound(location, getSound(), getVolume(), getPitch());
-                return TriggerResult.SUCCESS;
+                return TriggerResult.TRIGGERED;
             }
         } else {
             // Play sound at player's location to player
@@ -80,7 +80,7 @@ public class SoundEffectAttribute extends BaseAttribute<SoundEffect> implements 
             if (playerSource.isPresent()) {
                 Player player = playerSource.get().getPlayer();
                 player.playSound(player.getLocation(), getSound(), getVolume(), getPitch());
-                return TriggerResult.SUCCESS;
+                return TriggerResult.TRIGGERED;
             }
         }
         return TriggerResult.NOT_TRIGGERED;

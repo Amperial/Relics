@@ -97,7 +97,7 @@ public class BlueprintAttribute extends BaseAttribute<Blueprint> implements Blue
             Player player = playerSource.get().getPlayer();
             ItemStack blueprint = source.getItem().getItem();
             CraftingMenu.open(Relics.instance(), player, getRecipe(), blueprint);
-            return TriggerResult.SUCCESS;
+            return TriggerResult.TRIGGERED;
         }
         return TriggerResult.NOT_TRIGGERED;
     }

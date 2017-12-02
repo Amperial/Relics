@@ -25,6 +25,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -77,162 +78,178 @@ public class GemAttribute extends BaseAttribute<Gem> implements Gem {
 
     @Override
     public boolean hasAttribute(String name) {
-        return attributes.hasAttribute(name);
+        return hasItem() && attributes.hasAttribute(name);
     }
 
     @Override
     public boolean hasAttribute(Class<? extends Attribute> type) {
-        return attributes.hasAttribute(type);
+        return hasItem() && attributes.hasAttribute(type);
     }
 
     @Override
     public boolean hasAttribute(Predicate<Attribute> predicate) {
-        return attributes.hasAttribute(predicate);
+        return hasItem() && attributes.hasAttribute(predicate);
     }
 
     @Override
     public Optional<Attribute> getAttribute(String name) {
-        return attributes.getAttribute(name);
+        return hasItem() ? attributes.getAttribute(name) : Optional.empty();
     }
 
     @Override
     public Optional<Attribute> getAttribute(Predicate<Attribute> predicate) {
-        return attributes.getAttribute(predicate);
+        return hasItem() ? attributes.getAttribute(predicate) : Optional.empty();
     }
 
     @Override
     public <T extends Attribute> Optional<T> getAttribute(Class<T> type) {
-        return attributes.getAttribute(type);
+        return hasItem() ? attributes.getAttribute(type) : Optional.empty();
     }
 
     @Override
     public <T extends Attribute> Optional<T> getAttribute(Class<T> type, String name) {
-        return attributes.getAttribute(type, name);
+        return hasItem() ? attributes.getAttribute(type, name) : Optional.empty();
     }
 
     @Override
     public <T extends Attribute> Optional<T> getAttribute(Class<T> type, Predicate<T> predicate) {
-        return attributes.getAttribute(type, predicate);
+        return hasItem() ? attributes.getAttribute(type, predicate) : Optional.empty();
     }
 
     @Override
     public Collection<Attribute> getAttributes() {
-        return attributes.getAttributes();
+        return hasItem() ? attributes.getAttributes() : Collections.emptySet();
     }
 
     @Override
     public Collection<Attribute> getAttributes(Predicate<Attribute> predicate) {
-        return attributes.getAttributes(predicate);
+        return hasItem() ? attributes.getAttributes(predicate) : Collections.emptySet();
     }
 
     @Override
     public <T extends Attribute> Collection<T> getAttributes(Class<T> type) {
-        return attributes.getAttributes(type);
+        return hasItem() ? attributes.getAttributes(type) : Collections.emptySet();
     }
 
     @Override
     public <T extends Attribute> Collection<T> getAttributes(Class<T> type, Predicate<T> predicate) {
-        return attributes.getAttributes(type, predicate);
+        return hasItem() ? attributes.getAttributes(type, predicate) : Collections.emptySet();
     }
 
     @Override
     public void forEach(Consumer<Attribute> action) {
-        attributes.forEach(action);
+        if (hasItem()) {
+            attributes.forEach(action);
+        }
     }
 
     @Override
     public void forEach(Predicate<Attribute> predicate, Consumer<Attribute> action) {
-        attributes.forEach(predicate, action);
+        if (hasItem()) {
+            attributes.forEach(predicate, action);
+        }
     }
 
     @Override
     public <T extends Attribute> void forEach(Class<T> type, Consumer<T> action) {
-        attributes.forEach(type, action);
+        if (hasItem()) {
+            attributes.forEach(type, action);
+        }
     }
 
     @Override
     public <T extends Attribute> void forEach(Class<T> type, Predicate<T> predicate, Consumer<T> action) {
-        attributes.forEach(type, predicate, action);
+        if (hasItem()) {
+            attributes.forEach(type, predicate, action);
+        }
     }
 
     @Override
     public boolean hasAttributeDeep(String name) {
-        return attributes.hasAttributeDeep(name);
+        return hasItem() && attributes.hasAttributeDeep(name);
     }
 
     @Override
     public boolean hasAttributeDeep(Class<? extends Attribute> type) {
-        return attributes.hasAttributeDeep(type);
+        return hasItem() && attributes.hasAttributeDeep(type);
     }
 
     @Override
     public boolean hasAttributeDeep(Predicate<Attribute> predicate) {
-        return attributes.hasAttributeDeep(predicate);
+        return hasItem() && attributes.hasAttributeDeep(predicate);
     }
 
     @Override
     public Optional<Attribute> getAttributeDeep(String name) {
-        return attributes.getAttributeDeep(name);
+        return hasItem() ? attributes.getAttributeDeep(name) : Optional.empty();
     }
 
     @Override
     public Optional<Attribute> getAttributeDeep(Predicate<Attribute> predicate) {
-        return attributes.getAttributeDeep(predicate);
+        return hasItem() ? attributes.getAttributeDeep(predicate) : Optional.empty();
     }
 
     @Override
     public <T extends Attribute> Optional<T> getAttributeDeep(Class<T> type) {
-        return attributes.getAttributeDeep(type);
+        return hasItem() ? attributes.getAttributeDeep(type) : Optional.empty();
     }
 
     @Override
     public <T extends Attribute> Optional<T> getAttributeDeep(Class<T> type, String name) {
-        return attributes.getAttributeDeep(type, name);
+        return hasItem() ? attributes.getAttributeDeep(type, name) : Optional.empty();
     }
 
     @Override
     public <T extends Attribute> Optional<T> getAttributeDeep(Class<T> type, Predicate<T> predicate) {
-        return attributes.getAttributeDeep(type, predicate);
+        return hasItem() ? attributes.getAttributeDeep(type, predicate) : Optional.empty();
     }
 
     @Override
     public Collection<Attribute> getAttributesDeep() {
-        return attributes.getAttributesDeep();
+        return hasItem() ? attributes.getAttributesDeep() : Collections.emptySet();
     }
 
     @Override
     public Collection<Attribute> getAttributesDeep(Predicate<Attribute> predicate) {
-        return attributes.getAttributesDeep(predicate);
+        return hasItem() ? attributes.getAttributesDeep(predicate) : Collections.emptySet();
     }
 
     @Override
     public <T extends Attribute> Collection<T> getAttributesDeep(Class<T> type) {
-        return attributes.getAttributesDeep(type);
+        return hasItem() ? attributes.getAttributesDeep(type) : Collections.emptySet();
     }
 
     @Override
     public <T extends Attribute> Collection<T> getAttributesDeep(Class<T> type, Predicate<T> predicate) {
-        return attributes.getAttributesDeep(type, predicate);
+        return hasItem() ? attributes.getAttributesDeep(type, predicate) : Collections.emptySet();
     }
 
     @Override
     public void forEachDeep(Consumer<Attribute> action) {
-        attributes.forEachDeep(action);
+        if (hasItem()) {
+            attributes.forEachDeep(action);
+        }
     }
 
     @Override
     public void forEachDeep(Predicate<Attribute> predicate, Consumer<Attribute> action) {
-        attributes.forEachDeep(predicate, action);
+        if (hasItem()) {
+            attributes.forEachDeep(predicate, action);
+        }
     }
 
     @Override
     public <T extends Attribute> void forEachDeep(Class<T> type, Consumer<T> action) {
-        attributes.forEachDeep(type, action);
+        if (hasItem()) {
+            attributes.forEachDeep(type, action);
+        }
     }
 
     @Override
     public <T extends Attribute> void forEachDeep(Class<T> type, Predicate<T> predicate, Consumer<T> action) {
-        attributes.forEachDeep(type, predicate, action);
+        if (hasItem()) {
+            attributes.forEachDeep(type, predicate, action);
+        }
     }
 
     @Override

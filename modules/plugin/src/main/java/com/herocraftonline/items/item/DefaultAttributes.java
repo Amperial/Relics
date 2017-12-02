@@ -32,9 +32,11 @@ import com.herocraftonline.items.item.attributes.triggers.conditions.ChanceCondi
 import com.herocraftonline.items.item.attributes.triggers.conditions.CooldownCondition;
 import com.herocraftonline.items.item.attributes.triggers.PlayerInteractTrigger;
 import com.herocraftonline.items.item.attributes.triggers.conditions.PermissionCondition;
+import com.herocraftonline.items.item.attributes.triggers.effects.ArmSwingEffectAttribute;
 import com.herocraftonline.items.item.attributes.triggers.effects.HealEffectAttribute;
 import com.herocraftonline.items.item.attributes.triggers.effects.PotionEffectAttribute;
 import com.herocraftonline.items.item.attributes.triggers.effects.SoundEffectAttribute;
+import com.herocraftonline.items.item.attributes.triggers.transforms.GetPlayerTransform;
 import com.herocraftonline.items.item.attributes.triggers.transforms.TargetBlockTransform;
 
 import java.util.ArrayList;
@@ -42,6 +44,7 @@ import java.util.Collection;
 
 public final class DefaultAttributes {
 
+    public static final AttributeType<ArmSwingEffectAttribute> ARM_SWING_EFFECT = new BaseAttributeType<>("arm-swing-effect", Integer.MAX_VALUE, ArmSwingEffectAttribute.Factory::new);
     public static final AttributeType<Blueprint> BLUEPRINT = new BaseAttributeType<>("blueprint", 5, BlueprintAttribute.Factory::new);
     public static final AttributeType<Chance> CHANCE_CONDITION = new BaseAttributeType<>("chance-condition", Integer.MAX_VALUE, ChanceCondition.Factory::new);
     public static final AttributeType<Command> COMMAND = new BaseAttributeType<>("command", Integer.MAX_VALUE, CommandAttribute.Factory::new);
@@ -49,6 +52,7 @@ public final class DefaultAttributes {
     public static final AttributeType<Minecraft> DAMAGE = new BaseAttributeType<>("damage", Integer.MAX_VALUE, DamageAttribute.Factory::new);
     public static final AttributeType<Durability> DURABILITY = new BaseAttributeType<>("durability", 8, DurabilityAttribute.Factory::new);
     public static final AttributeType<Gem> GEM = new BaseAttributeType<>("gem", 7, GemAttribute.Factory::new);
+    public static final AttributeType<GetPlayerTransform> GET_PLAYER_TRANSFORM = new BaseAttributeType<>("get-player-transform", Integer.MAX_VALUE, GetPlayerTransform.Factory::new);
     public static final AttributeType<Group> GROUP = new BaseAttributeType<>("group", 0, GroupAttribute.Factory::new);
     public static final AttributeType<HealEffect> HEAL_EFFECT = new BaseAttributeType<>("heal-effect", Integer.MAX_VALUE, HealEffectAttribute.Factory::new);
     public static final AttributeType<Identifiable> IDENTIFIABLE = new BaseAttributeType<>("identifiable", Integer.MAX_VALUE, IdentifiableAttribute.Factory::new);
@@ -73,6 +77,7 @@ public final class DefaultAttributes {
     private static final Collection<AttributeType> types = new ArrayList<>();
 
     static {
+        types.add(ARM_SWING_EFFECT);
         types.add(BLUEPRINT);
         types.add(CHANCE_CONDITION);
         types.add(COMMAND);
@@ -80,6 +85,7 @@ public final class DefaultAttributes {
         types.add(DAMAGE);
         types.add(DURABILITY);
         types.add(GEM);
+        types.add(GET_PLAYER_TRANSFORM);
         types.add(GROUP);
         types.add(HEAL_EFFECT);
         types.add(IDENTIFIABLE);

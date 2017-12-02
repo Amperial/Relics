@@ -68,7 +68,7 @@ public class CommandAttribute extends BaseAttribute<Command> implements Command 
         if (senderSource.isPresent()) {
             CommandSender commandSender = senderSource.get().getSender();
             execute(commandSender);
-            return TriggerResult.SUCCESS;
+            return TriggerResult.TRIGGERED;
         }
         return TriggerResult.NOT_TRIGGERED;
     }

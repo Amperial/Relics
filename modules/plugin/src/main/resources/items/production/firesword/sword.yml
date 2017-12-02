@@ -1,6 +1,7 @@
-name: "&4Fire Sword"
-material: "DIAMOND_SWORD"
+name: "&6Fire Sword"
+item: "fire-sword"
 item-type: "primary"
+material: "DIAMOND_SWORD"
 attributes:
   model:
     type: "model"
@@ -9,3 +10,6 @@ attributes:
     type: "reagent"
     reagent-type: "Fire Sword"
     lore: false
+  socket:
+    type: "socket"
+    color: "gold"

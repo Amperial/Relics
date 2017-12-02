@@ -1,7 +1,12 @@
-name: "&4Fire Sword Blueprint"
-material: "MAP"
+name: "&6Fire Sword Blueprint"
+item: "fire-sword-blueprint"
 item-type: "blueprint"
+material: "MAP"
 attributes:
+  click:
+    type: "player-interact"
+    targets: ["blueprint"]
+    actions: ["RIGHT_CLICK_AIR"]
   blueprint:
     type: "blueprint"
     recipe:
@@ -17,9 +22,10 @@ attributes:
       - slot: 6
         reagent: "Fire Sword Handle"
       result:
-        name: "&4Fire Sword"
-        material: "DIAMOND_SWORD"
+        name: "&6Fire Sword"
+        item: "fire-sword"
         item-type: "primary"
+        material: "DIAMOND_SWORD"
         attributes:
           model:
             type: "model"

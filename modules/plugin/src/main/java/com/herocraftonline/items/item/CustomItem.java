@@ -406,7 +406,7 @@ public class CustomItem implements Item {
         item.setItemMeta(meta);
 
         // Check for model or blueprint attributes
-        attributes.getAttribute(Model.class).ifPresent(model -> model.apply(item));
+        attributes.getAttributesDeep(Model.class).stream().reduce(Model.PRIORITY).ifPresent(model -> model.apply(item));
         attributes.getAttribute(Blueprint.class).ifPresent(blueprint -> blueprint.apply(item));
 
         // Get NBTTagCompound

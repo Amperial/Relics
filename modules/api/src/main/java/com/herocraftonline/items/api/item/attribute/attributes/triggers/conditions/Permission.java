@@ -30,8 +30,8 @@ public interface Permission extends ConditionTrigger<Permission> {
     @Override
     default boolean test(TriggerSource source) {
         return source.ofType(CommandSenderSource.class)
-                .map(commandSenderSource -> commandSenderSource.getSender()
-                .hasPermission(getPermission())).orElse(false);
+                .map(commandSenderSource -> commandSenderSource.getSender().hasPermission(getPermission()))
+                .orElse(false);
     }
 
 }

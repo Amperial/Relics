@@ -24,7 +24,7 @@ public enum TriggerResult {
     /**
      * The triggerable was triggered successfully but has no meaningful result.
      */
-    SUCCESS,
+    TRIGGERED,
     /**
      * The triggerable changed the item which should now be updated.
      */
@@ -52,5 +52,5 @@ public enum TriggerResult {
      * Used to get the trigger result that should be handled when dealing with separate target triggers.
      */
     public static final BinaryOperator<TriggerResult> SEPARATE = (r1, r2) -> r1.equals(r2) ? r1 :
-            COMBINED.apply(r1 == NOT_TRIGGERED ? SUCCESS : r1, r2 == NOT_TRIGGERED ? SUCCESS : r2);
+            COMBINED.apply(r1 == NOT_TRIGGERED ? TRIGGERED : r1, r2 == NOT_TRIGGERED ? TRIGGERED : r2);
 }

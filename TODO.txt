@@ -1,3 +1,7 @@
+IMPORTANT:
+- Give all items in items.yml a constant uuid, separate from the actual id that can be random per instance
+    - For revoking all items of a certain type, even if they are different unique instances
+
 Core Systems:
 - Equipment
 - Item Variables
