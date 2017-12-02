@@ -1,4 +1,4 @@
-name: "&4Token of ampayne2"
+name: "&4Token of Amperial"
 material: "REDSTONE_ORE"
 item-type: "other"
 attributes:
@@ -15,7 +15,7 @@ attributes:
   infuse: "#{gems/infuse}"
   gem:
     type: "gem"
-    name: "&7(&4Token of ampayne2)"
+    name: "&7(&4Token of Amperial)"
     color: "yellow"
     attributes:
       requirement:
@@ -24,4 +24,4 @@ attributes:
       description:
         type: "text"
         text:
-        - "A token of favor from ampayne2!"
+        - "A token of favor from Amperial!"
