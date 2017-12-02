@@ -2,6 +2,12 @@
 # The given texture pack will be modified so that these materials are able to use the models.
 # Custom items can refer to these models by name and they will automatically be handled.
 models:
+  tuba:
+    model: "item/tuba"
+    assets:
+    - "textures/items/tuba.png"
+    materials:
+    - "SHEARS"
   chromatics:
     model: "item/chromatics"
     assets:
