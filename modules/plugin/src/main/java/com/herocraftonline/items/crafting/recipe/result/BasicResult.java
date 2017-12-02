@@ -29,7 +29,7 @@ public class BasicResult implements Result {
 
     @Override
     public String getDisplayIcon() {
-        return getItem().getType().name();
+        return getItem().getType().name().toLowerCase();
     }
 
     @Override

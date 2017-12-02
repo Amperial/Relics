@@ -1,6 +1,5 @@
 Core Systems:
 - Equipment
-- Triggers
 - Item Variables
 
 Attributes:
@@ -35,3 +34,7 @@ Item Variables:
         - If something doesn't use a variable, the static value will just be wrapped for evaluation with the same code
 - Necessary for item upgrade system, allowing item values to change after generation
 - Used for item level, rarity, and other possibilities such as varying how good the item is, storing energy, etc
+
+General QoL:
+- Add option to set an item's max stack size
+    - Have to listen to all sorts of events to accomplish this without breaking functionality of other items

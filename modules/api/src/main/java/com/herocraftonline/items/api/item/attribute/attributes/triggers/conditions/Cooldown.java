@@ -13,7 +13,7 @@ package com.herocraftonline.items.api.item.attribute.attributes.triggers.conditi
 import com.herocraftonline.items.api.item.attribute.attributes.triggers.source.TriggerSource;
 
 /**
- * A trigger attribute that can only trigger once every period of time.
+ * A condition trigger that can only trigger once every period of time.
  *
  * @author Austin Payne
  */

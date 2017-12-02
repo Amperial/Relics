@@ -24,8 +24,11 @@ import com.herocraftonline.items.api.item.attribute.attributes.gems.Socket;
 import com.herocraftonline.items.api.item.attribute.attributes.projectiles.Velocity;
 import com.herocraftonline.items.api.item.attribute.attributes.requirements.LevelRequirement;
 import com.herocraftonline.items.api.item.attribute.attributes.triggers.PlayerInteract;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.conditions.Chance;
 import com.herocraftonline.items.api.item.attribute.attributes.triggers.conditions.Cooldown;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.conditions.Permission;
 import com.herocraftonline.items.item.attributes.*;
+import com.herocraftonline.items.item.attributes.triggers.conditions.ChanceCondition;
 import com.herocraftonline.items.item.attributes.triggers.conditions.CooldownCondition;
 import com.herocraftonline.items.item.attributes.triggers.PlayerInteractTrigger;
 import com.herocraftonline.items.item.attributes.triggers.conditions.PermissionCondition;
@@ -40,6 +43,7 @@ import java.util.Collection;
 public final class DefaultAttributes {
 
     public static final AttributeType<Blueprint> BLUEPRINT = new BaseAttributeType<>("blueprint", 5, BlueprintAttribute.Factory::new);
+    public static final AttributeType<Chance> CHANCE_CONDITION = new BaseAttributeType<>("chance-condition", Integer.MAX_VALUE, ChanceCondition.Factory::new);
     public static final AttributeType<Command> COMMAND = new BaseAttributeType<>("command", Integer.MAX_VALUE, CommandAttribute.Factory::new);
     public static final AttributeType<Cooldown> COOLDOWN = new BaseAttributeType<>("cooldown-condition", Integer.MAX_VALUE, CooldownCondition.Factory::new);
     public static final AttributeType<Minecraft> DAMAGE = new BaseAttributeType<>("damage", Integer.MAX_VALUE, DamageAttribute.Factory::new);
@@ -53,7 +57,7 @@ public final class DefaultAttributes {
     public static final AttributeType<LevelRequirement> LEVEL_REQUIREMENT = new BaseAttributeType<>("level-requirement", Integer.MIN_VALUE, LevelRequirementAttribute.Factory::new);
     public static final AttributeType<Minecraft> MINECRAFT = new BaseAttributeType<>("minecraft", Integer.MAX_VALUE, MinecraftAttribute.Factory::new);
     public static final AttributeType<Model> MODEL = new BaseAttributeType<>("model", Integer.MAX_VALUE, ModelAttribute.Factory::new);
-    public static final AttributeType<PermissionCondition> PERMISSION_CONDITION = new BaseAttributeType<>("permission-condition", Integer.MAX_VALUE, PermissionCondition.Factory::new);
+    public static final AttributeType<Permission> PERMISSION_CONDITION = new BaseAttributeType<>("permission-condition", Integer.MAX_VALUE, PermissionCondition.Factory::new);
     public static final AttributeType<PlayerInteract> PLAYER_INTERACT = new BaseAttributeType<>("player-interact", Integer.MAX_VALUE, PlayerInteractTrigger.Factory::new);
     public static final AttributeType<PotionEffect> POTION_EFFECT = new BaseAttributeType<>("potion-effect", Integer.MAX_VALUE, PotionEffectAttribute.Factory::new);
     public static final AttributeType<Rarity> RARITY = new BaseAttributeType<>("rarity", 1, RarityAttribute.Factory::new);
@@ -70,6 +74,7 @@ public final class DefaultAttributes {
 
     static {
         types.add(BLUEPRINT);
+        types.add(CHANCE_CONDITION);
         types.add(COMMAND);
         types.add(COOLDOWN);
         types.add(DAMAGE);

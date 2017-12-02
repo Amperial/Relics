@@ -55,12 +55,13 @@ public class CustomItem implements Item {
     private static final String ITEM_TAG = "relics-item";
 
     // Specific item tags for various item information
-    private static final String ID_TAG = "id";
+    private static final String ID_TAG = "item";
+    private static final String TYPE_TAG = "item-type";
+    private static final String UUID_TAG = "id";
     private static final String NAME_TAG = "name";
     private static final String MATERIAL_TAG = "material";
     private static final String ENCHANTMENTS_TAG = "enchantments";
     private static final String UNBREAKABLE_TAG = "unbreakable";
-    private static final String TYPE_TAG = "item-type";
     private static final String VARIABLES_TAG = "variables";
     private static final String ATTRIBUTES_TAG = "attributes";
     private static final String INSTANCE_TAG = "item-instance";
@@ -500,7 +501,7 @@ public class CustomItem implements Item {
 
     @Override
     public void saveToNBT(NBTTagCompound compound) {
-        compound.setString(ID_TAG, getId().toString());
+        compound.setString(UUID_TAG, getId().toString());
         compound.setString(NAME_TAG, getName());
         compound.setString(MATERIAL_TAG, getMaterial().name());
         NBTTagCompound enchants = NBTTagCompound.create();
@@ -533,7 +534,7 @@ public class CustomItem implements Item {
         @Override
         public Item loadFromConfig(ConfigurationSection config) {
             // Load id, name, material, enchantments, unbreakable, type, and variables
-            UUID id = config.isString(ID_TAG) ? UUID.fromString(config.getString(ID_TAG)) : UUID.randomUUID();
+            UUID uuid = config.isString(ID_TAG) ? itemManager.getItemId(config.getString(ID_TAG)) : UUID.randomUUID();
             String name = ChatColor.translateAlternateColorCodes('&', config.getString(NAME_TAG));
             Material material = Material.getMaterial(config.getString(MATERIAL_TAG));
             Map<Enchantment, Integer> enchantments = new HashMap<>();
@@ -558,7 +559,7 @@ public class CustomItem implements Item {
             Group attributes = new GroupAttribute(null, ATTRIBUTES_TAG, new HashMap<>(), true);
 
             // Create item
-            Item item = new CustomItem(id, name, material, enchantments, unbreakable, type, variables, attributes);
+            Item item = new CustomItem(uuid, name, material, enchantments, unbreakable, type, variables, attributes);
 
             // Load attributes
             Group loadedAttributes = DefaultAttributes.GROUP.getFactory().loadFromConfig(item, ATTRIBUTES_TAG, config);
@@ -578,7 +579,7 @@ public class CustomItem implements Item {
             }
 
             // Load id, name, material, enchantments, unbreakable, type, and attributes
-            UUID id = UUID.fromString(compound.getString(ID_TAG));
+            UUID uuid = UUID.fromString(compound.getString(UUID_TAG));
             String name = compound.getString(NAME_TAG);
             Material material = Material.getMaterial(compound.getString(MATERIAL_TAG));
             Map<Enchantment, Integer> enchantments = new HashMap<>();
@@ -597,7 +598,7 @@ public class CustomItem implements Item {
             Group attributes = new GroupAttribute(null, ATTRIBUTES_TAG, new HashMap<>(), true);
 
             // Create item
-            Item item = new CustomItem(id, name, material, enchantments, unbreakable, type, variables, attributes);
+            Item item = new CustomItem(uuid, name, material, enchantments, unbreakable, type, variables, attributes);
 
             // Load attributes
             Group loadedAttributes = DefaultAttributes.GROUP.getFactory().loadFromNBT(item, ATTRIBUTES_TAG, compound);

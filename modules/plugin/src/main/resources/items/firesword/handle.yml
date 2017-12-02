@@ -1,5 +1,5 @@
 name: "&4Fire Sword Handle"
-material: "DIAMOND_SWORD"
+material: "SHEARS"
 item-type: "reagent"
 attributes:
   model:

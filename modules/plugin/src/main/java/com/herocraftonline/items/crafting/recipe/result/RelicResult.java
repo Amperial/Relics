@@ -30,7 +30,7 @@ public class RelicResult implements Result {
 
     @Override
     public String getDisplayIcon() {
-        return result.getAttribute(Reagent.class).map(reagent -> reagent.getReagentType().getDisplayIcon()).orElse(result.getMaterial().name());
+        return result.getAttribute(Reagent.class).map(reagent -> reagent.getReagentType().getDisplayIcon()).orElse(result.getMaterial().name().toLowerCase());
     }
 
     @Override

@@ -84,6 +84,9 @@ public class ConfigManager implements com.herocraftonline.items.api.storage.conf
 
     @Override
     public ConfigAccessor getConfigAccessor(Config configType) {
+        if (!configs.containsKey(configType)) {
+            registerCustomConfig(configType, plugin, false);
+        }
         return configs.get(configType).reloadConfig();
     }
 

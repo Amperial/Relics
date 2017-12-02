@@ -137,6 +137,14 @@ public interface ItemManager {
     Optional<Item> getItem(String item, Object... args);
 
     /**
+     * Gets the configured UUID of a certain item, or a random UUID.
+     *
+     * @param item the item name
+     * @return the item's unique id
+     */
+    UUID getItemId(String item);
+
+    /**
      * Checks if the attribute type of a certain name is registered.
      *
      * @param type the attribute type's name

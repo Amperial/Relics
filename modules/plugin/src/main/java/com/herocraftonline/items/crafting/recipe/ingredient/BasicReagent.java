@@ -37,7 +37,7 @@ public class BasicReagent implements ReagentType {
 
     @Override
     public String getDisplayIcon() {
-        return getMaterial().name();
+        return getMaterial().name().toLowerCase();
     }
 
     @Override

@@ -99,8 +99,7 @@ public class ItemListener implements Listener {
                 event.setCancelled(true);
             }
             TriggerSource source = new PlayerInteractSource(item, event);
-            TriggerResult result = item.getAttributes(attribute -> attribute instanceof PlayerInteract).stream()
-                    .map(attribute -> (PlayerInteract) attribute)
+            TriggerResult result = item.getAttributes(PlayerInteract.class).stream()
                     .filter(attribute -> attribute.canTrigger(source))
                     .map(attribute -> attribute.onTrigger(source))
                     .reduce(TriggerResult.COMBINED).orElse(TriggerResult.NOT_TRIGGERED);
