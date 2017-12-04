@@ -132,11 +132,6 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
     }
 
     @Override
-    public boolean hasItemType(String name) {
-        return itemTypes.containsKey(name.toLowerCase());
-    }
-
-    @Override
     public ItemType getItemType(String name) {
 
         // Amusing way to handle null names

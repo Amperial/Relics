@@ -137,15 +137,7 @@ public interface ItemManager {
     Optional<Item> getItem(String item, Object... args);
 
     /**
-     * Checks if an item type of a certain name is registered.
-     *
-     * @param name the item type name
-     * @return {@code true} if the item type is registered, else {@code false}
-     */
-    boolean hasItemType(String name);
-
-    /**
-     * Gets the item type with the given name. If one is not found, then a new one flagged
+     * Gets the item type with the given name (case insensitive). If one is not found, then a new one flagged
      * as transient will be created and returned.
      *
      * @param name the name of the item type
