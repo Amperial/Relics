@@ -250,7 +250,7 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
         if (nameObj instanceof String) {
 
             String name = (String) nameObj;
-            if (hasItemType(name)) {
+            if (itemTypes.containsKey(name.toLowerCase())) {
                 plugin.getLogger().warning("Duplicate item type name `" + name + "`");
                 return;
             }
