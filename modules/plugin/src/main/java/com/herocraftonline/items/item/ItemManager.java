@@ -27,27 +27,26 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
 public class ItemManager implements com.herocraftonline.items.api.item.ItemManager {
 
     private final ItemPlugin plugin;
     private final ItemFactory factory;
+    private final Map<String, ItemType> itemTypes;
     private final Map<String, AttributeType> attributeTypes;
     private final Map<String, ItemConfig> items;
 
     public ItemManager(ItemPlugin plugin) {
         this.plugin = plugin;
         this.factory = new CustomItem.DefaultItemFactory(this);
+        this.itemTypes = new HashMap<>();
         this.attributeTypes = new HashMap<>();
         this.items = new HashMap<>();
 
+        // Load item types defined in `items.yml`
+        loadItemTypes();
         // Register default attribute types
         registerAttributeTypes(DefaultAttributes.getTypes(), plugin);
 
@@ -133,6 +132,32 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
     }
 
     @Override
+    public boolean hasItemType(String name) {
+        return itemTypes.containsKey(name.toLowerCase());
+    }
+
+    @Override
+    public ItemType getItemType(String name) {
+
+        // Amusing way to handle null names
+        if (name == null) name = "NULL";
+
+        ItemType itemType = itemTypes.get(name.toLowerCase());
+
+        if (itemType == null) {
+            itemType = new ItemType(name.toLowerCase(), null, true);
+            itemTypes.put(name, itemType);
+        }
+
+        return itemType;
+    }
+
+    @Override
+    public Collection<? extends ItemType> getItemTypes() {
+        return Collections.unmodifiableCollection(itemTypes.values());
+    }
+
+    @Override
     public Item getItem(NBTTagCompound compound) {
         // Ensure compound isnt null for some reason
         if (compound == null) {
@@ -215,4 +240,51 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
         return factory;
     }
 
+    private void loadItemTypes() {
+        loadItemTypes(plugin.getConfigManager().getConfig(DefaultConfig.ITEMS).getMapList("types"), new Stack<>());
+    }
+
+    private void loadItemTypes(List<Map<?, ?>> typeMaps, Stack<ItemType> parentStack) {
+        for (Map<?,?> typeMap : typeMaps) {
+            loadItemType(typeMap, parentStack);
+        }
+    }
+
+    private void loadItemType(Map<?, ?> typeMap, Stack<ItemType> parentStack) {
+        Object nameObj = typeMap.get("name");
+        if (nameObj instanceof String) {
+
+            String name = (String) nameObj;
+            if (hasItemType(name)) {
+                plugin.getLogger().warning("Duplicate item type name `" + name + "`");
+                return;
+            }
+
+            ItemType parent = null;
+            if (!parentStack.empty()) {
+                parent = parentStack.peek();
+            }
+
+            ItemType itemType = new ItemType(name, parent, false);
+            itemTypes.put(name.toLowerCase(), itemType);
+
+            Object childrenObj = typeMap.get("children");
+            if (childrenObj instanceof List) {
+                List<?> list = (List<?>) childrenObj;
+                List<Map<?, ?>> typeList = new ArrayList<>();
+
+                for (Object o : list) {
+                    if (o instanceof Map) {
+                        typeList.add((Map<?, ?>) o);
+                    }
+                }
+
+                if (!typeList.isEmpty()) {
+                    parentStack.push(itemType);
+                    loadItemTypes(typeList, parentStack);
+                    parentStack.pop();
+                }
+            }
+        }
+    }
 }

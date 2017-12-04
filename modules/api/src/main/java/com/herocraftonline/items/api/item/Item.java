@@ -71,6 +71,14 @@ public interface Item extends AttributeContainer, Equippable {
     ItemType getType();
 
     /**
+     * Checks if this item's type is, or is a child of the given item type
+     *
+     * @param itemType the item type to check against
+     * @return {@code true} this item's type is or is a child of the given item type, {@code false} otherwise
+     */
+    boolean isType(ItemType itemType);
+
+    /**
      * Checks if the item is currently equipped.
      *
      * @return {@code true} if the item is equipped, else {@code false}

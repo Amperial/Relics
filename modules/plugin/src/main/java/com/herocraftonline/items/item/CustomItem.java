@@ -121,6 +121,11 @@ public class CustomItem implements Item {
     }
 
     @Override
+    public boolean isType(ItemType itemType) {
+        return getType().isType(itemType);
+    }
+
+    @Override
     public boolean hasAttribute(String name) {
         return attributes.hasAttribute(name);
     }
@@ -335,7 +340,10 @@ public class CustomItem implements Item {
         ItemMeta meta = item.getItemMeta();
 
         // Set item name
-        meta.setDisplayName(getName());
+        meta.setDisplayName(getName()
+                + " " + ChatColor.DARK_GRAY + ChatColor.ITALIC
+                + (type.isTransient() ? ChatColor.STRIKETHROUGH : "")
+                + type.getName());
 
         // Set item lore
         meta.setLore(createLore());
@@ -490,7 +498,7 @@ public class CustomItem implements Item {
                 }
             }
             boolean unbreakable = config.getBoolean(UNBREAKABLE_TAG, false);
-            ItemType type = new ItemType(config.getString(TYPE_TAG, ItemType.OTHER.getName()));
+            ItemType type = itemManager.getItemType(config.getString(TYPE_TAG));
             Group attribute = DefaultAttributes.GROUP.getFactory().loadFromConfig(ATTRIBUTES_TAG, config);
 
             // Create Item
@@ -517,7 +525,7 @@ public class CustomItem implements Item {
                 enchantments.put(Enchantment.getByName(enchant), enchants.getInt(enchant));
             }
             boolean unbreakable = compound.getBoolean(UNBREAKABLE_TAG);
-            ItemType type = new ItemType(compound.getString(TYPE_TAG));
+            ItemType type = itemManager.getItemType(compound.getString(TYPE_TAG));
             Group attribute = DefaultAttributes.GROUP.getFactory().loadFromNBT(ATTRIBUTES_TAG, compound);
 
             // Create Item

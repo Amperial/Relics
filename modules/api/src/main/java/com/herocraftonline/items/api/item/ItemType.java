@@ -11,66 +11,51 @@
 package com.herocraftonline.items.api.item;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Represents a type of custom item.
  *
  * @author Austin Payne
  */
-public class ItemType {
+public interface ItemType {
 
     /**
-     * Default item types that may be needed.
-     */
-
-    public static final ItemType OTHER = new ItemType("other");
-    public static final ItemType UNIDENTIFIED = new ItemType("unidentified");
-    public static final ItemType TOOL = new ItemType("tool");
-    public static final ItemType TOOL_AXE = new ItemType("tool-axe");
-    public static final ItemType TOOL_HOE = new ItemType("tool-hoe");
-    public static final ItemType TOOL_PICKAXE = new ItemType("tool-pickaxe");
-    public static final ItemType TOOL_SHEARS = new ItemType("tool-shears");
-    public static final ItemType TOOL_SHOVEL = new ItemType("tool-shovel");
-    public static final ItemType WEAPON = new ItemType("weapon");
-    public static final ItemType WEAPON_AXE = new ItemType("weapon-axe");
-    public static final ItemType WEAPON_BOW = new ItemType("weapon-bow");
-    public static final ItemType WEAPON_HOE = new ItemType("weapon-hoe");
-    public static final ItemType WEAPON_PICKAXE = new ItemType("weapon-pickaxe");
-    public static final ItemType WEAPON_SHEARS = new ItemType("weapon-shears");
-    public static final ItemType WEAPON_SHOVEL = new ItemType("weapon-shovel");
-    public static final ItemType WEAPON_SWORD = new ItemType("weapon-sword");
-    public static final ItemType HELMET = new ItemType("helmet");
-    public static final ItemType CHESTPLATE = new ItemType("chestplate");
-    public static final ItemType LEGGINGS = new ItemType("leggings");
-    public static final ItemType BOOTS = new ItemType("boots");
-    public static final ItemType SHIELD = new ItemType("shield");
-
-    private final String name;
-
-    public ItemType(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Gets the name of the item type.
+     * Gets the name of this item type
      *
-     * @return the item type's name
+     * @return the name
      */
-    public String getName() {
-        return name;
-    }
+    String getName();
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ItemType)) return false;
-        ItemType itemType = (ItemType) o;
-        return Objects.equals(name, itemType.name);
-    }
+    /**
+     * Checks if this item has a parent item type
+     *
+     * @return {@code true} if a parent exists, {@code false} otherwise
+     */
+    boolean hasParent();
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
-    }
+    /**
+     * Gets the parent of this item type
+     *
+     * @return the parent
+     */
+    ItemType getParent();
 
+    /**
+     * Checks if this item type is a child of the given item type
+     *
+     * @param itemType the item type to test for
+     * @return {@code true} if this item type is a child of the given item type, {@code false} otherwise
+     */
+    boolean isType(ItemType itemType);
+
+    /**
+     * Checks if this item type is transient. A transient item type is created
+     * when an item type is defined in an item or item config that isn't defined in
+     * the items.yml. This is to prevent such items from causing problems with the
+     * rest of the plugin. As such a transient item type always have no parent or children.
+     *
+     * @return {@code true} if this item type is transient, {@code false} otherwise
+     */
+    boolean isTransient();
 }
