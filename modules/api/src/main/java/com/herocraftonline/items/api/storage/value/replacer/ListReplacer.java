@@ -8,7 +8,7 @@
  * Unauthorized copying and/or distribution of Relics API,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.storage.config.transform.replacer;
+package com.herocraftonline.items.api.storage.value.replacer;
 
 import java.util.regex.Pattern;
 
@@ -18,11 +18,11 @@ import java.util.regex.Pattern;
  *
  * @author Austin Payne
  */
-public class EqualChanceList extends Replacer {
+public class ListReplacer extends Replacer {
 
     private static final Pattern EQUAL_CHANCE = Pattern.compile("<[^<:,\\s]*(,[^<:,\\s>]*)*>");
 
-    public EqualChanceList(Replaceable value) {
+    public ListReplacer(Replaceable value) {
         super(EQUAL_CHANCE.matcher(value.getString()), value);
     }
 

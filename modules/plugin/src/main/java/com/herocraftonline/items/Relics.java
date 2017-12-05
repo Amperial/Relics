@@ -190,10 +190,8 @@ public class Relics extends JavaPlugin implements ItemPlugin {
         commandController = null;
         messenger = null;
         configManager = null;
-        if (effectLib.isPresent()) {
-            effectLib.get().dispose();
-        }
-        effectLib = null;
+        effectLib.ifPresent(EffectManager::dispose);
+        effectLib = Optional.empty();
     }
 
     @Override

@@ -16,7 +16,7 @@ import com.herocraftonline.items.api.storage.config.DefaultConfig;
 import com.herocraftonline.items.api.storage.config.transform.ArgTransform;
 import com.herocraftonline.items.api.storage.config.transform.ConfigTransform;
 import com.herocraftonline.items.api.storage.config.transform.ReferenceTransform;
-import com.herocraftonline.items.api.storage.config.transform.replacer.ReplacerTransform;
+import com.herocraftonline.items.api.storage.config.transform.ReplacerTransform;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

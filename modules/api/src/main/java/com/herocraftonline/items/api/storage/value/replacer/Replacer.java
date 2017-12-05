@@ -8,7 +8,7 @@
  * Unauthorized copying and/or distribution of Relics API,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.storage.config.transform.replacer;
+package com.herocraftonline.items.api.storage.value.replacer;
 
 import java.util.Random;
 import java.util.regex.Matcher;

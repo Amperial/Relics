@@ -8,7 +8,7 @@
  * Unauthorized copying and/or distribution of Relics API,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.storage.config.transform.replacer;
+package com.herocraftonline.items.api.storage.value.replacer;
 
 import java.util.regex.Pattern;
 
@@ -18,12 +18,12 @@ import java.util.regex.Pattern;
  *
  * @author Austin Payne
  */
-public class WeightedChanceList extends Replacer {
+public class WeightedListReplacer extends Replacer {
 
     private static final String VALUE = "[^<:,\\s]*:([1-9]\\d*|\\d\\.\\d*[1-9])+";
     private static final Pattern WEIGHTED_CHANCE = Pattern.compile("<" + VALUE + "(," + VALUE + ")*>");
 
-    public WeightedChanceList(Replaceable value) {
+    public WeightedListReplacer(Replaceable value) {
         super(WEIGHTED_CHANCE.matcher(value.getString()), value);
     }
 

@@ -8,10 +8,16 @@
  * Unauthorized copying and/or distribution of Relics API,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.storage.config.transform.replacer;
+package com.herocraftonline.items.api.storage.config.transform;
 
 import com.herocraftonline.items.api.ItemPlugin;
-import com.herocraftonline.items.api.storage.config.transform.ConfigTransform;
+import com.herocraftonline.items.api.storage.value.replacer.BasicReplaceable;
+import com.herocraftonline.items.api.storage.value.replacer.ListReplacer;
+import com.herocraftonline.items.api.storage.value.replacer.ExpressionReplacer;
+import com.herocraftonline.items.api.storage.value.replacer.RangeReplacer;
+import com.herocraftonline.items.api.storage.value.replacer.Replaceable;
+import com.herocraftonline.items.api.storage.value.replacer.InterpolateReplacer;
+import com.herocraftonline.items.api.storage.value.replacer.WeightedListReplacer;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
@@ -28,17 +34,7 @@ public class ReplacerTransform extends ConfigTransform {
     public ReplacerTransform(ItemPlugin plugin) {
         super(plugin);
 
-        // Create replaceable
-        replaceable = new Replaceable("");
-
-        // Add replacers, order here is important
-        // As the regex for each replacer increases in complexity, it becomes less specific
-        // Therefore each consecutive replacer assumes the previous replacers are all unable to find a match
-        replaceable.addReplacer(new PairRange(replaceable));
-        replaceable.addReplacer(new TripleRange(replaceable));
-        replaceable.addReplacer(new EqualChanceList(replaceable));
-        replaceable.addReplacer(new WeightedChanceList(replaceable));
-        replaceable.addReplacer(new Expression(replaceable));
+        replaceable = new BasicReplaceable();
     }
 
     @Override
@@ -47,7 +43,7 @@ public class ReplacerTransform extends ConfigTransform {
         for (String key : section.getKeys(true)) {
             if (section.isString(key)) {
                 // Replace string
-                String string = replace(section.getString(key));
+                String string = replaceable.replace(section.getString(key));
 
                 // Replace string at config path
                 setValue(section, key, string);
@@ -57,7 +53,7 @@ public class ReplacerTransform extends ConfigTransform {
                     Object element = list.get(i);
                     if (element instanceof String) {
                         // Replace string
-                        String string = replace((String) element);
+                        String string = replaceable.replace((String) element);
 
                         // Replace value at list index
                         setValue(list, i, string);
@@ -69,14 +65,6 @@ public class ReplacerTransform extends ConfigTransform {
             }
         }
         return section;
-    }
-
-    private String replace(String string) {
-        // Set the replaceable string
-        replaceable.setString(string);
-
-        // Perform replacement
-        return replaceable.replace();
     }
 
 }

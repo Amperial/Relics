@@ -8,7 +8,7 @@
  * Unauthorized copying and/or distribution of Relics API,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.storage.config.transform.replacer;
+package com.herocraftonline.items.api.storage.value.replacer;
 
 import java.util.regex.Pattern;
 
@@ -18,12 +18,12 @@ import java.util.regex.Pattern;
  *
  * @author Austin Payne
  */
-public class TripleRange extends Replacer {
+public class InterpolateReplacer extends Replacer {
 
     private static final String VALUE = "-?\\d+(\\.\\d+)?";
     private static final Pattern TRIPLE = Pattern.compile("\\((" + VALUE + ",){2}" + VALUE + "\\)");
 
-    public TripleRange(Replaceable value) {
+    public InterpolateReplacer(Replaceable value) {
         super(TRIPLE.matcher(value.getString()), value);
     }
 

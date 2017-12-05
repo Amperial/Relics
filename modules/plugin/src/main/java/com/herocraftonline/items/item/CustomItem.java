@@ -23,10 +23,11 @@ import com.herocraftonline.items.api.item.attribute.attributes.requirements.Requ
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatGroup;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatType;
-import com.herocraftonline.items.api.item.variable.BasicVariable;
-import com.herocraftonline.items.api.item.variable.Variable;
+import com.herocraftonline.items.api.storage.value.variables.BaseVariableContainer;
+import com.herocraftonline.items.api.storage.value.variables.VariableContainer;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.api.storage.nbt.NBTTagList;
+import com.herocraftonline.items.api.storage.value.DynamicValue;
 import com.herocraftonline.items.item.attributes.GroupAttribute;
 import com.herocraftonline.items.nms.NMSHandler;
 import org.bukkit.ChatColor;
@@ -62,7 +63,6 @@ public class CustomItem implements Item {
     private static final String MATERIAL_TAG = "material";
     private static final String ENCHANTMENTS_TAG = "enchantments";
     private static final String UNBREAKABLE_TAG = "unbreakable";
-    private static final String VARIABLES_TAG = "variables";
     private static final String ATTRIBUTES_TAG = "attributes";
     private static final String INSTANCE_TAG = "item-instance";
 
@@ -82,11 +82,11 @@ public class CustomItem implements Item {
     private final Map<Enchantment, Integer> enchantments;
     private final boolean unbreakable;
     private final ItemType type;
-    private final Map<String, Variable> variables;
+    private final VariableContainer variables;
     private final Group attributes;
     private boolean equipped = false;
 
-    private CustomItem(UUID id, String name, Material material, Map<Enchantment, Integer> enchantments, boolean unbreakable, ItemType type, Map<String, Variable> variables, Group attributes) {
+    private CustomItem(UUID id, String name, Material material, Map<Enchantment, Integer> enchantments, boolean unbreakable, ItemType type, VariableContainer variables, Group attributes) {
         this.id = id;
         this.name = name;
         this.material = material;
@@ -298,42 +298,23 @@ public class CustomItem implements Item {
     }
 
     @Override
-    public boolean hasVariable(String name) {
-        return variables.containsKey(name);
+    public Optional<Object> getValue(String name) {
+        return variables.getValue(name);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> Variable<T> getVariable(String name, Class<T> type) {
-        Variable variable = variables.get(name);
-        if (variable != null && type.isAssignableFrom(variable.getClass())) {
-            return (Variable<T>) variable;
-        }
-        return null;
+    public void setValue(String name, Object value) {
+        variables.setValue(name, value);
     }
 
     @Override
-    public Collection<String> getVariables() {
-        return variables.keySet();
+    public void addDynamicValue(DynamicValue value) {
+        variables.addDynamicValue(value);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> T getValue(String name, Class<T> type) {
-        Variable variable = variables.get(name);
-        if (variable != null && type.isAssignableFrom(variable.getValue().getClass())) {
-            return (T) variable.getValue();
-        }
-        return null;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> void setValue(String name, T value) {
-        Variable variable = variables.get(name);
-        if (variable != null && value.getClass().isAssignableFrom(variable.getValue().getClass())) {
-            variable.setValue(value);
-        }
+    public void resetDynamicValues() {
+        variables.resetDynamicValues();
     }
 
     @Override
@@ -512,15 +493,7 @@ public class CustomItem implements Item {
         compound.setBoolean(UNBREAKABLE_TAG, isUnbreakable());
         compound.setString(TYPE_TAG, getType().getName());
         attributes.saveToNBT(compound);
-        NBTTagCompound variableCompound = NBTTagCompound.create();
-        for (Map.Entry<String, Variable> variable : variables.entrySet()) {
-            Object value = variable.getValue().getValue();
-            // TODO: Allow for more variable types in the future, handle loading better
-            if (value instanceof Integer || value instanceof Double) {
-                variableCompound.setDouble(variable.getKey(), (double) value);
-            }
-        }
-        compound.setBase(VARIABLES_TAG, variableCompound);
+        variables.saveToNBT(compound);
         compound.setObject(INSTANCE_TAG, this);
     }
 
@@ -546,16 +519,7 @@ public class CustomItem implements Item {
             }
             boolean unbreakable = config.getBoolean(UNBREAKABLE_TAG, false);
             ItemType type = new ItemType(config.getString(TYPE_TAG, ItemType.OTHER.getName()));
-            Map<String, Variable> variables = new HashMap<>();
-            if (config.isConfigurationSection(VARIABLES_TAG)) {
-                ConfigurationSection variableConfig = config.getConfigurationSection(VARIABLES_TAG);
-                for (String variable : variableConfig.getKeys(false)) {
-                    // TODO: Allow for more variable types in the future, handle loading better
-                    if (variableConfig.isInt(variable) || variableConfig.isDouble(variable)) {
-                        variables.put(variable, new BasicVariable<>(variableConfig.getDouble(variable)));
-                    }
-                }
-            }
+            VariableContainer variables = BaseVariableContainer.loadFromConfig(config);
             Group attributes = new GroupAttribute(null, ATTRIBUTES_TAG, new HashMap<>(), true);
 
             // Create item
@@ -589,12 +553,7 @@ public class CustomItem implements Item {
             }
             boolean unbreakable = compound.getBoolean(UNBREAKABLE_TAG);
             ItemType type = new ItemType(compound.getString(TYPE_TAG));
-            Map<String, Variable> variables = new HashMap<>();
-            NBTTagCompound variableCompound = compound.getCompound(VARIABLES_TAG);
-            for (String variable : variableCompound.getKeySet()) {
-                // TODO: Allow for more variable types in the future, handle loading better
-                variables.put(variable, new BasicVariable<>(variableCompound.getDouble(variable)));
-            }
+            VariableContainer variables = BaseVariableContainer.loadFromNBT(compound);
             Group attributes = new GroupAttribute(null, ATTRIBUTES_TAG, new HashMap<>(), true);
 
             // Create item

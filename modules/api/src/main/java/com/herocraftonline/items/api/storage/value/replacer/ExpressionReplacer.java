@@ -8,7 +8,7 @@
  * Unauthorized copying and/or distribution of Relics API,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.storage.config.transform.replacer;
+package com.herocraftonline.items.api.storage.value.replacer;
 
 import java.util.regex.Pattern;
 
@@ -18,13 +18,13 @@ import java.util.regex.Pattern;
  *
  * @author Austin Payne
  */
-public class Expression extends Replacer {
+public class ExpressionReplacer extends Replacer {
 
     private static final String NUMBER = "-?\\d+(\\.\\d+)?";
     private static final String VALUE = NUMBER + "([\\^*/+-]" + NUMBER + ")";
     private static final Pattern EXPRESSION = Pattern.compile(VALUE + "+|\\(" + VALUE + "*\\)");
 
-    public Expression(Replaceable value) {
+    public ExpressionReplacer(Replaceable value) {
         super(EXPRESSION.matcher(value.getString()), value);
     }
 

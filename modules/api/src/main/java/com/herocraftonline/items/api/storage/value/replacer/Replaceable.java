@@ -8,7 +8,7 @@
  * Unauthorized copying and/or distribution of Relics API,
  * via any medium is strictly prohibited.
  */
-package com.herocraftonline.items.api.storage.config.transform.replacer;
+package com.herocraftonline.items.api.storage.value.replacer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +25,10 @@ public class Replaceable {
 
     public Replaceable(String string) {
         this.string = string;
+    }
+
+    public  Replaceable() {
+        this("");
     }
 
     /**
@@ -64,6 +68,18 @@ public class Replaceable {
             replacers.stream().filter(Replacer::find).forEachOrdered(Replacer::replace);
         }
         return string;
+    }
+
+    /**
+     * Sets the replaceable's string and returns the result of calling {@link this#replace()}
+     *
+     * @param string the string to replace
+     * @return the final string value
+     */
+    public String replace(String string) {
+        setString(string);
+
+        return replace();
     }
 
 }
