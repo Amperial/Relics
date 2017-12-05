@@ -10,8 +10,12 @@
  */
 package com.herocraftonline.items.api.storage.value;
 
+import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+
 public interface Value<T> {
 
     T getValue();
+
+    void saveToNBT(NBTTagCompound compound);
 
 }

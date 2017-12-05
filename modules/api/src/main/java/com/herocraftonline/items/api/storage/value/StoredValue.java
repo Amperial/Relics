@@ -88,16 +88,16 @@ public class StoredValue<T> {
             V val = get.apply(storage, key);
             try {
                 if (dynamic || !valCheck.test(val)) {
-                    DynamicValue<T> dynamicValue = new DynamicValue<>(variables, toString.apply(val), parse, def, cache);
+                    DynamicValue<T> dynamicValue = new DynamicValue<>(variables, key, toString.apply(val), parse, def, cache);
                     variables.addDynamicValue(dynamicValue);
                     return dynamicValue;
                 } else {
-                    return new StaticValue<>(value.apply(val));
+                    return new StaticValue<>(key, value.apply(val));
                 }
             } catch (Exception ignored) {
             }
         }
-        return () -> def;
+        return new StaticValue<>(def);
     }
 
     private static final BiFunction<ConfigurationSection, String, Boolean> CONFIG_CONTAINS = ConfigurationSection::contains;

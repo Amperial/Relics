@@ -21,6 +21,4 @@ public interface Level extends Attribute<Level> {
 
     int getLevel();
 
-    void setLevel(int level);
-
 }

@@ -10,6 +10,7 @@
  */
 package com.herocraftonline.items.api.storage.value;
 
+import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.api.storage.value.variables.VariableContainer;
 import com.herocraftonline.items.api.storage.value.replacer.Replaceable;
 import com.herocraftonline.items.api.storage.value.replacer.VariableReplaceable;
@@ -18,18 +19,22 @@ import java.util.function.Function;
 
 public class DynamicValue<T> implements Value<T> {
 
-    private final Replaceable replaceable;
+    private final String key;
     private final String value;
     private final T def;
+
+    private final Replaceable replaceable;
     private final Function<String, T> parse;
     private final boolean cache;
     private T last;
 
-    public DynamicValue(VariableContainer variables, String value, Function<String, T> parse, T def, boolean cache) {
-        this.replaceable = new VariableReplaceable(variables);
+    public DynamicValue(VariableContainer variables, String key, String value, Function<String, T> parse, T def, boolean cache) {
+        this.key = key;
         this.value = value;
-        this.parse = parse;
         this.def = def;
+
+        this.replaceable = new VariableReplaceable(variables);
+        this.parse = parse;
         this.cache = cache;
         this.last = null;
     }
@@ -48,6 +53,13 @@ public class DynamicValue<T> implements Value<T> {
 
     public void reset() {
         this.last = null;
+    }
+
+    @Override
+    public void saveToNBT(NBTTagCompound compound) {
+        if (key != null) {
+            compound.setString(key, value);
+        }
     }
 
 }

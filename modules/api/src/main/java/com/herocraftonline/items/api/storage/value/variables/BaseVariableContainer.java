@@ -10,7 +10,10 @@
  */
 package com.herocraftonline.items.api.storage.value.variables;
 
+import com.herocraftonline.items.api.storage.nbt.NBTBase;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+import com.herocraftonline.items.api.storage.nbt.NBTTagDouble;
+import com.herocraftonline.items.api.storage.nbt.NBTTagInt;
 import com.herocraftonline.items.api.storage.value.DynamicValue;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -64,8 +67,10 @@ public class BaseVariableContainer implements VariableContainer {
         for (Map.Entry<String, Object> variable : variables.entrySet()) {
             Object value = variable.getValue();
             // TODO: Allow for more variable types in the future, handle loading better
-            if (value instanceof Integer || value instanceof Double) {
-                variableCompound.setDouble(variable.getKey(), (double) value);
+            if (value instanceof Integer) {
+                variableCompound.setInt(variable.getKey(), (Integer) value);
+            } else if (value instanceof Double) {
+                variableCompound.setDouble(variable.getKey(), (Double) value);
             }
         }
         compound.setBase(VARIABLES_TAG, variableCompound);
@@ -76,7 +81,14 @@ public class BaseVariableContainer implements VariableContainer {
         NBTTagCompound variableCompound = compound.getCompound(VARIABLES_TAG);
         for (String variable : variableCompound.getKeySet()) {
             // TODO: Allow for more variable types in the future, handle loading better
-            variables.setValue(variable, variableCompound.getDouble(variable));
+            NBTBase base = variableCompound.getBase(variable);
+            if (base instanceof NBTTagInt) {
+                Integer var = variableCompound.getInt(variable);
+                variables.setValue(variable, var);
+            } else if (base instanceof NBTTagDouble) {
+                Double var = variableCompound.getDouble(variable);
+                variables.setValue(variable, var);
+            }
         }
         return variables;
     }
@@ -87,7 +99,9 @@ public class BaseVariableContainer implements VariableContainer {
             ConfigurationSection variableConfig = config.getConfigurationSection(VARIABLES_TAG);
             for (String variable : variableConfig.getKeys(false)) {
                 // TODO: Allow for more variable types in the future, handle loading better
-                if (variableConfig.isInt(variable) || variableConfig.isDouble(variable)) {
+                if (variableConfig.isInt(variable)) {
+                    variables.setValue(variable, variableConfig.getInt(variable));
+                } else if (variableConfig.isDouble(variable)) {
                     variables.setValue(variable, variableConfig.getDouble(variable));
                 }
             }

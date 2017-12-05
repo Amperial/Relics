@@ -12,6 +12,7 @@ package com.herocraftonline.items.api.storage.value.replacer;
 
 import com.herocraftonline.items.api.storage.value.variables.VariableContainer;
 
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
@@ -36,7 +37,7 @@ public class VariableReplacer extends Replacer {
     public String getValue(String replace) {
         String name = replace.substring(1, replace.length() - 1);
 
-        return variables.hasVariable(name) ? variables.getValue(name).toString() : name;
+        return variables.getValue(name).map(Object::toString).orElse(name);
     }
 
 }
