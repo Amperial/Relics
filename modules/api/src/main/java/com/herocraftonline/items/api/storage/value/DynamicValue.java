@@ -14,29 +14,37 @@ import com.herocraftonline.items.api.storage.value.variables.VariableContainer;
 import com.herocraftonline.items.api.storage.value.replacer.Replaceable;
 import com.herocraftonline.items.api.storage.value.replacer.VariableReplaceable;
 
-public abstract class DynamicValue<T> implements Value<T> {
+import java.util.function.Function;
+
+public class DynamicValue<T> implements Value<T> {
 
     private final Replaceable replaceable;
     private final String value;
+    private final T def;
+    private final Function<String, T> parse;
     private final boolean cache;
     private T last;
 
-    public DynamicValue(VariableContainer variables, String value, boolean cache) {
+    public DynamicValue(VariableContainer variables, String value, Function<String, T> parse, T def, boolean cache) {
         this.replaceable = new VariableReplaceable(variables);
         this.value = value;
+        this.parse = parse;
+        this.def = def;
         this.cache = cache;
         this.last = null;
     }
 
     @Override
     public T getValue() {
-        if (!cache || last == null) {
-            last = getValue(replaceable.replace(value));
+        if (last == null || !cache) {
+            try {
+                last = parse.apply(replaceable.replace(value));
+            } catch (Exception e) {
+                last = def;
+            }
         }
         return last;
     }
-
-    protected abstract T getValue(String string);
 
     public void reset() {
         this.last = null;
