@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -15,6 +15,7 @@ import com.herocraftonline.items.api.crafting.ReagentType;
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Reagent;
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;
@@ -23,9 +24,11 @@ import java.util.Optional;
 public class RelicReagent implements ReagentType {
 
     private final String name;
+    private final String displayName;
 
     public RelicReagent(String name) {
-        this.name = name;
+        this.name = ChatColor.stripColor(name);
+        this.displayName = ChatColor.translateAlternateColorCodes('&', name);
     }
 
     public String getName() {
@@ -41,7 +44,7 @@ public class RelicReagent implements ReagentType {
 
     @Override
     public String getDisplayIcon() {
-        return getName().toUpperCase().replace(' ', '_');
+        return getName().toLowerCase().replace(' ', '_');
     }
 
     @Override

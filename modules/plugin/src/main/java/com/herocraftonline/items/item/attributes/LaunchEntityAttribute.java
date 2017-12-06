@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -11,6 +11,7 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
@@ -23,8 +24,8 @@ public class LaunchEntityAttribute extends BaseAttribute<LaunchEntityAttribute> 
     private final EntityType entity;
     private final double velocity;
 
-    public LaunchEntityAttribute(String name, EntityType entity, double velocity) {
-        super(name, DefaultAttributes.LAUNCH_ENTITY);
+    public LaunchEntityAttribute(Item item, String name, EntityType entity, double velocity) {
+        super(item, name, DefaultAttributes.LAUNCH_ENTITY);
 
         this.entity = entity;
         this.velocity = velocity;
@@ -62,23 +63,23 @@ public class LaunchEntityAttribute extends BaseAttribute<LaunchEntityAttribute> 
         }
 
         @Override
-        public LaunchEntityAttribute loadFromConfig(String name, ConfigurationSection config) {
+        public LaunchEntityAttribute loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load entity and velocity
             EntityType entity = EntityType.valueOf(config.getString("entity", "PRIMED_TNT"));
             double velocity = config.getDouble("velocity", 1);
 
             // Create launch entity attribute
-            return new LaunchEntityAttribute(name, entity, velocity);
+            return new LaunchEntityAttribute(item, name, entity, velocity);
         }
 
         @Override
-        public LaunchEntityAttribute loadFromNBT(String name, NBTTagCompound compound) {
+        public LaunchEntityAttribute loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load entity and velocity
             EntityType entity = EntityType.valueOf(compound.getString("entity"));
             double velocity = compound.getDouble("velocity");
 
             // Create launch entity attribute
-            return new LaunchEntityAttribute(name, entity, velocity);
+            return new LaunchEntityAttribute(item, name, entity, velocity);
         }
     }
 

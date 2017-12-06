@@ -1,0 +1,27 @@
+name: "&4Token of Amperial"
+material: "REDSTONE_ORE"
+item-type: "other"
+attributes:
+  info:
+    type: "group"
+    spacing: false
+    attributes:
+      rarity:
+        type: "rarity"
+        tier: 3
+      level:
+        type: "level"
+        level: 20
+  infuse: "#{gems/infuse}"
+  gem:
+    type: "gem"
+    name: "&7(&4Token of Amperial)"
+    color: "yellow"
+    attributes:
+      requirement:
+        type: "level-requirement"
+        level: 0
+      description:
+        type: "text"
+        text:
+        - "A token of favor from Amperial!"

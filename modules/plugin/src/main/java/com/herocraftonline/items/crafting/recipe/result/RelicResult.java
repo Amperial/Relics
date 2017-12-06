@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -30,7 +30,7 @@ public class RelicResult implements Result {
 
     @Override
     public String getDisplayIcon() {
-        return result.getAttribute(Reagent.class).map(reagent -> reagent.getReagentType().getDisplayIcon()).orElse(result.getMaterial().name());
+        return result.getAttribute(Reagent.class).map(reagent -> reagent.getReagentType().getDisplayIcon()).orElse(result.getMaterial().name().toLowerCase());
     }
 
     @Override

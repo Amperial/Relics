@@ -1,6 +1,9 @@
+IMPORTANT:
+- Give all items in items.yml a constant uuid, separate from the actual id that can be random per instance
+    - For revoking all items of a certain type, even if they are different unique instances
+
 Core Systems:
 - Equipment
-- Triggers
 - Item Variables
 
 Attributes:
@@ -17,6 +20,11 @@ Triggerables:
 - EffectLib effects
 - Bukkit effects
 - Skills
+- Send message to command sender
+- Fire players out of bows
+
+Trigger Results:
+- TriggerResult enum implements Result, Result has TriggerResult getResult, onTrigger returns Result
 
 Projectiles:
 - Put projectile item on projectile entity metadata when fired
@@ -30,3 +38,7 @@ Item Variables:
         - If something doesn't use a variable, the static value will just be wrapped for evaluation with the same code
 - Necessary for item upgrade system, allowing item values to change after generation
 - Used for item level, rarity, and other possibilities such as varying how good the item is, storing energy, etc
+
+General QoL:
+- Add option to set an item's max stack size
+    - Have to listen to all sorts of events to accomplish this without breaking functionality of other items

@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics API.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -43,7 +43,7 @@ public enum RelMessage implements Message {
 
     SOCKET_NOTFOUND("Socket.NotFound", "Socket of name %s not found."),
     SOCKET_EMPTY("Socket.Empty", "Item doesn't have a gem to extract."),
-    SOCKET_FULL("Socket.Full", "Item's doesn't have an empty socket."),
+    SOCKET_FULL("Socket.Full", "Item doesn't have an empty socket."),
     SOCKET_NOACCEPT("Socket.NoAccept", "Socket can't accept the gem."),
     SOCKET_EXTRACT("Socket.Extract", "Extracted gem %s&7 from socket!"),
     SOCKET_INFUSE("Socket.Infuse", "Infused gem %s&7 into the socket!"),

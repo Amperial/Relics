@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics API.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -137,6 +137,14 @@ public interface ItemManager {
     Optional<Item> getItem(String item, Object... args);
 
     /**
+     * Gets the configured UUID of a certain item, or a random UUID.
+     *
+     * @param item the item name
+     * @return the item's unique id
+     */
+    UUID getItemId(String item);
+
+    /**
      * Checks if the attribute type of a certain name is registered.
      *
      * @param type the attribute type's name
@@ -182,7 +190,7 @@ public interface ItemManager {
      * @param config the configuration section
      * @return the item attribute
      */
-    Attribute loadAttribute(String name, ConfigurationSection config);
+    Attribute loadAttribute(Item item, String name, ConfigurationSection config);
 
     /**
      * Loads an item attribute with the given name from an nbt tag compound.
@@ -191,7 +199,7 @@ public interface ItemManager {
      * @param compound the tag compound
      * @return the item attribute
      */
-    Attribute loadAttribute(String name, NBTTagCompound compound);
+    Attribute loadAttribute(Item item, String name, NBTTagCompound compound);
 
     /**
      * Gets the item manager's item factory.

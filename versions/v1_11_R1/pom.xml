@@ -83,8 +83,8 @@
                     <properties>
                         <name>${project.name}</name>
                         <author>Austin Payne</author>
-                        <email>payneaustin5@gmail.com</email>
-                        <url>http://github.com/ampayne2</url>
+                        <email>amperialdev@gmail.com</email>
+                        <url>http://github.com/Amperial</url>
                         <copyright>Copyright (c) ${project.inceptionYear}</copyright>
                     </properties>
                     <includes>

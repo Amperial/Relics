@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -47,15 +47,15 @@ public abstract class RecipeRenderer<T extends Recipe> extends MapRenderer {
     protected void drawIngredient(MapCanvas canvas, int x, int y, Ingredient ingredient) {
         // Load required icons
         if (unknown == null) {
-            unknown = loadIcon("UNKNOWN").orElse(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
-            BufferedImage number = loadIcon("NUMBERS").orElse(new BufferedImage(50, 7, BufferedImage.TYPE_INT_ARGB));
+            unknown = loadIcon("unknown").orElse(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
+            BufferedImage number = loadIcon("numbers").orElse(new BufferedImage(50, 7, BufferedImage.TYPE_INT_ARGB));
             for (int i = 0; i < 10; i++) {
                 numbers[i] = number.getSubimage(i * 5, 0, 5, 7);
             }
         }
 
         // Draw slot background image
-        drawImage(canvas, x, y, getIcon("SLOT"));
+        drawImage(canvas, x, y, getIcon("slot"));
 
         if (ingredient != null) {
             // Draw reagent icon
@@ -69,12 +69,12 @@ public abstract class RecipeRenderer<T extends Recipe> extends MapRenderer {
     protected void drawResult(MapCanvas canvas, int x, int y, Result result, boolean arrow) {
         // Draw arrow image
         if (arrow) {
-            drawImage(canvas, x, y + 2, getIcon("RESULT"));
+            drawImage(canvas, x, y + 2, getIcon("result"));
             x += 18;
         }
 
         // Draw slot background image
-        drawImage(canvas, x, y, getIcon("SLOT"));
+        drawImage(canvas, x, y, getIcon("slot"));
 
         // Draw result material icon
         drawImage(canvas, x + 2, y + 2, getIcon(result.getDisplayIcon()));

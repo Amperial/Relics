@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics API.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -20,7 +20,5 @@ import com.herocraftonline.items.api.item.attribute.Attribute;
 public interface Level extends Attribute<Level> {
 
     int getLevel();
-
-    void setLevel(int level);
 
 }

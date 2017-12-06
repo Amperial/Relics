@@ -1,0 +1,11 @@
+name: "&6Fire Sword Handle"
+item: "fire-sword-handle"
+item-type: "reagent"
+material: "SHEARS"
+attributes:
+  model:
+    type: model
+    model: "fire_sword_handle"
+  reagent:
+    type: "reagent"
+    reagent-type: "Fire Sword Handle"

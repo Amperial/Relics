@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -10,7 +10,7 @@
  */
 package com.herocraftonline.items.crafting;
 
-import com.herocraftonline.items.Relics;
+import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.crafting.Recipe;
 import com.herocraftonline.items.api.util.InventoryUtil.Dimensions;
 import com.herocraftonline.items.api.util.InventoryUtil.Position;
@@ -47,17 +47,23 @@ public class CraftingMenu {
     private static final Dimensions LARGE = new Dimensions(5, 5);
     private static final Position SMALL_OFFSET = new Position(3, 1);
     private static final Position LARGE_OFFSET = new Position(2, 0);
-    private static final Position BLUEPRINT = new Position(1, 2);
-    private static final Position OUTPUT = new Position(7, 2);
+    private static final Position SMALL_BLUEPRINT = new Position(1, 2);
+    private static final Position LARGE_BLUEPRINT = new Position(0, 2);
+    private static final Position SMALL_OUTPUT = new Position(7, 2);
+    private static final Position LARGE_OUTPUT = new Position(8, 2);
     private static final ItemStack FILL = new ItemStack(Material.IRON_FENCE);
 
+    private final ItemPlugin plugin;
     private final Recipe recipe;
     private final Inventory inventory;
     private final Dimensions craftingDimensions;
     private final Position craftingOffset;
     private final Set<Position> craftingArea;
+    private final Position blueprintPosition;
+    private final Position outputPosition;
 
-    public CraftingMenu(Recipe recipe, Inventory inventory, ItemStack blueprint) {
+    public CraftingMenu(ItemPlugin plugin, Recipe recipe, Inventory inventory, ItemStack blueprint) {
+        this.plugin = plugin;
         this.recipe = recipe;
         this.inventory = inventory;
 
@@ -66,20 +72,24 @@ public class CraftingMenu {
         if (SMALL.contains(required)) {
             craftingDimensions = SMALL;
             craftingOffset = SMALL_OFFSET;
+            blueprintPosition = SMALL_BLUEPRINT;
+            outputPosition = SMALL_OUTPUT;
         } else {
             craftingDimensions = LARGE;
             craftingOffset = LARGE_OFFSET;
+            blueprintPosition = LARGE_BLUEPRINT;
+            outputPosition = LARGE_OUTPUT;
         }
 
         // Get positions in crafting area
         craftingArea = craftingDimensions.getPositions(craftingOffset);
 
         // Set blueprint item for player to reference when crafting
-        setItem(BLUEPRINT, blueprint == null ? FILL : blueprint);
+        setItem(blueprintPosition, blueprint == null ? FILL : blueprint);
 
         // Fill remaining positions
         OUTER.forEach(position -> {
-            if (!(position.equals(BLUEPRINT) || craftingArea.contains(position) || position.equals(OUTPUT))) {
+            if (!(position.equals(blueprintPosition) || craftingArea.contains(position) || position.equals(outputPosition))) {
                 setItem(position, FILL);
             }
         });
@@ -145,13 +155,13 @@ public class CraftingMenu {
         Position clicked = new Slot(event.getSlot()).getPosition(OUTER);
         ItemStack cursor = event.getCursor();
         if (craftingArea.contains(clicked)) {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(Relics.instance(), () -> updateOutput(player));
+            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> updateOutput(player));
         } else if (event.getClickedInventory().equals(inventory)) {
-            if (clicked.equals(OUTPUT) && (cursor == null || cursor.getType() == Material.AIR)) {
-                Optional<ItemStack> output = getItem(OUTPUT);
+            if (clicked.equals(outputPosition) && (cursor == null || cursor.getType() == Material.AIR)) {
+                Optional<ItemStack> output = getItem(outputPosition);
                 if (output.isPresent()) {
                     craftingArea.forEach(position -> setItem(position, null));
-                    setItem(OUTPUT, null);
+                    setItem(outputPosition, null);
                     player.setItemOnCursor(output.get());
                     player.updateInventory();
                 }
@@ -167,7 +177,7 @@ public class CraftingMenu {
         Map<Position, ItemStack> input = filled.stream().collect(Collectors.toMap(position -> position.subtract(offset), position -> getItem(position).orElse(null)));
 
         // Update crafting output
-        setItem(OUTPUT, recipe.test(input) ? recipe.getResult().getItem() : null);
+        setItem(outputPosition, recipe.test(input) ? recipe.getResult().getItem() : null);
         player.updateInventory();
     }
 
@@ -200,10 +210,10 @@ public class CraftingMenu {
 
     }
 
-    public static void open(Player player, Recipe recipe, ItemStack blueprint) {
+    public static void open(ItemPlugin plugin, Player player, Recipe recipe, ItemStack blueprint) {
         CraftingHolder holder = new CraftingHolder(player);
         Inventory inventory = Bukkit.createInventory(holder, OUTER.size(), "Blueprint Assembly");
-        holder.menu = new CraftingMenu(recipe, inventory, blueprint);
+        holder.menu = new CraftingMenu(plugin, recipe, inventory, blueprint);
 
         player.openInventory(inventory);
     }

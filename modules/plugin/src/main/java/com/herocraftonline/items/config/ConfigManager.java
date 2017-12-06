@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -16,7 +16,7 @@ import com.herocraftonline.items.api.storage.config.DefaultConfig;
 import com.herocraftonline.items.api.storage.config.transform.ArgTransform;
 import com.herocraftonline.items.api.storage.config.transform.ConfigTransform;
 import com.herocraftonline.items.api.storage.config.transform.ReferenceTransform;
-import com.herocraftonline.items.api.storage.config.transform.replacer.ReplacerTransform;
+import com.herocraftonline.items.api.storage.config.transform.ReplacerTransform;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -84,6 +84,9 @@ public class ConfigManager implements com.herocraftonline.items.api.storage.conf
 
     @Override
     public ConfigAccessor getConfigAccessor(Config configType) {
+        if (!configs.containsKey(configType)) {
+            registerCustomConfig(configType, plugin, false);
+        }
         return configs.get(configType).reloadConfig();
     }
 

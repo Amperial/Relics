@@ -1,0 +1,24 @@
+name: "&6Fire Sword Gem"
+item: "fire-sword-gem"
+item-type: "gem"
+material: "FIREBALL"
+attributes:
+  gem:
+    type: "gem"
+    name: "&7\u2993&6Flame Wave&7\u2994"
+    color: "gold"
+    attributes:
+      model:
+        type: "model"
+        model: "fire_sword_socketed"
+        priority: 1
+      click:
+        type: "player-interact"
+        actions: ["RIGHT_CLICK_AIR"]
+        targets: ["sound", "swing"]
+      sound:
+        type: "sound-effect"
+        sound: "ENTITY_BLAZE_SHOOT"
+        global: true
+      swing:
+        type: "arm-swing-effect"

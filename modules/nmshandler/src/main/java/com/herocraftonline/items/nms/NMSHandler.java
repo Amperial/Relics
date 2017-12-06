@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics NMS API.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -12,6 +12,7 @@ package com.herocraftonline.items.nms;
 
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Optional;
@@ -50,6 +51,10 @@ public abstract class NMSHandler {
         return activeInterface;
     }
 
+    /*
+     * Items
+     */
+
     public abstract NBTTagCompound getTag(ItemStack item);
 
     public abstract Optional<ItemStack> setTag(ItemStack item, NBTTagCompound compound);
@@ -60,6 +65,9 @@ public abstract class NMSHandler {
 
     public abstract Optional<ItemStack> replaceNBT(ItemStack item, NBTTagCompound compound);
 
+    /*
+     * Serialization
+     */
     public String serializeItem(ItemStack item) {
         return serializeNBT(toNBT(item));
     }
@@ -71,5 +79,11 @@ public abstract class NMSHandler {
     public abstract String serializeNBT(NBTTagCompound compound);
 
     public abstract NBTTagCompound deserializeNBT(String compoundString);
+
+    /*
+     * Packets
+     */
+
+    public abstract void playArmSwing(Player player, boolean mainArm);
 
 }

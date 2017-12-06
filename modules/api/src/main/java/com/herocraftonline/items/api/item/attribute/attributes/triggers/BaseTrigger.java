@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics API.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -11,55 +11,60 @@
 package com.herocraftonline.items.api.item.attribute.attributes.triggers;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.AttributeType;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
-import com.herocraftonline.items.api.item.trigger.TriggerResult;
-import com.herocraftonline.items.api.item.trigger.Triggerable;
-import com.herocraftonline.items.api.item.trigger.source.TriggerSource;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.result.TriggerResult;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.source.TriggerSource;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.api.storage.nbt.NBTTagList;
 import com.herocraftonline.items.api.storage.nbt.NBTTagString;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * A base trigger attribute implementation to simplify the creation of trigger attributes.<br>
  * Helps manage keeping track of and triggering the trigger's target triggerable attributes.
  *
- * @param <T> the type of attribute
  * @author Austin Payne
  */
 public abstract class BaseTrigger<T extends Trigger<T>> extends BaseAttribute<T> implements Trigger<T> {
 
-    private final Set<String> targets;
+    private final List<String> targets;
+    private final boolean separate;
 
-    public BaseTrigger(String name, AttributeType<T> type, Set<String> targets) {
-        super(name, type);
+    public BaseTrigger(Item item, String name, AttributeType<T> type, List<String> targets, boolean separate) {
+        super(item, name, type);
 
         this.targets = targets;
+        this.separate = separate;
     }
 
     @Override
     public boolean canTrigger(TriggerSource source) {
-        return source.getItem().getAttributesDeep(attribute -> getTargets().contains(attribute.getName())).stream()
-                .filter(attribute -> attribute instanceof Triggerable)
-                .allMatch(attribute -> ((Triggerable) attribute).canTrigger(source));
+        Stream<Triggerable> targets = getTargets().stream().map(target -> source.getItem().getAttributeDeep(Triggerable.class, target)).filter(Optional::isPresent).map(Optional::get);
+        return handleSeparately() ? targets.anyMatch(triggerable -> triggerable.canTrigger(source)) : targets.allMatch(triggerable -> triggerable.canTrigger(source));
     }
 
     @Override
     public TriggerResult onTrigger(TriggerSource source) {
-        return source.getItem().getAttributesDeep(attribute -> getTargets().contains(attribute.getName())).stream()
-                .filter(attribute -> attribute instanceof Triggerable)
-                .map(attribute -> ((Triggerable) attribute).onTrigger(source))
-                .reduce(TriggerResult.COMBINE).orElse(TriggerResult.NOT_TRIGGERED);
+        Stream<Triggerable> targets = getTargets().stream().map(target -> source.getItem().getAttributeDeep(Triggerable.class, target)).filter(Optional::isPresent).map(Optional::get);
+        return targets.map(triggerable -> triggerable.onTrigger(source)).reduce(handleSeparately() ? TriggerResult.SEPARATE : TriggerResult.COMBINED).orElse(TriggerResult.NOT_TRIGGERED);
     }
 
     @Override
-    public Set<String> getTargets() {
+    public List<String> getTargets() {
         return targets;
+    }
+
+    @Override
+    public boolean handleSeparately() {
+        return separate;
     }
 
     @Override
@@ -68,6 +73,7 @@ public abstract class BaseTrigger<T extends Trigger<T>> extends BaseAttribute<T>
         NBTTagList targets = NBTTagList.create();
         getTargets().forEach(target -> targets.addBase(NBTTagString.create(target)));
         compound.setBase("targets", targets);
+        compound.setBoolean("separate", handleSeparately());
     }
 
     public abstract static class BaseTriggerFactory<T extends Trigger<T>> extends BaseAttributeFactory<T> {
@@ -75,12 +81,18 @@ public abstract class BaseTrigger<T extends Trigger<T>> extends BaseAttribute<T>
             super(plugin);
         }
 
-        protected Set<String> loadTargetsFromConfig(ConfigurationSection config) {
-            return new HashSet<>(config.getStringList("targets"));
+        protected List<String> loadTargetsFromConfig(ConfigurationSection config) {
+            if (config.isString("target")) {
+                List<String> target = new ArrayList<>();
+                target.add(config.getString("target"));
+                return target;
+            } else {
+                return config.getStringList("targets");
+            }
         }
 
-        protected Set<String> loadTargetsFromNBT(NBTTagCompound compound) {
-            Set<String> targets = new HashSet<>();
+        protected List<String> loadTargetsFromNBT(NBTTagCompound compound) {
+            List<String> targets = new ArrayList<>();
             NBTTagList targetList = compound.getList("targets", NBTTagString.create().getTypeId());
             for (int i = 0; i < targetList.size(); i++) {
                 targets.add(targetList.getString(i));

@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -11,6 +11,7 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Reagent;
@@ -26,8 +27,8 @@ public class ReagentAttribute extends BaseAttribute<Reagent> implements Reagent 
     private final RelicReagent reagent;
     private final boolean showLore;
 
-    public ReagentAttribute(String name, String text, boolean showLore, RelicReagent reagent) {
-        super(name, DefaultAttributes.REAGENT);
+    public ReagentAttribute(Item item, String name, String text, boolean showLore, RelicReagent reagent) {
+        super(item, name, DefaultAttributes.REAGENT);
 
         this.reagent = reagent;
         this.showLore = showLore;
@@ -60,23 +61,23 @@ public class ReagentAttribute extends BaseAttribute<Reagent> implements Reagent 
         }
 
         @Override
-        public Reagent loadFromConfig(String name, ConfigurationSection config) {
+        public Reagent loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load reagent type, name, and whether to show lore
             String reagent = config.getString("reagent-type");
             boolean lore = config.getBoolean("lore", true);
 
             // Create reagent attribute
-            return new ReagentAttribute(name, text, lore, new RelicReagent(reagent));
+            return new ReagentAttribute(item, name, text, lore, new RelicReagent(reagent));
         }
 
         @Override
-        public Reagent loadFromNBT(String name, NBTTagCompound compound) {
+        public Reagent loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load reagent type, name, and whether to show lore
             String reagent = compound.getString("reagent-type");
             boolean lore = compound.getBoolean("lore");
 
             // Create reagent attribute
-            return new ReagentAttribute(name, text, lore, new RelicReagent(reagent));
+            return new ReagentAttribute(item, name, text, lore, new RelicReagent(reagent));
         }
     }
 

@@ -1,0 +1,36 @@
+name: "&6Fire Sword Blueprint"
+item: "fire-sword-blueprint"
+item-type: "blueprint"
+material: "MAP"
+attributes:
+  click:
+    type: "player-interact"
+    targets: ["blueprint"]
+    actions: ["RIGHT_CLICK_AIR"]
+  blueprint:
+    type: "blueprint"
+    recipe:
+      type: "shaped"
+      dimensions:
+        width: 3
+        height: 3
+      ingredients:
+      - slot: 2
+        reagent: "Fire Sword Blade"
+      - slot: 4
+        reagent: "Fire Sword Crossguard"
+      - slot: 6
+        reagent: "Fire Sword Handle"
+      result:
+        name: "&6Fire Sword"
+        item: "fire-sword"
+        item-type: "primary"
+        material: "DIAMOND_SWORD"
+        attributes:
+          model:
+            type: "model"
+            model: "fire_sword"
+          reagent:
+            type: "reagent"
+            reagent-type: "Fire Sword"
+            lore: false

@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -15,9 +15,9 @@ import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.Identifiable;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
-import com.herocraftonline.items.api.item.trigger.TriggerResult;
-import com.herocraftonline.items.api.item.trigger.source.TriggerSource;
-import com.herocraftonline.items.api.item.trigger.source.entity.HumanEntitySource;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.result.TriggerResult;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.source.TriggerSource;
+import com.herocraftonline.items.api.item.attribute.attributes.triggers.source.entity.HumanEntitySource;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.DefaultAttributes;
 import com.herocraftonline.items.util.EncryptUtil;
@@ -31,8 +31,8 @@ public class IdentifiableAttribute extends BaseAttribute<Identifiable> implement
 
     private final String encryptedItem;
 
-    public IdentifiableAttribute(String name, String encryptedItem) {
-        super(name, DefaultAttributes.IDENTIFIABLE);
+    public IdentifiableAttribute(Item item, String name, String encryptedItem) {
+        super(item, name, DefaultAttributes.IDENTIFIABLE);
 
         this.encryptedItem = encryptedItem;
     }
@@ -71,25 +71,25 @@ public class IdentifiableAttribute extends BaseAttribute<Identifiable> implement
         }
 
         @Override
-        public Identifiable loadFromConfig(String name, ConfigurationSection config) {
+        public Identifiable loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load identifiable item
             String encryptedItem = null;
             if (config.isConfigurationSection("item")) {
-                Item item = getPlugin().getItemManager().getItem(config.getConfigurationSection("item"));
-                encryptedItem = EncryptUtil.encrypt(ItemUtil.serialize(item));
+                Item identifiable = getPlugin().getItemManager().getItem(config.getConfigurationSection("item"));
+                encryptedItem = EncryptUtil.encrypt(ItemUtil.serialize(identifiable));
             }
 
             // Create identifiable attribute
-            return new IdentifiableAttribute(name, encryptedItem);
+            return new IdentifiableAttribute(item, name, encryptedItem);
         }
 
         @Override
-        public Identifiable loadFromNBT(String name, NBTTagCompound compound) {
+        public Identifiable loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load identifiable item
             String encryptedItem = compound.getString("item");
 
             // Create identifiable attribute
-            return new IdentifiableAttribute(name, encryptedItem);
+            return new IdentifiableAttribute(item, name, encryptedItem);
         }
     }
 

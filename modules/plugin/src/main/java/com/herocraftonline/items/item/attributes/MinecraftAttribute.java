@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -12,6 +12,7 @@ package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.Equippable;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.AttributeType;
 import com.herocraftonline.items.api.item.attribute.attributes.Minecraft;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
@@ -123,8 +124,8 @@ public class MinecraftAttribute extends BaseStatAttribute<Minecraft> implements 
     private UUID uuid;
     private double amount;
 
-    public MinecraftAttribute(String name, AttributeType<Minecraft> attributeType, StatType<Minecraft> statType, Type minecraftType, Slot slot, Operation operation, boolean stacking, double amount) {
-        super(name, attributeType, statType);
+    public MinecraftAttribute(Item item, String name, AttributeType<Minecraft> attributeType, StatType<Minecraft> statType, Type minecraftType, Slot slot, Operation operation, boolean stacking, double amount) {
+        super(item, name, attributeType, statType);
 
         this.minecraftType = minecraftType;
         this.slot = slot;
@@ -133,8 +134,8 @@ public class MinecraftAttribute extends BaseStatAttribute<Minecraft> implements 
         this.amount = amount;
     }
 
-    public MinecraftAttribute(String name, Type minecraftType, Slot slot, Operation operation, boolean stacking, double amount) {
-        this(name, DefaultAttributes.MINECRAFT, STAT_TYPE, minecraftType, slot, operation, stacking, amount);
+    public MinecraftAttribute(Item item, String name, Type minecraftType, Slot slot, Operation operation, boolean stacking, double amount) {
+        this(item, name, DefaultAttributes.MINECRAFT, STAT_TYPE, minecraftType, slot, operation, stacking, amount);
     }
 
     @Override
@@ -239,7 +240,7 @@ public class MinecraftAttribute extends BaseStatAttribute<Minecraft> implements 
         }
 
         @Override
-        public MinecraftAttribute loadFromConfig(String name, ConfigurationSection config) {
+        public MinecraftAttribute loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load minecraft type, slot, operation, stacking, and amount
             Type minecraftType = Type.valueOf(config.getString("minecraft-type"));
             Slot slot = Slot.valueOf(config.getString("slot", "ANY"));
@@ -248,11 +249,11 @@ public class MinecraftAttribute extends BaseStatAttribute<Minecraft> implements 
             double amount = config.getDouble("amount", 0);
 
             // Create minecraft attribute
-            return new MinecraftAttribute(name, minecraftType, slot, operation, stacking, amount);
+            return new MinecraftAttribute(item, name, minecraftType, slot, operation, stacking, amount);
         }
 
         @Override
-        public MinecraftAttribute loadFromNBT(String name, NBTTagCompound compound) {
+        public MinecraftAttribute loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load minecraft type, slot, operation, stacking, and amount
             Type minecraftType = Type.valueOf(compound.getString("minecraft-type"));
             Slot slot = Slot.valueOf(compound.getString("slot"));
@@ -261,7 +262,7 @@ public class MinecraftAttribute extends BaseStatAttribute<Minecraft> implements 
             double amount = compound.getDouble("amount");
 
             // Create minecraft attribute
-            return new MinecraftAttribute(name, minecraftType, slot, operation, stacking, amount);
+            return new MinecraftAttribute(item, name, minecraftType, slot, operation, stacking, amount);
         }
     }
 

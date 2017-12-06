@@ -1,0 +1,20 @@
+name: "&6Fire Sword"
+item: "fire-sword"
+item-type: "primary"
+material: "DIAMOND_SWORD"
+variables:
+  level: 1
+attributes:
+  level:
+    type: "level"
+    level: "&level&"
+  model:
+    type: "model"
+    model: "fire_sword"
+  reagent:
+    type: "reagent"
+    reagent-type: "Fire Sword"
+    lore: false
+  socket:
+    type: "socket"
+    color: "gold"

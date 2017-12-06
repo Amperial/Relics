@@ -1,0 +1,11 @@
+name: "&6Fire Sword Blade"
+item: "fire-sword-blade"
+item-type: "reagent"
+material: "SHEARS"
+attributes:
+  model:
+    type: model
+    model: "fire_sword_blade"
+  reagent:
+    type: "reagent"
+    reagent-type: "Fire Sword Blade"

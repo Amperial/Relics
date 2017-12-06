@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -11,6 +11,7 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.Text;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
@@ -30,8 +31,8 @@ public class TextAttribute extends BaseAttribute<Text> implements Text {
 
     private final List<String> text;
 
-    public TextAttribute(String name, List<String> text) {
-        super(name, DefaultAttributes.TEXT);
+    public TextAttribute(Item item, String name, List<String> text) {
+        super(item, name, DefaultAttributes.TEXT);
 
         this.text = text;
 
@@ -64,17 +65,17 @@ public class TextAttribute extends BaseAttribute<Text> implements Text {
         }
 
         @Override
-        public Text loadFromConfig(String name, ConfigurationSection config) {
+        public Text loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load text
             List<String> text = config.getStringList("text");
             text.replaceAll(line -> ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', line));
 
             // Create text attribute
-            return new TextAttribute(name, text);
+            return new TextAttribute(item, name, text);
         }
 
         @Override
-        public Text loadFromNBT(String name, NBTTagCompound compound) {
+        public Text loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load text
             List<String> text = new ArrayList<>();
             if (compound.hasKey("text")) {
@@ -85,7 +86,7 @@ public class TextAttribute extends BaseAttribute<Text> implements Text {
             }
 
             // Create text attribute
-            return new TextAttribute(name, text);
+            return new TextAttribute(item, name, text);
         }
     }
 

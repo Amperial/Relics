@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -11,6 +11,7 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.item.attribute.attributes.projectiles.Velocity;
@@ -23,8 +24,8 @@ public class VelocityAttribute extends BaseAttribute<Velocity> implements Veloci
     private double value;
     private boolean multiply;
 
-    public VelocityAttribute(String name, double value, boolean multiply) {
-        super(name, DefaultAttributes.VELOCITY);
+    public VelocityAttribute(Item item, String name, double value, boolean multiply) {
+        super(item, name, DefaultAttributes.VELOCITY);
 
         this.value = value;
         this.multiply = multiply;
@@ -63,23 +64,23 @@ public class VelocityAttribute extends BaseAttribute<Velocity> implements Veloci
         }
 
         @Override
-        public Velocity loadFromConfig(String name, ConfigurationSection config) {
+        public Velocity loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load velocity details
             double value = config.getDouble("value", 1);
             boolean multiply = config.getBoolean("multiply", true);
 
             // Load velocity attribute
-            return new VelocityAttribute(name, value, multiply);
+            return new VelocityAttribute(item, name, value, multiply);
         }
 
         @Override
-        public Velocity loadFromNBT(String name, NBTTagCompound compound) {
+        public Velocity loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load velocity details
             double value = compound.getDouble("value");
             boolean multiply = compound.getBoolean("multiply");
 
             // Load velocity attribute
-            return new VelocityAttribute(name, value, multiply);
+            return new VelocityAttribute(item, name, value, multiply);
         }
     }
 

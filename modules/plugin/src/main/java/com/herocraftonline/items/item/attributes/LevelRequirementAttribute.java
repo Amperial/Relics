@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -27,8 +27,8 @@ public class LevelRequirementAttribute extends BaseStatAttribute<LevelRequiremen
 
     private int level;
 
-    public LevelRequirementAttribute(String name, LevelRequirementStatType statType, int level) {
-        super(name, DefaultAttributes.LEVEL_REQUIREMENT, statType);
+    public LevelRequirementAttribute(Item item, String name, LevelRequirementStatType statType, int level) {
+        super(item, name, DefaultAttributes.LEVEL_REQUIREMENT, statType);
 
         this.level = level;
     }
@@ -86,21 +86,21 @@ public class LevelRequirementAttribute extends BaseStatAttribute<LevelRequiremen
         }
 
         @Override
-        public LevelRequirementAttribute loadFromConfig(String name, ConfigurationSection config) {
+        public LevelRequirementAttribute loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load level
             int level = Math.max(config.getInt("level", 0), 0);
 
             // Create level requirement attribute
-            return new LevelRequirementAttribute(name, statType, level);
+            return new LevelRequirementAttribute(item, name, statType, level);
         }
 
         @Override
-        public LevelRequirementAttribute loadFromNBT(String name, NBTTagCompound compound) {
+        public LevelRequirementAttribute loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load level
             int level = compound.getInt("level");
 
             // Create level requirement attribute
-            return new LevelRequirementAttribute(name, statType, level);
+            return new LevelRequirementAttribute(item, name, statType, level);
         }
     }
 

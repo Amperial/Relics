@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -11,6 +11,7 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.ItemManager;
 import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.AttributeContainer;
@@ -35,8 +36,8 @@ public class GroupAttribute extends BaseAttributeContainer<Group> implements Gro
     private final Map<String, Attribute> attributes;
     private final boolean spacing;
 
-    public GroupAttribute(String name, Map<String, Attribute> attributes, boolean spacing) {
-        super(name, DefaultAttributes.GROUP);
+    public GroupAttribute(Item item, String name, Map<String, Attribute> attributes, boolean spacing) {
+        super(item, name, DefaultAttributes.GROUP);
 
         this.attributes = attributes;
         this.spacing = spacing;
@@ -143,7 +144,7 @@ public class GroupAttribute extends BaseAttributeContainer<Group> implements Gro
         }
 
         @Override
-        public Group loadFromConfig(String name, ConfigurationSection config) {
+        public Group loadFromConfig(Item item, String name, ConfigurationSection config) {
             ItemManager itemManager = getPlugin().getItemManager();
 
             // Load attributes
@@ -152,7 +153,7 @@ public class GroupAttribute extends BaseAttributeContainer<Group> implements Gro
                 ConfigurationSection attributes = config.getConfigurationSection("attributes");
                 attributes.getKeys(false).stream().filter(attributes::isConfigurationSection).forEach(attributeName -> {
                     ConfigurationSection attributeSection = attributes.getConfigurationSection(attributeName);
-                    Attribute attribute = itemManager.loadAttribute(attributeName, attributeSection);
+                    Attribute attribute = itemManager.loadAttribute(item, attributeName, attributeSection);
                     if (attribute != null) {
                         attributeMap.put(attributeName, attribute);
                     }
@@ -160,11 +161,11 @@ public class GroupAttribute extends BaseAttributeContainer<Group> implements Gro
             }
 
             // Create attribute group
-            return new GroupAttribute(name, attributeMap, config.getBoolean("spacing", true));
+            return new GroupAttribute(item, name, attributeMap, config.getBoolean("spacing", true));
         }
 
         @Override
-        public Group loadFromNBT(String name, NBTTagCompound compound) {
+        public Group loadFromNBT(Item item, String name, NBTTagCompound compound) {
             ItemManager itemManager = getPlugin().getItemManager();
 
             // Load attributes
@@ -173,7 +174,7 @@ public class GroupAttribute extends BaseAttributeContainer<Group> implements Gro
                 NBTTagCompound attributes = compound.getCompound("attributes");
                 attributes.getKeySet().forEach(attributeName -> {
                     NBTTagCompound attributeCompound = attributes.getCompound(attributeName);
-                    Attribute attribute = itemManager.loadAttribute(attributeName, attributeCompound);
+                    Attribute attribute = itemManager.loadAttribute(item, attributeName, attributeCompound);
                     if (attribute != null) {
                         attributeMap.put(attributeName, attribute);
                     }
@@ -181,7 +182,7 @@ public class GroupAttribute extends BaseAttributeContainer<Group> implements Gro
             }
 
             // Create attribute group
-            return new GroupAttribute(name, attributeMap, compound.getBoolean("spacing"));
+            return new GroupAttribute(item, name, attributeMap, compound.getBoolean("spacing"));
         }
     }
 

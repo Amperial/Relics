@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics API.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -10,6 +10,7 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes.base;
 
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.AttributeLore;
 import com.herocraftonline.items.api.item.attribute.AttributeType;
@@ -25,14 +26,20 @@ import org.bukkit.ChatColor;
  */
 public class BaseAttribute<T extends Attribute<T>> implements Attribute<T> {
 
+    private final Item item;
     private final String name;
     private final AttributeType<T> type;
     private AttributeLore lore;
 
-    public BaseAttribute(String name, AttributeType<T> type) {
+    public BaseAttribute(Item item, String name, AttributeType<T> type) {
+        this.item = item;
         this.name = ChatColor.translateAlternateColorCodes('&', name);
         this.type = type;
         this.lore = AttributeLore.NONE;
+    }
+
+    protected Item getItem() {
+        return item;
     }
 
     @Override

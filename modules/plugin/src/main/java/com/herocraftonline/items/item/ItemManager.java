@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -15,6 +15,8 @@ import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.ItemFactory;
 import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.AttributeType;
+import com.herocraftonline.items.api.storage.config.Config;
+import com.herocraftonline.items.api.storage.config.ConfigAccessor;
 import com.herocraftonline.items.api.storage.config.ConfigManager;
 import com.herocraftonline.items.api.storage.config.DefaultConfig;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
@@ -40,13 +42,15 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
     private final ItemPlugin plugin;
     private final ItemFactory factory;
     private final Map<String, AttributeType> attributeTypes;
-    private final Map<String, ItemConfig> items;
+    private final Map<String, Config> items;
+    private final Map<String, UUID> itemIds;
 
     public ItemManager(ItemPlugin plugin) {
         this.plugin = plugin;
         this.factory = new CustomItem.DefaultItemFactory(this);
         this.attributeTypes = new HashMap<>();
         this.items = new HashMap<>();
+        this.itemIds = new HashMap<>();
 
         // Register default attribute types
         registerAttributeTypes(DefaultAttributes.getTypes(), plugin);
@@ -63,10 +67,36 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
             }
         }
 
-        // Load item configss
-        FileConfiguration itemConfig = configManager.getConfig(DefaultConfig.ITEMS);
-        itemConfig.getStringList("items").stream().map(ItemConfig::new).forEach(config -> items.put(config.getItem().toLowerCase(), config));
-        items.values().forEach(config -> configManager.registerCustomConfig(config, plugin, false));
+        // Load defined items
+        ConfigAccessor itemsConfigAccessor = configManager.getConfigAccessor(DefaultConfig.ITEMS);
+        FileConfiguration itemsConfig = itemsConfigAccessor.getConfig();
+        if (itemsConfig.isConfigurationSection("items")) {
+            ConfigurationSection itemsSection = itemsConfig.getConfigurationSection("items");
+            for (String itemName : itemsSection.getKeys(false)) {
+                // Load item
+                itemName = itemName.toLowerCase();
+                ConfigurationSection itemSection = itemsSection.getConfigurationSection(itemName);
+                if (itemSection.isString("file")) {
+                    // Load and register item config
+                    Config itemConfig = new ItemConfig(itemSection.getString("file"));
+                    configManager.registerCustomConfig(itemConfig, plugin, false);
+                    items.put(itemName, itemConfig);
+
+                    if (itemSection.isString("uuid")) {
+                        // Load or generate and save item id
+                        UUID id;
+                        try {
+                            id = UUID.fromString(itemSection.getString("uuid"));
+                        } catch (IllegalArgumentException e) {
+                            id = UUID.randomUUID();
+                            itemSection.set("uuid", id.toString());
+                        }
+                        itemIds.put(itemName, id);
+                    }
+                }
+            }
+        }
+        itemsConfigAccessor.saveConfig();
 
         DefaultAttributes.loadFactories(plugin);
     }
@@ -163,13 +193,17 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
 
     @Override
     public Optional<Item> getItem(String item, Object... args) {
-        ItemConfig itemConfig = items.get(item.toLowerCase());
+        Config itemConfig = items.get(item.toLowerCase());
         if (itemConfig == null) {
-            plugin.getMessenger().log(Level.WARNING, "Attempted to get item from null config");
-            return null;
+            itemConfig = new ItemConfig(item);
         }
 
         return Optional.ofNullable(getItem(plugin.getConfigManager().getConfig(itemConfig), args));
+    }
+
+    @Override
+    public UUID getItemId(String item) {
+        return itemIds.getOrDefault(item.toLowerCase(), UUID.randomUUID());
     }
 
     @Override
@@ -199,15 +233,15 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
     }
 
     @Override
-    public Attribute loadAttribute(String name, ConfigurationSection config) {
+    public Attribute loadAttribute(Item item, String name, ConfigurationSection config) {
         String type = config.getString("type");
-        return hasAttributeType(type) ? getAttributeType(type).getFactory().loadFromConfig(name, config) : null;
+        return hasAttributeType(type) ? getAttributeType(type).getFactory().loadFromConfig(item, name, config) : null;
     }
 
     @Override
-    public Attribute loadAttribute(String name, NBTTagCompound compound) {
+    public Attribute loadAttribute(Item item, String name, NBTTagCompound compound) {
         String type = compound.getString("type");
-        return hasAttributeType(type) ? getAttributeType(type).getFactory().loadFromNBT(name, compound) : null;
+        return hasAttributeType(type) ? getAttributeType(type).getFactory().loadFromNBT(item, name, compound) : null;
     }
 
     @Override

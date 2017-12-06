@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics API.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -10,6 +10,7 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes.base;
 
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.AttributeContainer;
 import com.herocraftonline.items.api.item.attribute.AttributeType;
@@ -55,8 +56,8 @@ import java.util.stream.Collectors;
  */
 public class BaseAttributeContainer<T extends Attribute<T>> extends BaseAttribute<T> implements AttributeContainer {
 
-    public BaseAttributeContainer(String name, AttributeType<T> type) {
-        super(name, type);
+    public BaseAttributeContainer(Item item, String name, AttributeType<T> type) {
+        super(item, name, type);
     }
 
     @Override

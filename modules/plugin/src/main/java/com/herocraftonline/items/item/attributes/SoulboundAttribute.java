@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -11,6 +11,7 @@
 package com.herocraftonline.items.item.attributes;
 
 import com.herocraftonline.items.api.ItemPlugin;
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.Soulbound;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
@@ -25,8 +26,8 @@ public class SoulboundAttribute extends BaseAttribute<Soulbound> implements Soul
 
     private boolean bound;
 
-    public SoulboundAttribute(String name, String equip, String bound, boolean isBound) {
-        super(name, DefaultAttributes.SOULBOUND);
+    public SoulboundAttribute(Item item, String name, String equip, String bound, boolean isBound) {
+        super(item, name, DefaultAttributes.SOULBOUND);
 
         this.bound = isBound;
 
@@ -82,18 +83,18 @@ public class SoulboundAttribute extends BaseAttribute<Soulbound> implements Soul
         }
 
         @Override
-        public SoulboundAttribute loadFromConfig(String name, ConfigurationSection config) {
+        public SoulboundAttribute loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Create soulbound attribute
-            return new SoulboundAttribute(name, equip, bound, false);
+            return new SoulboundAttribute(item, name, equip, bound, false);
         }
 
         @Override
-        public SoulboundAttribute loadFromNBT(String name, NBTTagCompound compound) {
+        public SoulboundAttribute loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load whether currently bound
             boolean isBound = compound.getBoolean("bound");
 
             // Create soulbound attribute
-            return new SoulboundAttribute(name, equip, bound, isBound);
+            return new SoulboundAttribute(item, name, equip, bound, isBound);
         }
     }
 

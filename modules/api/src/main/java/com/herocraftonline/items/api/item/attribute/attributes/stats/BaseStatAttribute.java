@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics API.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -10,6 +10,7 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes.stats;
 
+import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.AttributeType;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 
@@ -24,8 +25,8 @@ public abstract class BaseStatAttribute<T extends StatAttribute<T>> extends Base
 
     private StatType<T> statType;
 
-    public BaseStatAttribute(String name, AttributeType<T> attributeType, StatType<T> statType) {
-        super(name, attributeType);
+    public BaseStatAttribute(Item item, String name, AttributeType<T> attributeType, StatType<T> statType) {
+        super(item, name, attributeType);
 
         this.statType = statType;
     }

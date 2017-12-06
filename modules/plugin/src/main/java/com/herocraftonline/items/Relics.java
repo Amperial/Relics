@@ -1,7 +1,7 @@
 /*
  * This file is part of Relics.
  *
- * Copyright (c) 2017, Austin Payne <payneaustin5@gmail.com - http://github.com/ampayne2>
+ * Copyright (c) 2017, Austin Payne <amperialdev@gmail.com - http://github.com/Amperial>
  *
  * All Rights Reserved.
  *
@@ -193,7 +193,7 @@ public class Relics extends JavaPlugin implements ItemPlugin {
         if (effectLib.isPresent()) {
             effectLib.get().dispose();
         }
-        effectLib = null;
+        effectLib = Optional.empty();
     }
 
     @Override
