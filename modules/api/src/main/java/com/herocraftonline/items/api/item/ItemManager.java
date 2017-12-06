@@ -145,6 +145,22 @@ public interface ItemManager {
     UUID getItemId(String item);
 
     /**
+     * Gets the item type with the given name (case insensitive). If one is not found, then a new one flagged
+     * as transient will be created and returned.
+     *
+     * @param name the name of the item type
+     * @return the item type
+     */
+    ItemType getItemType(String name);
+
+    /**
+     * Gets all item types
+     *
+     * @return all item types
+     */
+    Collection<? extends ItemType> getItemTypes();
+
+    /**
      * Checks if the attribute type of a certain name is registered.
      *
      * @param type the attribute type's name

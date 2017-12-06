@@ -29,11 +29,14 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Stack;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -41,6 +44,7 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
 
     private final ItemPlugin plugin;
     private final ItemFactory factory;
+    private final Map<String, ItemType> itemTypes;
     private final Map<String, AttributeType> attributeTypes;
     private final Map<String, Config> items;
     private final Map<String, UUID> itemIds;
@@ -48,6 +52,7 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
     public ItemManager(ItemPlugin plugin) {
         this.plugin = plugin;
         this.factory = new CustomItem.DefaultItemFactory(this);
+        this.itemTypes = new HashMap<>();
         this.attributeTypes = new HashMap<>();
         this.items = new HashMap<>();
         this.itemIds = new HashMap<>();
@@ -67,9 +72,12 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
             }
         }
 
-        // Load defined items
+        // Load defined item types and items
         ConfigAccessor itemsConfigAccessor = configManager.getConfigAccessor(DefaultConfig.ITEMS);
         FileConfiguration itemsConfig = itemsConfigAccessor.getConfig();
+        if (itemsConfig.isConfigurationSection("types")) {
+            loadItemTypes(itemsConfig.getMapList("types"), new Stack<>());
+        }
         if (itemsConfig.isConfigurationSection("items")) {
             ConfigurationSection itemsSection = itemsConfig.getConfigurationSection("items");
             for (String itemName : itemsSection.getKeys(false)) {
@@ -99,6 +107,43 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
         itemsConfigAccessor.saveConfig();
 
         DefaultAttributes.loadFactories(plugin);
+    }
+
+    private void loadItemTypes(List<Map<?, ?>> types, Stack<ItemType> parents) {
+        for (Map<?, ?> type : types) {
+            Object key = type.get("name");
+            if (key instanceof String) {
+                String name = (String) key;
+                if (itemTypes.containsKey(name.toLowerCase())) {
+                    plugin.getLogger().warning("Duplicate item type name \"" + name + "\"");
+                    continue;
+                }
+
+                ItemType parent = null;
+                if (!parents.empty()) {
+                    parent = parents.peek();
+                }
+
+                ItemType itemType = new ItemType(name, parent, false);
+                itemTypes.put(name.toLowerCase(), itemType);
+
+                Object children = type.get("children");
+                if (children instanceof List) {
+                    List<Map<?, ?>> childrenList = new ArrayList<>();
+
+                    List<?> list = (List<?>) children;
+                    for (Object child : list) {
+                        if (child instanceof Map<?, ?>) {
+                            childrenList.add((Map<?, ?>) child);
+                        }
+                    }
+
+                    parents.push(itemType);
+                    loadItemTypes(childrenList, parents);
+                    parents.pop();
+                }
+            }
+        }
     }
 
     @Override
@@ -160,6 +205,26 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
     @Override
     public Optional<Item> getItem(ItemStack itemStack) {
         return Optional.ofNullable(factory.loadFromItemStack(itemStack));
+    }
+
+    @Override
+    public ItemType getItemType(String name) {
+        // Amusing way to handle null names
+        if (name == null) name = "NULL";
+
+        ItemType itemType = itemTypes.get(name.toLowerCase());
+
+        if (itemType == null) {
+            itemType = new ItemType(name.toLowerCase(), null, true);
+            itemTypes.put(name, itemType);
+        }
+
+        return itemType;
+    }
+
+    @Override
+    public Collection<ItemType> getItemTypes() {
+        return Collections.unmodifiableCollection(itemTypes.values());
     }
 
     @Override

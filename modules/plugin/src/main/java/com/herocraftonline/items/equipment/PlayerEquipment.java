@@ -275,7 +275,9 @@ public class PlayerEquipment implements Equipment {
             ItemManager itemManager = plugin.getItemManager();
             ConfigurationSection slots = config.getConfigurationSection("slots");
             for (String name : slots.getKeys(false)) {
-                Slot slot = new Slot(name, new ItemType(slots.getString(name + ".type")));
+                ItemType type = itemManager.getItemType(slots.getString(name + ".type"));
+
+                Slot slot = new Slot(name, type);
                 if (slots.isString(name + ".item-id")) {
                     UUID itemId = UUID.fromString(slots.getString(name + ".item-id"));
                     Optional<Item> item = itemManager.findItem(player, itemId);

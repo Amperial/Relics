@@ -1,3 +1,31 @@
+types:
+- name: "Main Hand"
+  children:
+  - name: "Weapon"
+    children:
+    - name: "Melee"
+      children:
+      - name: "Sword"
+    - name: "Ranged"
+      children:
+      - name: "Bow"
+  - name: "Tool"
+    children:
+    - name: "Pickaxe"
+    - name: "Axe"
+    - name: "Shovel"
+    - name: "Hoe"
+    - name: "Shears"
+- name: "Off Hand"
+  children:
+  - name: "Arrow"
+  - name: "Shield"
+- name: "Armor"
+  children:
+  - name: "Helmet"
+  - name: "Chestplate"
+  - name: "Leggings"
+  - name: "Boots"
 items:
   chromatics:
     file: "production/reagent/chromatics"

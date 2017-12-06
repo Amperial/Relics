@@ -128,6 +128,11 @@ public class CustomItem implements Item {
     }
 
     @Override
+    public boolean isType(ItemType itemType) {
+        return getType().isType(itemType);
+    }
+
+    @Override
     public boolean hasAttribute(String name) {
         return attributes.hasAttribute(name);
     }
@@ -363,6 +368,7 @@ public class CustomItem implements Item {
 
         // Set item name
         meta.setDisplayName(getName());
+        // meta.setDisplayName(getName() + " " + ChatColor.DARK_GRAY + ChatColor.ITALIC + (type.isTransient() ? ChatColor.STRIKETHROUGH : "") + type.getName());
 
         // Set item lore
         meta.setLore(createLore());
@@ -518,7 +524,7 @@ public class CustomItem implements Item {
                 }
             }
             boolean unbreakable = config.getBoolean(UNBREAKABLE_TAG, false);
-            ItemType type = new ItemType(config.getString(TYPE_TAG, ItemType.OTHER.getName()));
+            ItemType type = itemManager.getItemType(config.getString(TYPE_TAG, "Unknown"));
             VariableContainer variables = BaseVariableContainer.loadFromConfig(config);
             Group attributes = new GroupAttribute(null, ATTRIBUTES_TAG, new HashMap<>(), true);
 
@@ -552,7 +558,7 @@ public class CustomItem implements Item {
                 enchantments.put(Enchantment.getByName(enchant), enchants.getInt(enchant));
             }
             boolean unbreakable = compound.getBoolean(UNBREAKABLE_TAG);
-            ItemType type = new ItemType(compound.getString(TYPE_TAG));
+            ItemType type = itemManager.getItemType(compound.getString(TYPE_TAG));
             VariableContainer variables = BaseVariableContainer.loadFromNBT(compound);
             Group attributes = new GroupAttribute(null, ATTRIBUTES_TAG, new HashMap<>(), true);
 
