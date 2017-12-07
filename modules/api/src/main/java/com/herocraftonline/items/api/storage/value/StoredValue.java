@@ -53,6 +53,14 @@ public class StoredValue<T> {
         this(key, type, def, true);
     }
 
+    public String getKey() {
+        return key;
+    }
+
+    public T getDefault() {
+        return def;
+    }
+
     public Value<T> loadFromConfig(VariableContainer variables, ConfigurationSection config) {
         return loadValue(variables, config, this);
     }
