@@ -27,7 +27,7 @@ public class Replaceable {
         this.string = string;
     }
 
-    public  Replaceable() {
+    public Replaceable() {
         this("");
     }
 

@@ -25,7 +25,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.stats.StatGroup;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatType;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.api.storage.nbt.NBTTagList;
-import com.herocraftonline.items.api.storage.value.DynamicValue;
+import com.herocraftonline.items.api.storage.value.Value;
 import com.herocraftonline.items.api.storage.value.variables.BaseVariableContainer;
 import com.herocraftonline.items.api.storage.value.variables.VariableContainer;
 import com.herocraftonline.items.item.attributes.GroupAttribute;
@@ -313,7 +313,7 @@ public class CustomItem implements Item {
     }
 
     @Override
-    public void addDynamicValue(DynamicValue value) {
+    public void addDynamicValue(Value value) {
         variables.addDynamicValue(value);
     }
 

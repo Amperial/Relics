@@ -13,13 +13,17 @@ package com.herocraftonline.items.api.storage.value;
 import com.herocraftonline.items.api.storage.nbt.NBTBase;
 import com.herocraftonline.items.api.storage.nbt.NBTNumber;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+import com.herocraftonline.items.api.storage.nbt.NBTTagList;
 import com.herocraftonline.items.api.storage.nbt.NBTTagString;
 import com.herocraftonline.items.api.storage.value.variables.VariableContainer;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class StoredValue<T> {
 
@@ -53,6 +57,10 @@ public class StoredValue<T> {
         this(key, type, def, true);
     }
 
+    public StoredValue(String key, Type<T> type) {
+        this(key, type, null);
+    }
+
     public String getKey() {
         return key;
     }
@@ -61,33 +69,85 @@ public class StoredValue<T> {
         return def;
     }
 
+    @SuppressWarnings("unchecked")
     public Value<T> loadFromConfig(VariableContainer variables, ConfigurationSection config) {
-        return loadValue(variables, config, this);
+        if (type instanceof ListType) {
+            StoredValue<List<Object>> value = (StoredValue<List<Object>>) this;
+            return (Value<T>) loadList(variables, config, value);
+        } else {
+            return loadValue(variables, config, this);
+        }
     }
 
+    @SuppressWarnings("unchecked")
     public Value<T> loadFromNBT(VariableContainer variables, NBTTagCompound compound) {
-        return loadValue(variables, compound, this);
+        if (type instanceof ListType) {
+            StoredValue<List<Object>> value = (StoredValue<List<Object>>) this;
+            return (Value<T>) loadList(variables, compound, value);
+        } else {
+            return loadValue(variables, compound, this);
+        }
     }
 
-    public static final Type<Boolean> BOOLEAN = new Type<>((o) -> o instanceof Boolean, (o) -> (Boolean) o, (b) -> b instanceof NBTNumber, (b) -> ((NBTNumber) b).asByte() != 0, Boolean::parseBoolean);
-    public static final Type<Double> DOUBLE = new Type<>((o) -> o instanceof Number, (o) -> ((Number) o).doubleValue(), (b) -> b instanceof NBTNumber, (b) -> ((NBTNumber) b).asDouble(), Double::parseDouble);
-    public static final Type<Integer> INTEGER = new Type<>((o) -> o instanceof Number, (o) -> ((Number) o).intValue(), (b) -> b instanceof NBTNumber, (b) -> ((NBTNumber) b).asInt(), Integer::parseInt);
-    public static final Type<Long> LONG = new Type<>((o) -> o instanceof Number, (o) -> ((Number) o).longValue(), (b) -> b instanceof NBTNumber, (b) -> ((NBTNumber) b).asLong(), Long::parseLong);
-    public static final Type<String> STRING = new Type<>((o) -> true, Object::toString, (b) -> b instanceof NBTTagString, (b) -> ((NBTTagString) b).getString(), Function.identity());
+    public static final ValueType<Boolean> BOOLEAN = new ValueType<>(Boolean::parseBoolean,
+            (o) -> o instanceof Boolean, (o) -> (Boolean) o,
+            (b) -> b instanceof NBTNumber, (b) -> ((NBTNumber) b).asByte() != 0);
+    public static final ValueType<Double> DOUBLE = new ValueType<>(Double::parseDouble,
+            (o) -> o instanceof Number, (o) -> ((Number) o).doubleValue(),
+            (b) -> b instanceof NBTNumber, (b) -> ((NBTNumber) b).asDouble());
+    public static final ValueType<Integer> INTEGER = new ValueType<>(Integer::parseInt,
+            (o) -> o instanceof Number, (o) -> ((Number) o).intValue(),
+            (b) -> b instanceof NBTNumber, (b) -> ((NBTNumber) b).asInt());
+    public static final ValueType<Long> LONG = new ValueType<>(Long::parseLong,
+            (o) -> o instanceof Number, (o) -> ((Number) o).longValue(),
+            (b) -> b instanceof NBTNumber, (b) -> ((NBTNumber) b).asLong());
+    public static final ValueType<String> STRING = new ValueType<>(Function.identity(),
+            (o) -> true, Object::toString, (b) -> b instanceof NBTTagString,
+            (b) -> ((NBTTagString) b).getString());
+    public static final ListType<String> STRING_LIST = new ListType<>(Function.identity(),
+            (o) -> o instanceof List, (o) -> (List<String>) ((List<?>) o).stream().map(String::valueOf).collect(Collectors.toList()),
+            (b) -> b instanceof NBTTagList, (b) -> {
+        List<String> text = new ArrayList<>();
+        NBTTagList list = (NBTTagList) b;
+        for (int i = 0; i < list.size(); i++) {
+            text.add(list.getString(i));
+        }
+        return text;
+    });
 
-    private static final class Type<T> {
-        private final Predicate<Object> configCheck;
-        private final Function<Object, T> configValue;
-        private final Predicate<NBTBase> nbtCheck;
-        private final Function<NBTBase, T> nbtValue;
-        private final Function<String, T> parse;
+    private static class Type<T> {
+        protected final Predicate<Object> configCheck;
+        protected final Predicate<NBTBase> nbtCheck;
 
-        public Type(Predicate<Object> configCheck, Function<Object, T> configValue, Predicate<NBTBase> nbtCheck, Function<NBTBase, T> nbtValue, Function<String, T> parse) {
+        public Type(Predicate<Object> configCheck, Predicate<NBTBase> nbtCheck) {
             this.configCheck = configCheck;
-            this.configValue = configValue;
             this.nbtCheck = nbtCheck;
-            this.nbtValue = nbtValue;
+        }
+    }
+
+    private static class ValueType<T> extends Type<T> {
+        protected final Function<String, T> parse;
+        protected final Function<Object, T> configValue;
+        protected final Function<NBTBase, T> nbtValue;
+
+        public ValueType(Function<String, T> parse, Predicate<Object> configCheck, Function<Object, T> configValue, Predicate<NBTBase> nbtCheck, Function<NBTBase, T> nbtValue) {
+            super(configCheck, nbtCheck);
             this.parse = parse;
+            this.configValue = configValue;
+            this.nbtValue = nbtValue;
+        }
+    }
+
+    private static class ListType<T> extends Type<List<T>> {
+        protected final Function<String, T> parse;
+        protected final Function<Object, List<T>> configValue;
+        protected final Function<NBTBase, List<T>> nbtValue;
+
+        public ListType(Function<String, T> parse, Predicate<Object> configCheck, Function<Object, List<T>> configValue, Predicate<NBTBase> nbtCheck, Function<NBTBase, List<T>> nbtValue) {
+            super(configCheck, nbtCheck);
+            this.parse = parse;
+            this.configValue = configValue;
+            this.nbtValue = nbtValue;
         }
     }
 
@@ -96,9 +156,26 @@ public class StoredValue<T> {
             V val = get.apply(storage, key);
             try {
                 if (dynamic || !valCheck.test(val)) {
-                    DynamicValue<T> dynamicValue = new DynamicValue<>(variables, key, toString.apply(val), parse, def, cache);
+                    Value<T> dynamicValue = new DynamicValue<>(variables, key, toString.apply(val), parse, def, cache);
                     variables.addDynamicValue(dynamicValue);
                     return dynamicValue;
+                } else {
+                    return new StaticValue<>(key, value.apply(val));
+                }
+            } catch (Exception ignored) {
+            }
+        }
+        return new StaticValue<>(def);
+    }
+
+    private static <S, V, T> Value<List<T>> loadList(VariableContainer variables, S storage, BiFunction<S, String, Boolean> contains, BiFunction<S, String, V> get, Function<V, List<String>> toList, Predicate<V> valCheck, Function<V, List<T>> value, Function<String, T> parse, String key, List<T> def, boolean cache, boolean dynamic) {
+        if (contains.apply(storage, key)) {
+            V val = get.apply(storage, key);
+            try {
+                if (dynamic || !valCheck.test(val)) {
+                    Value<List<T>> dynamicList = new DynamicList<>(variables, key, toList.apply(val), parse, def, cache);
+                    variables.addDynamicValue(dynamicList);
+                    return dynamicList;
                 } else {
                     return new StaticValue<>(key, value.apply(val));
                 }
@@ -111,17 +188,43 @@ public class StoredValue<T> {
     private static final BiFunction<ConfigurationSection, String, Boolean> CONFIG_CONTAINS = ConfigurationSection::contains;
     private static final BiFunction<ConfigurationSection, String, Object> CONFIG_GET = ConfigurationSection::get;
     private static final Function<Object, String> CONFIG_STRING = Object::toString;
+    private static final Function<Object, List<String>> CONFIG_STRING_LIST = STRING_LIST.configValue;
 
     private static <T> Value<T> loadValue(VariableContainer variables, ConfigurationSection config, StoredValue<T> value) {
-        return loadValue(variables, config, CONFIG_CONTAINS, CONFIG_GET, CONFIG_STRING, value.type.configCheck, value.type.configValue, value.type.parse, value.key, value.def, value.cache, value.dynamic);
+        if (value.type instanceof ValueType) {
+            ValueType<T> type = (ValueType<T>) value.type;
+            return loadValue(variables, config, CONFIG_CONTAINS, CONFIG_GET, CONFIG_STRING, type.configCheck, type.configValue, type.parse, value.key, value.def, value.cache, value.dynamic);
+        }
+        return new StaticValue<>(value.def);
+    }
+
+    private static <T> Value<List<T>> loadList(VariableContainer variables, ConfigurationSection config, StoredValue<List<T>> value) {
+        if (value.type instanceof ListType) {
+            ListType<T> type = (ListType<T>) value.type;
+            return loadList(variables, config, CONFIG_CONTAINS, CONFIG_GET, CONFIG_STRING_LIST, type.configCheck, type.configValue, type.parse, value.key, value.def, value.cache, value.dynamic);
+        }
+        return new StaticValue<>(value.def);
     }
 
     private static final BiFunction<NBTTagCompound, String, Boolean> NBT_CONTAINS = NBTTagCompound::hasKey;
     private static final BiFunction<NBTTagCompound, String, NBTBase> NBT_GET = NBTTagCompound::getBase;
     private static final Function<NBTBase, String> NBT_STRING = (b) -> ((NBTTagString) b).getString();
+    private static final Function<NBTBase, List<String>> NBT_STRING_LIST = STRING_LIST.nbtValue;
 
     private static <T> Value<T> loadValue(VariableContainer variables, NBTTagCompound compound, StoredValue<T> value) {
-        return loadValue(variables, compound, NBT_CONTAINS, NBT_GET, NBT_STRING, value.type.nbtCheck, value.type.nbtValue, value.type.parse, value.key, value.def, value.cache, value.dynamic);
+        if (value.type instanceof ValueType) {
+            ValueType<T> type = (ValueType<T>) value.type;
+            return loadValue(variables, compound, NBT_CONTAINS, NBT_GET, NBT_STRING, type.nbtCheck, type.nbtValue, type.parse, value.key, value.def, value.cache, value.dynamic);
+        }
+        return new StaticValue<>(value.def);
+    }
+
+    private static <T> Value<List<T>> loadList(VariableContainer variables, NBTTagCompound compound, StoredValue<List<T>> value) {
+        if (value.type instanceof ListType) {
+            ListType<T> type = (ListType<T>) value.type;
+            return loadList(variables, compound, NBT_CONTAINS, NBT_GET, NBT_STRING_LIST, type.nbtCheck, type.nbtValue, type.parse, value.key, value.def, value.cache, value.dynamic);
+        }
+        return new StaticValue<>(value.def);
     }
 
 }

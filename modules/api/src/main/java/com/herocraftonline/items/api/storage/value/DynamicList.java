@@ -11,24 +11,28 @@
 package com.herocraftonline.items.api.storage.value;
 
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+import com.herocraftonline.items.api.storage.nbt.NBTTagList;
+import com.herocraftonline.items.api.storage.nbt.NBTTagString;
 import com.herocraftonline.items.api.storage.value.replacer.Replaceable;
 import com.herocraftonline.items.api.storage.value.replacer.VariableReplaceable;
 import com.herocraftonline.items.api.storage.value.variables.VariableContainer;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
-public class DynamicValue<T> implements Value<T> {
+public class DynamicList<T> implements Value<List<T>> {
 
     private final String key;
-    private final String value;
-    private final T def;
+    private final List<String> value;
+    private final List<T> def;
 
     private final Replaceable replaceable;
     private final Function<String, T> parse;
     private final boolean cache;
-    private T last;
+    private List<T> last;
 
-    public DynamicValue(VariableContainer variables, String key, String value, Function<String, T> parse, T def, boolean cache) {
+    public DynamicList(VariableContainer variables, String key, List<String> value, Function<String, T> parse, List<T> def, boolean cache) {
         this.key = key;
         this.value = value;
         this.def = def;
@@ -40,10 +44,14 @@ public class DynamicValue<T> implements Value<T> {
     }
 
     @Override
-    public T getValue() {
+    public List<T> getValue() {
         if (last == null || !cache) {
             try {
-                last = parse.apply(replaceable.replace(value));
+                List<T> list = new ArrayList<>();
+                for (String string : value) {
+                    list.add(parse.apply(replaceable.replace(string)));
+                }
+                last = list;
             } catch (Exception e) {
                 last = def;
             }
@@ -59,7 +67,11 @@ public class DynamicValue<T> implements Value<T> {
     @Override
     public void saveToNBT(NBTTagCompound compound) {
         if (key != null) {
-            compound.setString(key, value);
+            NBTTagList list = NBTTagList.create();
+            for (String string : value) {
+                list.addBase(NBTTagString.create(string));
+            }
+            compound.setBase(key, list);
         }
     }
 

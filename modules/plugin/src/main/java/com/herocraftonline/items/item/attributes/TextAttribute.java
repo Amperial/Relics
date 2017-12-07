@@ -16,50 +16,44 @@ import com.herocraftonline.items.api.item.attribute.attributes.Text;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
-import com.herocraftonline.items.api.storage.nbt.NBTTagList;
-import com.herocraftonline.items.api.storage.nbt.NBTTagString;
+import com.herocraftonline.items.api.storage.value.StoredValue;
+import com.herocraftonline.items.api.storage.value.Value;
 import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class TextAttribute extends BaseAttribute<Text> implements Text {
 
-    private final List<String> text;
+    private static final Function<String, String> color = (s) -> ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', s);
+    private final Value<List<String>> text;
 
-    public TextAttribute(Item item, String name, List<String> text) {
+    public TextAttribute(Item item, String name, Value<List<String>> text) {
         super(item, name, DefaultAttributes.TEXT);
 
         this.text = text;
 
-        setLore((lore, prefix) -> lore.addAll(getText().stream().map(line -> prefix + line).collect(Collectors.toList())));
+        setLore((lore, prefix) -> lore.addAll(getText().stream().map(line -> prefix + color.apply(line)).collect(Collectors.toList())));
     }
 
     @Override
     public List<String> getText() {
-        return text;
-    }
-
-    @Override
-    public void addText(String... text) {
-        Collections.addAll(this.text, text);
+        return text.getValue();
     }
 
     @Override
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
-        NBTTagList list = NBTTagList.create();
-        for (String line : getText()) {
-            list.addBase(NBTTagString.create(line));
-        }
-        compound.setBase("text", list);
+        text.saveToNBT(compound);
     }
 
     public static class Factory extends BaseAttributeFactory<Text> {
+        private static final StoredValue<List<String>> TEXT = new StoredValue<>("text", StoredValue.STRING_LIST, new ArrayList<>(), true, true);
+
         public Factory(ItemPlugin plugin) {
             super(plugin);
         }
@@ -67,8 +61,7 @@ public class TextAttribute extends BaseAttribute<Text> implements Text {
         @Override
         public Text loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load text
-            List<String> text = config.getStringList("text");
-            text.replaceAll(line -> ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', line));
+            Value<List<String>> text = TEXT.loadFromConfig(item, config);
 
             // Create text attribute
             return new TextAttribute(item, name, text);
@@ -77,13 +70,7 @@ public class TextAttribute extends BaseAttribute<Text> implements Text {
         @Override
         public Text loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load text
-            List<String> text = new ArrayList<>();
-            if (compound.hasKey("text")) {
-                NBTTagList list = compound.getList("text", 8);
-                for (int i = 0; i < list.size(); i++) {
-                    text.add(list.getString(i));
-                }
-            }
+            Value<List<String>> text = TEXT.loadFromNBT(item, compound);
 
             // Create text attribute
             return new TextAttribute(item, name, text);

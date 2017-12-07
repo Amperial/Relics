@@ -14,7 +14,7 @@ import com.herocraftonline.items.api.storage.nbt.NBTBase;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.api.storage.nbt.NBTTagDouble;
 import com.herocraftonline.items.api.storage.nbt.NBTTagInt;
-import com.herocraftonline.items.api.storage.value.DynamicValue;
+import com.herocraftonline.items.api.storage.value.Value;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class BaseVariableContainer implements VariableContainer {
     private static final String VARIABLES_TAG = "variables";
 
     private final Map<String, Object> variables;
-    private final List<DynamicValue> values;
+    private final List<Value> values;
 
     public BaseVariableContainer() {
         this.variables = new HashMap<>();
@@ -52,13 +52,13 @@ public class BaseVariableContainer implements VariableContainer {
     }
 
     @Override
-    public void addDynamicValue(DynamicValue value) {
+    public void addDynamicValue(Value value) {
         values.add(value);
     }
 
     @Override
     public void resetDynamicValues() {
-        values.forEach(DynamicValue::reset);
+        values.forEach(Value::reset);
     }
 
     @Override

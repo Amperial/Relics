@@ -7,7 +7,7 @@ variables:
 attributes:
   level:
     type: "level"
-    level: "&level&"
+    level: "@level"
   model:
     type: "model"
     model: "fire_sword"

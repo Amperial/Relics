@@ -16,6 +16,9 @@ public interface Value<T> {
 
     T getValue();
 
+    default void reset() {
+    }
+
     void saveToNBT(NBTTagCompound compound);
 
 }

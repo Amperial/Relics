@@ -168,7 +168,7 @@ public class AnvilMenu {
             // Attempt to upgrade item
             Optional<ItemStack> item = getItem(ITEM);
             Optional<ItemStack> upgrade = getItem(UPGRADE);
-            if (item.isPresent() && upgrade.isPresent() ) {
+            if (item.isPresent() && upgrade.isPresent()) {
                 Optional<ItemStack> upgraded = upgrade(player, item.get(), upgrade.get());
                 if (upgraded.isPresent()) {
                     // Item was upgraded

@@ -11,7 +11,7 @@
 package com.herocraftonline.items.api.storage.value.variables;
 
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
-import com.herocraftonline.items.api.storage.value.DynamicValue;
+import com.herocraftonline.items.api.storage.value.Value;
 
 import java.util.Optional;
 
@@ -39,7 +39,7 @@ public interface VariableContainer {
 
     void setValue(String name, Object value);
 
-    void addDynamicValue(DynamicValue value);
+    void addDynamicValue(Value value);
 
     void resetDynamicValues();
 

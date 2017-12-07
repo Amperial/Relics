@@ -15,14 +15,14 @@ import com.herocraftonline.items.api.storage.value.variables.VariableContainer;
 import java.util.regex.Pattern;
 
 /**
- * A replacer that searches for variable references of the form {@code &variable&},<br>
+ * A replacer that searches for variable references of the form {@code @variable},<br>
  * replacing them with the variable's actual value from the variable container.
  *
  * @author Austin Payne
  */
 public class VariableReplacer extends Replacer {
 
-    private static final Pattern VARIABLE = Pattern.compile("&[A-Za-z]+&");
+    private static final Pattern VARIABLE = Pattern.compile("@[A-Za-z]+");
 
     private final VariableContainer variables;
 
@@ -34,7 +34,7 @@ public class VariableReplacer extends Replacer {
 
     @Override
     public String getValue(String replace) {
-        String name = replace.substring(1, replace.length() - 1);
+        String name = replace.substring(1, replace.length());
 
         return variables.getValue(name).map(Object::toString).orElse(name);
     }

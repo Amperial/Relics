@@ -28,11 +28,4 @@ public interface Text extends Attribute<Text> {
      */
     List<String> getText();
 
-    /**
-     * Adds text to the attribute.
-     *
-     * @param text the text to add
-     */
-    void addText(String... text);
-
 }
