@@ -17,6 +17,8 @@ import com.herocraftonline.items.api.item.attribute.attributes.trigger.condition
 import com.herocraftonline.items.api.item.attribute.attributes.trigger.result.TriggerResult;
 import com.herocraftonline.items.api.item.attribute.attributes.trigger.source.TriggerSource;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+import com.herocraftonline.items.api.storage.value.StoredValue;
+import com.herocraftonline.items.api.storage.value.Value;
 import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -24,10 +26,10 @@ import java.util.List;
 
 public class CooldownCondition extends BaseCondition<Cooldown> implements Cooldown {
 
-    private long duration;
+    private Value<Long> duration;
     private long lastUsed;
 
-    public CooldownCondition(Item item, String name, List<String> targets, boolean separate, long duration, long lastUsed) {
+    public CooldownCondition(Item item, String name, List<String> targets, boolean separate, Value<Long> duration, long lastUsed) {
         super(item, name, DefaultAttributes.COOLDOWN, targets, separate);
 
         this.duration = duration;
@@ -36,12 +38,7 @@ public class CooldownCondition extends BaseCondition<Cooldown> implements Cooldo
 
     @Override
     public long getDuration() {
-        return duration;
-    }
-
-    @Override
-    public void setDuration(long duration) {
-        this.duration = duration;
+        return duration.getValue();
     }
 
     @Override
@@ -76,11 +73,13 @@ public class CooldownCondition extends BaseCondition<Cooldown> implements Cooldo
     @Override
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
-        compound.setLong("duration", getDuration());
+        duration.saveToNBT(compound);
         compound.setLong("lastUsed", getLastUsed());
     }
 
     public static class Factory extends BaseTriggerFactory<Cooldown> {
+        private static final StoredValue<Long> DURATION = new StoredValue<>("duration", StoredValue.LONG, 0L);
+
         public Factory(ItemPlugin plugin) {
             super(plugin);
         }
@@ -89,7 +88,7 @@ public class CooldownCondition extends BaseCondition<Cooldown> implements Cooldo
         public Cooldown loadFromConfig(Item item, String name, ConfigurationSection config) {
             List<String> targets = loadTargetsFromConfig(config);
             boolean separate = config.getBoolean("separate", false);
-            long duration = config.getLong("duration", 0);
+            Value<Long> duration = DURATION.loadFromConfig(item, config);
             long lastUsed = System.currentTimeMillis();
 
             // Load cooldown trigger
@@ -100,7 +99,7 @@ public class CooldownCondition extends BaseCondition<Cooldown> implements Cooldo
         public Cooldown loadFromNBT(Item item, String name, NBTTagCompound compound) {
             List<String> targets = loadTargetsFromNBT(compound);
             boolean separate = compound.getBoolean("separate");
-            long duration = compound.getLong("duration");
+            Value<Long> duration = DURATION.loadFromNBT(item, compound);
             long lastUsed = compound.getLong("lastUsed");
 
             // Load cooldown trigger

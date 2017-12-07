@@ -24,11 +24,4 @@ public interface HealEffect extends Effect<HealEffect> {
      */
     double getHeal();
 
-    /**
-     * Sets the amount to heal an entity for.
-     *
-     * @param heal the heal amount
-     */
-    void setHeal(double heal);
-
 }

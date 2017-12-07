@@ -19,6 +19,8 @@ import com.herocraftonline.items.api.item.attribute.attributes.trigger.result.Tr
 import com.herocraftonline.items.api.item.attribute.attributes.trigger.source.CommandSenderSource;
 import com.herocraftonline.items.api.item.attribute.attributes.trigger.source.TriggerSource;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+import com.herocraftonline.items.api.storage.value.StoredValue;
+import com.herocraftonline.items.api.storage.value.Value;
 import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -27,10 +29,10 @@ import java.util.Optional;
 
 public class CommandAttribute extends BaseAttribute<Command> implements Command {
 
-    private String command;
+    private Value<String> command;
     private Sender sender;
 
-    public CommandAttribute(Item item, String name, String command, Sender sender) {
+    public CommandAttribute(Item item, String name, Value<String> command, Sender sender) {
         super(item, name, DefaultAttributes.COMMAND);
 
         this.command = command;
@@ -39,12 +41,7 @@ public class CommandAttribute extends BaseAttribute<Command> implements Command 
 
     @Override
     public String getCommand() {
-        return command;
-    }
-
-    @Override
-    public void setCommand(String command) {
-        this.command = command;
+        return command.getValue();
     }
 
     @Override
@@ -76,11 +73,13 @@ public class CommandAttribute extends BaseAttribute<Command> implements Command 
     @Override
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
-        compound.setString("command", getCommand());
+        command.saveToNBT(compound);
         compound.setString("sender", getSendAs().name());
     }
 
     public static class Factory extends BaseAttributeFactory<Command> {
+        private static final StoredValue<String> COMMAND = new StoredValue<>("command", StoredValue.STRING, "");
+
         public Factory(ItemPlugin plugin) {
             super(plugin);
         }
@@ -88,7 +87,7 @@ public class CommandAttribute extends BaseAttribute<Command> implements Command 
         @Override
         public Command loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load command and sender
-            String command = config.getString("command");
+            Value<String> command = COMMAND.loadFromConfig(item, config);
             Sender sender = Sender.valueOf(config.getString("sender", "SOURCE"));
 
             // Load command attribute
@@ -98,7 +97,7 @@ public class CommandAttribute extends BaseAttribute<Command> implements Command 
         @Override
         public Command loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load command and sender
-            String command = compound.getString("command");
+            Value<String> command = COMMAND.loadFromNBT(item, compound);
             Sender sender = Sender.valueOf(compound.getString("sender"));
 
             // Load command attribute

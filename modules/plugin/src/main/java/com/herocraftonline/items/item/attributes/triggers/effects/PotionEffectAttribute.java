@@ -19,6 +19,8 @@ import com.herocraftonline.items.api.item.attribute.attributes.trigger.source.Tr
 import com.herocraftonline.items.api.item.attribute.attributes.trigger.source.entity.LivingEntitySource;
 import com.herocraftonline.items.api.item.attribute.attributes.trigger.triggerables.effects.PotionEffect;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+import com.herocraftonline.items.api.storage.value.StoredValue;
+import com.herocraftonline.items.api.storage.value.Value;
 import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.Color;
 import org.bukkit.configuration.ConfigurationSection;
@@ -28,17 +30,27 @@ import java.util.Optional;
 
 public class PotionEffectAttribute extends BaseAttribute<PotionEffect> implements PotionEffect {
 
-    private org.bukkit.potion.PotionEffect effect;
+    private final PotionEffectType type;
+    private final Value<Integer> duration;
+    private final Value<Integer> amplifier;
+    private final boolean ambient;
+    private final boolean particles;
+    private final Color color;
 
-    public PotionEffectAttribute(Item item, String name, org.bukkit.potion.PotionEffect effect) {
+    public PotionEffectAttribute(Item item, String name, PotionEffectType type, Value<Integer> duration, Value<Integer> amplifier, boolean ambient, boolean particles, Color color) {
         super(item, name, DefaultAttributes.POTION_EFFECT);
 
-        this.effect = effect;
+        this.type = type;
+        this.duration = duration;
+        this.amplifier = amplifier;
+        this.ambient = ambient;
+        this.particles = particles;
+        this.color = color;
     }
 
     @Override
     public org.bukkit.potion.PotionEffect getEffect() {
-        return effect;
+        return new org.bukkit.potion.PotionEffect(type, duration.getValue(), amplifier.getValue(), ambient, particles, color);
     }
 
     @Override
@@ -61,8 +73,8 @@ public class PotionEffectAttribute extends BaseAttribute<PotionEffect> implement
         super.saveToNBT(compound);
         org.bukkit.potion.PotionEffect effect = getEffect();
         compound.setString("potion-type", effect.getType().getName());
-        compound.setInt("duration", effect.getDuration());
-        compound.setInt("amplifier", effect.getAmplifier());
+        duration.saveToNBT(compound);
+        amplifier.saveToNBT(compound);
         compound.setBoolean("ambient", effect.isAmbient());
         compound.setBoolean("particles", effect.hasParticles());
         if (effect.getColor() != null) {
@@ -71,6 +83,9 @@ public class PotionEffectAttribute extends BaseAttribute<PotionEffect> implement
     }
 
     public static class Factory extends BaseAttributeFactory<PotionEffect> {
+        private static final StoredValue<Integer> DURATION = new StoredValue<>("duration", StoredValue.INTEGER, 200);
+        private static final StoredValue<Integer> AMPLIFIER = new StoredValue<>("amplifier", StoredValue.INTEGER, 1);
+
         public Factory(ItemPlugin plugin) {
             super(plugin);
         }
@@ -79,32 +94,28 @@ public class PotionEffectAttribute extends BaseAttribute<PotionEffect> implement
         public PotionEffect loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load potion effect
             PotionEffectType type = PotionEffectType.getByName(config.getString("potion-type"));
-            int duration = config.getInt("duration", Integer.MAX_VALUE);
-            int amplifier = config.getInt("amplifier", 1);
+            Value<Integer> duration = DURATION.loadFromConfig(item, config);
+            Value<Integer> amplifier = AMPLIFIER.loadFromConfig(item, config);
             boolean ambient = config.getBoolean("ambient", true);
             boolean particles = config.getBoolean("particles", true);
             Color color = config.getColor("color", null);
-            org.bukkit.potion.PotionEffect effect =
-                    new org.bukkit.potion.PotionEffect(type, duration, amplifier, ambient, particles, color);
 
             // Load potion effect attribute
-            return new PotionEffectAttribute(item, name, effect);
+            return new PotionEffectAttribute(item, name, type, duration, amplifier, ambient, particles, color);
         }
 
         @Override
         public PotionEffect loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load potion effect
             PotionEffectType type = PotionEffectType.getByName(compound.getString("potion-type"));
-            int duration = compound.getInt("duration");
-            int amplifier = compound.getInt("amplifier");
+            Value<Integer> duration = DURATION.loadFromNBT(item, compound);
+            Value<Integer> amplifier = AMPLIFIER.loadFromNBT(item, compound);
             boolean ambient = compound.getBoolean("ambient");
             boolean particles = compound.getBoolean("particles");
             Color color = compound.hasKey("color") ? Color.fromRGB(compound.getInt("color")) : null;
-            org.bukkit.potion.PotionEffect effect =
-                    new org.bukkit.potion.PotionEffect(type, duration, amplifier, ambient, particles, color);
 
             // Load potion effect attribute
-            return new PotionEffectAttribute(item, name, effect);
+            return new PotionEffectAttribute(item, name, type, duration, amplifier, ambient, particles, color);
         }
     }
 

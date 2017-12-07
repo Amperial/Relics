@@ -17,6 +17,8 @@ import com.herocraftonline.items.api.item.attribute.attributes.trigger.condition
 import com.herocraftonline.items.api.item.attribute.attributes.trigger.result.TriggerResult;
 import com.herocraftonline.items.api.item.attribute.attributes.trigger.source.TriggerSource;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+import com.herocraftonline.items.api.storage.value.StoredValue;
+import com.herocraftonline.items.api.storage.value.Value;
 import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -24,9 +26,9 @@ import java.util.List;
 
 public class ChanceCondition extends BaseTrigger<Chance> implements Chance {
 
-    private final double chance;
+    private final Value<Double> chance;
 
-    public ChanceCondition(Item item, String name, List<String> targets, boolean separate, double chance) {
+    public ChanceCondition(Item item, String name, List<String> targets, boolean separate, Value<Double> chance) {
         super(item, name, DefaultAttributes.CHANCE_CONDITION, targets, separate);
 
         this.chance = chance;
@@ -34,7 +36,7 @@ public class ChanceCondition extends BaseTrigger<Chance> implements Chance {
 
     @Override
     public double getChance() {
-        return chance;
+        return chance.getValue();
     }
 
     @Override
@@ -45,10 +47,12 @@ public class ChanceCondition extends BaseTrigger<Chance> implements Chance {
     @Override
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
-        compound.setDouble("chance", getChance());
+        chance.saveToNBT(compound);
     }
 
     public static class Factory extends BaseTriggerFactory<Chance> {
+        private static final StoredValue<Double> CHANCE = new StoredValue<>("chance", StoredValue.DOUBLE, 1.0);
+
         public Factory(ItemPlugin plugin) {
             super(plugin);
         }
@@ -57,7 +61,7 @@ public class ChanceCondition extends BaseTrigger<Chance> implements Chance {
         public Chance loadFromConfig(Item item, String name, ConfigurationSection config) {
             List<String> targets = loadTargetsFromConfig(config);
             boolean separate = config.getBoolean("separate", false);
-            double chance = config.getDouble("chance", 1);
+            Value<Double> chance = CHANCE.loadFromConfig(item, config);
 
             return new ChanceCondition(item, name, targets, separate, chance);
         }
@@ -66,7 +70,7 @@ public class ChanceCondition extends BaseTrigger<Chance> implements Chance {
         public Chance loadFromNBT(Item item, String name, NBTTagCompound compound) {
             List<String> targets = loadTargetsFromNBT(compound);
             boolean separate = compound.getBoolean("separate");
-            double chance = compound.getDouble("chance");
+            Value<Double> chance = CHANCE.loadFromNBT(item, compound);
 
             return new ChanceCondition(item, name, targets, separate, chance);
         }

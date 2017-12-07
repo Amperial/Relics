@@ -29,13 +29,6 @@ public interface Command extends Triggerable<Command> {
     String getCommand();
 
     /**
-     * Sets the command to be executed by the attribute.
-     *
-     * @param command the command string
-     */
-    void setCommand(String command);
-
-    /**
      * Gets the sender to execute the command.
      *
      * @return the command sender

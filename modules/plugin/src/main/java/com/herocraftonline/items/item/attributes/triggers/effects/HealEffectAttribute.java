@@ -19,6 +19,8 @@ import com.herocraftonline.items.api.item.attribute.attributes.trigger.source.Tr
 import com.herocraftonline.items.api.item.attribute.attributes.trigger.source.entity.LivingEntitySource;
 import com.herocraftonline.items.api.item.attribute.attributes.trigger.triggerables.effects.HealEffect;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+import com.herocraftonline.items.api.storage.value.StoredValue;
+import com.herocraftonline.items.api.storage.value.Value;
 import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
@@ -27,22 +29,18 @@ import java.util.Optional;
 
 public class HealEffectAttribute extends BaseAttribute<HealEffect> implements HealEffect {
 
-    private double heal;
+    private Value<Double> heal;
 
-    public HealEffectAttribute(Item item, String name, double heal) {
+    public HealEffectAttribute(Item item, String name, Value<Double> heal) {
         super(item, name, DefaultAttributes.HEAL_EFFECT);
 
-        setHeal(heal);
+        this.heal = heal;
     }
 
     @Override
     public double getHeal() {
-        return heal;
-    }
-
-    @Override
-    public void setHeal(double heal) {
-        this.heal = heal < 0 ? 0 : heal;
+        double amount = heal.getValue();
+        return amount > 0 ? amount : 0;
     }
 
     @Override
@@ -67,10 +65,12 @@ public class HealEffectAttribute extends BaseAttribute<HealEffect> implements He
     @Override
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
-        compound.setDouble("heal", getHeal());
+        heal.saveToNBT(compound);
     }
 
     public static class Factory extends BaseAttributeFactory<HealEffect> {
+        private static final StoredValue<Double> HEAL = new StoredValue<>("heal", StoredValue.DOUBLE, 0.0);
+
         public Factory(ItemPlugin plugin) {
             super(plugin);
         }
@@ -78,7 +78,7 @@ public class HealEffectAttribute extends BaseAttribute<HealEffect> implements He
         @Override
         public HealEffect loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load heal amount
-            double heal = config.getDouble("heal", 0);
+            Value<Double> heal = HEAL.loadFromConfig(item, config);
 
             // Load heal effect attribute
             return new HealEffectAttribute(item, name, heal);
@@ -87,7 +87,7 @@ public class HealEffectAttribute extends BaseAttribute<HealEffect> implements He
         @Override
         public HealEffect loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load heal amount
-            double heal = compound.getDouble("heal");
+            Value<Double> heal = HEAL.loadFromNBT(item, compound);
 
             // Load heal effect attribute
             return new HealEffectAttribute(item, name, heal);

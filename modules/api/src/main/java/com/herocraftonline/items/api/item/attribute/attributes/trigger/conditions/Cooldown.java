@@ -27,13 +27,6 @@ public interface Cooldown extends ConditionTrigger<Cooldown> {
     long getDuration();
 
     /**
-     * Sets the duration of the cooldown between triggering target triggerables.
-     *
-     * @param duration the cooldown's duration
-     */
-    void setDuration(long duration);
-
-    /**
      * Gets the last time the cooldown was used.
      *
      * @return the cooldown's last used time

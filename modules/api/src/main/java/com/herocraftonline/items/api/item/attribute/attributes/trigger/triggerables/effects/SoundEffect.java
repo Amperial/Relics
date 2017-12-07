@@ -21,6 +21,8 @@ public interface SoundEffect extends Effect<SoundEffect> {
 
     float getPitch();
 
+    boolean isGlobal();
+
     /**
      * Gets the minimum volume needed for a sound to reach a certain distance.<br>
      * A sound can always be heard within 16 blocks regardless of volume.<br>

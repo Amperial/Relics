@@ -20,6 +20,8 @@ import com.herocraftonline.items.api.item.attribute.attributes.trigger.source.Tr
 import com.herocraftonline.items.api.item.attribute.attributes.trigger.source.entity.PlayerSource;
 import com.herocraftonline.items.api.item.attribute.attributes.trigger.triggerables.effects.SoundEffect;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+import com.herocraftonline.items.api.storage.value.StoredValue;
+import com.herocraftonline.items.api.storage.value.Value;
 import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -31,11 +33,11 @@ import java.util.Optional;
 public class SoundEffectAttribute extends BaseAttribute<SoundEffect> implements SoundEffect {
 
     private Sound sound;
-    private float volume;
-    private float pitch;
+    private Value<Double> volume;
+    private Value<Double> pitch;
     private boolean global;
 
-    public SoundEffectAttribute(Item item, String name, Sound sound, float volume, float pitch, boolean global) {
+    public SoundEffectAttribute(Item item, String name, Sound sound, Value<Double> volume, Value<Double> pitch, boolean global) {
         super(item, name, DefaultAttributes.SOUND_EFFECT);
 
         this.sound = sound;
@@ -51,22 +53,27 @@ public class SoundEffectAttribute extends BaseAttribute<SoundEffect> implements 
 
     @Override
     public float getVolume() {
-        return volume;
+        return volume.getValue().floatValue();
     }
 
     @Override
     public float getPitch() {
-        return pitch;
+        return pitch.getValue().floatValue();
+    }
+
+    @Override
+    public boolean isGlobal() {
+        return global;
     }
 
     @Override
     public boolean canTrigger(TriggerSource source) {
-        return global ? source instanceof LocationSource : source instanceof PlayerSource;
+        return isGlobal() ? source instanceof LocationSource : source instanceof PlayerSource;
     }
 
     @Override
     public TriggerResult onTrigger(TriggerSource source) {
-        if (global) {
+        if (isGlobal()) {
             // Play sound at location to everyone
             Optional<LocationSource> locationSource = source.ofType(LocationSource.class);
             if (locationSource.isPresent()) {
@@ -90,12 +97,15 @@ public class SoundEffectAttribute extends BaseAttribute<SoundEffect> implements 
     public void saveToNBT(NBTTagCompound compound) {
         super.saveToNBT(compound);
         compound.setString("sound", getSound().name());
-        compound.setFloat("volume", getVolume());
-        compound.setFloat("pitch", getPitch());
-        compound.setBoolean("global", global);
+        volume.saveToNBT(compound);
+        pitch.saveToNBT(compound);
+        compound.setBoolean("global", isGlobal());
     }
 
     public static class Factory extends BaseAttributeFactory<SoundEffect> {
+        private static final StoredValue<Double> VOLUME = new StoredValue<>("volume", StoredValue.DOUBLE, 1.0);
+        private static final StoredValue<Double> PITCH = new StoredValue<>("pitch", StoredValue.DOUBLE, 1.0);
+
         public Factory(ItemPlugin plugin) {
             super(plugin);
         }
@@ -104,8 +114,8 @@ public class SoundEffectAttribute extends BaseAttribute<SoundEffect> implements 
         public SoundEffect loadFromConfig(Item item, String name, ConfigurationSection config) {
             // Load sound, volume, pitch, and global
             Sound sound = Sound.valueOf(config.getString("sound"));
-            float volume = (float) config.getDouble("volume", 1);
-            float pitch = (float) config.getDouble("pitch", 1);
+            Value<Double> volume = VOLUME.loadFromConfig(item, config);
+            Value<Double> pitch = PITCH.loadFromConfig(item, config);
             boolean global = config.getBoolean("global", false);
 
             // Load sound effect attribute
@@ -116,8 +126,8 @@ public class SoundEffectAttribute extends BaseAttribute<SoundEffect> implements 
         public SoundEffect loadFromNBT(Item item, String name, NBTTagCompound compound) {
             // Load sound, volume, pitch, and global
             Sound sound = Sound.valueOf(compound.getString("sound"));
-            float volume = compound.getFloat("volume");
-            float pitch = compound.getFloat("pitch");
+            Value<Double> volume = VOLUME.loadFromNBT(item, compound);
+            Value<Double> pitch = PITCH.loadFromNBT(item, compound);
             boolean global = compound.getBoolean("global");
 
             // Load sound effect attribute
