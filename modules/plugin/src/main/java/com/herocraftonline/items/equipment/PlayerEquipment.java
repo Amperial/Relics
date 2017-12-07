@@ -256,38 +256,35 @@ public class PlayerEquipment implements Equipment {
     public void load() {
         Player player = getPlayer();
 
-        // Get player config or default equipment
-        ConfigManager configManager = plugin.getConfigManager();
-        ConfigAccessor playerConfig = configManager.getPlayerConfigAccessor(player);
-        FileConfiguration config;
-        if (playerConfig.exists()) {
-            config = playerConfig.getConfig();
-        } else {
-            config = configManager.getConfig(DefaultConfig.EQUIPMENT);
-        }
-
         // Clear existing slots
         slotsByName.clear();
         slotsByType.clear();
 
-        // Load slots
-        if (config.isConfigurationSection("slots")) {
-            ItemManager itemManager = plugin.getItemManager();
-            ConfigurationSection slots = config.getConfigurationSection("slots");
-            for (String name : slots.getKeys(false)) {
-                ItemType type = itemManager.getItemType(slots.getString(name + ".type"));
+        // Get player config or default equipment
+        ConfigManager configManager = plugin.getConfigManager();
+        ConfigAccessor playerConfig = configManager.getPlayerConfigAccessor(player);
+        ConfigurationSection slots = playerConfig.getConfig();
+        if (playerConfig.exists() && slots.isConfigurationSection("slots")) {
+            slots = slots.getConfigurationSection("slots");
+        } else {
+            slots = configManager.getConfig(DefaultConfig.EQUIPMENT).getConfigurationSection("slots");
+        }
 
-                Slot slot = new Slot(name, type);
-                if (slots.isString(name + ".item-id")) {
-                    UUID itemId = UUID.fromString(slots.getString(name + ".item-id"));
-                    Optional<Item> item = itemManager.findItem(player, itemId);
-                    if (item.isPresent()) {
-                        slot.setItemId(itemId);
-                        item.get().onEquip(player);
-                    }
+        // Load slots
+        ItemManager itemManager = plugin.getItemManager();
+        for (String name : slots.getKeys(false)) {
+            ItemType type = itemManager.getItemType(slots.getString(name + ".type"));
+
+            Slot slot = new Slot(name, type);
+            if (slots.isString(name + ".item-id")) {
+                UUID itemId = UUID.fromString(slots.getString(name + ".item-id"));
+                Optional<Item> item = itemManager.findItem(player, itemId);
+                if (item.isPresent()) {
+                    slot.setItemId(itemId);
+                    item.get().onEquip(player);
                 }
-                addSlot(slot);
             }
+            addSlot(slot);
         }
     }
 

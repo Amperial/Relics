@@ -38,7 +38,7 @@ public class IdentifiableAttribute extends BaseAttribute<Identifiable> implement
     }
 
     @Override
-    public ItemStack identifyItem() {
+    public Optional<ItemStack> identifyItem() {
         return ItemUtil.deserialize(EncryptUtil.decrypt(encryptedItem));
     }
 
@@ -50,17 +50,20 @@ public class IdentifiableAttribute extends BaseAttribute<Identifiable> implement
 
     @Override
     public boolean canTrigger(TriggerSource source) {
-        return source instanceof HumanEntitySource;
+        return source instanceof HumanEntitySource && encryptedItem != null && !encryptedItem.isEmpty();
     }
 
     @Override
     public TriggerResult onTrigger(TriggerSource source) {
         Optional<HumanEntitySource> humanEntitySource = source.ofType(HumanEntitySource.class);
         if (humanEntitySource.isPresent()) {
-            humanEntitySource.get().getEntity().getInventory().addItem(identifyItem());
-            // TODO: We might want to have a way to replace item in inventory instead
-            // NMSHandler.instance().replaceNBT(identifiable, identified);
-            return TriggerResult.CONSUME_ITEM;
+            Optional<ItemStack> identified = identifyItem();
+            if (identified.isPresent()) {
+                // TODO: We might want to have a way to replace item in inventory instead
+                humanEntitySource.get().getEntity().getInventory().addItem(identified.get());
+                // NMSHandler.instance().replaceNBT(identifiable, identified);
+                return TriggerResult.CONSUME_ITEM;
+            }
         }
         return TriggerResult.NOT_TRIGGERED;
     }

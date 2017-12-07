@@ -48,12 +48,14 @@ public class ConfigAccessor implements com.herocraftonline.items.api.storage.con
 
     @Override
     public ConfigAccessor reloadConfig() {
-        fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
-
         InputStream defConfigStream = plugin.getResource(configType.getFileName());
-        if (defConfigStream != null) {
-            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream));
-            fileConfiguration.setDefaults(defConfig);
+        if (configFile.exists() || defConfigStream != null) {
+            fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
+
+            if (defConfigStream != null) {
+                YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream));
+                fileConfiguration.setDefaults(defConfig);
+            }
         }
         return this;
     }

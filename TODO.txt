@@ -4,7 +4,6 @@ IMPORTANT:
 
 Core Systems:
 - Equipment
-- Item Variables
 
 Attributes:
 - Item Set bonuses
@@ -29,15 +28,6 @@ Trigger Results:
 Projectiles:
 - Put projectile item on projectile entity metadata when fired
 - Add trigger for triggerables that listen to projectile hit event
-
-Item Variables:
-- Global variables on the item, that can be used in attributes
-- Variables can be referenced with config transform system
-    - Attributes with values that support this will hold an object that must be evaluated
-        - If something uses a variable, the variable's current value will be used every time the setting is evaluated
-        - If something doesn't use a variable, the static value will just be wrapped for evaluation with the same code
-- Necessary for item upgrade system, allowing item values to change after generation
-- Used for item level, rarity, and other possibilities such as varying how good the item is, storing energy, etc
 
 General QoL:
 - Add option to set an item's max stack size

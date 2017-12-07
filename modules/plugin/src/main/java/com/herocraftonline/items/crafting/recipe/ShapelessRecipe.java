@@ -156,7 +156,7 @@ public class ShapelessRecipe implements Recipe {
         @Override
         public ShapelessRecipe loadFromNBT(NBTTagCompound compound) {
             // Load result
-            ItemStack resultItem = ItemUtil.deserialize(compound.getString("result"));
+            ItemStack resultItem = ItemUtil.deserialize(compound.getString("result")).orElse(new ItemStack(Material.AIR));
             Optional<Result> relicResult = plugin.getItemManager().getItem(resultItem).map(RelicResult::new);
             Result result = relicResult.orElse(new BasicResult(resultItem));
 

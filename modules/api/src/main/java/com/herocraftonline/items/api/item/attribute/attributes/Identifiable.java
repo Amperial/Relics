@@ -13,6 +13,8 @@ package com.herocraftonline.items.api.item.attribute.attributes;
 import com.herocraftonline.items.api.item.attribute.attributes.trigger.Triggerable;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Optional;
+
 /**
  * An attribute that holds an encrypted item that can be identified.
  *
@@ -25,6 +27,6 @@ public interface Identifiable extends Triggerable<Identifiable> {
      *
      * @return the identified item stack
      */
-    ItemStack identifyItem();
+    Optional<ItemStack> identifyItem();
 
 }

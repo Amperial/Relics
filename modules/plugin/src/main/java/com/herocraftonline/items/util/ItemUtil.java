@@ -19,6 +19,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Utility methods for items.
@@ -81,8 +82,12 @@ public final class ItemUtil {
      * @param itemStack the serialized item stack string
      * @return the deserialized item stack
      */
-    public static ItemStack deserialize(String itemStack) {
-        return NMSHandler.instance().deserializeItem(itemStack);
+    public static Optional<ItemStack> deserialize(String itemStack) {
+        try {
+            return Optional.of(NMSHandler.instance().deserializeItem(itemStack));
+        } catch (Exception ignored) {
+            return Optional.empty();
+        }
     }
 
 }

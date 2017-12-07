@@ -97,7 +97,7 @@ public class ConfigManager implements com.herocraftonline.items.api.storage.conf
 
     @Override
     public ConfigAccessor getPlayerConfigAccessor(Player player) {
-        return new ConfigAccessor(plugin, new PlayerConfig(player), plugin.getDataFolder());
+        return new ConfigAccessor(plugin, new PlayerConfig(player), plugin.getDataFolder()).saveDefaultConfig(true);
     }
 
     @Override

@@ -22,7 +22,10 @@ import com.herocraftonline.items.api.item.attribute.attributes.trigger.source.Tr
 import com.herocraftonline.items.api.item.attribute.attributes.trigger.triggers.PlayerInteract;
 import com.herocraftonline.items.api.message.Messenger;
 import com.herocraftonline.items.api.message.RelMessage;
+import com.herocraftonline.items.api.storage.config.ConfigAccessor;
 import com.herocraftonline.items.item.attributes.triggers.sources.event.PlayerInteractSource;
+import com.herocraftonline.items.util.ItemUtil;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -52,19 +55,18 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class ItemListener implements Listener {
 
     private final ItemPlugin plugin;
     private final Random random;
     private final Map<UUID, Long> soulbound;
-    private final Map<UUID, List<Item>> deathItems;
 
     public ItemListener(ItemPlugin plugin) {
         this.plugin = plugin;
         this.random = new Random();
         this.soulbound = new HashMap<>();
-        this.deathItems = new HashMap<>();
 
         // Register listener
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -293,6 +295,8 @@ public class ItemListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         ItemManager itemManager = plugin.getItemManager();
         Player player = event.getEntity();
+
+        // Attempt to handle dropping all items, remove all items that can't be dropped from drops
         List<Item> items = new ArrayList<>();
         Iterator<ItemStack> drops = event.getDrops().iterator();
         while (drops.hasNext()) {
@@ -303,21 +307,36 @@ public class ItemListener implements Listener {
                 drops.remove();
             }
         }
-        deathItems.put(player.getUniqueId(), items);
+
+        // Add items that weren't dropped to player config to restore later
+        if (!items.isEmpty()) {
+            ConfigAccessor playerAccessor = plugin.getConfigManager().getPlayerConfigAccessor(player);
+            ConfigurationSection playerConfig = playerAccessor.getConfig();
+            List<String> restoreList = playerConfig.getStringList("give-items");
+            for (Item item : items) {
+                restoreList.add(ItemUtil.serialize(item));
+            }
+            playerConfig.set("give-items", restoreList);
+            playerAccessor.saveConfig();
+        }
     }
 
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
-        UUID playerId = player.getUniqueId();
-        if (deathItems.containsKey(playerId)) {
-            ItemManager itemManager = plugin.getItemManager();
-            List<Item> items = deathItems.get(playerId);
-            Inventory inventory = player.getInventory();
-            for (Item item : items) {
-                inventory.addItem(item.getItem());
-            }
-            deathItems.remove(playerId);
+        Inventory inventory = player.getInventory();
+
+        // Restore any items in give-items section of player config
+        ConfigAccessor playerAccessor = plugin.getConfigManager().getPlayerConfigAccessor(player);
+        ConfigurationSection playerConfig = playerAccessor.getConfig();
+        List<String> restoreList = playerConfig.getStringList("give-items");
+        if (!restoreList.isEmpty()) {
+            ItemStack[] restore = restoreList.stream()
+                    .map(ItemUtil::deserialize).filter(Optional::isPresent).map(Optional::get).toArray(ItemStack[]::new);
+            restoreList = player.getInventory().addItem(restore).values().stream()
+                    .map(ItemUtil::serialize).collect(Collectors.toList());
+            playerConfig.set("give-items", restoreList);
+            playerAccessor.saveConfig();
         }
     }
 

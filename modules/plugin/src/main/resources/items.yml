@@ -27,22 +27,19 @@ types:
   - name: "Leggings"
   - name: "Boots"
 items:
+  apex:
+    file: "production/upgrade/apex"
   chromatics:
     file: "production/reagent/chromatics"
-    uuid: ""
   fire-sword:
     file: "production/firesword/sword"
   fire-sword-gem:
     file: "production/firesword/gem"
-    uuid: ""
   fire-sword-blueprint:
     file: "production/firesword/blueprint"
   fire-sword-handle:
     file: "production/firesword/handle"
-    uuid: ""
   fire-sword-crossguard:
     file: "production/firesword/crossguard"
-    uuid: ""
   fire-sword-blade:
     file: "production/firesword/blade"
-    uuid: ""
