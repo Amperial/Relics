@@ -12,7 +12,6 @@ package com.herocraftonline.items.api.storage.value.replacer;
 
 import com.herocraftonline.items.api.storage.value.variables.VariableContainer;
 
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**

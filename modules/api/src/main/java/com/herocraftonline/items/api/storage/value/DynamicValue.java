@@ -11,9 +11,9 @@
 package com.herocraftonline.items.api.storage.value;
 
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
-import com.herocraftonline.items.api.storage.value.variables.VariableContainer;
 import com.herocraftonline.items.api.storage.value.replacer.Replaceable;
 import com.herocraftonline.items.api.storage.value.replacer.VariableReplaceable;
+import com.herocraftonline.items.api.storage.value.variables.VariableContainer;
 
 import java.util.function.Function;
 

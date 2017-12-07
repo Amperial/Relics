@@ -10,6 +10,7 @@
  */
 package com.herocraftonline.items;
 
+import com.herocraftonline.items.anvil.AnvilListener;
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.command.Command;
 import com.herocraftonline.items.api.command.CommandController;
@@ -78,6 +79,7 @@ public class Relics extends JavaPlugin implements ItemPlugin {
     private AttributeListener attributeListener;
     private MenuListener menuListener;
     private CraftingListener craftingListener;
+    private AnvilListener anvilListener;
 
     @Override
     public void onEnable() {
@@ -131,6 +133,7 @@ public class Relics extends JavaPlugin implements ItemPlugin {
         attributeListener = new AttributeListener(this);
         menuListener = new MenuListener(this);
         craftingListener = new CraftingListener(this);
+        anvilListener = new AnvilListener(this);
     }
 
     private void loadCommands() {
@@ -177,6 +180,8 @@ public class Relics extends JavaPlugin implements ItemPlugin {
     @Override
     public void onDisable() {
         // The order managers are destroyed in is not important
+        anvilListener.closeOpenMenus();
+        anvilListener = null;
         craftingListener.closeOpenMenus();
         craftingListener = null;
         menuListener.closeOpenMenus();

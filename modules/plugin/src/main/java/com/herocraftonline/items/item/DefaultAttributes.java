@@ -16,21 +16,24 @@ import com.herocraftonline.items.api.item.attribute.attributes.*;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeType;
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Blueprint;
 import com.herocraftonline.items.api.item.attribute.attributes.crafting.Reagent;
-import com.herocraftonline.items.api.item.attribute.attributes.effects.HealEffect;
-import com.herocraftonline.items.api.item.attribute.attributes.effects.PotionEffect;
-import com.herocraftonline.items.api.item.attribute.attributes.effects.SoundEffect;
 import com.herocraftonline.items.api.item.attribute.attributes.gems.Gem;
 import com.herocraftonline.items.api.item.attribute.attributes.gems.Socket;
 import com.herocraftonline.items.api.item.attribute.attributes.projectiles.Velocity;
 import com.herocraftonline.items.api.item.attribute.attributes.requirements.LevelRequirement;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.PlayerInteract;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.conditions.Chance;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.conditions.Cooldown;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.conditions.Permission;
+import com.herocraftonline.items.api.item.attribute.attributes.trigger.conditions.Chance;
+import com.herocraftonline.items.api.item.attribute.attributes.trigger.conditions.Cooldown;
+import com.herocraftonline.items.api.item.attribute.attributes.trigger.conditions.Permission;
+import com.herocraftonline.items.api.item.attribute.attributes.trigger.triggerables.IncreaseVariable;
+import com.herocraftonline.items.api.item.attribute.attributes.trigger.triggerables.effects.HealEffect;
+import com.herocraftonline.items.api.item.attribute.attributes.trigger.triggerables.effects.PotionEffect;
+import com.herocraftonline.items.api.item.attribute.attributes.trigger.triggerables.effects.SoundEffect;
+import com.herocraftonline.items.api.item.attribute.attributes.trigger.triggers.Anvil;
+import com.herocraftonline.items.api.item.attribute.attributes.trigger.triggers.PlayerInteract;
 import com.herocraftonline.items.item.attributes.*;
+import com.herocraftonline.items.item.attributes.triggers.AnvilTrigger;
+import com.herocraftonline.items.item.attributes.triggers.PlayerInteractTrigger;
 import com.herocraftonline.items.item.attributes.triggers.conditions.ChanceCondition;
 import com.herocraftonline.items.item.attributes.triggers.conditions.CooldownCondition;
-import com.herocraftonline.items.item.attributes.triggers.PlayerInteractTrigger;
 import com.herocraftonline.items.item.attributes.triggers.conditions.PermissionCondition;
 import com.herocraftonline.items.item.attributes.triggers.effects.ArmSwingEffectAttribute;
 import com.herocraftonline.items.item.attributes.triggers.effects.HealEffectAttribute;
@@ -44,6 +47,7 @@ import java.util.Collection;
 
 public final class DefaultAttributes {
 
+    public static final AttributeType<Anvil> ANVIL_TRIGGER = new BaseAttributeType<>("anvil-trigger", Integer.MAX_VALUE, AnvilTrigger.Factory::new);
     public static final AttributeType<ArmSwingEffectAttribute> ARM_SWING_EFFECT = new BaseAttributeType<>("arm-swing-effect", Integer.MAX_VALUE, ArmSwingEffectAttribute.Factory::new);
     public static final AttributeType<Blueprint> BLUEPRINT = new BaseAttributeType<>("blueprint", 5, BlueprintAttribute.Factory::new);
     public static final AttributeType<Chance> CHANCE_CONDITION = new BaseAttributeType<>("chance-condition", Integer.MAX_VALUE, ChanceCondition.Factory::new);
@@ -56,6 +60,7 @@ public final class DefaultAttributes {
     public static final AttributeType<Group> GROUP = new BaseAttributeType<>("group", 0, GroupAttribute.Factory::new);
     public static final AttributeType<HealEffect> HEAL_EFFECT = new BaseAttributeType<>("heal-effect", Integer.MAX_VALUE, HealEffectAttribute.Factory::new);
     public static final AttributeType<Identifiable> IDENTIFIABLE = new BaseAttributeType<>("identifiable", Integer.MAX_VALUE, IdentifiableAttribute.Factory::new);
+    public static final AttributeType<IncreaseVariable> INCREASE_VARIABLE = new BaseAttributeType<>("increase-variable", Integer.MAX_VALUE, IncreaseVariableAttribute.Factory::new);
     public static final AttributeType<LaunchEntityAttribute> LAUNCH_ENTITY = new BaseAttributeType<>("launch-entity", Integer.MAX_VALUE, LaunchEntityAttribute.Factory::new);
     public static final AttributeType<Level> LEVEL = new BaseAttributeType<>("level", 2, LevelAttribute.Factory::new);
     public static final AttributeType<LevelRequirement> LEVEL_REQUIREMENT = new BaseAttributeType<>("level-requirement", Integer.MIN_VALUE, LevelRequirementAttribute.Factory::new);
@@ -77,6 +82,7 @@ public final class DefaultAttributes {
     private static final Collection<AttributeType> types = new ArrayList<>();
 
     static {
+        types.add(ANVIL_TRIGGER);
         types.add(ARM_SWING_EFFECT);
         types.add(BLUEPRINT);
         types.add(CHANCE_CONDITION);
@@ -89,6 +95,7 @@ public final class DefaultAttributes {
         types.add(GROUP);
         types.add(HEAL_EFFECT);
         types.add(IDENTIFIABLE);
+        types.add(INCREASE_VARIABLE);
         types.add(LAUNCH_ENTITY);
         types.add(LEVEL);
         types.add(LEVEL_REQUIREMENT);

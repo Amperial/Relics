@@ -14,7 +14,7 @@ import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.item.attributes.triggers.sources.CommandSenderSource;
 import org.bukkit.entity.Entity;
 
-public class EntitySource extends CommandSenderSource implements com.herocraftonline.items.api.item.attribute.attributes.triggers.source.entity.EntitySource {
+public class EntitySource extends CommandSenderSource implements com.herocraftonline.items.api.item.attribute.attributes.trigger.source.entity.EntitySource {
 
     public EntitySource(Item item, Entity entity) {
         super(item, entity);

@@ -14,7 +14,7 @@ import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.item.attributes.triggers.sources.entity.EntitySource;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-public class EntityDamageSource extends EntitySource implements com.herocraftonline.items.api.item.attribute.attributes.triggers.source.event.EntityDamageSource {
+public class EntityDamageSource extends EntitySource implements com.herocraftonline.items.api.item.attribute.attributes.trigger.source.event.EntityDamageSource {
 
     private final EntityDamageEvent event;
 

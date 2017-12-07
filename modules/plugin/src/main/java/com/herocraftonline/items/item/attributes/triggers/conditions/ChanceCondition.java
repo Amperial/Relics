@@ -12,10 +12,10 @@ package com.herocraftonline.items.item.attributes.triggers.conditions;
 
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.Item;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.BaseTrigger;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.conditions.Chance;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.result.TriggerResult;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.source.TriggerSource;
+import com.herocraftonline.items.api.item.attribute.attributes.trigger.BaseTrigger;
+import com.herocraftonline.items.api.item.attribute.attributes.trigger.conditions.Chance;
+import com.herocraftonline.items.api.item.attribute.attributes.trigger.result.TriggerResult;
+import com.herocraftonline.items.api.item.attribute.attributes.trigger.source.TriggerSource;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.configuration.ConfigurationSection;

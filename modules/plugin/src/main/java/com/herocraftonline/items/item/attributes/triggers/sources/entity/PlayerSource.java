@@ -13,7 +13,7 @@ package com.herocraftonline.items.item.attributes.triggers.sources.entity;
 import com.herocraftonline.items.api.item.Item;
 import org.bukkit.entity.Player;
 
-public class PlayerSource extends HumanEntitySource implements com.herocraftonline.items.api.item.attribute.attributes.triggers.source.entity.PlayerSource {
+public class PlayerSource extends HumanEntitySource implements com.herocraftonline.items.api.item.attribute.attributes.trigger.source.entity.PlayerSource {
 
     public PlayerSource(Item item, Player player) {
         super(item, player);

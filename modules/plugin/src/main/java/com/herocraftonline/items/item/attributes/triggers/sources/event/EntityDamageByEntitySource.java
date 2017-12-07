@@ -13,7 +13,7 @@ package com.herocraftonline.items.item.attributes.triggers.sources.event;
 import com.herocraftonline.items.api.item.Item;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-public class EntityDamageByEntitySource extends EntityDamageSource implements com.herocraftonline.items.api.item.attribute.attributes.triggers.source.event.EntityDamageByEntitySource {
+public class EntityDamageByEntitySource extends EntityDamageSource implements com.herocraftonline.items.api.item.attribute.attributes.trigger.source.event.EntityDamageByEntitySource {
 
     public EntityDamageByEntitySource(Item item, EntityDamageByEntityEvent event) {
         super(item, event);

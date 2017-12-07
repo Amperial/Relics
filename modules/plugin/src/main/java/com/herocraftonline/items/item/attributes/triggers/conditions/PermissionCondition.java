@@ -12,8 +12,8 @@ package com.herocraftonline.items.item.attributes.triggers.conditions;
 
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.Item;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.conditions.BaseCondition;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.conditions.Permission;
+import com.herocraftonline.items.api.item.attribute.attributes.trigger.conditions.BaseCondition;
+import com.herocraftonline.items.api.item.attribute.attributes.trigger.conditions.Permission;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.Bukkit;

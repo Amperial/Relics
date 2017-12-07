@@ -10,7 +10,7 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes;
 
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.Triggerable;
+import com.herocraftonline.items.api.item.attribute.attributes.trigger.Triggerable;
 import org.bukkit.inventory.ItemStack;
 
 /**

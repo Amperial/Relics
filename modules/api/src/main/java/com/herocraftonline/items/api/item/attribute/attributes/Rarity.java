@@ -21,6 +21,4 @@ public interface Rarity extends Attribute<Rarity> {
 
     int getRarity();
 
-    void setRarity(int rarity);
-
 }

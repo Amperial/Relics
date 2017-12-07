@@ -12,8 +12,8 @@ package com.herocraftonline.items.api.item;
 
 import com.herocraftonline.items.api.item.attribute.Attribute;
 import com.herocraftonline.items.api.item.attribute.AttributeContainer;
-import com.herocraftonline.items.api.storage.value.variables.VariableContainer;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
+import com.herocraftonline.items.api.storage.value.variables.VariableContainer;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;

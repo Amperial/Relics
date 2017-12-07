@@ -12,9 +12,9 @@ package com.herocraftonline.items.item.attributes.triggers.transforms;
 
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.Item;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.source.TriggerSource;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.source.entity.LivingEntitySource;
-import com.herocraftonline.items.api.item.attribute.attributes.triggers.transforms.BaseTransform;
+import com.herocraftonline.items.api.item.attribute.attributes.trigger.source.TriggerSource;
+import com.herocraftonline.items.api.item.attribute.attributes.trigger.source.entity.LivingEntitySource;
+import com.herocraftonline.items.api.item.attribute.attributes.trigger.transforms.BaseTransform;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.item.DefaultAttributes;
 import com.herocraftonline.items.item.attributes.triggers.sources.LocationSource;

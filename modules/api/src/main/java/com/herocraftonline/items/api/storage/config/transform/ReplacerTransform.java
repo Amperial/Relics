@@ -12,12 +12,7 @@ package com.herocraftonline.items.api.storage.config.transform;
 
 import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.storage.value.replacer.BasicReplaceable;
-import com.herocraftonline.items.api.storage.value.replacer.ListReplacer;
-import com.herocraftonline.items.api.storage.value.replacer.ExpressionReplacer;
-import com.herocraftonline.items.api.storage.value.replacer.RangeReplacer;
 import com.herocraftonline.items.api.storage.value.replacer.Replaceable;
-import com.herocraftonline.items.api.storage.value.replacer.InterpolateReplacer;
-import com.herocraftonline.items.api.storage.value.replacer.WeightedListReplacer;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
