@@ -1,9 +1,9 @@
 # args: level, rarity, variance
 defaults-args: [1, 1, 0.0]
-name: "[&f,&7,&2,&b,&d,&5,&9,&e,&3,&c,&6,&4](@rarity)Worn Greatsword"
-item: "starter-greatsword"
-item-type: "Greatsword"
-material: "DIAMOND_SWORD"
+name: "[&f,&7,&2,&b,&d,&5,&9,&e,&3,&c,&6,&4](@rarity)Worn Bastardsword"
+item: "starter-bastardsword"
+item-type: "Bastardsword"
+material: "IRON_SWORD"
 unbreakable: true
 stackable: false
 variables:
@@ -16,6 +16,6 @@ attributes:
   rarity:
     tier: "@rarity"
   reroll: "#{reroll-variance}"
-  attack: "#{attack-entity[75,2.3]}"
+  attack: "#{attack-entity[40,2.3]}"
   class-requirement:
-    classes: ["Samurai", "Berserker", "Runeblade", "Paladin"]
+    classes: ["Ninja", "Bard", "Runeblade", "Paladin", "Samurai"]

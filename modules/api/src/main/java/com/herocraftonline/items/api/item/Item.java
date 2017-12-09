@@ -65,6 +65,13 @@ public interface Item extends AttributeContainer, Equippable, VariableContainer 
     boolean isUnbreakable();
 
     /**
+     * Checks if the item is stackable.
+     *
+     * @return {@code true} if the item is stackable
+     */
+    boolean isStackable();
+
+    /**
      * Gets the type of the item.
      *
      * @return the item's type

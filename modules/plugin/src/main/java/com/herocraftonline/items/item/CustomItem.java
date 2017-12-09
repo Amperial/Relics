@@ -53,7 +53,6 @@ import java.util.function.Predicate;
 public class CustomItem implements Item {
 
     // Base item tags to avoid overriding other custom nbt
-    private static final String ITEM_TAG_OLD = "amp-item";
     private static final String ITEM_TAG = "relics-item";
 
     // Specific item tags for various item information
@@ -64,6 +63,7 @@ public class CustomItem implements Item {
     private static final String MATERIAL_TAG = "material";
     private static final String ENCHANTMENTS_TAG = "enchantments";
     private static final String UNBREAKABLE_TAG = "unbreakable";
+    private static final String STACKABLE_TAG = "stackable";
     private static final String ATTRIBUTES_TAG = "attributes";
     private static final String INSTANCE_TAG = "item-instance";
 
@@ -82,17 +82,19 @@ public class CustomItem implements Item {
     private final Material material;
     private final Map<Enchantment, Integer> enchantments;
     private final boolean unbreakable;
+    private final boolean stackable;
     private final ItemType type;
     private final VariableContainer variables;
     private final Group attributes;
     private boolean equipped = false;
 
-    private CustomItem(UUID id, Value<String> name, Material material, Map<Enchantment, Integer> enchantments, boolean unbreakable, ItemType type, VariableContainer variables, Group attributes) {
+    private CustomItem(UUID id, Value<String> name, Material material, Map<Enchantment, Integer> enchantments, boolean unbreakable, boolean stackable, ItemType type, VariableContainer variables, Group attributes) {
         this.id = id;
         this.name = name;
         this.material = material;
         this.enchantments = enchantments;
         this.unbreakable = unbreakable;
+        this.stackable = stackable;
         this.type = type;
         this.variables = variables;
         this.attributes = attributes;
@@ -121,6 +123,11 @@ public class CustomItem implements Item {
     @Override
     public boolean isUnbreakable() {
         return unbreakable || hasAttribute(Model.class);
+    }
+
+    @Override
+    public boolean isStackable() {
+        return stackable;
     }
 
     @Override
@@ -498,6 +505,10 @@ public class CustomItem implements Item {
         }
         compound.setBase(ENCHANTMENTS_TAG, enchants);
         compound.setBoolean(UNBREAKABLE_TAG, isUnbreakable());
+        compound.setBoolean(STACKABLE_TAG, isStackable());
+        if (!isStackable()) {
+            compound.setString("prevent-" + STACKABLE_TAG, UUID.randomUUID().toString());
+        }
         compound.setString(TYPE_TAG, getType().getName());
         attributes.saveToNBT(compound);
         variables.saveToNBT(compound);
@@ -526,13 +537,14 @@ public class CustomItem implements Item {
                 }
             }
             boolean unbreakable = config.getBoolean(UNBREAKABLE_TAG, false);
+            boolean stackable = config.getBoolean(STACKABLE_TAG, false);
             ItemType type = itemManager.getItemType(config.getString(TYPE_TAG, "Unknown"));
             VariableContainer variables = BaseVariableContainer.loadFromConfig(config);
             Group attributes = new GroupAttribute(null, ATTRIBUTES_TAG, new HashMap<>(), true);
             Value<String> name = NAME.loadFromConfig(variables, config);
 
             // Create item
-            Item item = new CustomItem(uuid, name, material, enchantments, unbreakable, type, variables, attributes);
+            Item item = new CustomItem(uuid, name, material, enchantments, unbreakable, stackable, type, variables, attributes);
 
             // Load attributes
             Group loadedAttributes = DefaultAttributes.GROUP.getFactory().loadFromConfig(item, ATTRIBUTES_TAG, config);
@@ -560,13 +572,14 @@ public class CustomItem implements Item {
                 enchantments.put(Enchantment.getByName(enchant), enchants.getInt(enchant));
             }
             boolean unbreakable = compound.getBoolean(UNBREAKABLE_TAG);
+            boolean stackable = compound.getBoolean(STACKABLE_TAG);
             ItemType type = itemManager.getItemType(compound.getString(TYPE_TAG));
             VariableContainer variables = BaseVariableContainer.loadFromNBT(compound);
             Group attributes = new GroupAttribute(null, ATTRIBUTES_TAG, new HashMap<>(), true);
             Value<String> name = NAME.loadFromNBT(variables, compound);
 
             // Create item
-            Item item = new CustomItem(uuid, name, material, enchantments, unbreakable, type, variables, attributes);
+            Item item = new CustomItem(uuid, name, material, enchantments, unbreakable, stackable, type, variables, attributes);
 
             // Load attributes
             Group loadedAttributes = DefaultAttributes.GROUP.getFactory().loadFromNBT(item, ATTRIBUTES_TAG, compound);
@@ -587,12 +600,6 @@ public class CustomItem implements Item {
 
             // Get ItemStack NBT
             NBTTagCompound compound = NMSHandler.instance().getTag(itemStack);
-
-            // TODO: Phase out old item tag
-            if (compound.hasKey(ITEM_TAG_OLD)) {
-                compound.setBase(ITEM_TAG, compound.getCompound(ITEM_TAG_OLD));
-                compound.remove(ITEM_TAG_OLD);
-            }
 
             // Ensure ItemStack is a custom item
             if (!compound.hasKey(ITEM_TAG)) {
@@ -619,8 +626,9 @@ public class CustomItem implements Item {
             }
 
             NBTTagCompound compound = NMSHandler.instance().getTag(itemStack);
-            // TODO: Phase out old item tag
-            return compound.hasKey(ITEM_TAG_OLD) || compound.hasKey(ITEM_TAG);
+
+            // Check if compound has relics item tag
+            return compound.hasKey(ITEM_TAG);
         }
     }
 

@@ -1,13 +1,13 @@
 slots:
   helmet:
-    type: "helmet"
+    type: "Helmet"
   chestplate:
-    type: "chestplate"
+    type: "Chestplate"
   leggings:
-    type: "leggings"
+    type: "Leggings"
   boots:
-    type: "boots"
+    type: "Boots"
   primary:
-    type: "primary"
+    type: "Primary"
   secondary:
-    type: "secondary"
+    type: "Secondary"

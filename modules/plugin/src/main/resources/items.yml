@@ -7,12 +7,10 @@ types:
       children:
       - name: "Magic"
         children:
-        - name: "Catalyst"
         - name: "Lute"
         - name: "Staff"
           children:
           - name: "Greatstaff"
-        - name: "Talisman"
         - name: "Wand"
       - name: "Melee"
         children:
@@ -52,6 +50,9 @@ types:
     - name: "Shield"
       children:
       - name: "Greatshield"
+    - name: "Talisman"
+      children:
+      - name: "Catalyst"
 - name: "Armor"
   children:
   - name: "Helmet"

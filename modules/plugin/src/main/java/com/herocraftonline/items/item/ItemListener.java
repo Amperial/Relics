@@ -122,6 +122,10 @@ public class ItemListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if (event.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
+            return;
+        }
+
         LivingEntity damager = getLivingDamager(event);
         if (damager != null) {
             ItemManager itemManager = plugin.getItemManager();
