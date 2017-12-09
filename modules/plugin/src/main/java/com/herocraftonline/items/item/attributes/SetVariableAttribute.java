@@ -14,20 +14,20 @@ import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttribute;
 import com.herocraftonline.items.api.item.attribute.attributes.base.BaseAttributeFactory;
-import com.herocraftonline.items.api.item.attribute.attributes.trigger.triggerables.IncreaseVariable;
+import com.herocraftonline.items.api.item.attribute.attributes.trigger.triggerables.SetVariable;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.api.storage.value.StoredValue;
 import com.herocraftonline.items.api.storage.value.Value;
 import com.herocraftonline.items.item.DefaultAttributes;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class IncreaseVariableAttribute extends BaseAttribute<IncreaseVariable> implements IncreaseVariable {
+public class SetVariableAttribute extends BaseAttribute<SetVariable> implements SetVariable {
 
     private final Value<String> variable;
     private final Value<Double> amount;
 
-    public IncreaseVariableAttribute(Item item, String name, Value<String> variable, Value<Double> amount) {
-        super(item, name, DefaultAttributes.INCREASE_VARIABLE);
+    public SetVariableAttribute(Item item, String name, Value<String> variable, Value<Double> amount) {
+        super(item, name, DefaultAttributes.SET_VARIABLE);
 
         this.variable = variable;
         this.amount = amount;
@@ -50,7 +50,7 @@ public class IncreaseVariableAttribute extends BaseAttribute<IncreaseVariable> i
         amount.saveToNBT(compound);
     }
 
-    public static class Factory extends BaseAttributeFactory<IncreaseVariable> {
+    public static class Factory extends BaseAttributeFactory<SetVariable> {
         private static final StoredValue<String> VARIABLE = new StoredValue<>("variable", StoredValue.STRING, "");
         private static final StoredValue<Double> AMOUNT = new StoredValue<>("amount", StoredValue.DOUBLE, 0.0);
 
@@ -59,19 +59,19 @@ public class IncreaseVariableAttribute extends BaseAttribute<IncreaseVariable> i
         }
 
         @Override
-        public IncreaseVariable loadFromConfig(Item item, String name, ConfigurationSection config) {
+        public SetVariable loadFromConfig(Item item, String name, ConfigurationSection config) {
             Value<String> variable = VARIABLE.loadFromConfig(item, config);
             Value<Double> amount = AMOUNT.loadFromConfig(item, config);
 
-            return new IncreaseVariableAttribute(item, name, variable, amount);
+            return new SetVariableAttribute(item, name, variable, amount);
         }
 
         @Override
-        public IncreaseVariable loadFromNBT(Item item, String name, NBTTagCompound compound) {
+        public SetVariable loadFromNBT(Item item, String name, NBTTagCompound compound) {
             Value<String> variable = VARIABLE.loadFromNBT(item, compound);
             Value<Double> amount = AMOUNT.loadFromNBT(item, compound);
 
-            return new IncreaseVariableAttribute(item, name, variable, amount);
+            return new SetVariableAttribute(item, name, variable, amount);
         }
     }
 

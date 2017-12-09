@@ -1,25 +1,57 @@
 types:
-- name: "Main Hand"
+- name: "Primary"
   children:
-  - name: "Weapon"
+  - name: "Main Hand"
     children:
-    - name: "Melee"
+    - name: "Weapon"
       children:
-      - name: "Sword"
-    - name: "Ranged"
-      children:
-      - name: "Bow"
-  - name: "Tool"
-    children:
-    - name: "Pickaxe"
-    - name: "Axe"
-    - name: "Shovel"
-    - name: "Hoe"
-    - name: "Shears"
-- name: "Off Hand"
+      - name: "Magic"
+        children:
+        - name: "Catalyst"
+        - name: "Lute"
+        - name: "Staff"
+          children:
+          - name: "Greatstaff"
+        - name: "Talisman"
+        - name: "Wand"
+      - name: "Melee"
+        children:
+        - name: "Axe"
+          children:
+          - name: "Greataxe"
+        - name: "Dagger"
+        - name: "Gauntlet"
+        - name: "Hammer"
+          children:
+          - name: "Greathammer"
+        - name: "Pole"
+          children:
+          - name: "Halberd"
+          - name: "Lance"
+          - name: "Spear"
+            children:
+            - name: "Greatspear"
+        - name: "Sword"
+          children:
+          - name: "Bastardsword"
+          - name: "Greatsword"
+          - name: "Katana"
+          - name: "Rapier"
+        - name: "Whip"
+      - name: "Ranged"
+        children:
+        - name: "Bow"
+          children:
+          - name: "Crossbow"
+          - name: "Greatbow"
+          - name: "Shortbow"
+- name: "Secondary"
   children:
-  - name: "Arrow"
-  - name: "Shield"
+  - name: "Off Hand"
+    children:
+    - name: "Shield"
+      children:
+      - name: "Greatshield"
 - name: "Armor"
   children:
   - name: "Helmet"
@@ -27,10 +59,62 @@ types:
   - name: "Leggings"
   - name: "Boots"
 items:
-  apex:
-    file: "production/upgrade/apex"
-  chromatics:
-    file: "production/reagent/chromatics"
+  # Starter class weapons
+  starter-axe:
+    file: "production/starter/axe"
+  starter-bastardsword:
+    file: "production/starter/bastardsword"
+  starter-bow:
+    file: "production/starter/bow"
+  starter-catalyst:
+    file: "production/starter/catalyst"
+  starter-crossbow:
+    file: "production/starter/crossbow"
+  starter-dagger:
+    file: "production/starter/dagger"
+  starter-gauntlet:
+    file: "production/starter/gauntlet"
+  starter-greataxe:
+    file: "production/starter/greataxe"
+  starter-greatbow:
+    file: "production/starter/greatbow"
+  starter-greathammer:
+    file: "production/starter/greathammer"
+  starter-greatshield:
+    file: "production/starter/greatshield"
+  starter-greatspear:
+    file: "production/starter/greatspear"
+  starter-greatstaff:
+    file: "production/starter/greatstaff"
+  starter-greatsword:
+    file: "production/starter/greatsword"
+  starter-halberd:
+    file: "production/starter/halberd"
+  starter-hammer:
+    file: "production/starter/hammer"
+  starter-katana:
+    file: "production/starter/katana"
+  starter-lance:
+    file: "production/starter/lance"
+  starter-lute:
+    file: "production/starter/lute"
+  starter-rapier:
+    file: "production/starter/rapier"
+  starter-shield:
+    file: "production/starter/shield"
+  starter-shortbow:
+    file: "production/starter/shortbow"
+  starter-spear:
+    file: "production/starter/spear"
+  starter-staff:
+    file: "production/starter/staff"
+  starter-talisman:
+    file: "production/starter/talisman"
+  starter-wand:
+    file: "production/starter/wand"
+  starter-whip:
+    file: "production/starter/whip"
+  # Fire Sword weapon and parts
   fire-sword:
     file: "production/firesword/sword"
   fire-sword-gem:

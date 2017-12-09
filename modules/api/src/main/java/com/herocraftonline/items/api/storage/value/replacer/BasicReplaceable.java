@@ -23,7 +23,8 @@ public class BasicReplaceable extends Replaceable {
         // Therefore each consecutive replacer assumes the previous replacers are all unable to find a match
         addReplacer(new RangeReplacer(this));
         addReplacer(new InterpolateReplacer(this));
-        addReplacer(new ListReplacer(this));
+        addReplacer(new IndexListReplacer(this));
+        addReplacer(new RandomListReplacer(this));
         addReplacer(new WeightedListReplacer(this));
         addReplacer(new ExpressionReplacer(this));
     }

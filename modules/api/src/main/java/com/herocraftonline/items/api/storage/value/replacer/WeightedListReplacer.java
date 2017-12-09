@@ -20,8 +20,8 @@ import java.util.regex.Pattern;
  */
 public class WeightedListReplacer extends Replacer {
 
-    private static final String VALUE = "[^<:,\\s]*:([1-9]\\d*|\\d\\.\\d*[1-9])+";
-    private static final Pattern WEIGHTED_CHANCE = Pattern.compile("<" + VALUE + "(," + VALUE + ")*>");
+    private static final String ELEMENT = "[^\\[(<:,\\s>\\])]*:([1-9]\\d*|\\d\\.\\d*[1-9])+";
+    private static final Pattern WEIGHTED_CHANCE = Pattern.compile("<" + ELEMENT + "(," + ELEMENT + ")*>");
 
     public WeightedListReplacer(Replaceable value) {
         super(WEIGHTED_CHANCE.matcher(value.getString()), value);

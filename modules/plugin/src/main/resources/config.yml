@@ -4,4 +4,4 @@ colors:
   secondary: GRAY
   highlights: DARK_GRAY
 config:
-  nesting-depth: 0
+  nesting-depth: 2

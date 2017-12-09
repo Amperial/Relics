@@ -4,7 +4,7 @@ item-type: "reagent"
 material: "SHEARS"
 attributes:
   model:
-    type: model
+    type: "model"
     model: "fire_sword_crossguard"
   reagent:
     type: "reagent"

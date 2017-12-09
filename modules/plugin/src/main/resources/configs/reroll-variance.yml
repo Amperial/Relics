@@ -1,0 +1,41 @@
+# A config for a set-variable trigger that rerolls an item's variance.
+# arguments are variance difficulty (v), and a random number from 0 to 1 (x).
+#
+# the variance is set based on the following process:
+#     pick a random number "x" from 0.0 to 1.0
+#     calculate the new variance with x and difficulty (v) using the following:
+#     variance = ((x^v) * (v-1) / v) + (x/v)
+# this equation allows the resulting variance value to scale from 0 to 1.
+# the variance difficulty adjusts the distribution of the resulting variance values.
+# by setting v = 1, the resulting variance is equal to the random number (y = x)
+# increasing v will change the curve so that y is increasingly less than x. for example:
+#     ________________________________________________
+#     When v = 1:
+#     desired variance | 0.2+  | 0.4+  | 0.6+  | 0.8+
+#     percent chance   | 80    | 60    | 40    | 20
+#     average tries    | 1.25  | 1.67  | 2.5   | 5
+#     ________________________________________________
+#     When v = 2:
+#     desired variance | 0.2+  | 0.4+  | 0.6+  | 0.8+
+#     percent chance   | 69.38 | 47.53 | 29.58 | 13.99
+#     average tries    | 1.441 | 2.104 | 3.381 | 7.148
+#     ________________________________________________
+#     When v = 3:
+#     desired variance | 0.2+  | 0.4+  | 0.6+  | 0.8+
+#     percent chance   | 56.48 | 34.98 | 20.5  | 9.29
+#     average tries    | 1.527 | 2.859 | 4.878 | 10.76
+#     ________________________________________________
+#     When v = 5:
+#     desired variance | 0.2+  | 0.4+  | 0.6+  | 0.8+
+#     percent chance   | 37.66 | 21.24 | 11.93 | 5.26
+#     average tries    | 2.655 | 4.708 | 8.382 | 19.01
+#
+# This system allows for an item's variance distribution to be chosen based on how good the item is:
+#     A very poor item should have a v of 1 or even less than 1.
+#     A normal item should have a v of between 1 and 3.
+#     A very strong item should have a v of at least 5, no more than 20.
+#
+default-args: ["1", "(0.0,1.0)"]
+type: "set-variable"
+variable: "variance"
+value: "((%2$s^%1$s)*(%1$s-1)/%1$s)+(%2$s/%1$s)"

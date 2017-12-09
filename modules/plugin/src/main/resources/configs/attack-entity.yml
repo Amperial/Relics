@@ -1,0 +1,28 @@
+# A config to define how much damage an item does when attacking an entity.
+# arguments are base damage, level scaling, rarity scaling, variance scaling, and stamina cost multiplier
+default-args: [0, 0.35, 5, 25, 1]
+type: "group"
+spacing: false
+attributes:
+  attack-entity:
+    targets: ["base-damage", "level-damage", "rarity-damage", "bonus-damage", "heroes-damage", "stamina-cost"]
+  base-damage:
+    type: "damage"
+    operation: "set"
+    amount: "%1$s"
+  level-damage:
+    type: "damage"
+    operation: "add"
+    amount: "@level*%2$s"
+  rarity-damage:
+    type: "damage"
+    operation: "add"
+    amount: "@rarity*%3$s"
+  bonus-damage:
+    type: "damage"
+    operation: "add"
+    amount: "@variance*%4$s"
+  heroes-damage:
+    operation: "add"
+  stamina-cost:
+    multiplier: "%5$s"

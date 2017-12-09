@@ -1,0 +1,22 @@
+# Herocraft starter Greatsword weapon.
+# args: level, rarity, variance
+defaults-args: [1, 1, 0.0]
+name: "[&f,&7,&2,&b,&d,&5,&9,&e,&3,&c,&6,&4](@rarity)Worn Greatsword"
+item: "starter-greatsword"
+item-type: "Greatsword"
+material: "DIAMOND_SWORD"
+unbreakable: true
+stackable: false
+variables:
+  level: "%1$s"
+  rarity: "%2$s"
+  variance: "%3$s"
+attributes:
+  level:
+    level: "@level"
+  rarity:
+    tier: "@rarity"
+  reroll: "#{reroll-variance}"
+  attack: "#{attack-entity[69.65,0.35,5,25,2.3]}"
+  class-requirement:
+    classes: ["Pyromancer", "Ranger", "ShadowKnight", "Berserker"]

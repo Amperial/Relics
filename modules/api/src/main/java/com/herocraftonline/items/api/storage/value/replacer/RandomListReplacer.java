@@ -18,11 +18,12 @@ import java.util.regex.Pattern;
  *
  * @author Austin Payne
  */
-public class ListReplacer extends Replacer {
+public class RandomListReplacer extends Replacer {
 
-    private static final Pattern EQUAL_CHANCE = Pattern.compile("<[^<:,\\s]*(,[^<:,\\s>]*)*>");
+    private static final String ELEMENT = "[^\\[(<:,\\s>\\])]*";
+    private static final Pattern EQUAL_CHANCE = Pattern.compile("<" + ELEMENT + "(," + ELEMENT + ")*>");
 
-    public ListReplacer(Replaceable value) {
+    public RandomListReplacer(Replaceable value) {
         super(EQUAL_CHANCE.matcher(value.getString()), value);
     }
 

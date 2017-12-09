@@ -25,6 +25,7 @@ import com.herocraftonline.items.api.item.attribute.attributes.stats.StatGroup;
 import com.herocraftonline.items.api.item.attribute.attributes.stats.StatType;
 import com.herocraftonline.items.api.storage.nbt.NBTTagCompound;
 import com.herocraftonline.items.api.storage.nbt.NBTTagList;
+import com.herocraftonline.items.api.storage.value.StoredValue;
 import com.herocraftonline.items.api.storage.value.Value;
 import com.herocraftonline.items.api.storage.value.variables.BaseVariableContainer;
 import com.herocraftonline.items.api.storage.value.variables.VariableContainer;
@@ -77,7 +78,7 @@ public class CustomItem implements Item {
     private static final String MODIFIER_UUID_LEAST = "UUIDLeast";
 
     private final UUID id;
-    private final String name;
+    private final Value<String> name;
     private final Material material;
     private final Map<Enchantment, Integer> enchantments;
     private final boolean unbreakable;
@@ -86,7 +87,7 @@ public class CustomItem implements Item {
     private final Group attributes;
     private boolean equipped = false;
 
-    private CustomItem(UUID id, String name, Material material, Map<Enchantment, Integer> enchantments, boolean unbreakable, ItemType type, VariableContainer variables, Group attributes) {
+    private CustomItem(UUID id, Value<String> name, Material material, Map<Enchantment, Integer> enchantments, boolean unbreakable, ItemType type, VariableContainer variables, Group attributes) {
         this.id = id;
         this.name = name;
         this.material = material;
@@ -104,7 +105,7 @@ public class CustomItem implements Item {
 
     @Override
     public String getName() {
-        return name;
+        return ChatColor.translateAlternateColorCodes('&', name.getValue());
     }
 
     @Override
@@ -489,7 +490,7 @@ public class CustomItem implements Item {
     @Override
     public void saveToNBT(NBTTagCompound compound) {
         compound.setString(UUID_TAG, getId().toString());
-        compound.setString(NAME_TAG, getName());
+        name.saveToNBT(compound);
         compound.setString(MATERIAL_TAG, getMaterial().name());
         NBTTagCompound enchants = NBTTagCompound.create();
         for (Map.Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
@@ -504,6 +505,8 @@ public class CustomItem implements Item {
     }
 
     public static class DefaultItemFactory implements ItemFactory {
+        private static final StoredValue<String> NAME = new StoredValue<>(NAME_TAG, StoredValue.STRING, "Unknown Name");
+
         private ItemManager itemManager;
 
         public DefaultItemFactory(ItemManager itemManager) {
@@ -514,7 +517,6 @@ public class CustomItem implements Item {
         public Item loadFromConfig(ConfigurationSection config) {
             // Load id, name, material, enchantments, unbreakable, type, and variables
             UUID uuid = config.isString(ID_TAG) ? itemManager.getItemId(config.getString(ID_TAG)) : UUID.randomUUID();
-            String name = ChatColor.translateAlternateColorCodes('&', config.getString(NAME_TAG));
             Material material = Material.getMaterial(config.getString(MATERIAL_TAG));
             Map<Enchantment, Integer> enchantments = new HashMap<>();
             if (config.isConfigurationSection(ENCHANTMENTS_TAG)) {
@@ -527,6 +529,7 @@ public class CustomItem implements Item {
             ItemType type = itemManager.getItemType(config.getString(TYPE_TAG, "Unknown"));
             VariableContainer variables = BaseVariableContainer.loadFromConfig(config);
             Group attributes = new GroupAttribute(null, ATTRIBUTES_TAG, new HashMap<>(), true);
+            Value<String> name = NAME.loadFromConfig(variables, config);
 
             // Create item
             Item item = new CustomItem(uuid, name, material, enchantments, unbreakable, type, variables, attributes);
@@ -550,7 +553,6 @@ public class CustomItem implements Item {
 
             // Load id, name, material, enchantments, unbreakable, type, and attributes
             UUID uuid = UUID.fromString(compound.getString(UUID_TAG));
-            String name = compound.getString(NAME_TAG);
             Material material = Material.getMaterial(compound.getString(MATERIAL_TAG));
             Map<Enchantment, Integer> enchantments = new HashMap<>();
             NBTTagCompound enchants = compound.getCompound(ENCHANTMENTS_TAG);
@@ -561,6 +563,7 @@ public class CustomItem implements Item {
             ItemType type = itemManager.getItemType(compound.getString(TYPE_TAG));
             VariableContainer variables = BaseVariableContainer.loadFromNBT(compound);
             Group attributes = new GroupAttribute(null, ATTRIBUTES_TAG, new HashMap<>(), true);
+            Value<String> name = NAME.loadFromNBT(variables, compound);
 
             // Create item
             Item item = new CustomItem(uuid, name, material, enchantments, unbreakable, type, variables, attributes);

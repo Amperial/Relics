@@ -299,7 +299,7 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
 
     @Override
     public Attribute loadAttribute(Item item, String name, ConfigurationSection config) {
-        String type = config.getString("type");
+        String type = config.isString("type") ? config.getString("type") : name;
         return hasAttributeType(type) ? getAttributeType(type).getFactory().loadFromConfig(item, name, config) : null;
     }
 

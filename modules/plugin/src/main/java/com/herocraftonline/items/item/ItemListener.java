@@ -14,15 +14,16 @@ import com.herocraftonline.items.api.ItemPlugin;
 import com.herocraftonline.items.api.equipment.EquipmentManager;
 import com.herocraftonline.items.api.item.Item;
 import com.herocraftonline.items.api.item.ItemManager;
-import com.herocraftonline.items.api.item.attribute.attributes.Damage;
 import com.herocraftonline.items.api.item.attribute.attributes.Durability;
 import com.herocraftonline.items.api.item.attribute.attributes.Soulbound;
 import com.herocraftonline.items.api.item.attribute.attributes.trigger.result.TriggerResult;
 import com.herocraftonline.items.api.item.attribute.attributes.trigger.source.TriggerSource;
+import com.herocraftonline.items.api.item.attribute.attributes.trigger.triggers.AttackEntity;
 import com.herocraftonline.items.api.item.attribute.attributes.trigger.triggers.PlayerInteract;
 import com.herocraftonline.items.api.message.Messenger;
 import com.herocraftonline.items.api.message.RelMessage;
 import com.herocraftonline.items.api.storage.config.ConfigAccessor;
+import com.herocraftonline.items.item.attributes.triggers.sources.event.EntityDamageByEntitySource;
 import com.herocraftonline.items.item.attributes.triggers.sources.event.PlayerInteractSource;
 import com.herocraftonline.items.util.ItemUtil;
 import org.bukkit.configuration.ConfigurationSection;
@@ -87,7 +88,7 @@ public class ItemListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
         ItemStack itemStack = event.getItem();
         Optional<Item> itemOptional = plugin.getItemManager().getItem(itemStack);
@@ -109,7 +110,7 @@ public class ItemListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
         if (!handleItemUse(player, player.getInventory().getItemInMainHand())) {
@@ -119,7 +120,7 @@ public class ItemListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         LivingEntity damager = getLivingDamager(event);
         if (damager != null) {
@@ -140,9 +141,12 @@ public class ItemListener implements Listener {
                     event.setCancelled(true);
                     return;
                 }
-                item.forEachDeep(Damage.class, attribute -> {
-                    event.setDamage(event.getDamage() + attribute.getVariation() * ((random.nextDouble() * 2) - 1));
-                });
+                TriggerSource source = new EntityDamageByEntitySource(item, event);
+                TriggerResult result = item.getAttributesDeep(AttackEntity.class).stream()
+                        .filter(attribute -> attribute.canTrigger(source))
+                        .map(attribute -> attribute.onTrigger(source))
+                        .reduce(TriggerResult.COMBINED).orElse(TriggerResult.NOT_TRIGGERED);
+                // TODO: Handle trigger results
                 if (durability.isPresent() && durability.get().damage(1)) {
                     item.updateItem(itemStack).ifPresent(updatedItem -> damager.getEquipment().setItemInMainHand(updatedItem));
                 }
@@ -208,7 +212,7 @@ public class ItemListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) {
             return;
@@ -234,7 +238,7 @@ public class ItemListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onInventoryDrag(InventoryDragEvent event) {
         ItemManager itemManager = plugin.getItemManager();
         if (itemManager.isItem(event.getOldCursor()) || itemManager.isItem(event.getCursor())) {
@@ -255,7 +259,7 @@ public class ItemListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         ItemManager itemManager = plugin.getItemManager();
         ItemStack itemStack = event.getItemDrop().getItemStack();
@@ -321,7 +325,7 @@ public class ItemListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
         Inventory inventory = player.getInventory();

@@ -19,21 +19,21 @@ import com.herocraftonline.items.api.item.attribute.attributes.trigger.source.it
 import java.util.Optional;
 
 /**
- * A triggerable attribute that increases the level of a variable on the source item.
+ * A triggerable attribute that sets the level of a variable on the source item.
  *
  * @author Austin Payne
  */
-public interface IncreaseVariable extends Triggerable<IncreaseVariable> {
+public interface SetVariable extends Triggerable<SetVariable> {
 
     /**
-     * Gets the variable to be increased.
+     * Gets the variable to be set.
      *
      * @return the variable name
      */
     String getVariable();
 
     /**
-     * Gets the amount to increase the variable by.
+     * Gets the amount to set the variable to.
      *
      * @return the increase amount
      */
@@ -56,14 +56,13 @@ public interface IncreaseVariable extends Triggerable<IncreaseVariable> {
         Item item = source.ofType(ItemSource.class).map(ItemSource::getSourceItem).orElse(source.getItem());
         Optional<Integer> intValue = item.getValue(getVariable(), Integer.class);
         if (intValue.isPresent()) {
-            Integer upgraded = intValue.get() + (int) getAmount();
-            item.setValue(getVariable(), upgraded);
+            Integer value = (int) getAmount();
+            item.setValue(getVariable(), value);
             return TriggerResult.UPDATE_ITEM;
         }
         Optional<Double> doubleValue = item.getValue(getVariable(), Double.class);
         if (doubleValue.isPresent()) {
-            Double upgraded = doubleValue.get() + getAmount();
-            item.setValue(getVariable(), upgraded);
+            item.setValue(getVariable(), getAmount());
             return TriggerResult.UPDATE_ITEM;
         }
         return TriggerResult.NOT_TRIGGERED;
