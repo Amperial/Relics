@@ -66,7 +66,7 @@ public class PlayerEquipment implements Equipment {
 
     @Override
     public boolean hasSlot(ItemType type) {
-        return slotsByType.containsKey(type);
+        return slotsByType.containsKey(type) || (type.hasParent() && hasSlot(type.getParent()));
     }
 
     @Override
@@ -76,7 +76,7 @@ public class PlayerEquipment implements Equipment {
 
     @Override
     public Collection<Slot> getSlots(ItemType type) {
-        return slotsByType.containsKey(type) ? slotsByType.get(type) : Collections.emptySet();
+        return slotsByType.containsKey(type) ? slotsByType.get(type) : type.hasParent() ? getSlots(type.getParent()) : Collections.emptySet();
     }
 
     @Override

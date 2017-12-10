@@ -16,5 +16,7 @@ attributes:
   rarity:
     tier: "@rarity"
   reroll: "#{reroll-variance}"
+  stamina-cost:
+    stamina-cost: 250
   class-requirement:
     classes: ["Paladin", "ShadowKnight"]

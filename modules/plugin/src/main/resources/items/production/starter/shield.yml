@@ -16,5 +16,7 @@ attributes:
   rarity:
     tier: "@rarity"
   reroll: "#{reroll-variance}"
+  stamina-cost:
+    stamina-cost: 150
   class-requirement:
     classes: ["Paladin", "Pyromancer", "Beguiler", "Cleric"]
