@@ -64,7 +64,7 @@ public class RarityAttribute extends BaseAttribute<Rarity> implements Rarity {
             unknown = ChatColor.GRAY + ChatColor.translateAlternateColorCodes('&', config.getString("unknown", "&8Unknown"));
             lore = (rarity) -> (lore, prefix) -> {
                 int value = rarity.getRarity();
-                lore.add(prefix + (value >= 0 && value < tiers.size() ? tiers.get(value) : unknown));
+                //lore.add(prefix + (value >= 0 && value < tiers.size() ? tiers.get(value) : unknown));
             };
         }
 

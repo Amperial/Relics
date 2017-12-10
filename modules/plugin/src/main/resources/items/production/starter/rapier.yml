@@ -1,5 +1,5 @@
 # args: level, rarity, variance
-defaults-args: [1, 1, 0.0]
+default-args: [1, 1, 0.0]
 name: "[&f,&7,&2,&b,&d,&5,&9,&e,&3,&c,&6,&4](@rarity)Worn Rapier"
 item: "starter-rapier"
 item-type: "Rapier"

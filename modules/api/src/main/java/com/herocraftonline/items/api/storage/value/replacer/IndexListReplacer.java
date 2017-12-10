@@ -36,7 +36,7 @@ public class IndexListReplacer extends Replacer {
         String[] elements = list.split(",");
 
         // Get element index
-        int index = Integer.valueOf(replace.substring(listEnd + 1, replace.length() - 1));
+        int index = Integer.valueOf(replace.substring(listEnd + 2, replace.length() - 1));
 
         // Return element at index
         return elements.length > index ? elements[index]: "";

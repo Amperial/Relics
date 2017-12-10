@@ -8,8 +8,8 @@ attributes:
     targets: ["base-damage", "heroes-damage"]
   base-damage:
     type: "bow-damage"
-    operation: "set"
+    operation: "SET"
     amount: "%1$s*(1+(@level*%2$s)+(@rarity*%3$s)+(@variance*%4$s))"
   heroes-damage:
     type: "hero-attribute-damage"
-    operation: "add"
+    operation: "ADD"
