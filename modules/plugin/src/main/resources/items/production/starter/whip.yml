@@ -17,7 +17,7 @@ attributes:
     tier: "@rarity"
   reroll: "#{reroll-variance}"
   attack: "#{attack-entity[25]}"
-  stamina-cost:
+  hero-stamina-cost:
     stamina-cost: 57.5
-  class-requirement:
+  hero-class-requirement:
     classes: ["Bloodmage", "Bard", "Ninja", "Berserker"]

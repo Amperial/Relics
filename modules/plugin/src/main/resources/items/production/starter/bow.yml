@@ -17,7 +17,7 @@ attributes:
     tier: "@rarity"
   reroll: "#{reroll-variance}"
   attack: "#{attack-entity-bow[100]}"
-  stamina-cost:
+  hero-stamina-cost:
     stamina-cost: 230
-  class-requirement:
+  hero-class-requirement:
     classes: ["Ranger", "Archer"]

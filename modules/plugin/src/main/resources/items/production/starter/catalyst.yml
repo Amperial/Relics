@@ -16,5 +16,5 @@ attributes:
   rarity:
     tier: "@rarity"
   reroll: "#{reroll-variance}"
-  class-requirement:
+  hero-class-requirement:
     classes: ["Necromancer", "Beguiler", "Endermage", "Wizard"]

@@ -17,7 +17,7 @@ attributes:
     tier: "@rarity"
   reroll: "#{reroll-variance}"
   attack: "#{attack-entity-bow[250]}"
-  stamina-cost:
+  hero-stamina-cost:
     stamina-cost: 575
-  class-requirement:
+  hero-class-requirement:
     classes: ["Paladin", "ShadowKnight"]

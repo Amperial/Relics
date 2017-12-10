@@ -75,7 +75,7 @@ public class ItemManager implements com.herocraftonline.items.api.item.ItemManag
         // Load defined item types and items
         ConfigAccessor itemsConfigAccessor = configManager.getConfigAccessor(DefaultConfig.ITEMS);
         FileConfiguration itemsConfig = itemsConfigAccessor.getConfig();
-        if (itemsConfig.isConfigurationSection("types")) {
+        if (itemsConfig.isList("types")) {
             loadItemTypes(itemsConfig.getMapList("types"), new Stack<>());
         }
         if (itemsConfig.isConfigurationSection("items")) {

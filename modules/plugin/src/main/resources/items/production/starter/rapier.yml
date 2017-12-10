@@ -17,7 +17,7 @@ attributes:
     tier: "@rarity"
   reroll: "#{reroll-variance}"
   attack: "#{attack-entity[30]}"
-  stamina-cost:
+  hero-stamina-cost:
     stamina-cost: 69
-  class-requirement:
+  hero-class-requirement:
     classes: ["Bard", "Ninja", "Pirate"]

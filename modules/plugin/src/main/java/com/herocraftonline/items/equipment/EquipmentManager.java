@@ -57,7 +57,9 @@ public class EquipmentManager implements com.herocraftonline.items.api.equipment
     @EventHandler(priority = EventPriority.MONITOR)
     public void unloadEquipment(PlayerQuitEvent event) {
         // Remove and save player equipment
-        equipment.remove(event.getPlayer().getUniqueId()).save();
+        if (equipment.containsKey(event.getPlayer().getUniqueId())) {
+            equipment.remove(event.getPlayer().getUniqueId()).save();
+        }
     }
 
     @Override

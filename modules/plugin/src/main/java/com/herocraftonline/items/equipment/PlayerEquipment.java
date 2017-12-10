@@ -76,7 +76,7 @@ public class PlayerEquipment implements Equipment {
 
     @Override
     public Collection<Slot> getSlots(ItemType type) {
-        return slotsByType.containsKey(type) ? slotsByType.get(type) : type.hasParent() ? getSlots(type.getParent()) : Collections.emptySet();
+        return slotsByType.containsKey(type) ? slotsByType.get(type) : (type.hasParent() ? getSlots(type.getParent()) : Collections.emptySet());
     }
 
     @Override

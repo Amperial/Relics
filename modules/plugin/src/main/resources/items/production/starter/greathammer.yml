@@ -17,7 +17,7 @@ attributes:
     tier: "@rarity"
   reroll: "#{reroll-variance}"
   attack: "#{attack-entity[90]}"
-  stamina-cost:
+  hero-stamina-cost:
     stamina-cost: 225
-  class-requirement:
+  hero-class-requirement:
     classes: ["Monk", "Paladin", "Cleric"]
