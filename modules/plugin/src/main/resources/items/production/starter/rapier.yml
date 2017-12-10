@@ -16,6 +16,8 @@ attributes:
   rarity:
     tier: "@rarity"
   reroll: "#{reroll-variance}"
-  attack: "#{attack-entity[30,2.3]}"
+  attack: "#{attack-entity[30]}"
+  stamina-cost:
+    stamina-cost: 69
   class-requirement:
     classes: ["Bard", "Ninja", "Pirate"]

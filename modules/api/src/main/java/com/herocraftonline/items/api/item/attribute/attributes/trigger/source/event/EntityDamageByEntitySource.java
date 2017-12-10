@@ -10,10 +10,13 @@
  */
 package com.herocraftonline.items.api.item.attribute.attributes.trigger.source.event;
 
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public interface EntityDamageByEntitySource extends EntityDamageSource {
 
     EntityDamageByEntityEvent getEvent();
+
+    LivingEntity getAttacker();
 
 }

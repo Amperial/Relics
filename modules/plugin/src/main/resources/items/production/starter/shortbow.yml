@@ -1,9 +1,9 @@
 # args: level, rarity, variance
 defaults-args: [1, 1, 0.0]
-name: "[&f,&7,&2,&b,&d,&5,&9,&e,&3,&c,&6,&4](@rarity)Worn Greatspear"
-item: "starter-greatspear"
-item-type: "Greatspear"
-material: "DIAMOND_SPADE"
+name: "[&f,&7,&2,&b,&d,&5,&9,&e,&3,&c,&6,&4](@rarity)Worn Shortbow"
+item: "starter-shortbow"
+item-type: "Shortbow"
+material: "BOW"
 unbreakable: true
 stackable: false
 variables:
@@ -16,8 +16,8 @@ attributes:
   rarity:
     tier: "@rarity"
   reroll: "#{reroll-variance}"
-  attack: "#{attack-entity[60]}"
+  attack: "#{attack-entity-bow[75]}"
   stamina-cost:
-    stamina-cost: 138
+    stamina-cost: 175
   class-requirement:
-    classes: ["Dragoon", "Shaman", "Berserker"]
+    classes: ["Ranger", "Ninja", "Samurai", "Archer"]

@@ -16,6 +16,8 @@ attributes:
   rarity:
     tier: "@rarity"
   reroll: "#{reroll-variance}"
-  attack: "#{attack-entity[40,2]}"
+  attack: "#{attack-entity[40]}"
+  stamina-cost:
+    stamina-cost: 80
   class-requirement:
     classes: ["Pyromancer", "Ranger", "ShadowKnight", "Berserker"]

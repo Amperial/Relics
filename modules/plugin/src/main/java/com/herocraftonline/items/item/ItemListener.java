@@ -36,6 +36,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -122,10 +123,6 @@ public class ItemListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (event.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
-            return;
-        }
-
         LivingEntity damager = getLivingDamager(event);
         if (damager != null) {
             ItemManager itemManager = plugin.getItemManager();
@@ -145,7 +142,7 @@ public class ItemListener implements Listener {
                     event.setCancelled(true);
                     return;
                 }
-                TriggerSource source = new EntityDamageByEntitySource(item, event);
+                TriggerSource source = new EntityDamageByEntitySource(item, event, damager);
                 TriggerResult result = item.getAttributesDeep(AttackEntity.class).stream()
                         .filter(attribute -> attribute.canTrigger(source))
                         .map(attribute -> attribute.onTrigger(source))

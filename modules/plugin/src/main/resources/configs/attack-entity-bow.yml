@@ -7,7 +7,7 @@ attributes:
   attack-entity:
     targets: ["base-damage", "heroes-damage"]
   base-damage:
-    type: "damage"
+    type: "bow-damage"
     operation: "set"
     amount: "%1$s*(1+(@level*%2$s)+(@rarity*%3$s)+(@variance*%4$s))"
   heroes-damage:
