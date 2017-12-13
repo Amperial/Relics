@@ -84,8 +84,11 @@ public class SoulboundAttribute extends BaseAttribute<Soulbound> implements Soul
 
         @Override
         public SoulboundAttribute loadFromConfig(Item item, String name, ConfigurationSection config) {
+            // Load whether currently bound
+            boolean isBound = config.getBoolean("bound", false);
+
             // Create soulbound attribute
-            return new SoulboundAttribute(item, name, equip, bound, false);
+            return new SoulboundAttribute(item, name, equip, bound, isBound);
         }
 
         @Override

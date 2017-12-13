@@ -15,6 +15,8 @@ attributes:
     level: "@level"
   rarity:
     tier: "@rarity"
+  soulbound:
+    type: "soulbound"
   reroll: "#{reroll-variance}"
   attack: "#{attack-entity-bow[250]}"
   hero-stamina-cost:
