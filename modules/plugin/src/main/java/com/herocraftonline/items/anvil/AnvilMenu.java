@@ -247,12 +247,17 @@ public class AnvilMenu {
     }
 
     public void onClose(InventoryCloseEvent event) {
+        ItemManager itemManager = plugin.getItemManager();
+
         // Get items currently in anvil menu
         List<ItemStack> drops = new ArrayList<>();
-        getItem(ITEM).ifPresent(item -> {
-            drops.add(item);
-            getItem(UPGRADE).ifPresent(drops::add);
-        });
+        Optional<ItemStack> item = getItem(ITEM);
+        if (item.isPresent()) {
+            drops.add(item.get());
+            if (itemManager.isItem(item.get())) {
+                getItem(UPGRADE).ifPresent(drops::add);
+            }
+        }
 
         // Return items to player inventory
         HumanEntity entity = event.getPlayer();
